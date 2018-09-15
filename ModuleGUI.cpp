@@ -38,14 +38,17 @@ update_status ModuleGUI::PreUpdate(float dt)
 
 update_status ModuleGUI::Update(float dt)
 {
+	update_status status= UPDATE_CONTINUE;
+
 	ImGui::ShowDemoWindow();
 
-	return update_status(UPDATE_CONTINUE);
+	return status;
 }
 
 update_status ModuleGUI::PostUpdate(float dt)
 {
 	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	return update_status(UPDATE_CONTINUE);
 }
