@@ -13,6 +13,8 @@
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
 
+#include <list>
+
 class Application
 {
 public:
@@ -29,7 +31,8 @@ private:
 
 	Timer	ms_timer;
 	float	dt;
-	p2List<Module*> list_modules;
+	//p2List<Module*> list_modules;
+	std::list<Module*> list_modules;
 
 public:
 
