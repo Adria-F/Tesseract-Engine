@@ -18,6 +18,7 @@ public:
 
 public:
 
+	bool demoWindow = false;
 };
 
 #endif // !__MODULEGUI_H__
