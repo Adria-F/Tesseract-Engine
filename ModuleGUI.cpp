@@ -46,6 +46,9 @@ update_status ModuleGUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("Demo Window"))
 				demoWindow = !demoWindow;
+			if (ImGui::MenuItem("Close", "ESC"))
+				status = UPDATE_STOP;
+
 			ImGui::EndMenu();
 		}
 	}

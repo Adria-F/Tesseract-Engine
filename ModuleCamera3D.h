@@ -1,6 +1,5 @@
 #pragma once
 #include "Module.h"
-#include "glmath.h"
 
 #define CAMERA_SPEED 10.0f
 

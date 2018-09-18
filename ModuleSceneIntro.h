@@ -6,6 +6,7 @@
 #include "PugiXml/src/pugixml.hpp"
 #include "Timer.h"
 
+
 #define ROAD_HEIGHT 9
 #define ROAD_WIDTH 15
 #define INVISIBLE_WALL 12
@@ -25,6 +26,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+
 public:
+
+	
 	
 };

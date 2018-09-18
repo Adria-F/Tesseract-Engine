@@ -170,11 +170,6 @@ bool ModulePhysics3D::CleanUp()
 
 	bodies.clear();
 
-	for(p2List_item<PhysVehicle3D*>* item = vehicles.getFirst(); item; item = item->next)
-		delete item->data;
-
-	vehicles.clear();
-
 	delete vehicle_raycaster;
 	delete world;
 
