@@ -55,7 +55,43 @@ update_status ModuleGUI::Update(float dt)
 	ImGui::EndMainMenuBar();
 
 	if (demoWindow)
+	{
 		ImGui::ShowDemoWindow();
+	}
+
+	//RNG Window
+	ImGui::SetNextWindowPos({ 0,20 });
+	ImGui::SetWindowPos({ 200, 270 });
+
+	ImGui::Begin("RNG based on PCG");
+	ImGui::Text("Here you can test the two ");
+	ImGui::Text("basic functions of the RNG");
+
+	ImGui::NewLine();
+	ImGui::Text("Get a random float between");
+	ImGui::Text("0 and 1");
+	if (ImGui::Button("Get"))
+	{
+		firstR = GET_RANDOM();
+	}
+	ImGui::SameLine(50.0f);
+	ImGui::Text("%f", firstR);
+
+	ImGui::NewLine();
+	ImGui::Text("Get a random int between");
+	ImGui::Text("two numbers");
+	
+	ImGui::SliderInt("MIN", &min, -500, max);
+	ImGui::SliderInt("MAX", &max, min, 500);
+	ImGui::PushID("Get2");
+	if (ImGui::Button("Get"))
+	{
+		secondR = GET_RANDOM_BETWEEN(min, max);
+	}
+	ImGui::PopID();
+	ImGui::SameLine(50.0f);
+	ImGui::Text("%d", secondR);
+	ImGui::End();
 
 	return status;
 }

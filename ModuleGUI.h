@@ -19,6 +19,10 @@ public:
 public:
 
 	bool demoWindow = false;
+	float firstR = 0.0f;
+	int secondR = 0;
+	int min = -50;
+	int max = 50;
 };
 
 #endif // !__MODULEGUI_H__
