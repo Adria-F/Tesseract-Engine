@@ -48,6 +48,9 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	//TO be able to use RNG in any file without worrying about initializing the seed
+	START_RNG_SEED();
+
 	// Call Init() in all modules
 	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{

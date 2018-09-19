@@ -6,8 +6,6 @@
 #include "PugiXml/src/pugixml.hpp"
 #include "Timer.h"
 
-#include "pcg-cpp-0.98/include/pcg_variants.h"
-
 #define ROAD_HEIGHT 9
 #define ROAD_WIDTH 15
 #define INVISIBLE_WALL 12
@@ -30,6 +28,5 @@ public:
 
 public:
 
-	pcg32_random_t rng;
 	
 };
