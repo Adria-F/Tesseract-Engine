@@ -7,6 +7,9 @@
 #include "MathGeoLib/Math/MathAll.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
+#include "pcg-cpp-0.98/extras/entropy.h"
+#include <time.h>
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -17,6 +20,8 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+
+	pcg32_srandom_r(&rng, time(NULL), (intptr_t)&rng);
 
 	return ret;
 }
@@ -49,6 +54,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		LOG("EL Lorien es tonto");
 	}
 
+	LOG("Random Number: %d", pcg32_random_r(&rng));
 
 	return ret;
 }

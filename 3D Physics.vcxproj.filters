@@ -114,8 +114,6 @@
     <ClInclude Include="ImGui\imstb_textedit.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\GL\gl3w.h" />
-    <ClInclude Include="ImGui\GL\glcorearb.h" />
     <ClInclude Include="ImGui\imgui_impl_sdl.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
@@ -385,7 +383,6 @@
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\GL\gl3w.c" />
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
