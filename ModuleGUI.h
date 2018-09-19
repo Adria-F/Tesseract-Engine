@@ -19,6 +19,12 @@ public:
 public:
 
 	bool demoWindow = false;
+	bool Sphere_tb = false;
+	bool RNGb = false;
+	
+	float aux_A[4] = { 0.0f,0.0f,0.0f,0.0f };
+	float aux_B[4] = { 0.0f,0.0f,0.0f,0.0f };
+
 	float firstR = 0.0f;
 	int secondR = 0;
 	int min = -50;

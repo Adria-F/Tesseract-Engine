@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 #define CAMERA_SPEED 10.0f
 
@@ -13,10 +14,10 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void Look(const vec &Position, const vec &Reference, bool RotateAroundReference = false);
+	void LookAt(const vec &Spot);
+	void Move(const vec &Movement);
+	float4x4* GetViewMatrix();
 	void setFreeCam(bool freeCam);
 
 private:
@@ -26,10 +27,10 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	vec X, Y, Z, Position, Reference;
 
 private:
 
-	mat4x4 ViewMatrix, ViewMatrixInverse;
-	vec3 offset_to_player;
+	float4x4 ViewMatrix, ViewMatrixInverse;
+	vec offset_to_player;
 };

@@ -13,6 +13,8 @@
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
 
+#include "MathGeoLib/MathGeoLib.h"
+
 #include <list>
 
 class Application
