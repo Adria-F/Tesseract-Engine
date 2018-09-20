@@ -153,8 +153,7 @@ update_status ModuleGUI::Update(float dt)
 	
 	//RNG Window-------------------------------------------------
 	if (RNGb)
-	{
-		
+	{	
 		ImGui::SetNextWindowPos({ 0,20 });
 		ImGui::SetWindowPos({ 200, 270 });
 

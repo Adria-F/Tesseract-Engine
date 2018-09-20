@@ -21,5 +21,5 @@ float getRandom()
 
 int getRandomBetween(int min, int max)
 {
-	return pcg32_boundedrand_r(&rng, (max - min)) + min;
+	return (min < max) ? pcg32_boundedrand_r(&rng, (max - min)) + min : (min == max) ? max : 0;
 }
