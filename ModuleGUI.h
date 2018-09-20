@@ -20,10 +20,16 @@ public:
 
 	bool demoWindow = false;
 	bool Sphere_tb = false;
+	bool AABB_tb = false;
 	bool RNGb = false;
 	
-	float aux_A[4] = { 0.0f,0.0f,0.0f,0.0f };
-	float aux_B[4] = { 0.0f,0.0f,0.0f,0.0f };
+	float aux_A[4] = { 0.0f,0.0f,0.0f,1.0f };
+	float aux_B[4] = { 0.0f,0.0f,0.0f,1.0f };
+
+	float Max_aux_A[3] = { 1.0f,1.0f,1.0f };
+	float Min_aux_A[3] = { 0.0f,0.0f,0.0f };
+	float Max_aux_B[3] = { 1.0f,1.0f,1.0f };
+	float Min_aux_B[3] = { 0.0f,0.0f,0.0f };
 
 	float firstR = 0.0f;
 	int secondR = 0;

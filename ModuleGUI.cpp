@@ -59,6 +59,8 @@ update_status ModuleGUI::Update(float dt)
 				RNGb = !RNGb;
 			if (ImGui::MenuItem("Speher intersection"))
 				Sphere_tb = !Sphere_tb;
+			if (ImGui::MenuItem("AABB intersection"))
+				AABB_tb = !AABB_tb;
 			ImGui::EndMenu();
 		}
 	}
@@ -82,39 +84,71 @@ update_status ModuleGUI::Update(float dt)
 
 		ImGui::DragFloat4("Position and radius A", aux_A);
 		
-		if (ImGui::Button("SAVE"))
-		{
-			App->scene_intro->S_Test_A.pos = { aux_A[0],aux_A[1],aux_A[2] };
-			App->scene_intro->S_Test_A.r = aux_A[4];
-		}
-
 		ImGui::Text("");
 
 		ImGui::DragFloat4("Position  and radius B", aux_B);
-
-		if (ImGui::Button("SAVE"))
-		{
-			App->scene_intro->S_Test_B.pos = { aux_B[0],aux_B[1],aux_B[2] };
-			App->scene_intro->S_Test_B.r = aux_B[4];
-		}
-		ImGui::Text("");
-
 		ImGui::Text("Click to test");
-		
 		if (ImGui::Button("Test"))
 		{
-			if (App->scene_intro->S_Test_A.Intersects(App->scene_intro->S_Test_B))
-			{
-				LOG("Intersection");
-			}
-			else
-			{
-				LOG("No Intersection");
-			}
+			App->scene_intro->S_Test_A.pos = { aux_A[0],aux_A[1],aux_A[2] };
+			App->scene_intro->S_Test_A.r = aux_A[3];
+			App->scene_intro->S_Test_B.pos = { aux_B[0],aux_B[1],aux_B[2] };
+			App->scene_intro->S_Test_B.r = aux_B[3];
 		}
 
+		if (App->scene_intro->S_Test_A.Intersects(App->scene_intro->S_Test_B))
+		{
+			ImGui::TextColored({ 0,1,0,1 }, "Intersection");
+			LOG("Intersection");
+		}
+		else
+		{
+			ImGui::TextColored({ 1,0,0,1 }, "No Intersection");
+			LOG("No Intersection");
+		}
 		
 		ImGui::End();		
+	}
+
+	if (AABB_tb)
+	{
+
+		ImGui::SetNextWindowPos({ 250,20 });
+
+		ImGui::Begin("Sphere Test", &AABB_tb);
+
+		ImGui::Text("Here you can test the collision between two AABB");
+		ImGui::Text("Create an Object");
+
+		ImGui::DragFloat3("Min pos A", Min_aux_A);
+		ImGui::DragFloat3("Max pos A", Max_aux_A);
+
+		ImGui::Text("");
+
+		ImGui::DragFloat3("Min pos B", Min_aux_B);
+		ImGui::DragFloat3("Max pos B", Max_aux_B);
+
+		ImGui::Text("Click to test");
+		if (ImGui::Button("Test"))
+		{
+			App->scene_intro->AABB_Test_A.minPoint = { Min_aux_A[0] ,Min_aux_A[1] ,Min_aux_A[2] };
+			App->scene_intro->AABB_Test_A.minPoint = { Max_aux_A[0] ,Max_aux_A[1] ,Max_aux_A[2] };
+			App->scene_intro->AABB_Test_B.minPoint = { Min_aux_B[0] ,Min_aux_B[1] ,Min_aux_B[2] };
+			App->scene_intro->AABB_Test_B.minPoint = { Max_aux_B[0] ,Max_aux_B[1] ,Max_aux_B[2] };
+		}
+
+		if (App->scene_intro->AABB_Test_A.Intersects(App->scene_intro->AABB_Test_B))
+		{
+			ImGui::TextColored({ 0,1,0,1 }, "Intersection");
+			LOG("Intersection");
+		}
+		else
+		{
+			ImGui::TextColored({ 1,0,0,1 }, "No Intersection");
+			LOG("No Intersection");
+		}
+
+		ImGui::End();
 	}
 	
 	//RNG Window-------------------------------------------------
