@@ -129,6 +129,7 @@ update_status ModuleGUI::Update(float dt)
 		ImGui::DragFloat3("Max pos B", Max_aux_B);
 
 		ImGui::Text("Click to test");
+		ImGui::PushID("Test2");
 		if (ImGui::Button("Test"))
 		{
 			App->scene_intro->AABB_Test_A.minPoint = { Min_aux_A[0] ,Min_aux_A[1] ,Min_aux_A[2] };
@@ -136,6 +137,7 @@ update_status ModuleGUI::Update(float dt)
 			App->scene_intro->AABB_Test_B.minPoint = { Min_aux_B[0] ,Min_aux_B[1] ,Min_aux_B[2] };
 			App->scene_intro->AABB_Test_B.maxPoint = { Max_aux_B[0] ,Max_aux_B[1] ,Max_aux_B[2] };
 		}
+		ImGui::PopID();
 
 		if (App->scene_intro->AABB_Test_A.Intersects(App->scene_intro->AABB_Test_B))
 		{
