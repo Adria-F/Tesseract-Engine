@@ -28,6 +28,9 @@
     <Filter Include="Sources\Tools\MathGeoLib">
       <UniqueIdentifier>{5bcf48c9-2df3-48a0-8b3a-e764900388fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Panels">
+      <UniqueIdentifier>{28264de2-6c37-4d4c-b105-c38bbfe1f15b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -309,6 +312,10 @@
     <ClInclude Include="MathGeoLib\MathGeoLibFwd.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="PanelConfiguration.h" />
+    <ClInclude Include="Panel.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -491,6 +498,7 @@
     <ClCompile Include="RNG.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="PanelConfiguration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

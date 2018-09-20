@@ -2,6 +2,10 @@
 #define __MODULEGUI_H__
 
 #include "Module.h"
+#include <list>
+
+class Panel;
+class PanelConfiguration;
 
 class ModuleGUI : public Module
 {
@@ -16,13 +20,20 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void logFPS(float fps, float ms);
+
 public:
+
+	std::list<Panel*> panels;
+
+	PanelConfiguration* configuration = nullptr;
+
 
 	bool demoWindow = false;
 	bool Sphere_tb = false;
 	bool AABB_tb = false;
 	bool RNGb = false;
-	bool configWindow = false;
+	bool configWindow = true;
 	bool hardwareWindow = false;
 	bool consoleWindow = false;
 	bool aboutWindow = false;

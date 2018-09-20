@@ -73,6 +73,8 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.ReadTime() / 1000.0f;
+	gui->logFPS(1 / dt, dt * 1000);
+
 	ms_timer.Start();
 }
 

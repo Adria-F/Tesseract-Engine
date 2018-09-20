@@ -3,6 +3,8 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
+#include "Panel.h"
+#include "PanelConfiguration.h"
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -23,6 +25,9 @@ bool ModuleGUI::Init()
 
 bool ModuleGUI::Start()
 {	
+	configuration = new PanelConfiguration("Configuration");
+
+	panels.push_back(configuration);
 
 	return true;
 }
@@ -70,7 +75,7 @@ update_status ModuleGUI::Update(float dt)
 			if (ImGui::MenuItem("Console"))
 				consoleWindow = !consoleWindow;
 			if (ImGui::MenuItem("Config"))
-				configWindow = !configWindow;
+				configuration->toggleActive();
 			if (ImGui::MenuItem("About"))
 				aboutWindow = !aboutWindow;
 			ImGui::EndMenu();
@@ -78,7 +83,13 @@ update_status ModuleGUI::Update(float dt)
 	}
 	ImGui::EndMainMenuBar();
 
-	if (demoWindow)
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
+	{
+		if ((*it_p)->isActive())
+			(*it_p)->Draw();
+	}
+
+	/*if (demoWindow)
 	{
 		ImGui::ShowDemoWindow();
 	}
@@ -226,6 +237,13 @@ update_status ModuleGUI::Update(float dt)
 		ImGui::SetNextWindowPos({ 725,18 });
 		ImGui::SetNextWindowSize({ 354, 438 });
 		ImGui::Begin("Configuration");
+
+		char title[25];
+		sprintf_s(title, 25, "Framerate %.1f", App->fps_log[App->fps_log.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &App->fps_log[0], App->fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %0.1f", App->ms_log[App->ms_log.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+
 		ImGui::End();
 	}
 
@@ -236,7 +254,7 @@ update_status ModuleGUI::Update(float dt)
 		ImGui::SetNextWindowSize({ 200, 207 });
 		ImGui::Begin("About");
 		ImGui::End();
-	}
+	}*/
 
 	return status;
 }
@@ -255,4 +273,10 @@ bool ModuleGUI::CleanUp()
 	ImGui_ImplOpenGL2_Shutdown();
 
 	return true;
+}
+
+void ModuleGUI::logFPS(float fps, float ms)
+{
+	if (configuration != nullptr)
+		configuration->addFPS(fps, ms);
 }
