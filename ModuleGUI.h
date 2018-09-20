@@ -22,6 +22,10 @@ public:
 	bool Sphere_tb = false;
 	bool AABB_tb = false;
 	bool RNGb = false;
+	bool configWindow = false;
+	bool hardwareWindow = false;
+	bool consoleWindow = false;
+	bool aboutWindow = false;
 	
 	float aux_A[4] = { 0.0f,0.0f,0.0f,1.0f };
 	float aux_B[4] = { 0.0f,0.0f,0.0f,1.0f };

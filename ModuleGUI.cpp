@@ -63,6 +63,18 @@ update_status ModuleGUI::Update(float dt)
 				AABB_tb = !AABB_tb;
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Hardware Info"))
+				hardwareWindow = !hardwareWindow;
+			if (ImGui::MenuItem("Console"))
+				consoleWindow = !consoleWindow;
+			if (ImGui::MenuItem("Config"))
+				configWindow = !configWindow;
+			if (ImGui::MenuItem("About"))
+				aboutWindow = !aboutWindow;
+			ImGui::EndMenu();
+		}
 	}
 	ImGui::EndMainMenuBar();
 
@@ -157,7 +169,7 @@ update_status ModuleGUI::Update(float dt)
 	if (RNGb)
 	{	
 		ImGui::SetNextWindowPos({ 0,20 });
-		ImGui::SetWindowPos({ 200, 270 });
+		ImGui::SetNextWindowSize({ 200, 270 });
 
 		ImGui::Begin("RNG based on PCG", &RNGb);
 		ImGui::Text("Here you can test the two ");
@@ -187,6 +199,42 @@ update_status ModuleGUI::Update(float dt)
 		ImGui::PopID();
 		ImGui::SameLine(50.0f);
 		ImGui::Text("%d", secondR);
+		ImGui::End();
+	}
+
+	//Hardware Info Window
+	if (hardwareWindow)
+	{
+		ImGui::SetNextWindowPos({ 528,20 });
+		ImGui::SetNextWindowSize({ 197, 230 });
+		ImGui::Begin("Hardware Info");
+		ImGui::End();
+	}
+
+	//Console
+	if (consoleWindow)
+	{
+		ImGui::SetNextWindowPos({ 2,551 });
+		ImGui::SetNextWindowSize({ 602, 170 });
+		ImGui::Begin("Console");
+		ImGui::End();
+	}
+
+	//Config
+	if (configWindow)
+	{
+		ImGui::SetNextWindowPos({ 725,18 });
+		ImGui::SetNextWindowSize({ 354, 438 });
+		ImGui::Begin("Configuration");
+		ImGui::End();
+	}
+
+	//About
+	if (aboutWindow)
+	{
+		ImGui::SetNextWindowPos({ 525,250 });
+		ImGui::SetNextWindowSize({ 200, 207 });
+		ImGui::Begin("About");
 		ImGui::End();
 	}
 
