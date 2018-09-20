@@ -77,10 +77,10 @@ update_status ModuleGUI::Update(float dt)
 	
 		ImGui::SetNextWindowPos({ 250,20 });
 		
-		ImGui::Begin("Sphere Test", &Sphere_tb);
+		ImGui::Begin("Intersection Test", &Sphere_tb);
 
 		ImGui::Text("Here you can test the collision between two Spheres");
-		ImGui::Text("Create an Object");
+		ImGui::Text("Create Sphere");
 
 		ImGui::DragFloat4("Position and radius A", aux_A);
 		
@@ -115,10 +115,10 @@ update_status ModuleGUI::Update(float dt)
 
 		ImGui::SetNextWindowPos({ 250,20 });
 
-		ImGui::Begin("Sphere Test", &AABB_tb);
+		ImGui::Begin("Intersection Test", &AABB_tb);
 
 		ImGui::Text("Here you can test the collision between two AABB");
-		ImGui::Text("Create an Object");
+		ImGui::Text("Create AABB");
 
 		ImGui::DragFloat3("Min pos A", Min_aux_A);
 		ImGui::DragFloat3("Max pos A", Max_aux_A);
@@ -132,9 +132,9 @@ update_status ModuleGUI::Update(float dt)
 		if (ImGui::Button("Test"))
 		{
 			App->scene_intro->AABB_Test_A.minPoint = { Min_aux_A[0] ,Min_aux_A[1] ,Min_aux_A[2] };
-			App->scene_intro->AABB_Test_A.minPoint = { Max_aux_A[0] ,Max_aux_A[1] ,Max_aux_A[2] };
+			App->scene_intro->AABB_Test_A.maxPoint = { Max_aux_A[0] ,Max_aux_A[1] ,Max_aux_A[2] };
 			App->scene_intro->AABB_Test_B.minPoint = { Min_aux_B[0] ,Min_aux_B[1] ,Min_aux_B[2] };
-			App->scene_intro->AABB_Test_B.minPoint = { Max_aux_B[0] ,Max_aux_B[1] ,Max_aux_B[2] };
+			App->scene_intro->AABB_Test_B.maxPoint = { Max_aux_B[0] ,Max_aux_B[1] ,Max_aux_B[2] };
 		}
 
 		if (App->scene_intro->AABB_Test_A.Intersects(App->scene_intro->AABB_Test_B))
