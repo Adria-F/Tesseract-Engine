@@ -4,6 +4,9 @@
 #include "Panel.h"
 #include <vector>
 
+class Module;
+class Application;
+
 class PanelConfiguration : public Panel
 {
 public:
@@ -13,11 +16,20 @@ public:
 	void Draw();
 
 	void addFPS(float fps, float ms);
+	void windowConfig();
 
 public:
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
+
+private:
+
+	bool fullscreen = false;
+	bool resizable = false;
+	bool borderless = false;
+	bool full_desktop = false;
+	
 };
 
 #endif // !__PANELCINFIGURATION_H__

@@ -1,5 +1,5 @@
-#include "ModuleGUI.h"
 #include "Application.h"
+#include "ModuleGUI.h"
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
@@ -9,7 +9,15 @@
 #include "PanelAbout.h"
 #include "PanelHardwareInfo.h"
 
-ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+
+ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
 }
 

@@ -15,7 +15,7 @@ PanelConsole::~PanelConsole()
 
 void PanelConsole::Draw()
 {
-	ImGui::Begin(name.c_str());
+	ImGui::Begin(name.c_str(), &active);
 
 
 

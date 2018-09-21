@@ -2,6 +2,7 @@
 #define __PANEL_H__
 
 #include "Globals.h"
+#include "Module.h"
 #include <string>
 
 class Panel

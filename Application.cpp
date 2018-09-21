@@ -1,17 +1,25 @@
 #include "Application.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleGUI.h"
 
 using namespace std;
 
 Application::Application()
 {
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
-	scene_intro = new ModuleSceneIntro(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
-	gui = new ModuleGUI(this);
+	window = new ModuleWindow();
+	input = new ModuleInput();
+	audio = new ModuleAudio(true);
+	scene_intro = new ModuleSceneIntro();
+	renderer3D = new ModuleRenderer3D();
+	camera = new ModuleCamera3D();
+	physics = new ModulePhysics3D();
+	gui = new ModuleGUI();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order

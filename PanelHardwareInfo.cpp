@@ -15,7 +15,7 @@ PanelHardwareInfo::~PanelHardwareInfo()
 
 void PanelHardwareInfo::Draw()
 {
-	ImGui::Begin(name.c_str());
+	ImGui::Begin(name.c_str(), &active);
 
 
 

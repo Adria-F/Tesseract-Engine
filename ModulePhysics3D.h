@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "p2List.h"
-#include "MathGeoLib/MathGeoLib.h"
-
 
 // Recommended scale is 1.0f == 1 meter, no less than 0.2 objects
 #define GRAVITY btVector3(0.0f, -10.0f, 0.0f) 
@@ -10,7 +8,7 @@
 class ModulePhysics3D : public Module
 {
 public:
-	ModulePhysics3D(Application* app, bool start_enabled = true);
+	ModulePhysics3D(bool start_enabled = true);
 	~ModulePhysics3D();
 
 	bool Init();

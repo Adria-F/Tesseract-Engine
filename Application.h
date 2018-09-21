@@ -1,21 +1,23 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "ModuleGUI.h"
 
 #include "MathGeoLib/MathGeoLib.h"
 
 #include <list>
+
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleAudio;
+class ModuleSceneIntro;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class ModuleGUI;
 
 class Application
 {
@@ -51,3 +53,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 };
+
+extern Application* App;
+
+#endif //__APPLICATION_H__
