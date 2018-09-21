@@ -23,6 +23,9 @@ public:
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
 
+	char appName[20] = "Application name";
+	int t = 60;
+
 private:
 
 	bool fullscreen = false;

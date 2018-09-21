@@ -10,6 +10,8 @@ PanelConfiguration::PanelConfiguration(const char * name) : Panel(name)
 	posY = 18;
 	width = 354;
 	height = 438;
+
+	active = true;
 }
 
 PanelConfiguration::~PanelConfiguration()
@@ -20,14 +22,20 @@ void PanelConfiguration::Draw()
 {
 	ImGui::Begin(name.c_str(),&active);
 
-	if (ImGui::CollapsingHeader("Aplication"))
+	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{
+
+		ImGui::InputText("App name", &appName[0], IM_ARRAYSIZE(appName));
+
+		ImGui::SliderInt("MaxFPS", &t, 30, 120);
+
 		char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 		sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 	}
+
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		if (ImGui::Checkbox("FullScreen", &fullscreen))
