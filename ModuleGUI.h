@@ -6,6 +6,9 @@
 
 class Panel;
 class PanelConfiguration;
+class PanelConsole;
+class PanelAbout;
+class PanelHardwareInfo;
 
 class ModuleGUI : public Module
 {
@@ -27,16 +30,14 @@ public:
 	std::list<Panel*> panels;
 
 	PanelConfiguration* configuration = nullptr;
+	PanelConsole* console = nullptr;
+	PanelAbout* about = nullptr;
+	PanelHardwareInfo* hardwareInfo = nullptr;
 
-
-	bool demoWindow = false;
+	// TO DELETE --------------------------------
 	bool Sphere_tb = false;
 	bool AABB_tb = false;
 	bool RNGb = false;
-	bool configWindow = true;
-	bool hardwareWindow = false;
-	bool consoleWindow = false;
-	bool aboutWindow = false;
 	
 	float aux_A[4] = { 0.0f,0.0f,0.0f,1.0f };
 	float aux_B[4] = { 0.0f,0.0f,0.0f,1.0f };
@@ -50,6 +51,7 @@ public:
 	int secondR = 0;
 	int min = -50;
 	int max = 50;
+	// -----------------------------------------
 };
 
 #endif // !__MODULEGUI_H__

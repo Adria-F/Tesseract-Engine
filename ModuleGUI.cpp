@@ -5,6 +5,9 @@
 #include "ImGui\imgui_impl_opengl2.h"
 #include "Panel.h"
 #include "PanelConfiguration.h"
+#include "PanelConsole.h"
+#include "PanelAbout.h"
+#include "PanelHardwareInfo.h"
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -25,9 +28,10 @@ bool ModuleGUI::Init()
 
 bool ModuleGUI::Start()
 {	
-	configuration = new PanelConfiguration("Configuration");
-
-	panels.push_back(configuration);
+	panels.push_back(hardwareInfo = new PanelHardwareInfo("Hardware Info"));
+	panels.push_back(console = new PanelConsole("Console"));
+	panels.push_back(configuration = new PanelConfiguration("Configuration"));
+	panels.push_back(about = new PanelAbout("About"));
 
 	return true;
 }
@@ -48,36 +52,23 @@ update_status ModuleGUI::Update(float dt)
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Demo Window"))
-				demoWindow = !demoWindow;
-			
+		{		
 			if (ImGui::MenuItem("Close", "ESC"))
 				status = UPDATE_STOP;
 
 			ImGui::EndMenu();
 		}
 		
-		if (ImGui::BeginMenu("Util"))
-		{
-			if (ImGui::MenuItem("RNG"))
-				RNGb = !RNGb;
-			if (ImGui::MenuItem("Speher intersection"))
-				Sphere_tb = !Sphere_tb;
-			if (ImGui::MenuItem("AABB intersection"))
-				AABB_tb = !AABB_tb;
-			ImGui::EndMenu();
-		}
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("Hardware Info"))
-				hardwareWindow = !hardwareWindow;
+				hardwareInfo->toggleActive();
 			if (ImGui::MenuItem("Console"))
-				consoleWindow = !consoleWindow;
+				console->toggleActive();
 			if (ImGui::MenuItem("Config"))
 				configuration->toggleActive();
 			if (ImGui::MenuItem("About"))
-				aboutWindow = !aboutWindow;
+				about->toggleActive();
 			ImGui::EndMenu();
 		}
 	}
@@ -86,14 +77,14 @@ update_status ModuleGUI::Update(float dt)
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
 	{
 		if ((*it_p)->isActive())
+		{
+			ImGui::SetNextWindowPos({ (*it_p)->posX, (*it_p)->posY });
+			ImGui::SetNextWindowSize({ (*it_p)->width, (*it_p)->height });
 			(*it_p)->Draw();
+		}
 	}
 
-	/*if (demoWindow)
-	{
-		ImGui::ShowDemoWindow();
-	}
-	
+	/*
 	//Object Generator-------------------------------------------
 	if (Sphere_tb)
 	{
@@ -176,85 +167,7 @@ update_status ModuleGUI::Update(float dt)
 		ImGui::End();
 	}
 	
-	//RNG Window-------------------------------------------------
-	if (RNGb)
-	{	
-		ImGui::SetNextWindowPos({ 0,20 });
-		ImGui::SetNextWindowSize({ 200, 270 });
-
-		ImGui::Begin("RNG based on PCG", &RNGb);
-		ImGui::Text("Here you can test the two ");
-		ImGui::Text("basic functions of the RNG");
-
-		ImGui::NewLine();
-		ImGui::Text("Get a random float between");
-		ImGui::Text("0 and 1");
-		if (ImGui::Button("Get"))
-		{
-			firstR = GET_RANDOM();
-		}
-		ImGui::SameLine(50.0f);
-		ImGui::Text("%f", firstR);
-
-		ImGui::NewLine();
-		ImGui::Text("Get a random int between");
-		ImGui::Text("two numbers");
-
-		ImGui::SliderInt("MIN", &min, -500, max);
-		ImGui::SliderInt("MAX", &max, min, 500);
-		ImGui::PushID("Get2");
-		if (ImGui::Button("Get"))
-		{
-			secondR = GET_RANDOM_BETWEEN(min, max);
-		}
-		ImGui::PopID();
-		ImGui::SameLine(50.0f);
-		ImGui::Text("%d", secondR);
-		ImGui::End();
-	}
-
-	//Hardware Info Window
-	if (hardwareWindow)
-	{
-		ImGui::SetNextWindowPos({ 528,20 });
-		ImGui::SetNextWindowSize({ 197, 230 });
-		ImGui::Begin("Hardware Info");
-		ImGui::End();
-	}
-
-	//Console
-	if (consoleWindow)
-	{
-		ImGui::SetNextWindowPos({ 2,551 });
-		ImGui::SetNextWindowSize({ 602, 170 });
-		ImGui::Begin("Console");
-		ImGui::End();
-	}
-
-	//Config
-	if (configWindow)
-	{
-		ImGui::SetNextWindowPos({ 725,18 });
-		ImGui::SetNextWindowSize({ 354, 438 });
-		ImGui::Begin("Configuration");
-
-		char title[25];
-		sprintf_s(title, 25, "Framerate %.1f", App->fps_log[App->fps_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &App->fps_log[0], App->fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-		sprintf_s(title, 25, "Milliseconds %0.1f", App->ms_log[App->ms_log.size() - 1]);
-		ImGui::PlotHistogram("##milliseconds", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
-
-		ImGui::End();
-	}
-
-	//About
-	if (aboutWindow)
-	{
-		ImGui::SetNextWindowPos({ 525,250 });
-		ImGui::SetNextWindowSize({ 200, 207 });
-		ImGui::Begin("About");
-		ImGui::End();
-	}*/
+	*/
 
 	return status;
 }
@@ -271,6 +184,9 @@ bool ModuleGUI::CleanUp()
 {
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL2_Shutdown();
+
+	panels.clear();
+	console = nullptr;
 
 	return true;
 }

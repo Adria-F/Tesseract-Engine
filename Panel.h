@@ -20,6 +20,10 @@ protected:
 	std::string name;
 	bool active = false;
 
+	public:
+
+	float posX, posY, width, height;
+
 };
 
 #endif // !__PANEL_H__

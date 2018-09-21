@@ -1,6 +1,15 @@
 #include "PanelConfiguration.h"
 #include "Application.h"
 #include "ImGui\imgui.h"
+#include "MathGeoLib/MathGeoLib.h"
+
+PanelConfiguration::PanelConfiguration(const char * name) : Panel(name)
+{
+	posX = 725;
+	posY = 18;
+	width = 354;
+	height = 438;
+}
 
 PanelConfiguration::~PanelConfiguration()
 {
@@ -8,8 +17,6 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-	ImGui::SetNextWindowPos({ 725,18 });
-	ImGui::SetNextWindowSize({ 354, 438 });
 	ImGui::Begin(name.c_str());
 
 	char title[25];

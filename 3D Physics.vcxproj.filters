@@ -312,8 +312,19 @@
     <ClInclude Include="MathGeoLib\MathGeoLibFwd.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="PanelConfiguration.h" />
     <ClInclude Include="Panel.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConfiguration.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConsole.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelHardwareInfo.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelAbout.h">
       <Filter>Sources\Modules\Panels</Filter>
     </ClInclude>
   </ItemGroup>
@@ -498,7 +509,18 @@
     <ClCompile Include="RNG.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="PanelConfiguration.cpp" />
+    <ClCompile Include="PanelConfiguration.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConsole.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelAbout.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelHardwareInfo.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

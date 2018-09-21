@@ -7,7 +7,7 @@
 class PanelConfiguration : public Panel
 {
 public:
-	PanelConfiguration(const char* name): Panel(name) {}
+	PanelConfiguration(const char* name);
 	~PanelConfiguration();
 
 	void Draw();
