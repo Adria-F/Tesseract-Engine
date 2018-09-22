@@ -4,7 +4,8 @@
 #include "ImGui\imgui.h"
 #include "MathGeoLib/MathGeoLib.h"
 
-PanelConfiguration::PanelConfiguration(const char * name) : Panel(name)
+PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
+fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE)
 {
 	posX = 725;
 	posY = 18;
@@ -25,9 +26,14 @@ void PanelConfiguration::Draw()
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{
 
-		ImGui::InputText("App name", &appName[0], IM_ARRAYSIZE(appName));
+		static char app_name[120];
+		strcpy_s(app_name, 120, App->getAppName());
+		if (ImGui::InputText("App Name", app_name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			App->setAppName(app_name);
 
-		ImGui::SliderInt("MaxFPS", &t, 30, 120);
+		static int framerateCap = App->getFramerateCap();
+		if (ImGui::SliderInt("MaxFPS", &framerateCap, 1, 120))
+			App->setFramerateCap(framerateCap);
 
 		char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
@@ -60,22 +66,14 @@ void PanelConfiguration::Draw()
 
 void PanelConfiguration::addFPS(float fps, float ms)
 {
-	if (fps_log.size() == 100)
+	for (uint i = 0; i < FPS_LOG_SIZE - 1; ++i)
 	{
-		for (int i = 0; i < fps_log.size() - 2; i++)
-		{
-			fps_log[i] = fps_log[i + 1];
-			ms_log[i] = ms_log[i + 1];
-		}
+		fps_log[i] = fps_log[i + 1];
+		ms_log[i] = ms_log[i + 1];
+	}
 
-		fps_log[fps_log.size() - 1] = fps;
-		ms_log[ms_log.size() - 1] = ms;
-	}
-	else
-	{
-		fps_log.push_back(fps);
-		ms_log.push_back(ms);
-	}
+	fps_log[FPS_LOG_SIZE - 1] = fps;
+	ms_log[FPS_LOG_SIZE - 1] = ms;
 }
 
 void PanelConfiguration::windowConfig()

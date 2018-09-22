@@ -81,7 +81,6 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.ReadTime() / 1000.0f;
-	gui->logFPS(1 / dt, dt * 1000);
 
 	ms_timer.Start();
 }
@@ -89,6 +88,11 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	int ms_cap = 1000 / framerateCap;
+	if (ms_timer.ReadTime() < ms_cap)
+		SDL_Delay(ms_cap - ms_timer.ReadTime());
+
+	gui->logFPS(1 / dt, dt * 1000);
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -127,6 +131,30 @@ bool Application::CleanUp()
 	}
 
 	return ret;
+}
+
+const char* Application::getAppName() const
+{
+	return appName.c_str();
+}
+
+void Application::setAppName(const char * name)
+{
+	if (name != nullptr && name != appName)
+	{
+		appName = name;
+		SDL_SetWindowTitle(window->window, name);
+	}
+}
+
+int Application::getFramerateCap() const
+{
+	return framerateCap;
+}
+
+void Application::setFramerateCap(int cap)
+{
+	framerateCap = cap;
 }
 
 void Application::AddModule(Module* mod)
