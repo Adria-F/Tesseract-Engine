@@ -9,6 +9,7 @@
 #include "ImGui\imgui.h"
 
 #include <list>
+#include <string>
 
 class Module;
 class ModuleWindow;
@@ -39,6 +40,9 @@ private:
 	//p2List<Module*> list_modules;
 	std::list<Module*> list_modules;
 
+	int framerateCap = 60;
+	std::string appName = TITLE;
+
 public:
 
 	Application();
@@ -47,6 +51,12 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+
+	const char* getAppName() const;
+	void setAppName(const char* name);
+
+	int getFramerateCap() const;
+	void setFramerateCap(int cap);
 
 private:
 

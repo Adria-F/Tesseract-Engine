@@ -4,6 +4,8 @@
 #include "Panel.h"
 #include <vector>
 
+#define FPS_LOG_SIZE 100
+
 class Module;
 class Application;
 
@@ -22,9 +24,6 @@ public:
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
-
-	char appName[20] = "Application name";
-	int t = 60;
 
 private:
 
