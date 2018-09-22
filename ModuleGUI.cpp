@@ -190,11 +190,18 @@ update_status ModuleGUI::PostUpdate(float dt)
 
 bool ModuleGUI::CleanUp()
 {
-	ImGui_ImplSDL2_Shutdown();
-	ImGui_ImplOpenGL2_Shutdown();
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
+	{
+		if (*it_p != nullptr)
+			delete *it_p;
+		*it_p = nullptr;
+	}
 
 	panels.clear();
 	console = nullptr;
+
+	ImGui_ImplSDL2_Shutdown();
+	ImGui_ImplOpenGL2_Shutdown();
 
 	return true;
 }
@@ -203,4 +210,10 @@ void ModuleGUI::logFPS(float fps, float ms)
 {
 	if (configuration != nullptr)
 		configuration->addFPS(fps, ms);
+}
+
+void ModuleGUI::AddLog(const char* log)
+{
+	if(App->gui && console!=nullptr)
+		console->AddLog(log);
 }

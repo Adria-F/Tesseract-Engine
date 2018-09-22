@@ -24,6 +24,7 @@ public:
 	bool CleanUp();
 
 	void logFPS(float fps, float ms);
+	void AddLog(const char* log);
 
 public:
 
