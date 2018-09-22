@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Globals.h"
 #include "ModuleWindow.h"
 #include "PanelConfiguration.h"
 #include "ImGui\imgui.h"
@@ -11,6 +12,15 @@ PanelConfiguration::PanelConfiguration(const char * name) : Panel(name)
 	width = 354;
 	height = 438;
 
+	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
+	nHeight = SCREEN_HEIGHT * SCREEN_SIZE;
+	
+	resizable = WIN_RESIZABLE;
+
+	brightness = SDL_GetWindowBrightness(App->window->window);
+
+	SDL_GetDisplayMode(NULL, NULL, &mode);
+
 	active = true;
 }
 
@@ -20,6 +30,7 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
+
 	ImGui::Begin(name.c_str(),&active);
 
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
@@ -38,21 +49,31 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Window"))
 	{
+		if (ImGui::SliderInt("Height", &nHeight, 0, 1080) || ImGui::SliderInt("Width", &nWidth, 0, 1920))
+		{
+			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
+		}
+
+		if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
+		{
+			SDL_SetWindowBrightness(App->window->window, brightness);
+		}
+
+		ImGui::Text("Refresh rate: %d", mode.refresh_rate);
+
 		if (ImGui::Checkbox("FullScreen", &fullscreen))
 			windowConfig();
-
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Resizable", &resizable))
-			//SDL_SetWindowResizable()
+			windowConfig();
 
 		ImGui::NewLine();
 		if (ImGui::Checkbox("Borderless", &borderless))
-			SDL_SetWindowBordered(App->window->window, (SDL_bool)borderless);
+			windowConfig();
 		
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Full Desktop", &full_desktop))
 			windowConfig();
-		
 	}
 
 	ImGui::End();
@@ -84,14 +105,19 @@ void PanelConfiguration::windowConfig()
 
 	if (fullscreen)
 		SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+	else if (full_desktop)
+		SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	else
 		SDL_SetWindowFullscreen(App->window->window, 0);
-	if (resizable)
-		flags |= SDL_WINDOW_RESIZABLE;
-	if (borderless)
-		flags |= SDL_WINDOW_BORDERLESS;
-	if (full_desktop)
-		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	
+	if (resizable)
+		SDL_SetWindowResizable(App->window->window, (SDL_bool)1);
+	else
+		SDL_SetWindowResizable(App->window->window, (SDL_bool)0);
+
+	if (borderless)
+		SDL_SetWindowBordered(App->window->window, (SDL_bool)(!borderless));
+	else
+		SDL_SetWindowBordered(App->window->window, (SDL_bool)1);	
 	
 }
