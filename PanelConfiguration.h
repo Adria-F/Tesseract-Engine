@@ -31,6 +31,13 @@ private:
 	bool resizable = false;
 	bool borderless = false;
 	bool full_desktop = false;
+
+	int nHeight;
+	int nWidth;
+	
+	float brightness;
+	
+	SDL_DisplayMode mode;
 	
 };
 
