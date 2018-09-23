@@ -31,12 +31,10 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-
 	ImGui::Begin(name.c_str(),&active);
 
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{
-
 		static char app_name[120];
 		strcpy_s(app_name, 120, App->getAppName());
 		if (ImGui::InputText("App Name", app_name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))

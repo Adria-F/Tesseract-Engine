@@ -3,10 +3,10 @@
 
 PanelHardwareInfo::PanelHardwareInfo(const char* name): Panel(name)
 {
-	posX = 528;
-	posY = 20;
-	width = 197;
-	height = 230;
+	posX = 725;
+	posY = 18;
+	width = 354;
+	height = 438;
 }
 
 PanelHardwareInfo::~PanelHardwareInfo()

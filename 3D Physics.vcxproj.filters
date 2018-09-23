@@ -19,9 +19,6 @@
     <Filter Include="Sources\Modules\Game">
       <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Tools\PugiXML">
-      <UniqueIdentifier>{fe6dacb6-adcb-4748-9352-0b3fc914226e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Tools\ImGui">
       <UniqueIdentifier>{b8d1081e-25d0-449e-b4ab-1e96c74fa881}</UniqueIdentifier>
     </Filter>
@@ -83,12 +80,6 @@
     </ClInclude>
     <ClInclude Include="ModulePhysics3D.h">
       <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="PugiXml\src\pugiconfig.hpp">
-      <Filter>Sources\Tools\PugiXML</Filter>
-    </ClInclude>
-    <ClInclude Include="PugiXml\src\pugixml.hpp">
-      <Filter>Sources\Tools\PugiXML</Filter>
     </ClInclude>
     <ClInclude Include="ModuleGUI.h">
       <Filter>Sources\Modules</Filter>
@@ -370,9 +361,6 @@
     </ClCompile>
     <ClCompile Include="ModulePhysics3D.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="PugiXml\src\pugixml.cpp">
-      <Filter>Sources\Tools\PugiXML</Filter>
     </ClCompile>
     <ClCompile Include="ModuleGUI.cpp">
       <Filter>Sources\Modules</Filter>

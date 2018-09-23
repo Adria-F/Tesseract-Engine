@@ -169,8 +169,6 @@
     <ClInclude Include="PanelConfiguration.h" />
     <ClInclude Include="PanelConsole.h" />
     <ClInclude Include="PanelHardwareInfo.h" />
-    <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
-    <ClInclude Include="PugiXml\src\pugixml.hpp" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,7 +233,6 @@
     <ClCompile Include="PanelConfiguration.cpp" />
     <ClCompile Include="PanelConsole.cpp" />
     <ClCompile Include="PanelHardwareInfo.cpp" />
-    <ClCompile Include="PugiXml\src\pugixml.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>

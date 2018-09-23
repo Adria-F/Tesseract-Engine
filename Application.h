@@ -58,6 +58,8 @@ public:
 	int getFramerateCap() const;
 	void setFramerateCap(int cap);
 
+	void RequestBrowser(const char * url) const;
+
 private:
 
 	void AddModule(Module* mod);

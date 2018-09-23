@@ -2,7 +2,6 @@
 #include "Module.h"
 #include "p2DynArray.h"
 #include "p2List.h"
-#include "PugiXml/src/pugixml.hpp"
 #include "Timer.h"
 #include "MathGeoLib/MathGeoLib.h"
 

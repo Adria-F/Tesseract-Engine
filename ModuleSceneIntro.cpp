@@ -26,9 +26,6 @@ update_status ModuleSceneIntro::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	int t = GET_RANDOM_BETWEEN(50, 100);
-	LOG("Random Number: %d", t);
-
 	return ret;
 }
 

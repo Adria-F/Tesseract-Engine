@@ -157,6 +157,11 @@ void Application::setFramerateCap(int cap)
 	framerateCap = cap;
 }
 
+void Application::RequestBrowser(const char * url) const
+{
+	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
