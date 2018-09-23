@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "rapidjson/prettywriter.h" // for stringify JSON
+#include <cstdio>
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
@@ -13,10 +15,16 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool ModuleWindow::Init(rapidjson::Document& document)
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
+
+	assert(document.IsObject());
+
+	assert(document["window"].IsString());
+	LOG("%s \n", document["window"].GetString());
+	LOG("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{

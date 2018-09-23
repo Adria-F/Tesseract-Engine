@@ -11,7 +11,7 @@ public:
 	ModulePhysics3D(bool start_enabled = true);
 	~ModulePhysics3D();
 
-	bool Init();
+	bool Init(rapidjson::Document& document);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);

@@ -8,6 +8,8 @@
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
 
+#include "rapidjson/filereadstream.h"
+
 using namespace std;
 
 Application::Application()
@@ -56,13 +58,21 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	rapidjson::Document document;
+	FILE* fp = fopen("test.json", "rb");
+	char readBuffer[65536];
+
+	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+	document.ParseStream(is);
+
 	//TO be able to use RNG in any file without worrying about initializing the seed
 	START_RNG_SEED();
 
 	// Call Init() in all modules
 	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Init(document);
 	}
 
 	// After all Init calls we call Start() in all modules
@@ -73,6 +83,7 @@ bool Application::Init()
 		ret = (*item)->Start();
 	}
 	
+	fclose(fp);
 	ms_timer.Start();
 	return ret;
 }

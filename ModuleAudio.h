@@ -15,7 +15,7 @@ public:
 	ModuleAudio(bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init();
+	bool Init(rapidjson::Document& document);
 	bool CleanUp();
 
 	// Play a music file

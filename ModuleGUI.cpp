@@ -25,7 +25,7 @@ ModuleGUI::~ModuleGUI()
 {
 }
 
-bool ModuleGUI::Init()
+bool ModuleGUI::Init(rapidjson::Document& document)
 {
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);

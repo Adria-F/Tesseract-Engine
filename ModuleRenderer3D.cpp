@@ -24,7 +24,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Init(rapidjson::Document& document)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;

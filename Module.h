@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Globals.h"
+#include "rapidjson/document.h"// rapidjson's DOM-style API
+#include "rapidjson/prettywriter.h" // for stringify JSON
 
 class Module
 {
@@ -16,7 +18,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(rapidjson::Document& document) 
 	{
 		return true; 
 	}

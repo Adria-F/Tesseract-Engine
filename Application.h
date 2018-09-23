@@ -7,6 +7,7 @@
 
 #include "MathGeoLib/MathGeoLib.h"
 #include "ImGui\imgui.h"
+#include "rapidjson/rapidjson.h"
 
 #include <list>
 #include <string>

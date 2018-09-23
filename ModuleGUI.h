@@ -16,7 +16,7 @@ public:
 	ModuleGUI(bool start_enabled = true);
 	~ModuleGUI();
 
-	bool Init();
+	bool Init(rapidjson::Document& document);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
