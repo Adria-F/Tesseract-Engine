@@ -69,13 +69,13 @@ update_status ModuleGUI::Update(float dt)
 		
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Hardware Info"))
+			if (ImGui::MenuItem("Hardware Info",NULL, hardwareInfo->isActive()))
 				hardwareInfo->toggleActive();
-			if (ImGui::MenuItem("Console"))
+			if (ImGui::MenuItem("Console", NULL, console->isActive()))
 				console->toggleActive();
-			if (ImGui::MenuItem("Config"))
+			if (ImGui::MenuItem("Config", NULL, configuration->isActive()))
 				configuration->toggleActive();
-			if (ImGui::MenuItem("About"))
+			if (ImGui::MenuItem("About", NULL, about->isActive()))
 				about->toggleActive();
 			ImGui::EndMenu();
 		}
