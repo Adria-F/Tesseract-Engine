@@ -59,7 +59,7 @@ bool Application::Init()
 	bool ret = true;
 
 	rapidjson::Document document;
-	FILE* fp = fopen("test.json", "rb");
+	FILE* fp = fopen("config.json", "rb");
 	char readBuffer[65536];
 
 	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));

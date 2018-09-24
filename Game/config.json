@@ -1,0 +1,11 @@
+{
+  "window": {
+    "width": 1080,
+    "height": 720,
+    "screen_size": 1,
+    "fullscreen": false,
+    "resizable": true,
+    "borderless": false,
+    "fullscreen_desktop": false
+  }
+}

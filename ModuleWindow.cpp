@@ -1,7 +1,8 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "rapidjson/prettywriter.h" // for stringify JSON
-#include <cstdio>
+
+using namespace rapidjson;
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
@@ -20,11 +21,16 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	assert(document.IsObject());
+	Value& configwindow = document["window"];
 
-	assert(document["window"].IsString());
-	LOG("%s \n", document["window"].GetString());
-	LOG("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	width = configwindow["width"].GetInt();
+	height = configwindow["height"].GetInt();
+	screen_size = configwindow["screen_size"].GetInt();
+
+	fullscreen = configwindow["fullscreen"].GetBool();
+	resizable = configwindow["resizable"].GetBool();
+	borderless = configwindow["borderless"].GetBool();
+	fullscreen_desktop = configwindow["fullscreen_desktop"].GetBool();
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -34,35 +40,33 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(WIN_FULLSCREEN == true)
+		if(fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(WIN_RESIZABLE == true)
+		if(resizable == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(WIN_BORDERLESS == true)
+		if(borderless == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if(fullscreen_desktop == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(App->getAppName(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+		window = SDL_CreateWindow(App->getAppName(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width* screen_size, height* screen_size, flags);
 
 		if(window == NULL)
 		{
