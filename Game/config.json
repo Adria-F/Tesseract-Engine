@@ -7,5 +7,35 @@
     "resizable": true,
     "borderless": false,
     "fullscreen_desktop": false
+  },
+  "panels": {
+    "Hardware_Info": {
+      "name": "Hardware Info",
+      "height": 438,
+      "width": 354,
+      "pos_X": 725,
+      "pos_Y": 18
+    },
+    "Console": {
+      "name": "Console",
+      "height": 170,
+      "width": 602,
+      "pos_X": 0,
+      "pos_Y": 551
+    },
+    "Configuration": {
+      "name": "Configuration",
+      "height": 438,
+      "width": 354,
+      "pos_X": 725,
+      "pos_Y": 18
+    },
+    "About": {
+      "name": "About",
+      "height": 438,
+      "width": 354,
+      "pos_X": 725,
+      "pos_Y": 18
+    }
   }
 }

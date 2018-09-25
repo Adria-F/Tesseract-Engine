@@ -31,6 +31,9 @@
     <Filter Include="Sources\Tools\RapidJSON">
       <UniqueIdentifier>{ea2aa68e-cc64-4f29-9686-f66d07fd8fd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Files">
+      <UniqueIdentifier>{c74f40ab-bcfd-4ab3-ace8-fb6594ccdda3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -642,6 +645,9 @@
     </None>
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>Sources\Tools\MathGeoLib</Filter>
+    </None>
+    <None Include="Game\config.json">
+      <Filter>Sources\Tools\Files</Filter>
     </None>
   </ItemGroup>
 </Project>

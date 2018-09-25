@@ -183,3 +183,13 @@ void ModuleAudio::setMusicVolume(float volume)
 	Mix_VolumeMusic(MIX_MAX_VOLUME*volume);
 	music_volume = MIX_MAX_VOLUME*volume; //Save it for fading;
 }
+
+bool ModuleAudio::Save(rapidjson::Document& document)
+{
+	return true;
+}
+
+bool ModuleAudio::Load(rapidjson::Document& document)
+{
+	return true;
+}

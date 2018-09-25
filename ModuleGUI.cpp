@@ -27,19 +27,30 @@ ModuleGUI::~ModuleGUI()
 
 bool ModuleGUI::Init(rapidjson::Document& document)
 {
+
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
+
+	rapidjson::Value& panels_info = document["panels"];
+	
+	rapidjson::Value& panels_aux = panels_info["Hardware_Info"];
+	panels.push_back(hardwareInfo = new PanelHardwareInfo(panels_aux["name"].GetString(),panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	
+	panels_aux = panels_info["Console"];
+	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	
+	panels_aux = panels_info["Configuration"];
+	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	
+	panels_aux = panels_info["About"];
+	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 	return true;
 }
 
 bool ModuleGUI::Start()
 {	
-	panels.push_back(hardwareInfo = new PanelHardwareInfo("Hardware Info"));
-	panels.push_back(console = new PanelConsole("Console"));
-	panels.push_back(configuration = new PanelConfiguration("Configuration"));
-	panels.push_back(about = new PanelAbout("About"));
 
 	return true;
 }
@@ -60,7 +71,11 @@ update_status ModuleGUI::Update(float dt)
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
-		{		
+		{	
+			if (ImGui::MenuItem("Save", "ctrl+s"))
+				App->SaveGame();
+			if (ImGui::MenuItem("Load"))
+				App->LoadGame();
 			if (ImGui::MenuItem("Close", "ESC"))
 				status = UPDATE_STOP;
 
@@ -216,4 +231,11 @@ void ModuleGUI::AddLog(const char* log)
 {
 	if(App->gui && console!=nullptr)
 		console->AddLog(log);
+}
+
+bool ModuleGUI::Save(rapidjson::Document& document) {
+	return true;
+}
+bool ModuleGUI::Load(rapidjson::Document& document) {
+	return true;
 }

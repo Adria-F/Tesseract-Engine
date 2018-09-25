@@ -48,6 +48,16 @@ public:
 		return true; 
 	}
 
+	virtual bool Save(rapidjson::Document& document)
+	{
+		return true;
+	}
+
+	virtual bool Load(rapidjson::Document& document)
+	{
+		return true;
+	}
+
 	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}*/
 };

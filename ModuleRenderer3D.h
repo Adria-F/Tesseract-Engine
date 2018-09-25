@@ -18,6 +18,9 @@ public:
 
 	void OnResize(int width, int height);
 
+	bool Save(rapidjson::Document& document);
+	bool Load(rapidjson::Document& document);
+
 public:
 
 	Light lights[MAX_LIGHTS];

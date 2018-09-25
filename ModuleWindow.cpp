@@ -103,3 +103,10 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
+bool ModuleWindow:: Save(rapidjson::Document& document) {
+	return true;
+}
+bool ModuleWindow::Load(rapidjson::Document& document) {
+	return true;
+}

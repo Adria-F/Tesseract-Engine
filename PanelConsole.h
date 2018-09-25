@@ -11,7 +11,7 @@
 class PanelConsole : public Panel
 {
 public:
-	PanelConsole(const char* name);
+	PanelConsole(const char* name, float posX, float posY, float width, float height);
 	~PanelConsole();
 
 	void Draw();

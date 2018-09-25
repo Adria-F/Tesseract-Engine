@@ -1,13 +1,8 @@
 #include "PanelConsole.h"
 #include "ImGui\imgui.h"
 
-PanelConsole::PanelConsole(const char* name): Panel(name)
+PanelConsole::PanelConsole(const char* name, float posX, float posY, float width, float height): Panel(name, posX, posY, width, height)
 {
-	posX = 0;
-	posY = 551;
-	width = 602;
-	height = 170;
-
 	active = true;
 }
 

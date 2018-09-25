@@ -8,7 +8,7 @@
 class Panel
 {
 public:
-	Panel(const char* name): name(name){}
+	Panel(const char* name, float posX,float posY,float width,float height): name(name),posX(posX),posY(posY),width(width),height(height){}
 	virtual ~Panel() {}
 
 	virtual void Draw() {}

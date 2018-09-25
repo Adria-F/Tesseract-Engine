@@ -261,3 +261,9 @@ Capsule* ModulePhysics3D::AddCapsule(LineSegment height, float radius)
 
 
 
+bool ModulePhysics3D::Save(rapidjson::Document& document) {
+	return true;
+}
+bool ModulePhysics3D::Load(rapidjson::Document& document) {
+	return true;
+}

@@ -66,6 +66,9 @@ public:
 		return mouse_y_motion;
 	}
 
+	bool Save(rapidjson::Document& document);
+	bool Load(rapidjson::Document& document);
+
 public:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];

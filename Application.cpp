@@ -177,3 +177,45 @@ void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
 }
+
+bool Application::LoadGame()
+{
+	bool ret=false;
+
+	rapidjson::Document document;
+	FILE* fp = fopen("load.json", "rb");
+	char readBuffer[65536];
+
+	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+	document.ParseStream(is);
+	fclose(fp);
+
+	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
+	{
+		ret = (*item)->Load(document);
+	}
+
+	return ret;
+}
+
+bool Application::SaveGame()
+{
+	bool ret = false;
+
+	rapidjson::Document document;
+	FILE* fp = fopen("save.json", "rb");
+	char readBuffer[65536];
+
+	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+	document.ParseStream(is);
+	fclose(fp);
+	
+	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
+	{
+		ret = (*item)->Save(document);
+	}
+	
+	return ret;
+}

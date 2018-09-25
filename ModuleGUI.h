@@ -26,6 +26,9 @@ public:
 	void logFPS(float fps, float ms);
 	void AddLog(const char* log);
 
+	bool Save(rapidjson::Document& document);
+	bool Load(rapidjson::Document& document);
+
 public:
 
 	std::list<Panel*> panels;

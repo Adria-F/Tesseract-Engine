@@ -18,6 +18,9 @@ public:
 
 	void SetTitle(const char* title);
 
+	bool Save(rapidjson::Document& document);
+	bool Load(rapidjson::Document& document);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;

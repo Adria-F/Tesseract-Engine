@@ -157,3 +157,10 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+bool ModuleRenderer3D::Save(rapidjson::Document& document) {
+	return true;
+}
+bool ModuleRenderer3D::Load(rapidjson::Document& document) {
+	return true;
+}

@@ -183,3 +183,10 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+bool ModuleInput::Save(rapidjson::Document& document) {
+	return true;
+}
+bool ModuleInput::Load(rapidjson::Document& document) {
+	return true;
+}

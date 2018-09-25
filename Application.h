@@ -61,11 +61,15 @@ public:
 
 	void RequestBrowser(const char * url) const;
 
+	bool LoadGame();
+	bool SaveGame();
+
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
 };
 
 extern Application* App;

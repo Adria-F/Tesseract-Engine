@@ -27,6 +27,10 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	bool Save(rapidjson::Document& document);
+
+	bool Load(rapidjson::Document& document);
+
 	void setFxVolume(float volume);
 	int getFxVolume() const;
 	int getMusicVolume() const;

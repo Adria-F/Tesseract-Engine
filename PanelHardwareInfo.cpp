@@ -2,13 +2,8 @@
 #include "ImGui\imgui.h"
 #include "SDL\include\SDL.h"
 
-PanelHardwareInfo::PanelHardwareInfo(const char* name): Panel(name)
+PanelHardwareInfo::PanelHardwareInfo(const char* name, float posX, float posY, float width, float height): Panel(name, posX, posY, width, height)
 {
-	posX = 725;
-	posY = 18;
-	width = 354;
-	height = 438;
-
 	active = true;
 }
 

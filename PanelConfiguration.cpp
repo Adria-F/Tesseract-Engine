@@ -5,14 +5,9 @@
 #include "ImGui\imgui.h"
 #include "MathGeoLib/MathGeoLib.h"
 
-PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
+PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height) : Panel(name, posX, posY, width, height),
 fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE)
 {
-	posX = 725;
-	posY = 18;
-	width = 354;
-	height = 438;
-
 	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
 	nHeight = SCREEN_HEIGHT * SCREEN_SIZE;
 	

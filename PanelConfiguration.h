@@ -12,7 +12,7 @@ class Application;
 class PanelConfiguration : public Panel
 {
 public:
-	PanelConfiguration(const char* name);
+	PanelConfiguration(const char* name, float posX, float posY, float width, float height);
 	~PanelConfiguration();
 
 	void Draw();

@@ -21,6 +21,9 @@ public:
 	float4x4* GetViewMatrix();
 	void setFreeCam(bool freeCam);
 
+	bool Save(rapidjson::Document& document);
+	bool Load(rapidjson::Document& document);
+
 private:
 
 	void CalculateViewMatrix();
