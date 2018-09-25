@@ -233,6 +233,11 @@ void ModuleGUI::AddLog(const char* log)
 		console->AddLog(log);
 }
 
+void ModuleGUI::handleInput(SDL_Event * event)
+{
+	ImGui_ImplSDL2_ProcessEvent(event);
+}
+
 bool ModuleGUI::Save(rapidjson::Document& document) {
 	return true;
 }

@@ -134,6 +134,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
+		App->gui->handleInput(&event);
 		switch (event.type)
 		{
 		case SDL_CONTROLLERBUTTONDOWN:
