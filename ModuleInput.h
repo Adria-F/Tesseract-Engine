@@ -66,7 +66,7 @@ public:
 		return mouse_y_motion;
 	}
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
 public:

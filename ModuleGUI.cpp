@@ -32,18 +32,16 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
-	rapidjson::Value& panels_info = document["panels"];
-	
-	rapidjson::Value& panels_aux = panels_info["Hardware_Info"];
+	rapidjson::Value& panels_aux = document["panels"]["Hardware_Info"];
 	panels.push_back(hardwareInfo = new PanelHardwareInfo(panels_aux["name"].GetString(),panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
-	panels_aux = panels_info["Console"];
+	panels_aux = document["panels"]["Console"];
 	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
-	panels_aux = panels_info["Configuration"];
+	panels_aux = document["panels"]["Configuration"];
 	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
-	panels_aux = panels_info["About"];
+	panels_aux = document["panels"]["About"];
 	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 	return true;
@@ -238,7 +236,21 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-bool ModuleGUI::Save(rapidjson::Document& document) {
+bool ModuleGUI::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+	
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Name", 2, allocator);
+	document.AddMember("Pepe", "paco", allocator);
+
+	rapidjson::Value Obj(rapidjson::kObjectType);
+	Obj.AddMember("tete", "gym\n", allocator);
+	rapidjson::Value Ovj(rapidjson::kObjectType);
+	Ovj.AddMember("tinc", "gana", allocator);
+	Obj.AddMember("pilota", Ovj, allocator);
+	document.AddMember("chistorra", Obj, allocator);
+
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+
 	return true;
 }
 bool ModuleGUI::Load(rapidjson::Document& document) {

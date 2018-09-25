@@ -2,6 +2,7 @@
 #define __MODULEGUI_H__
 
 #include "Module.h"
+
 #include <list>
 
 union SDL_Event;
@@ -29,7 +30,7 @@ public:
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document,rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
 public:

@@ -201,21 +201,24 @@ bool Application::LoadGame()
 
 bool Application::SaveGame()
 {
-	bool ret = false;
+	bool ret = true;
 
 	rapidjson::Document document;
-	FILE* fp = fopen("save.json", "rb");
-	char readBuffer[65536];
+	document.SetObject();
+	FILE* fp = fopen("save.json", "wb");
+	char writeBuffer[655360];
 
-	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+	rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
 
-	document.ParseStream(is);
-	fclose(fp);
-	
-	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
+	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{
-		ret = (*item)->Save(document);
+		ret = (*item)->Save(document, os);
 	}
+
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	document.Accept(writer);
+	
+	fclose(fp);
 	
 	return ret;
 }

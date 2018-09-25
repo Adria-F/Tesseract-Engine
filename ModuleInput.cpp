@@ -185,7 +185,12 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-bool ModuleInput::Save(rapidjson::Document& document) {
+bool ModuleInput::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("name", "input", allocator);
+
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 bool ModuleInput::Load(rapidjson::Document& document) {

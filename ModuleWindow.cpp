@@ -104,7 +104,14 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-bool ModuleWindow:: Save(rapidjson::Document& document) {
+bool ModuleWindow:: Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("window", 2, allocator);
+
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	
+
 	return true;
 }
 bool ModuleWindow::Load(rapidjson::Document& document) {

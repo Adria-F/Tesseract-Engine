@@ -158,7 +158,12 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-bool ModuleRenderer3D::Save(rapidjson::Document& document) {
+bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+	document.AddMember("name", "render", allocator);
+
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 bool ModuleRenderer3D::Load(rapidjson::Document& document) {

@@ -8,6 +8,8 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "ImGui\imgui.h"
 #include "rapidjson/rapidjson.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/filewritestream.h"
 
 #include <list>
 #include <string>

@@ -184,8 +184,11 @@ void ModuleAudio::setMusicVolume(float volume)
 	music_volume = MIX_MAX_VOLUME*volume; //Save it for fading;
 }
 
-bool ModuleAudio::Save(rapidjson::Document& document)
+bool ModuleAudio::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)
 {
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("name", "audio", allocator);
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 

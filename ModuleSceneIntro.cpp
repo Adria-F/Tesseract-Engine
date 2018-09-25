@@ -29,6 +29,17 @@ update_status ModuleSceneIntro::Update(float dt)
 	return ret;
 }
 
+bool ModuleSceneIntro::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("name", "Scene", allocator);
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	return true;
+}
+bool ModuleSceneIntro::Load(rapidjson::Document& document) {
+	return true;
+}
+
 //void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 //{
 //	

@@ -27,7 +27,7 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 
 	bool Load(rapidjson::Document& document);
 

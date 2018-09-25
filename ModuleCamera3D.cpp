@@ -178,8 +178,11 @@ void ModuleCamera3D::CalculateViewMatrix()
 	ViewMatrixInverse = ViewMatrix.Inverted();
 }
 
-bool ModuleCamera3D::Save(rapidjson::Document& document)
+bool ModuleCamera3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)
 {
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("name", "camera", allocator);
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 bool ModuleCamera3D::Load(rapidjson::Document& document)

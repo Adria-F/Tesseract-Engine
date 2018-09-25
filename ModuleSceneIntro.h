@@ -22,6 +22,10 @@ public:
 	bool CleanUp();
 	//void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
+
+	bool Load(rapidjson::Document& document);
+
 public:
 
 	Sphere S_Test_A;

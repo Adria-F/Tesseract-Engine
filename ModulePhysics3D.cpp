@@ -261,7 +261,11 @@ Capsule* ModulePhysics3D::AddCapsule(LineSegment height, float radius)
 
 
 
-bool ModulePhysics3D::Save(rapidjson::Document& document) {
+bool ModulePhysics3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+	
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("name", "physics", allocator);
+	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 bool ModulePhysics3D::Load(rapidjson::Document& document) {

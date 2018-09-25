@@ -18,7 +18,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
 public:

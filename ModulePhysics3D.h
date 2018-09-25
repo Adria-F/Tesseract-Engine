@@ -22,7 +22,7 @@ public:
 	OBB* CreateOBB(float3 position, float3 size, float3 vec_1, float3 vec_2, float3 vec_3);
 	Capsule* AddCapsule(LineSegment height, float radius = 1.0f);
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
 private:

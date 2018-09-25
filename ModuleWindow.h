@@ -18,7 +18,7 @@ public:
 
 	void SetTitle(const char* title);
 
-	bool Save(rapidjson::Document& document);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
 public:

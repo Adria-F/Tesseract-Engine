@@ -274,6 +274,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\config.json" />
+    <None Include="Game\load.json" />
+    <None Include="Game\save.json" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
