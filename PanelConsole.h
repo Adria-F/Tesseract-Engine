@@ -1,9 +1,9 @@
 #ifndef __PANELCONSOLE_H__
 #define __PANELCONSOLE_H__
 
-/*
+/***********************************************************
 	trying this https://github.com/ocornut/imgui/issues/300
-*/
+***********************************************************/
 
 #include "Panel.h"
 #include "ImGui\imgui.h"

@@ -38,7 +38,7 @@ private:
 	float brightness;
 	
 	SDL_DisplayMode mode;
-	
+
 };
 
 #endif // !__PANELCINFIGURATION_H__

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "Globals.h"
 #include "ModuleWindow.h"
 #include "PanelConfiguration.h"
@@ -61,18 +62,84 @@ void PanelConfiguration::Draw()
 		ImGui::Text("Refresh rate: %d", mode.refresh_rate);
 
 		if (ImGui::Checkbox("FullScreen", &fullscreen))
-			windowConfig();
+		{
+			if (fullscreen)
+				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+			else
+				SDL_SetWindowFullscreen(App->window->window, 0);
+		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Resizable", &resizable))
-			windowConfig();
+		{
+			
+			if (resizable)
+				SDL_SetWindowResizable(App->window->window, (SDL_bool)1);
+			else
+				SDL_SetWindowResizable(App->window->window, (SDL_bool)0);
+		}
 
 		ImGui::NewLine();
 		if (ImGui::Checkbox("Borderless", &borderless))
-			windowConfig();
+		{
+			if (borderless)
+				SDL_SetWindowBordered(App->window->window, (SDL_bool)(!borderless));
+			else
+				SDL_SetWindowBordered(App->window->window, (SDL_bool)1);
+		}
 		
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Full Desktop", &full_desktop))
-			windowConfig();
+		{
+			
+			if (full_desktop)
+				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			else
+				SDL_SetWindowFullscreen(App->window->window, 0);
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Renderer 3D"))
+	{
+		if (ImGui::Checkbox("Depth Test", &App->renderer3D->Depth_Test))
+		{
+			if (App->renderer3D->Depth_Test)
+				glEnable(GL_DEPTH_TEST);
+
+			else
+				glDisable(GL_DEPTH_TEST);
+		}
+		if (ImGui::Checkbox("Cull Face", &App->renderer3D->Cull_Face))
+		{
+			if (App->renderer3D->Depth_Test)
+				glEnable(GL_CULL_FACE);
+
+			else
+				glDisable(GL_CULL_FACE);
+		}
+		if (ImGui::Checkbox("Lighting", &App->renderer3D->Lighting))
+		{
+			if (App->renderer3D->Depth_Test)
+				glEnable(GL_LIGHTING);
+
+			else
+				glDisable(GL_LIGHTING);
+		}
+		if (ImGui::Checkbox("Color Material", &App->renderer3D->Color_Material))
+		{
+			if (App->renderer3D->Depth_Test)
+				glEnable(GL_COLOR_MATERIAL);
+
+			else
+				glDisable(GL_COLOR_MATERIAL);
+		}
+		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->Texture_2D))
+		{
+			if (App->renderer3D->Depth_Test)
+				glEnable(GL_TEXTURE_2D);
+
+			else
+				glDisable(GL_TEXTURE_2D);
+		}
 	}
 
 	ImGui::End();
@@ -92,23 +159,5 @@ void PanelConfiguration::addFPS(float fps, float ms)
 
 void PanelConfiguration::windowConfig()
 {
-	Uint32 flags;
 
-	if (fullscreen)
-		SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-	else if (full_desktop)
-		SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	else
-		SDL_SetWindowFullscreen(App->window->window, 0);
-	
-	if (resizable)
-		SDL_SetWindowResizable(App->window->window, (SDL_bool)1);
-	else
-		SDL_SetWindowResizable(App->window->window, (SDL_bool)0);
-
-	if (borderless)
-		SDL_SetWindowBordered(App->window->window, (SDL_bool)(!borderless));
-	else
-		SDL_SetWindowBordered(App->window->window, (SDL_bool)1);	
-	
 }

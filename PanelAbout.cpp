@@ -39,7 +39,7 @@ void PanelAbout::Draw()
 	ImGui::Text("Libraries used:");
 	if (ImGui::Selectable("SDL - version 2.0.8", false, 0, { 135, 13 }))
 		App->RequestBrowser("https://www.libsdl.org/");
-	if (ImGui::Selectable("ImGui - version 1.65", false, 0, { 142, 13 }))
+	if (ImGui::Selectable("ImGui - version %s", false, 0, { 142, 13 }))
 		App->RequestBrowser("https://github.com/ocornut/imgui");
 	if (ImGui::Selectable("PCG - version (C Implementation) 0.94", false, 0, { 260, 13 }))
 		App->RequestBrowser("http://www.pcg-random.org/");
@@ -52,6 +52,7 @@ void PanelAbout::Draw()
 	ImGui::NewLine();
 	ImGui::Text("This engine is licensed under the Public\n"
 				"Domain, see LICENSE for more information"
+
 	);
 
 	ImGui::End();

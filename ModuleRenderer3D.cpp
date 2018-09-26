@@ -1,11 +1,5 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "Glew/include/glew.h"
-#include "SDL\include\SDL_opengl.h"
-
-#include <gl/GL.h>
-#include <gl/GLU.h>
-
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -186,6 +180,7 @@ bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteS
 	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
+
 bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 	return true;
 }
