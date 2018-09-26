@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -14,6 +16,7 @@
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module( start_enabled)
 {
@@ -37,8 +40,22 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		ret = false;
 	}
 	
+	GLenum error = glewInit();
+	if (error != GL_NO_ERROR)
+	{
+		LOG("Error initializing glew! Error: %s\n", gluErrorString(error));
+		ret = false;
+	}
+
 	if(ret == true)
 	{
+		LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+
+		LOG("Vendor: %s", glGetString(GL_VENDOR));
+		LOG("Renderer: %s", glGetString(GL_RENDERER));
+		LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
@@ -72,6 +89,8 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		
 		//Initialize clear color
 		glClearColor(0.f, 0.f, 0.f, 1.f);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Check for error
 		error = glGetError();
@@ -112,11 +131,12 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	//glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf((float*)App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
