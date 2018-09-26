@@ -1,6 +1,5 @@
 #pragma once
 #include "Module.h"
-#include "glmath.h"
 #include "Light.h"
 
 #define MAX_LIGHTS 8
@@ -25,13 +24,14 @@ public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	float3x3 NormalMatrix;
+	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 
-	bool Depth_Test = false;
-	bool Cull_Face = false;
-	bool Lighting = false;
-	bool Color_Material = false;
+	bool Depth_Test = true;
+	bool Cull_Face = true;
+	bool Lighting = true;
+	bool Color_Material = true;
 	bool Texture_2D = false;
+	bool Wireframe = false;
 };

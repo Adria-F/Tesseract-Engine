@@ -40,7 +40,6 @@ bool ModuleSceneIntro::Load(rapidjson::Document& document) {
 	return true;
 }
 
-//void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-//{
-//	
-//}
+void ModuleSceneIntro::Draw()const
+{
+}

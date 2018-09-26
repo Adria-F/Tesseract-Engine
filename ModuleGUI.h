@@ -33,6 +33,8 @@ public:
 	bool Save(rapidjson::Document& document,rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
+	void Draw();
+
 public:
 
 	std::list<Panel*> panels;

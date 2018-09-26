@@ -26,6 +26,8 @@ public:
 
 	bool Load(rapidjson::Document& document);
 
+	void Draw()const;
+
 public:
 
 	Sphere S_Test_A;

@@ -876,6 +876,8 @@ public:
 	/// matrix differs from [0 0 0 1].
 	bool ContainsProjection(float epsilon = 1e-3f) const;
 
+	float4x4 Perspective(float fovy, float aspect, float n, float f);
+
 #ifdef MATH_ENABLE_STL_SUPPORT
 	/// Returns a string representation of form "(m00, m01, m02, m03; m10, m11, m12, m13; ... )".
 	std::string ToString() const;

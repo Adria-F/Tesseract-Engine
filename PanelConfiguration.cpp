@@ -140,6 +140,14 @@ void PanelConfiguration::Draw()
 			else
 				glDisable(GL_TEXTURE_2D);
 		}
+		if (ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe))
+		{
+			if (App->renderer3D->Depth_Test)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+			else
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 	}
 
 	ImGui::End();

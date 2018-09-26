@@ -144,6 +144,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	App->gui->Draw();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -165,8 +167,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
+	ProjectionMatrix.Perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	GLfloat projectgl;
+	glLoadMatrixf((float*)&ProjectionMatrix);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
