@@ -54,8 +54,8 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
-		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
+		//Initialize Projection Matrix. Specify which matrix is the current matrix
+		glMatrixMode(GL_PROJECTION);//Applies subsequent matrix operations to the projection matrix stack. (screen position)
 		glLoadIdentity();
 
 		//Check for error
@@ -66,7 +66,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 			ret = false;
 		}
 
-		//Initialize Modelview Matrix
+		//Initialize Modelview Matrix.Specify which matrix is the current matrix(camera position)
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -78,12 +78,15 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 			ret = false;
 		}
 		
+		//specify implementation of The most correct, or highest quality, option should be chosen.
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);
+		glClearDepth(1.0f);//Specifies the depth value used when the depth buffer is cleared.
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(0.f, 0.f, 0.f, 1.f);//clear values for the color buffers. The initial values are all 0.
 
+
+		//specify pixel arithmetic glBlendFunc(rgb source blending factors, rgb destination blending factors)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Check for error
