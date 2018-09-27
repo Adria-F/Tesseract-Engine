@@ -147,6 +147,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f);
+	glEnd();
+	glLineWidth(1.0f);
+
 	App->gui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);

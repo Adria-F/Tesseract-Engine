@@ -47,6 +47,8 @@ void PanelAbout::Draw()
 		App->RequestBrowser("https://github.com/juj/MathGeoLib");
 	if (ImGui::Selectable("RapidJSON - version 1.1.0", false, 0, { 175, 13 }))
 		App->RequestBrowser("http://rapidjson.org/index.html");
+	if (ImGui::Selectable((const char*)("Glew - version %s", glewGetString(GLEW_VERSION)), false, 0, { 142, 13 }))
+		App->RequestBrowser("https://github.com/nigels-com/glew");
 
 	//License
 	ImGui::NewLine();

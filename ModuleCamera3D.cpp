@@ -16,10 +16,8 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	Y = vec(0.0f, 1.0f, 0.0f);
 	Z = vec(0.0f, 0.0f, 1.0f);
 
-	Position = vec(0.0f, 50.0f, 0.0f);
+	Position = vec(0.0f, 0.0f, 5.0f);
 	Reference = vec(0.0f, 0.0f, 0.0f);
-
-	offset_to_player = vec(0.0f, 14.0f, -12.5f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()

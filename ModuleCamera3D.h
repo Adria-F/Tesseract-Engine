@@ -36,7 +36,6 @@ public:
 private:
 
 	float4x4 ViewMatrix, ViewMatrixInverse;
-	vec offset_to_player;
 };
 
 #endif //__MODULE_CAMERA_3D_H__
