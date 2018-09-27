@@ -18,7 +18,7 @@ public:
 	void Look(const vec &Position, const vec &Reference, bool RotateAroundReference = false);
 	void LookAt(const vec &Spot);
 	void Move(const vec &Movement);
-	float4x4* GetViewMatrix();
+	float* GetViewMatrix();
 	void setFreeCam(bool freeCam);
 
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
@@ -27,7 +27,7 @@ public:
 private:
 
 	void CalculateViewMatrix();
-	bool freeCam = false;
+	bool freeCam = true;
 
 public:
 	

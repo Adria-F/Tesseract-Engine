@@ -18,6 +18,8 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 
 	Position = vec(0.0f, 0.0f, 5.0f);
 	Reference = vec(0.0f, 0.0f, 0.0f);
+
+	freeCam = true;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -158,9 +160,9 @@ void ModuleCamera3D::Move(const vec &Movement)
 }
 
 // -----------------------------------------------------------------
-float4x4* ModuleCamera3D::GetViewMatrix()
+float* ModuleCamera3D::GetViewMatrix()
 {
-	return &ViewMatrix;
+	return (float*)ViewMatrix.v;
 }
 
 void ModuleCamera3D::setFreeCam(bool freeCam)

@@ -7,6 +7,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
+#include "Primitive.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -133,7 +134,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf((float*)App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -153,6 +154,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glVertex3f(0.0f, 10.0f, 0.0f);
 	glEnd();
 	glLineWidth(1.0f);
+
+	/*MPlane base_plane(0, 1, 0, 0);
+	base_plane.axis = true;
+	base_plane.Render();*/
 
 	App->gui->Draw();
 
