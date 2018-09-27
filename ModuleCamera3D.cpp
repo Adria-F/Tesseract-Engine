@@ -108,6 +108,9 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
+	LOG("Camera Position:");
+	LOG("X: %f | Y: %f | Z: %f", Position.x, Position.y, Position.z);
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
