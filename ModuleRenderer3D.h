@@ -2,6 +2,10 @@
 #include "Module.h"
 #include "Light.h"
 
+#include <array>
+
+using namespace std;
+
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
@@ -11,6 +15,7 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init(rapidjson::Document& document);
+	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
@@ -34,4 +39,12 @@ public:
 	bool Color_Material = true;
 	bool Texture_2D = false;
 	bool Wireframe = false;
+
+	array<float,108> box;
+	array<float, 24> box2;
+	array<uint, 36> indices;
+
+
+	uint my_id = 0;
+	uint my_ids = 0;
 };

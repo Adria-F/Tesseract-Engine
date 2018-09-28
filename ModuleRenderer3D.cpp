@@ -126,6 +126,50 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	bool ret = true;
+
+	box = { 25.0f, 10.0f, 0.0f,35.0f, 0.0f, 0.0f,25.0f, 0.0f, 0.0f,
+		25.0f, 10.0f, 0.0f,35.0f, 10.0f, 0.0f,35.0f, 0.0f, 0.0f,
+
+	35.0f, 10.0f, 0.0f,35.0f, 0.0f, 10.0f,35.0f, 0.0f, 0.0f,
+	35.0f, 10.0f, 0.0f,35.0f, 10.0f, 10.0f,35.0f, 0.0f, 10.0f,
+
+	25.0f, 10.0f, 10.0f,35.0f, 0.0f, 10.0f,35.0f, 10.0f, 10.0f,
+	25.0f, 10.0f, 10.0f,25.0f, 0.0f, 10.0f,35.0f, 0.0f, 10.0f,
+
+	25.0f, 0.0f, 0.0f,25.0f, 0.0f, 10.0f,25.0f, 10.0f, 10.0f,
+	25.0f, 10.0f, 0.0f,25.0f, 0.0f, 0.0f,25.0f, 10.0f, 10.0f,
+
+	35.0f, 10.0f, 0.0f,25.0f, 10.0f, 0.0f,25.0f, 10.0f, 10.0f,
+	25.0f, 10.0f, 10.0f,35.0f, 10.0f, 10.0f,35.0f, 10.0f, 0.0f,
+
+	35.0f, 0.0f, 10.0f,25.0f, 0.0f, 10.0f,35.0f, 0.0f, 0.0f,
+	25.0f, 0.0f, 10.0f,25.0f, 0.0f, 0.0f ,35.0f, 0.0f, 0.0f };
+
+
+	glGenBuffers(1,(GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(float)*3*36,&box[0], GL_STATIC_DRAW);
+
+	box2 = {-25.f,0.f,10.f,-15.f,0.f,10.f,-25.f,10.f,10.f,-15.f,10.f,10.f, // a(0),b(1),c(2),d(3)
+		-25.f,0.f,0.f,-15.f,0.f,0.f,-25.f,10.f,0.f,-15.f,10.f,0.f };//e(4), f(5),g(6),h(7)
+
+	indices = { 0,1,2, 1,3,2,
+	3,1,5,  5,7,3,
+	7,5,4,  6,7,4,
+	6,4,0,  0,2,6,
+	6,2,3,  6,3,7,
+	0,4,5,  0,5,1};
+
+	glGenBuffers(1, (GLuint*)&(my_ids));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_ids);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* 36, &indices[0], GL_STATIC_DRAW);
+
+	return ret;
+}
+
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
@@ -171,6 +215,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glEnd();
 	glLineWidth(1.0f);
+
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_ids);
+	glVertexPointer(3, GL_FLOAT, 0, &box2[0]);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
