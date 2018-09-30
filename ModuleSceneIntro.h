@@ -5,11 +5,16 @@
 #include "Timer.h"
 #include "MathGeoLib/MathGeoLib.h"
 
+#include <list>
+
 #define ROAD_HEIGHT 9
 #define ROAD_WIDTH 15
 #define INVISIBLE_WALL 12
 #define MAP_SCALE 2
 
+using namespace std;
+
+class Primitive;
 
 class ModuleSceneIntro : public Module
 {
@@ -34,5 +39,7 @@ public:
 	Sphere S_Test_B;
 	AABB   AABB_Test_A;
 	AABB   AABB_Test_B;
+
+	list<Primitive> ShapesToDraw;
 
 };

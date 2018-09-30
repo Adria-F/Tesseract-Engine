@@ -192,6 +192,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
+	if (Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	glLineWidth(2.0f);
 	glBegin(GL_TRIANGLES);
 

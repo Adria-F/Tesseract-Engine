@@ -2,7 +2,8 @@
 #include "Module.h"
 #include "Light.h"
 
-#include <array>
+#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -32,7 +33,6 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-
 	bool Depth_Test = true;
 	bool Cull_Face = true;
 	bool Lighting = true;
@@ -40,9 +40,9 @@ public:
 	bool Texture_2D = false;
 	bool Wireframe = false;
 
-	array<float,108> box;
-	array<float, 24> box2;
-	array<uint, 36> indices;
+	vector<float> box;
+	vector<float> box2;
+	vector<uint> indices;
 
 
 	uint my_id = 0;

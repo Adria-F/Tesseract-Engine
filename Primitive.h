@@ -1,6 +1,9 @@
 #pragma once
 #include "Color.h"
+#include <vector>
 #include "MathGeoLib/MathGeoLib.h"
+
+using namespace std;
 
 enum PrimitiveTypes
 {
@@ -31,8 +34,15 @@ public:
 	float4x4 transform;
 	bool axis,wire;
 
+	vector<float> shape;
+	vector<uint> indices;
+
+	uint my_id = 0;
+
 protected:
+	
 	PrimitiveTypes type;
+
 };
 
 // ============================================

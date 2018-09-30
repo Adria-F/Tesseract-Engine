@@ -110,7 +110,7 @@ void PanelConfiguration::Draw()
 		}
 		if (ImGui::Checkbox("Cull Face", &App->renderer3D->Cull_Face))
 		{
-			if (App->renderer3D->Depth_Test)
+			if (App->renderer3D->Cull_Face)
 				glEnable(GL_CULL_FACE);
 
 			else
@@ -118,7 +118,7 @@ void PanelConfiguration::Draw()
 		}
 		if (ImGui::Checkbox("Lighting", &App->renderer3D->Lighting))
 		{
-			if (App->renderer3D->Depth_Test)
+			if (App->renderer3D->Lighting)
 				glEnable(GL_LIGHTING);
 
 			else
@@ -126,7 +126,7 @@ void PanelConfiguration::Draw()
 		}
 		if (ImGui::Checkbox("Color Material", &App->renderer3D->Color_Material))
 		{
-			if (App->renderer3D->Depth_Test)
+			if (App->renderer3D->Color_Material)
 				glEnable(GL_COLOR_MATERIAL);
 
 			else
@@ -134,20 +134,14 @@ void PanelConfiguration::Draw()
 		}
 		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->Texture_2D))
 		{
-			if (App->renderer3D->Depth_Test)
+			if (App->renderer3D->Texture_2D)
 				glEnable(GL_TEXTURE_2D);
 
 			else
 				glDisable(GL_TEXTURE_2D);
 		}
-		if (ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe))
-		{
-			if (App->renderer3D->Depth_Test)
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-			else
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+		ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe);
+		
 	}
 
 	ImGui::End();
