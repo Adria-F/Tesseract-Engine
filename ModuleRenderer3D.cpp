@@ -152,6 +152,7 @@ bool ModuleRenderer3D::Start()
 	glGenBuffers(1,(GLuint*)&(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER,sizeof(float)*3*36,&box[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	box2 = {-25.f,0.f,10.f,-15.f,0.f,10.f,-25.f,10.f,10.f,-15.f,10.f,10.f, // a(0),b(1),c(2),d(3)
 		-25.f,0.f,0.f,-15.f,0.f,0.f,-25.f,10.f,0.f,-15.f,10.f,0.f };//e(4), f(5),g(6),h(7)
@@ -166,6 +167,10 @@ bool ModuleRenderer3D::Start()
 	glGenBuffers(1, (GLuint*)&(my_ids));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_ids);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* 36, &indices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//Sphere --------------------------------
+	sphere = new MSphere(10, 6, 12);
 
 	return ret;
 }
@@ -192,10 +197,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
 	if (Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	//Direct Mode --------------------------------
 	glLineWidth(2.0f);
 	glBegin(GL_TRIANGLES);
 
@@ -220,7 +227,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glEnd();
 	glLineWidth(1.0f);
 
-
+	//Vertex Array -----------------------------
 	glEnableClientState(GL_VERTEX_ARRAY);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
@@ -228,7 +235,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	
+	//Indices ----------------------------------
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_ids);
 	glVertexPointer(3, GL_FLOAT, 0, &box2[0]);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
@@ -236,6 +243,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 
+	//Sphere Test ---------------------------
+	sphere->Render();
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;

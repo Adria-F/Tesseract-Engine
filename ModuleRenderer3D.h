@@ -9,6 +9,8 @@ using namespace std;
 
 #define MAX_LIGHTS 8
 
+class MSphere;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -44,6 +46,7 @@ public:
 	vector<float> box2;
 	vector<uint> indices;
 
+	MSphere* sphere = nullptr;
 
 	uint my_id = 0;
 	uint my_ids = 0;
