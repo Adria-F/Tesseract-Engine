@@ -246,6 +246,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Sphere Test ---------------------------
 	sphere->Render();
 
+	//Scene Test  ---------------------------
+
+	App->scene_intro->Draw();
+
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
 	base_plane.Render();

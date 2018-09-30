@@ -31,7 +31,7 @@ public:
 
 	bool Load(rapidjson::Document& document);
 
-	void Draw()const;
+	void Draw();
 
 public:
 
@@ -40,6 +40,6 @@ public:
 	AABB   AABB_Test_A;
 	AABB   AABB_Test_B;
 
-	list<Primitive> ShapesToDraw;
+	list<Primitive*> ShapesToDraw;
 
 };

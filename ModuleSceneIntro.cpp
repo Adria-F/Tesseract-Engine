@@ -14,6 +14,9 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));
+	ShapesToDraw.push_back(new MCylinder(5, 10, 10, 20, {0,0,30}));
+
 	return ret;
 }
 
@@ -41,6 +44,10 @@ bool ModuleSceneIntro::Load(rapidjson::Document& document) {
 	return true;
 }
 
-void ModuleSceneIntro::Draw()const
+void ModuleSceneIntro::Draw()
 {
+	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
+	{
+		(*it)->Render();
+	}
 }

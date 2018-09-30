@@ -103,13 +103,42 @@ void Primitive::Scale(float x, float y, float z)
 }
 
 // CUBE ============================================
-Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+MCube::MCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
+	float sx = size.x * 0.5f;
+	float sy = size.y * 0.5f;
+	float sz = size.z * 0.5f;
+
+	shape.push_back(center.x - sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//A
+	shape.push_back(center.x + sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//B
+	shape.push_back(center.x - sx); shape.push_back(center.y + sy); shape.push_back(center.z + sz);	//C
+	shape.push_back(center.x + sx); shape.push_back(center.y + sy); shape.push_back(center.z + sz);	//D
+																						   
+	shape.push_back(center.x - sx); shape.push_back(center.y - sy); shape.push_back(center.z - sz);	//E
+	shape.push_back(center.x + sx); shape.push_back(center.y - sy); shape.push_back(center.z - sz);	//F
+	shape.push_back(center.x - sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//G
+	shape.push_back(center.x + sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//H
+
+	indices.push_back(0); indices.push_back(1); indices.push_back(2);
+	indices.push_back(1); indices.push_back(3); indices.push_back(2);
+	indices.push_back(3); indices.push_back(1); indices.push_back(5);
+	indices.push_back(5); indices.push_back(7); indices.push_back(3);
+	indices.push_back(7); indices.push_back(5); indices.push_back(4);
+	indices.push_back(6); indices.push_back(7); indices.push_back(4);
+	indices.push_back(6); indices.push_back(4); indices.push_back(0);
+	indices.push_back(0); indices.push_back(2); indices.push_back(6);
+	indices.push_back(6); indices.push_back(2); indices.push_back(3);
+	indices.push_back(6); indices.push_back(3); indices.push_back(7);
+	indices.push_back(0); indices.push_back(4); indices.push_back(5);
+	indices.push_back(0); indices.push_back(5); indices.push_back(1);
+
+	generateBuffer();
+
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
@@ -186,8 +215,95 @@ MCylinder::MCylinder() : Primitive(), radius(1.0f), height(1.0f)
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-MCylinder::MCylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+MCylinder::MCylinder(float radius, float heigh, int rings, int sectors,vec pos) : Primitive(), radius(radius), height(height)
 {
+	vec initialPos = pos;
+
+	float x, y, z, xz;                              // vertex position
+
+	float sectorStep = 2 * pi / sectors;
+	float stackStep = pi / rings;
+	float sectorAngle, stackAngle;
+	float rise = heigh / rings;
+
+	for (int i = 0; i <= rings; ++i)
+	{
+		stackAngle = pi / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+		y = initialPos.y + rise*i;              // r * sin(u)
+																   // add (sectorCount+1) vertices per stack
+																   // the first and last vertices have same position and normal, but different tex coods
+		for (int j = 0; j <= sectors; ++j)
+		{
+			sectorAngle = j * sectorStep;
+
+			// vertex position (x, y, z)
+			z = initialPos.z + radius * cosf(sectorAngle);             // r * cos(u) * cos(v)
+			x = initialPos.x + radius * sinf(sectorAngle);             // r * cos(u) * sin(v)
+			shape.push_back(x);
+			shape.push_back(y);
+			shape.push_back(z);
+		}
+	}
+
+	shape.push_back(initialPos.x);
+	shape.push_back(initialPos.y);
+	shape.push_back(initialPos.z);
+
+	LOG("%f %f %f", initialPos.x, initialPos.y, initialPos.z);
+
+	shape.push_back(initialPos.x);
+	shape.push_back(initialPos.y + heigh);
+	shape.push_back(initialPos.z);
+	
+
+	int k1, k2;
+
+	//bottom circle;
+	for (int i = 0; i < sectors; i++)
+	{
+		indices.push_back(i);
+		indices.push_back(((int)shape.size() / 3) - 2);
+		indices.push_back(i+1);
+	}
+
+	//Tube
+	for (int i = 0; i < rings; ++i)
+	{
+		k1 = i * (sectors + 1);     // beginning of current stack
+		k2 = k1 + sectors + 1;      // beginning of next stack
+
+		for (int j = 0; j < sectors; ++j, ++k1, ++k2)
+		{
+			// 2 triangles per sector excluding 1st and last stacks
+			if (i >= 0)
+			{
+				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1);
+				
+			}
+
+			if (i != rings)
+			{
+				indices.push_back(k2 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
+			}
+		}
+	}
+	
+	//Bottom Circle
+	int last_vertex = (shape.size()/3)-sectors-3;
+	for (int i = 0; i < sectors; i++)
+	{
+		indices.push_back(((int)shape.size() / 3) - 1);
+		indices.push_back(i+ last_vertex);
+		indices.push_back(i + last_vertex + 1);
+	}
+
+	generateBuffer();
+
+
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 

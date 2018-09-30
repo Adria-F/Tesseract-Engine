@@ -49,11 +49,11 @@ protected:
 };
 
 // ============================================
-class Cube : public Primitive
+class MCube : public Primitive
 {
 public :
-	Cube();
-	Cube(float sizeX, float sizeY, float sizeZ);
+	MCube();
+	MCube(float sizeX, float sizeY, float sizeZ, vec center);
 public:
 	vec size;
 };
@@ -73,7 +73,7 @@ class MCylinder : public Primitive
 {
 public:
 	MCylinder();
-	MCylinder(float radius, float height);
+	MCylinder(float radius, float height,int rings, int sectors, vec pos);
 public:
 	float radius;
 	float height;
