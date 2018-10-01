@@ -19,6 +19,8 @@ bool ModuleSceneIntro::Start()
 	ShapesToDraw.push_back(new MArrow(10, 20, 0, {0,20,0}));
 	ShapesToDraw.push_back(new MAxis(5, { 15,20,0 }));
 	ShapesToDraw.push_back(new MCapsule(5, 10, 10, 20, { 20,0,30 }));
+	ShapesToDraw.push_back(new MSphere(10, 6, 12, { 0.0f, 0.0f, -20.0f }));
+	ShapesToDraw.push_back(new MFrustum(10, 10, 5, 3, { -30.0f, 20.0f, 0.0f }));
 
 	return ret;
 }
@@ -53,4 +55,9 @@ void ModuleSceneIntro::Draw()
 	{
 		(*it)->Render();
 	}
+}
+
+void ModuleSceneIntro::newScene()
+{
+	ShapesToDraw.clear();
 }

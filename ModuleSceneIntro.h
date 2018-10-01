@@ -33,6 +33,8 @@ public:
 
 	void Draw();
 
+	void newScene();
+
 public:
 
 	Sphere S_Test_A;

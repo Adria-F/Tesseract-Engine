@@ -169,9 +169,6 @@ bool ModuleRenderer3D::Start()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* 36, &indices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	//Sphere --------------------------------
-	sphere = new MSphere(10, 6, 12, { 0.0f, 0.0f, -20.0f });
-
 	return ret;
 }
 
@@ -243,11 +240,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	//Sphere Test ---------------------------
-	sphere->Render();
 
-	//Scene Test  ---------------------------
-
+	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
 
 	MPlane base_plane(0, 1, 0, 0);

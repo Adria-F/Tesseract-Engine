@@ -79,6 +79,8 @@ update_status ModuleGUI::Update(float dt)
 				App->SaveGame();
 			if (ImGui::MenuItem("Load"))
 				App->LoadGame();
+			if (ImGui::MenuItem("New Scene"))
+				App->scene_intro->newScene();
 			if (ImGui::MenuItem("Close", "ESC"))
 				status = UPDATE_STOP;
 

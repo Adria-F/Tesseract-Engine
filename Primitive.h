@@ -10,10 +10,13 @@ enum PrimitiveTypes
 	Primitive_Point,
 	Primitive_Line,
 	Primitive_Arrow,
+	Primitive_Axis,
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
-	Primitive_Cylinder
+	Primitive_Cylinder,
+	Primitive_Capsule,
+	Primitive_Frustum
 };
 
 class Primitive
@@ -138,4 +141,15 @@ public:
 public:
 	float radius;
 	float height;
+};
+
+// ============================================
+class MFrustum : public Primitive
+{
+public:
+	MFrustum();
+	MFrustum(float distance, float depth, float width, float height, vec center);
+public:
+	vec center;
+	float distance, width, depth, height;
 };

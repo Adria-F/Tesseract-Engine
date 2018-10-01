@@ -1,7 +1,7 @@
 {
   "window": {
-    "width": 1080,
-    "height": 720,
+    "width": 1440,
+    "height": 810,
     "screen_size": 1,
     "fullscreen": false,
     "resizable": true,
@@ -13,7 +13,7 @@
       "name": "Hardware Info",
       "height": 438,
       "width": 354,
-      "pos_X": 725,
+      "pos_X": 1086,
       "pos_Y": 18
     },
     "Console": {
@@ -21,27 +21,27 @@
       "height": 170,
       "width": 602,
       "pos_X": 0,
-      "pos_Y": 551
+      "pos_Y": 642
     },
     "Configuration": {
       "name": "Configuration",
       "height": 438,
       "width": 354,
-      "pos_X": 725,
+      "pos_X": 1086,
       "pos_Y": 18
     },
     "About": {
       "name": "About",
       "height": 438,
       "width": 354,
-      "pos_X": 725,
+      "pos_X": 1086,
       "pos_Y": 18
     },
     "Elements": {
       "name": "3D Elements",
       "height": 438,
       "width": 354,
-      "pos_X": 725,
+      "pos_X": 0,
       "pos_Y": 18
     }
   }

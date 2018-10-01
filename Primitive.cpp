@@ -428,10 +428,12 @@ void MArrow::Render() const
 
 MAxis::MAxis(): Primitive(), origin(0,0,0), size(1)
 {
+	type = PrimitiveTypes::Primitive_Axis;
 }
 
 MAxis::MAxis(float size, vec pos): Primitive(), origin(pos.x, pos.y, pos.z), size(size)
 {
+	type = PrimitiveTypes::Primitive_Axis;
 }
 
 void MAxis::Render() const
@@ -468,10 +470,13 @@ void MAxis::Render() const
 
 MCapsule::MCapsule()
 {
+	type = PrimitiveTypes::Primitive_Capsule;
 }
 
 MCapsule::MCapsule(float radius, float height, int rings, int sectors, vec pos)
 {
+	type = PrimitiveTypes::Primitive_Capsule;
+
 	float x, y, z, xz;                              // vertex position
 
 	float sectorStep = 2 * pi / sectors;
@@ -528,6 +533,49 @@ MCapsule::MCapsule(float radius, float height, int rings, int sectors, vec pos)
 			}
 		}
 	}
+
+	generateBuffer();
+}
+
+MFrustum::MFrustum() : distance(1.0f), depth(5.0f), width(5.0f), height(3.0f), center({0.0f,0.0f,0.0f})
+{
+	type = PrimitiveTypes::Primitive_Frustum;
+}
+
+MFrustum::MFrustum(float distance, float depth, float width, float height, vec center): distance(distance), depth(depth), width(width), height(height), center(center)
+{
+	type = PrimitiveTypes::Primitive_Frustum;
+
+	float frontHalfWidth = ((width / 2) / distance)*(distance + depth);
+	float frontHalfHeight = ((height / 2) / distance)*(distance + depth);
+
+	shape.push_back(center.x - width / 2); shape.push_back(center.y + height / 2); shape.push_back(center.z - distance); //A(0)
+	shape.push_back(center.x + width / 2); shape.push_back(center.y + height / 2); shape.push_back(center.z - distance); //B(1)
+	shape.push_back(center.x - width / 2); shape.push_back(center.y - height / 2); shape.push_back(center.z - distance); //C(2)
+	shape.push_back(center.x + width / 2); shape.push_back(center.y - height / 2); shape.push_back(center.z - distance); //D(3)
+
+	shape.push_back(center.x - frontHalfWidth); shape.push_back(center.y + frontHalfHeight); shape.push_back(center.z - (distance+depth)); //E(4)
+	shape.push_back(center.x + frontHalfWidth); shape.push_back(center.y + frontHalfHeight); shape.push_back(center.z - (distance+depth)); //F(5)
+	shape.push_back(center.x - frontHalfWidth); shape.push_back(center.y - frontHalfHeight); shape.push_back(center.z - (distance+depth)); //G(6)
+	shape.push_back(center.x + frontHalfWidth); shape.push_back(center.y - frontHalfHeight); shape.push_back(center.z - (distance+depth)); //H(7)
+
+	indices.push_back(0); indices.push_back(2); indices.push_back(1);
+	indices.push_back(1); indices.push_back(2); indices.push_back(3);
+
+	indices.push_back(1); indices.push_back(3); indices.push_back(7);
+	indices.push_back(5); indices.push_back(1); indices.push_back(7);
+
+	indices.push_back(0); indices.push_back(1); indices.push_back(4);
+	indices.push_back(4); indices.push_back(1); indices.push_back(5);
+
+	indices.push_back(0); indices.push_back(6); indices.push_back(2);
+	indices.push_back(0); indices.push_back(4); indices.push_back(6);
+
+	indices.push_back(2); indices.push_back(6); indices.push_back(3);
+	indices.push_back(3); indices.push_back(6); indices.push_back(7);
+
+	indices.push_back(4); indices.push_back(7); indices.push_back(6);
+	indices.push_back(4); indices.push_back(5); indices.push_back(7);
 
 	generateBuffer();
 }
