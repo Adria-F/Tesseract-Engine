@@ -16,6 +16,9 @@ bool ModuleSceneIntro::Start()
 
 	ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));
 	ShapesToDraw.push_back(new MCylinder(5, 10, 10, 20, {0,0,30}));
+	ShapesToDraw.push_back(new MArrow(10, 20, 0, {0,20,0}));
+	ShapesToDraw.push_back(new MAxis(5, { 15,20,0 }));
+	ShapesToDraw.push_back(new MCapsule(5, 10, 10, 20, { 20,0,30 }));
 
 	return ret;
 }

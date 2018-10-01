@@ -9,6 +9,7 @@ enum PrimitiveTypes
 {
 	Primitive_Point,
 	Primitive_Line,
+	Primitive_Arrow,
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
@@ -92,6 +93,30 @@ public:
 };
 
 // ============================================
+class MArrow : public Primitive
+{
+public:
+	MArrow();
+	MArrow(float x, float y, float z, vec pos);
+	void Render() const;
+public:
+	vec origin;
+	vec destination;
+};
+
+// ============================================
+class MAxis : public Primitive
+{
+public:
+	MAxis();
+	MAxis(float size, vec pos);
+	void Render() const;
+public:
+	vec origin;
+	float size;
+};
+
+// ============================================
 class MPlane : public Primitive
 {
 public:
@@ -102,4 +127,15 @@ public:
 public:
 	vec normal;
 	float constant;
+};
+
+// ============================================
+class MCapsule : public Primitive
+{
+public:
+	MCapsule();
+	MCapsule(float radius, float height, int rings, int sectors, vec pos);
+public:
+	float radius;
+	float height;
 };
