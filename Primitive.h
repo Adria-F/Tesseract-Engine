@@ -63,7 +63,7 @@ class MSphere : public Primitive
 {
 public:
 	MSphere();
-	MSphere(float radius, int rings, int sectors);
+	MSphere(float radius, int rings, int sectors, vec pos);
 public:
 	float radius;
 };

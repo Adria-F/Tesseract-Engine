@@ -143,16 +143,16 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 }
 
 // SPHERE ============================================
-MSphere::MSphere() : MSphere(1, 6, 12)
+MSphere::MSphere() : MSphere(1, 6, 12, { 0,0,0 })
 {
 }
 
-MSphere::MSphere(float radius, int rings, int sectors) : Primitive(), radius(radius)
+MSphere::MSphere(float radius, int rings, int sectors, vec pos) : Primitive(), radius(radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 
 	//TEMP
-	vec initialPos = { 0.0f, 0.0f, -20.0f };
+	vec initialPos = pos;
 
 	float x, y, z, xz;                              // vertex position
 

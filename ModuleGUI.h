@@ -12,6 +12,7 @@ class PanelConfiguration;
 class PanelConsole;
 class PanelAbout;
 class PanelHardwareInfo;
+class PanelElements;
 
 class ModuleGUI : public Module
 {
@@ -43,6 +44,7 @@ public:
 	PanelConsole* console = nullptr;
 	PanelAbout* about = nullptr;
 	PanelHardwareInfo* hardwareInfo = nullptr;
+	PanelElements* ShapeElements = nullptr;
 
 	// TO DELETE --------------------------------
 	bool Sphere_tb = false;

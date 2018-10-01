@@ -36,6 +36,13 @@
       "width": 354,
       "pos_X": 725,
       "pos_Y": 18
+    },
+    "Elements": {
+      "name": "3D Elements",
+      "height": 438,
+      "width": 354,
+      "pos_X": 725,
+      "pos_Y": 18
     }
   }
 }

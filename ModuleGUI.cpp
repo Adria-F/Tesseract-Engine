@@ -8,6 +8,7 @@
 #include "PanelConsole.h"
 #include "PanelAbout.h"
 #include "PanelHardwareInfo.h"
+#include "PanelElements.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -43,6 +44,10 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	
 	panels_aux = document["panels"]["About"];
 	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+
+	panels_aux = document["panels"]["Elements"];
+	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+
 
 	return true;
 }
@@ -90,6 +95,13 @@ update_status ModuleGUI::Update(float dt)
 				configuration->toggleActive();
 			if (ImGui::MenuItem("About", NULL, about->isActive()))
 				about->toggleActive();
+			ImGui::EndMenu();
+		}
+		
+		if (ImGui::BeginMenu("3D"))
+		{
+			if (ImGui::MenuItem("3D Shapes", NULL, ShapeElements->isActive()))
+				ShapeElements->toggleActive();
 			ImGui::EndMenu();
 		}
 	}

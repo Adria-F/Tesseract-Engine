@@ -170,7 +170,7 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	//Sphere --------------------------------
-	sphere = new MSphere(10, 6, 12);
+	sphere = new MSphere(10, 6, 12, { 0.0f, 0.0f, -20.0f });
 
 	return ret;
 }
