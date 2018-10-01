@@ -395,3 +395,139 @@ void MPlane::Render() const
 
 	glEnd();
 }
+
+MArrow::MArrow() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+{
+	type = PrimitiveTypes::Primitive_Line;
+}
+
+MArrow::MArrow(float x, float y, float z, vec pos) : Primitive(), origin(pos.x, pos.y, pos.z), destination(x, y, z)
+{
+	type = PrimitiveTypes::Primitive_Line;
+}
+
+void MArrow::Render() const
+{
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(origin.x, origin.y, origin.z);
+	glVertex3f(destination.x, destination.y, destination.z);
+
+	glVertex3f(destination.x, destination.y, destination.z);
+	glVertex3f(destination.x-2, destination.y-1, destination.z);
+
+	glVertex3f(destination.x, destination.y, destination.z);
+	glVertex3f(destination.x - 2, destination.y + 1, destination.z);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+}
+
+MAxis::MAxis(): Primitive(), origin(0,0,0), size(1)
+{
+}
+
+MAxis::MAxis(float size, vec pos): Primitive(), origin(pos.x, pos.y, pos.z), size(size)
+{
+}
+
+void MAxis::Render() const
+{
+	// Draw Axis Grid
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+
+	glVertex3f(origin.x, origin.y, origin.z); glVertex3f(origin.x+size, origin.y, origin.z);
+	glVertex3f(origin.x+size, origin.y+0.1f*size, origin.z); glVertex3f(origin.x+1.1f*size, origin.y-0.1f*size, origin.z);
+	glVertex3f(origin.x+1.1f*size, origin.y+0.1f*size, origin.z); glVertex3f(origin.x+size, origin.y-0.1f*size, origin.z);
+
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+
+	glVertex3f(origin.x, origin.y, origin.z); glVertex3f(origin.x, origin.y+size, origin.z);
+	glVertex3f(origin.x-0.05f*size, origin.y+1.25f*size, origin.z); glVertex3f(origin.x, origin.y+1.15f*size, origin.z);
+	glVertex3f(origin.x+0.05f*size, origin.y+1.25f*size, origin.z); glVertex3f(origin.x, origin.y+1.15f*size, origin.z);
+	glVertex3f(origin.x, origin.y+1.15f*size, origin.z); glVertex3f(origin.x, origin.y+1.05f*size, origin.z);
+
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+
+	glVertex3f(origin.x, origin.y, origin.z); glVertex3f(origin.x, origin.y, origin.z+size);
+	glVertex3f(origin.x-0.05f*size, origin.y+0.1f*size, origin.z+1.05f*size); glVertex3f(origin.x+0.05f*size, origin.y+0.1f*size, origin.z+1.05f*size);
+	glVertex3f(origin.x+0.05f*size, origin.y+0.1f*size, origin.z+1.05f*size); glVertex3f(origin.x-0.05f*size, origin.y-0.1f*size, origin.z+1.05f*size);
+	glVertex3f(origin.x-0.05f*size, origin.y-0.1f*size, origin.z+1.05f*size); glVertex3f(origin.x+0.05f*size, origin.y-0.1f*size, origin.z+1.05f*size);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+}
+
+MCapsule::MCapsule()
+{
+}
+
+MCapsule::MCapsule(float radius, float height, int rings, int sectors, vec pos)
+{
+	float x, y, z, xz;                              // vertex position
+
+	float sectorStep = 2 * pi / sectors;
+	float stackStep = pi / rings;
+	float sectorAngle, stackAngle;
+
+	for (int i = 0; i <= rings; ++i)
+	{
+		stackAngle = pi / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+		xz = radius * cosf(stackAngle);             // r * cos(u)
+		y = pos.y + radius * sinf(stackAngle);              // r * sin(u)
+
+		if (stackAngle < 0)
+			y -= height / 2;
+		else
+			y += height / 2;
+
+		// add (sectorCount+1) vertices per stack
+		// the first and last vertices have same position and normal, but different tex coods
+		for (int j = 0; j <= sectors; ++j)
+		{
+			sectorAngle = j * sectorStep;
+
+			// vertex position (x, y, z)
+			z = pos.z + xz * cosf(sectorAngle);             // r * cos(u) * cos(v)
+			x = pos.x + xz * sinf(sectorAngle);             // r * cos(u) * sin(v)
+			shape.push_back(x);
+			shape.push_back(y);
+			shape.push_back(z);
+		}
+	}
+
+	int k1, k2;
+	for (int i = 0; i < rings; ++i)
+	{
+		k1 = i * (sectors + 1);     // beginning of current stack
+		k2 = k1 + sectors + 1;      // beginning of next stack
+
+		for (int j = 0; j < sectors; ++j, ++k1, ++k2)
+		{
+			// 2 triangles per sector excluding 1st and last stacks
+			if (i != 0)
+			{
+				indices.push_back(k1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
+			}
+
+			if (i != (rings - 1))
+			{
+				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k2 + 1);
+			}
+		}
+	}
+
+	generateBuffer();
+}
