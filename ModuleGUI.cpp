@@ -30,6 +30,9 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 {
 
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
@@ -133,6 +136,7 @@ bool ModuleGUI::CleanUp()
 
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL2_Shutdown();
+	ImGui::DestroyContext();
 
 	return true;
 }
