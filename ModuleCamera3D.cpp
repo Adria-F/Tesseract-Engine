@@ -16,7 +16,7 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 50.0f, 0.0f);
+	Position = vec3(0.0f, 30.0f, 80.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 
 	freeCam = true;

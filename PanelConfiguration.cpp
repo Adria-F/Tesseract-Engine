@@ -2,6 +2,7 @@
 #include "ModuleRenderer3D.h"
 #include "Globals.h"
 #include "ModuleWindow.h"
+#include "ModuleCamera3D.h"
 #include "PanelConfiguration.h"
 #include "ImGui\imgui.h"
 #include "MathGeoLib/MathGeoLib.h"
@@ -27,7 +28,7 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-	ImGui::Begin(name.c_str(),&active);
+	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing);
 
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -49,7 +50,7 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		if (ImGui::SliderInt("Height", &nHeight, 0, 1080) || ImGui::SliderInt("Width", &nWidth, 0, 1920))
+		if (ImGui::SliderInt("Width", &nWidth, 0, 1920) || ImGui::SliderInt("Height", &nHeight, 0, 1080))
 		{
 			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
 		}
@@ -142,6 +143,16 @@ void PanelConfiguration::Draw()
 		}
 		ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe);
 		
+	}
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		ImGui::Text("Camera Position:");
+		ImGui::Text("X: "); ImGui::SameLine();
+		ImGui::Text(std::to_string(App->camera->Position.x).c_str());
+		ImGui::Text("Y: "); ImGui::SameLine();
+		ImGui::Text(std::to_string(App->camera->Position.y).c_str());
+		ImGui::Text("Z: "); ImGui::SameLine();
+		ImGui::Text(std::to_string(App->camera->Position.z).c_str());
 	}
 
 	ImGui::End();

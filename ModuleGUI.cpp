@@ -57,6 +57,7 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 
 bool ModuleGUI::Start()
 {	
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = { 0,0,0,1.0f };
 
 	return true;
 }

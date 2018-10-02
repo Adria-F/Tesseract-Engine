@@ -168,7 +168,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	base_plane.Render();
 
 	App->gui->Draw();
-
+	
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
