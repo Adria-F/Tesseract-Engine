@@ -11,6 +11,17 @@ using namespace std;
 
 class MSphere;
 
+struct Mesh
+{
+	uint id_vertices = 0;
+	uint num_vertices = 0;
+	float* vertices = nullptr;
+
+	uint id_indices = 0;
+	uint num_indices = 0;
+	uint* indices = nullptr;
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
