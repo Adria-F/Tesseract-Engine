@@ -1,5 +1,5 @@
-#include "ModuleMeshLoader.h"
 #include "Application.h"
+#include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -46,6 +46,43 @@ bool ModuleMeshLoader::CleanUp()
 	return true;
 }
 
-ModuleMeshLoader::~ModuleMeshLoader()
+void ModuleMeshLoader::ImportFBX(const char* full_path)
 {
+	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+		for (int i = 0; i < scene->mNumMeshes; i++)
+		{
+			Mesh* newMesh = new Mesh();
+			aiMesh* currentMesh= scene->mMeshes[i];
+
+			newMesh->num_vertices = currentMesh->mNumVertices;
+			newMesh->vertices = new float[newMesh->num_vertices * 3];
+			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+			LOG("New Mesh with %d vertices",newMesh->num_vertices);
+
+			if (currentMesh->HasFaces())
+			{
+				newMesh->num_indices = currentMesh->mNumFaces * 3;
+				newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
+				
+				for (int j = 0; j < currentMesh->mNumFaces; ++j)
+				{
+					if (currentMesh->mFaces[i].mNumIndices != 3)
+					{
+						LOG("WARNING, geometry face with != 3 indices!");
+
+					}
+					else
+					{
+						memcpy(&newMesh->indices[i * 3], currentMesh->mFaces[i].mIndices, 3 * sizeof(uint));
+					}
+				}
+			}
+		}
+		aiReleaseImport(scene);
+	}
+	else
+		LOG("Error loading scene %s", full_path);
 }

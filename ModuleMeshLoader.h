@@ -9,7 +9,7 @@ class ModuleMeshLoader : public Module
 {
 public:
 	ModuleMeshLoader(bool start_enabled = true);
-	~ModuleMeshLoader();
+	~ModuleMeshLoader() {}
 
 	bool Init(rapidjson::Document& document);
 
@@ -25,9 +25,9 @@ public:
 	update_status PostUpdate(float dt);
 
 	bool CleanUp();
-	
 
-	void loadMesh(Mesh& mesh);
+	void ImportFBX(const char* full_path);
+	
 };
 
 #endif //__MODULEMESHLOADER_H__

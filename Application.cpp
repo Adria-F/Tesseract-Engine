@@ -7,6 +7,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
+#include "ModuleMeshLoader.h"
 
 #include "rapidjson/filereadstream.h"
 
@@ -22,6 +23,7 @@ Application::Application()
 	camera = new ModuleCamera3D();
 	physics = new ModulePhysics3D();
 	gui = new ModuleGUI();
+	mesh_loader = new ModuleMeshLoader();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -33,6 +35,7 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 	AddModule(physics);
+	AddModule(mesh_loader);
 
 	// Scenes
 	AddModule(scene_intro);

@@ -29,6 +29,7 @@ class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModulePhysics3D;
 class ModuleGUI;
+class ModuleMeshLoader;
 
 class Application
 {
@@ -41,6 +42,7 @@ public:
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
 	ModuleGUI* gui;
+	ModuleMeshLoader* mesh_loader;
 
 private:
 
