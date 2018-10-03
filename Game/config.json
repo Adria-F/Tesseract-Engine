@@ -18,16 +18,16 @@
     },
     "Console": {
       "name": "Console",
-      "height": 182,
-      "width": 1236,
+      "height": 176,
+      "width": 720,
       "pos_X": 0,
-      "pos_Y": 619
+      "pos_Y": 466
     },
     "Configuration": {
       "name": "Configuration",
       "height": 783,
       "width": 302,
-      "pos_X": 1234,
+      "pos_X": 720,
       "pos_Y": 18
     },
     "About": {
@@ -39,7 +39,7 @@
     },
     "Elements": {
       "name": "3D Elements",
-      "height": 601,
+      "height": 449,
       "width": 306,
       "pos_X": 0,
       "pos_Y": 18

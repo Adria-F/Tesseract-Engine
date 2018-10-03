@@ -51,6 +51,7 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	panels_aux = document["panels"]["Elements"];
 	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
 }
@@ -58,7 +59,6 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 bool ModuleGUI::Start()
 {	
 	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = { 0,0,0,1.0f };
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
 }
