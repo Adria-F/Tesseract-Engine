@@ -234,4 +234,18 @@ void Mesh::Draw()
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glLineWidth(2.0f);
+	glColor3f(0, 0.5f, 1);
+	
+	glBegin(GL_LINES);
+	for (int i = 0; i < num_vertices*3; i=i+3)
+	{
+		glVertex3f(vertices[i], vertices[i+1], vertices[i + 2]);
+		glVertex3f(-normals[i] + vertices[i], -normals[i + 1] + vertices[i + 1], -normals[i + 2] + vertices[i + 2]);
+	}
+	glEnd();
+
+	glColor3f(1, 1, 1);
+	glLineWidth(1.0f);
 }

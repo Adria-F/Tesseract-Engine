@@ -61,8 +61,13 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 			newMesh->num_vertices = currentMesh->mNumVertices;
 			newMesh->vertices = new float[newMesh->num_vertices * 3];
+			newMesh->num_normals = currentMesh->mNumVertices;
+			newMesh->normals = new float[newMesh->num_normals * 3];
+
 			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+			memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
 			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
+			LOG("New Mesh with %d normals\n", newMesh->num_normals);
 
 			if (currentMesh->HasFaces())
 			{
