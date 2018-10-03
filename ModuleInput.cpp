@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
+#include "ModuleMeshLoader.h"
 
 #define MAX_KEYS 300
 
@@ -167,8 +168,14 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->window->OnResize(event.window.data1, event.window.data2);
 				App->renderer3D->OnResize(event.window.data1, event.window.data2);
-				App->gui->OnResize(event.window.data1, event.window.data2);				
+				App->gui->OnResize(event.window.data1, event.window.data2);
 			}
+			break;
+		}
+		case (SDL_DROPFILE):
+		{
+			App->mesh_loader->ImportFBX(event.drop.file);
+			break;
 		}
 		}
 	}

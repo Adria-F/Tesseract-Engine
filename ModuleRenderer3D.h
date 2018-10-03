@@ -34,6 +34,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void pushMesh(Mesh* mesh);
+	void drawMeshes();
+
 	void OnResize(int width, int height);
 
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
@@ -53,12 +56,5 @@ public:
 	bool Texture_2D = false;
 	bool Wireframe = false;
 
-	vector<float> box;
-	vector<float> box2;
-	vector<uint> indices;
-
-	MSphere* sphere = nullptr;
-
-	uint my_id = 0;
-	uint my_ids = 0;
+	list<Mesh*> meshes;
 };

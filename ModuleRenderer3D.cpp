@@ -162,6 +162,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
+	drawMeshes();
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -181,6 +182,30 @@ bool ModuleRenderer3D::CleanUp()
 	SDL_GL_DeleteContext(context);
 
 	return true;
+}
+
+void ModuleRenderer3D::pushMesh(Mesh* mesh)
+{
+	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, &mesh->indices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	meshes.push_back(mesh);
+}
+
+void ModuleRenderer3D::drawMeshes()
+{
+	
+	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it_m)->id_indices);
+		glVertexPointer(3, GL_FLOAT, 0, &(*it_m)->vertices[0]);
+		glDrawElements(GL_TRIANGLES, (*it_m)->num_indices, GL_UNSIGNED_INT, NULL);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
 }
 
 

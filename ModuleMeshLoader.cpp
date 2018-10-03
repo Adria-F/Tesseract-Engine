@@ -48,7 +48,9 @@ bool ModuleMeshLoader::CleanUp()
 
 void ModuleMeshLoader::ImportFBX(const char* full_path)
 {
-	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	bool errorLoading = false;
+
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -60,19 +62,20 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			newMesh->num_vertices = currentMesh->mNumVertices;
 			newMesh->vertices = new float[newMesh->num_vertices * 3];
 			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
-			LOG("New Mesh with %d vertices",newMesh->num_vertices);
+			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
 
 			if (currentMesh->HasFaces())
 			{
 				newMesh->num_indices = currentMesh->mNumFaces * 3;
 				newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
-				
+
 				for (int j = 0; j < currentMesh->mNumFaces; ++j)
 				{
 					if (currentMesh->mFaces[i].mNumIndices != 3)
 					{
 						LOG("WARNING, geometry face with != 3 indices!");
-
+						errorLoading = true;
+						break;
 					}
 					else
 					{
@@ -80,6 +83,12 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 					}
 				}
 			}
+			else
+				errorLoading = true;
+
+			if (!errorLoading)
+				App->renderer3D->pushMesh(newMesh);
+			errorLoading = false;
 		}
 		aiReleaseImport(scene);
 	}
