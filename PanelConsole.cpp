@@ -10,7 +10,7 @@ PanelConsole::~PanelConsole()
 
 void PanelConsole::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMove);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing);
 	ImGui::TextUnformatted(Buffer.begin());
 	
 	if (ScrollToBottom)

@@ -27,7 +27,7 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMove);
+	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoFocusOnAppearing);
 
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{

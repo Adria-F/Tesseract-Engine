@@ -40,16 +40,16 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	panels.push_back(hardwareInfo = new PanelHardwareInfo(panels_aux["name"].GetString(),panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
 	panels_aux = document["panels"]["Console"];
-	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), BOTTOM));
+	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
 	panels_aux = document["panels"]["Configuration"];
-	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), RIGHT));
+	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
 	panels_aux = document["panels"]["About"];
 	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 	panels_aux = document["panels"]["Elements"];
-	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), LEFT));
+	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 
 	return true;
@@ -198,6 +198,9 @@ void ModuleGUI::Draw()
 
 void ModuleGUI::OnResize(int width, int height)
 {
+	float screenWidthFactor = (float)width / SCREEN_WIDTH;
+	float screenHeigthFactor = (float)height / SCREEN_HEIGHT;
+
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
 	{
 		if ((*it_p)->isActive())
@@ -221,8 +224,8 @@ void ModuleGUI::OnResize(int width, int height)
 				break;
 			}
 
-			ImGui::SetWindowPos((*it_p)->getName(), pos);
-			ImGui::SetWindowSize((*it_p)->getName(), size);
+			ImGui::SetWindowPos((*it_p)->getName(), { pos.x*screenWidthFactor, pos.y*screenHeigthFactor });
+			ImGui::SetWindowSize((*it_p)->getName(), {size.x*screenWidthFactor, size.y*screenHeigthFactor});
 		}
 	}
 }
