@@ -71,7 +71,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 				for (int j = 0; j < currentMesh->mNumFaces; ++j)
 				{
-					if (currentMesh->mFaces[i].mNumIndices != 3)
+					if (currentMesh->mFaces[j].mNumIndices != 3)
 					{
 						LOG("WARNING, geometry face with != 3 indices!");
 						errorLoading = true;
@@ -79,7 +79,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 					}
 					else
 					{
-						memcpy(&newMesh->indices[i * 3], currentMesh->mFaces[i].mIndices, 3 * sizeof(uint));
+						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
 			}

@@ -20,6 +20,8 @@ struct Mesh
 	uint id_indices = 0;
 	uint num_indices = 0;
 	uint* indices = nullptr;
+
+	void Draw();
 };
 
 class ModuleRenderer3D : public Module
@@ -35,7 +37,6 @@ public:
 	bool CleanUp();
 
 	void pushMesh(Mesh* mesh);
-	void drawMeshes();
 
 	void OnResize(int width, int height);
 

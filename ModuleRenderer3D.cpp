@@ -162,7 +162,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
-	drawMeshes();
+	
+	//Draw meshes
+	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
+	{
+		(*it_m)->Draw();
+	}
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -171,6 +176,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->gui->Draw();
 	
 	SDL_GL_SwapWindow(App->window->window);
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -193,21 +199,6 @@ void ModuleRenderer3D::pushMesh(Mesh* mesh)
 
 	meshes.push_back(mesh);
 }
-
-void ModuleRenderer3D::drawMeshes()
-{
-	
-	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
-	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it_m)->id_indices);
-		glVertexPointer(3, GL_FLOAT, 0, &(*it_m)->vertices[0]);
-		glDrawElements(GL_TRIANGLES, (*it_m)->num_indices, GL_UNSIGNED_INT, NULL);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
-}
-
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
@@ -233,4 +224,14 @@ bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteS
 
 bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 	return true;
+}
+
+void Mesh::Draw()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
