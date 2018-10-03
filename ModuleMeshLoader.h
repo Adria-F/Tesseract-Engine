@@ -11,6 +11,22 @@ public:
 	ModuleMeshLoader(bool start_enabled = true);
 	~ModuleMeshLoader();
 
+	bool Init(rapidjson::Document& document);
+
+	bool Start();
+
+
+	update_status PreUpdate(float dt);
+
+
+	update_status Update(float dt);
+
+
+	update_status PostUpdate(float dt);
+
+	bool CleanUp();
+	
+
 	void loadMesh(Mesh& mesh);
 };
 
