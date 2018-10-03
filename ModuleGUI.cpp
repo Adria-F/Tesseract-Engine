@@ -40,16 +40,16 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	panels.push_back(hardwareInfo = new PanelHardwareInfo(panels_aux["name"].GetString(),panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
 	panels_aux = document["panels"]["Console"];
-	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), BOTTOM));
 	
 	panels_aux = document["panels"]["Configuration"];
-	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), RIGHT));
 	
 	panels_aux = document["panels"]["About"];
 	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 	panels_aux = document["panels"]["Elements"];
-	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat(), LEFT));
 
 
 	return true;
@@ -58,6 +58,7 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 bool ModuleGUI::Start()
 {	
 	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = { 0,0,0,1.0f };
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
 }
@@ -86,7 +87,8 @@ update_status ModuleGUI::Update(float dt)
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
 			if (ImGui::MenuItem("Close", "ESC"))
-				status = UPDATE_STOP;
+				//status = UPDATE_STOP;
+				LOG("Not Working");
 
 			ImGui::EndMenu();
 		}
@@ -186,12 +188,41 @@ void ModuleGUI::Draw()
 	{
 		if ((*it_p)->isActive())
 		{
-			ImGui::SetNextWindowPos({ (*it_p)->posX, (*it_p)->posY });
-			ImGui::SetNextWindowSize({ (*it_p)->width, (*it_p)->height });
 			(*it_p)->Draw();
 		}
 	}
 
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleGUI::OnResize(int width, int height)
+{
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
+	{
+		if ((*it_p)->isActive())
+		{
+			ImVec2 pos = (*it_p)->pos;
+			ImVec2 size = (*it_p)->size;
+
+			switch ((*it_p)->aligned)
+			{
+			case TOP:
+				pos.y = 13;
+				break;
+			case LEFT:
+				pos.x = 0;
+				break;
+			case RIGHT:
+				pos.x = App->window->width - size.x;
+				break;
+			case BOTTOM:
+				pos.y = App->window->height - size.y;
+				break;
+			}
+
+			ImGui::SetWindowPos((*it_p)->getName(), pos);
+			ImGui::SetWindowSize((*it_p)->getName(), size);
+		}
+	}
 }

@@ -4,10 +4,9 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "PanelConfiguration.h"
-#include "ImGui\imgui.h"
 #include "MathGeoLib/MathGeoLib.h"
 
-PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height) : Panel(name, posX, posY, width, height),
+PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned),
 fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE)
 {
 	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
@@ -28,7 +27,7 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing);
+	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMove);
 
 	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -155,6 +154,7 @@ void PanelConfiguration::Draw()
 		ImGui::Text(std::to_string(App->camera->Position.z).c_str());
 	}
 
+	checkMoved();
 	ImGui::End();
 }
 

@@ -21,6 +21,8 @@ public:
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
+	void OnResize(int width, int height);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;

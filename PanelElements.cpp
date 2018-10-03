@@ -2,9 +2,8 @@
 #include "ModuleSceneIntro.h"
 #include "PanelElements.h"
 #include "Primitive.h"
-#include "ImGui\imgui.h"
 
-PanelElements::PanelElements(const char* name, float posX, float posY, float width, float height) : Panel(name, posX, posY, width, height)
+PanelElements::PanelElements(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned)
 {
 	active = true;
 }
@@ -16,7 +15,7 @@ PanelElements::~PanelElements()
 
 void PanelElements::Draw() 
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMove);
 
 	if (ImGui::CollapsingHeader("Box"))
 	{
@@ -94,5 +93,6 @@ void PanelElements::Draw()
 		}
 	}
 
+	checkMoved();
 	ImGui::End();
 }

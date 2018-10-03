@@ -36,6 +36,8 @@ public:
 
 	void Draw();
 
+	void OnResize(int width, int height);
+
 public:
 
 	std::list<Panel*> panels;

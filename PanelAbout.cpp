@@ -1,8 +1,7 @@
 #include "PanelAbout.h"
 #include "Application.h"
-#include "ImGui\imgui.h"
 
-PanelAbout::PanelAbout(const char* name, float posX, float posY, float width, float height) : Panel(name, posX, posY, width, height)
+PanelAbout::PanelAbout(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned)
 {
 }
 

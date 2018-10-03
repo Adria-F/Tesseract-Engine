@@ -5,7 +5,7 @@
 class PanelElements:public Panel
 {
 public:
-	PanelElements(const char* name, float posX, float posY, float width, float height);
+	PanelElements(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned = NO_ALINGNMENT);
 	~PanelElements();
 
 	void Draw();

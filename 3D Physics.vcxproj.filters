@@ -436,7 +436,9 @@
     <ClInclude Include="PanelElements.h">
       <Filter>Sources\Modules\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleMeshLoader.h" />
+    <ClInclude Include="ModuleMeshLoader.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -632,7 +634,9 @@
     <ClCompile Include="PanelElements.cpp">
       <Filter>Sources\Modules\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleMeshLoader.cpp" />
+    <ClCompile Include="ModuleMeshLoader.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
