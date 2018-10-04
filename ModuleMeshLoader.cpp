@@ -69,6 +69,13 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
 			LOG("New Mesh with %d normals\n", newMesh->num_normals);
 
+			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
+			aiColor3D color(0.f, 0.f, 0.f);
+			mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			newMesh->color.x = color.r;
+			newMesh->color.y = color.g;
+			newMesh->color.z = color.b;
+
 			if (currentMesh->HasFaces())
 			{
 				newMesh->num_indices = currentMesh->mNumFaces * 3;

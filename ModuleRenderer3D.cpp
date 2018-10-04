@@ -229,10 +229,12 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 void Mesh::Draw()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor3f(color.x, color.y, color.z);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glColor3f(1, 1, 1);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	if (App->renderer3D->Normals)

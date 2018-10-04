@@ -25,6 +25,8 @@ struct Mesh
 	uint num_normals = 0;
 	float* normals = nullptr;
 
+	vec3 color = { 0,0,0 };
+
 	void Draw();
 };
 
