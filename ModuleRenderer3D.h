@@ -8,6 +8,9 @@
 using namespace std;
 
 #define MAX_LIGHTS 8
+#define CHECKERS_H 100
+#define CHECKERS_W 100
+
 
 class MSphere;
 
@@ -63,6 +66,8 @@ public:
 	bool Texture_2D = false;
 	bool Wireframe = false;
 	bool Normals = false;
+
+	uint buff_id = 0;
 
 	list<Mesh*> meshes;
 };
