@@ -141,6 +141,7 @@ void PanelConfiguration::Draw()
 				glDisable(GL_TEXTURE_2D);
 		}
 		ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe);
+		ImGui::Checkbox("Normals", &App->renderer3D->Normals);
 		
 	}
 	if (ImGui::CollapsingHeader("Camera"))

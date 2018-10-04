@@ -60,6 +60,7 @@ public:
 	bool Color_Material = true;
 	bool Texture_2D = false;
 	bool Wireframe = false;
+	bool Normals = false;
 
 	list<Mesh*> meshes;
 };
