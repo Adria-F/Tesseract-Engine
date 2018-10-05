@@ -30,6 +30,7 @@ struct Mesh
 
 	vec3 color = { 0,0,0 };
 
+	uint texture = 0;
 	float* texCoords;
 
 	void Draw();
