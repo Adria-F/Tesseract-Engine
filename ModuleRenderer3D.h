@@ -52,6 +52,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void ChangeMeshTexture(const char* path);
+
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 

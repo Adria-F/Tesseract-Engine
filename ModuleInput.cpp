@@ -174,7 +174,21 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 		case (SDL_DROPFILE):
 		{
-			App->mesh_loader->ImportFBX(event.drop.file);
+			string str = event.drop.file;
+
+			size_t i = str.rfind('.', str.length());
+			if (i != string::npos) {
+				str=str.substr(i + 1, str.length() - i);
+			}
+
+			if (str == "fbx")
+			{
+				App->mesh_loader->ImportFBX(event.drop.file);
+			}
+			if (str == "png")
+			{
+				App->renderer3D->ChangeMeshTexture(event.drop.file);
+			}			
 			break;
 		}
 		}

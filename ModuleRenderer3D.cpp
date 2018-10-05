@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleMeshLoader.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -300,6 +301,17 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
+void ModuleRenderer3D::ChangeMeshTexture(const char * path)
+{
+	GLuint tex_id = App->mesh_loader->loadTexture(path);
+
+	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
+	{
+		//glDeleteTextures(1, (GLuint*)(*it_m)->texture);
+		(*it_m)->texture = tex_id;
+	}
+}
+
 bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
@@ -312,6 +324,7 @@ bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteS
 bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 	return true;
 }
+
 
 void Mesh::Draw()
 {
@@ -346,3 +359,4 @@ void Mesh::Draw()
 		glLineWidth(1.0f);
 	}
 }
+
