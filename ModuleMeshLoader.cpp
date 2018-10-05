@@ -94,7 +94,18 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
 			
 			if (textureError == aiReturn::aiReturn_SUCCESS)
-				newMesh->texture = loadTexture(full_path, path.C_Str());
+			{
+				//Remove the name of the mesh from the path and add the image name
+				std::string Path = full_path;
+				for (int i = Path.size() - 1; i >= 0; i--)
+					if (Path[i] == '\\')
+						break;
+					else
+						Path.pop_back();
+				Path += path.C_Str();
+
+				newMesh->texture = loadTexture(Path.c_str());
+			}
 			else
 				LOG("Couldn't load the texture from .fbx file");
 
@@ -130,21 +141,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		LOG("Error loading scene %s", full_path);
 }
 
-GLuint ModuleMeshLoader::loadTexture(const char* meshPath, const char* imagePath)
+GLuint ModuleMeshLoader::loadTexture(const char* path)
 {
-	std::string Path = meshPath;
-
-	for (int i = Path.size() - 1; i >= 0; i--)
-	{
-		if (Path[i] == '\\')
-		{
-			break;
-		}
-		else
-			Path.pop_back();
-	}
-	Path += imagePath;
-
 	ILuint imageID;	
 	GLuint textureID;
 
@@ -154,7 +152,7 @@ GLuint ModuleMeshLoader::loadTexture(const char* meshPath, const char* imagePath
 	ilGenImages(1, &imageID);
 	ilBindImage(imageID);
 
-	success = ilLoadImage(Path.c_str());
+	success = ilLoadImage(path);
 									
 	if (success)
 	{
