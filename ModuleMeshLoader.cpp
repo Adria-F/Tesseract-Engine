@@ -79,6 +79,18 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
 			LOG("New Mesh with %d normals\n", newMesh->num_normals);
 
+			newMesh->texCoords = new float[newMesh->num_vertices * 2];
+
+			int t = 0;
+			for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+			{
+				newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
+				newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
+				t++;
+			}
+
+			LOG("total cords %d", t);
+
 			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
 			aiColor3D color(0.f, 0.f, 0.f);
 			mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
