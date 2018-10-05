@@ -4,8 +4,14 @@
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
+#include "DevIL\include\il.h"
+#include "DevIL\include\ilu.h"
+#include "DevIL\include\ilut.h"
 
 #pragma comment (lib,"Assimp/libx86/assimp.lib")
+#pragma comment( lib, "DevIL/libx86/DevIL.lib")
+#pragma comment( lib, "DevIL/libx86/ILU.lib")
+#pragma comment( lib, "DevIL/libx86/ILUT.lib")
 
 ModuleMeshLoader::ModuleMeshLoader(bool start_enabled): Module(start_enabled)
 {
@@ -16,6 +22,10 @@ bool ModuleMeshLoader::Init(rapidjson::Document& document)
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+
+	ilInit();
+	iluInit();
+	ilutRenderer(ILUT_OPENGL);
 
 	return true;
 }
