@@ -25,6 +25,7 @@ bool ModuleMeshLoader::Init(rapidjson::Document& document)
 
 	ilInit();
 	iluInit();
+	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
 	return true;
@@ -53,6 +54,9 @@ update_status ModuleMeshLoader::PostUpdate(float dt)
 bool ModuleMeshLoader::CleanUp()
 {
 	aiDetachAllLogStreams();
+
+	ilShutDown();
+
 	return true;
 }
 
@@ -73,7 +77,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			newMesh->vertices = new float[newMesh->num_vertices * 3];
 			newMesh->num_normals = currentMesh->mNumVertices;
 			newMesh->normals = new float[newMesh->num_normals * 3];
-
+	
 			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
 			memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
 			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
@@ -85,6 +89,14 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			newMesh->color.x = color.r;
 			newMesh->color.y = color.g;
 			newMesh->color.z = color.b;
+			
+			aiString path;
+			aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
+			
+			if (textureError == aiReturn::aiReturn_SUCCESS)
+				newMesh->texture = loadTexture(full_path, path.C_Str());
+			else
+				LOG("Couldn't load the texture from .fbx file");
 
 			if (currentMesh->HasFaces())
 			{
@@ -116,4 +128,71 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 	}
 	else
 		LOG("Error loading scene %s", full_path);
+}
+
+GLuint ModuleMeshLoader::loadTexture(const char* meshPath, const char* imagePath)
+{
+	std::string Path = meshPath;
+
+	for (int i = Path.size() - 1; i >= 0; i--)
+	{
+		if (Path[i] == '\\')
+		{
+			break;
+		}
+		else
+			Path.pop_back();
+	}
+	Path += imagePath;
+
+	ILuint imageID;	
+	GLuint textureID;
+
+	bool success;
+	ILenum error;
+
+	ilGenImages(1, &imageID);
+	ilBindImage(imageID);
+
+	success = ilLoadImage(Path.c_str());
+									
+	if (success)
+	{
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+			iluFlipImage();
+
+		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+		if (!success)
+		{
+			error = ilGetError();
+			LOG("Image conversion failed - IL error: %s", iluErrorString(error));
+			return -1;
+		}
+
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(GL_RGBA), ilGetInteger(1024), ilGetInteger(1024), 0, ilGetInteger(GL_RGBA), GL_UNSIGNED_BYTE, ilGetData());
+	}
+	else
+	{
+		error = ilGetError();
+		LOG("Image load failed - IL error: %s", iluErrorString(error));
+		return -1;
+	}
+
+	ilDeleteImages(1, &imageID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	LOG("Texture creation successful." );
+
+	return textureID;
 }

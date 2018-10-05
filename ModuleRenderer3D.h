@@ -30,6 +30,8 @@ struct Mesh
 
 	vec3 color = { 0,0,0 };
 
+	uint texture = 0;
+
 	void Draw();
 };
 

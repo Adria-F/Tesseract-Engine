@@ -317,10 +317,12 @@ void Mesh::Draw()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor3f(color.x, color.y, color.z);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glColor3f(1, 1, 1);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
