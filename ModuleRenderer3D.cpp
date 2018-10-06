@@ -280,6 +280,21 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::pushMesh(Mesh* mesh)
 {
+	
+	for (int i = 0; i < (*mesh).num_vertices * 3; i = i + 9)
+	{
+		float x, y, z;
+
+		x = (mesh->vertices[i] + mesh->vertices[i + 3] + mesh->vertices[i + 6]) / 3;
+		y = (mesh->vertices[i+1] + mesh->vertices[i + 4] + mesh->vertices[i + 7]) / 3;
+		z = (mesh->vertices[i+2] + mesh->vertices[i + 5] + mesh->vertices[i + 8]) / 3;
+
+		mesh->faceNormals.push_back(x);
+		mesh->faceNormals.push_back(y);
+		mesh->faceNormals.push_back(z);
+
+	}
+
 	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, &mesh->indices[0], GL_STATIC_DRAW);
@@ -352,6 +367,25 @@ void Mesh::Draw()
 		{
 			glVertex3f(vertices[i], vertices[i+1], vertices[i + 2]);
 			glVertex3f(-normals[i]*3 + vertices[i], -normals[i + 1]*3 + vertices[i + 1], -normals[i + 2]*3 + vertices[i + 2]);
+		}
+		glEnd();
+
+		glColor3f(1, 1, 1);
+		glLineWidth(1.0f);
+	}
+
+	if (App->renderer3D->Faces)
+	{
+		int vert_normal=0;
+
+		glLineWidth(2.0f);
+		glColor3f(0, 0.5f, 1);
+
+		glBegin(GL_LINES);
+		for (int i = 0; i < faceNormals.size(); i = i + 3)
+		{
+			glVertex3f(faceNormals[i], faceNormals[i + 1], faceNormals[i + 2]);
+			glVertex3f(normals[i] + faceNormals[i], normals[i + 1] + faceNormals[i + 1], normals[i + 2] + faceNormals[i + 2]);
 		}
 		glEnd();
 

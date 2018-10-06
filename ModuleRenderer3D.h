@@ -33,6 +33,8 @@ struct Mesh
 	uint texture = 0;
 	float* texCoords;
 
+	vector<float> faceNormals;
+
 	void Draw();
 };
 
@@ -71,6 +73,7 @@ public:
 	bool Texture_2D = false;
 	bool Wireframe = false;
 	bool Normals = false;
+	bool Faces = false;
 
 	uint buff_id = 0;
 
