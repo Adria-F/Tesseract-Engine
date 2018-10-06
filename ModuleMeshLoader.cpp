@@ -155,14 +155,14 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 GLuint ModuleMeshLoader::loadTexture(const char* path)
 {
-	ILuint imageID;	
+	ILuint ilImage;	
 	GLuint textureID;
 
 	bool success;
 	ILenum error;
 
-	ilGenImages(1, &imageID);
-	ilBindImage(imageID);
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
 
 	success = ilLoadImage(path);
 									
@@ -199,7 +199,7 @@ GLuint ModuleMeshLoader::loadTexture(const char* path)
 		return -1;
 	}
 
-	ilDeleteImages(1, &imageID);
+	ilDeleteImages(1, &ilImage);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	LOG("Texture creation successful." );

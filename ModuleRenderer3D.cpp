@@ -343,17 +343,24 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 
 void Mesh::Draw()
 {
+	//Enable
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glColor3f(color.x, color.y, color.z);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (texture > 0)
+		glBindTexture(GL_TEXTURE_2D, texture);
+	else
+		glColor3f(color.x, color.y, color.z);	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	//Draw
 	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, &texCoords[0]);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	//Disable
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glColor3f(1, 1, 1);
+	if (texture > 0)
+		glBindTexture(GL_TEXTURE_2D, 0);
+	else
+		glColor3f(1, 1, 1);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
