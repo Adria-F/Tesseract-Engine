@@ -16,10 +16,8 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 30.0f, 80.0f);
+	Position = vec3(0.0f, 00.0f, 80.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
-
-	freeCam = true;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -45,12 +43,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	//Implement a debug camera with keys and mouse
-	//Now we can make this movememnt frame rate independant!
-
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) freeCam = !freeCam;
-
-	if (freeCam)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		vec3 newPos(0, 0, 0);
 		float speed = CAMERA_SPEED * dt;
@@ -70,44 +63,14 @@ update_status ModuleCamera3D::Update(float dt)
 		Position += newPos;
 		Reference += newPos;
 
-		// Mouse motion ----------------
-
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			int dx = -App->input->GetMouseXMotion();
-			int dy = -App->input->GetMouseYMotion();
-
-			float Sensitivity = 0.25f;
-
-			Position -= Reference;
-
-			if (dx != 0)
-			{
-				float DeltaX = (float)dx * Sensitivity;
-
-				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			}
-
-			if (dy != 0)
-			{
-				float DeltaY = (float)dy * Sensitivity;
-
-				Y = rotate(Y, DeltaY, X);
-				Z = rotate(Z, DeltaY, X);
-
-				if (Y.y < 0.0f)
-				{
-					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-					Y = cross(Z, X);
-				}
-			}
-
-			Position = Reference + Z * length(Position);
-		}
+		Reference = Position - getMovementFactor();
 	}
-
+	
+	// Rotation over object ----------------
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		Position = Reference + getMovementFactor();
+	}
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
@@ -162,16 +125,44 @@ float* ModuleCamera3D::GetViewMatrix()
 	return &ViewMatrix;
 }
 
-void ModuleCamera3D::setFreeCam(bool freeCam)
+vec3 ModuleCamera3D::getMovementFactor()
 {
-	this->freeCam = freeCam;
+	float Sensitivity = 0.25f;
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	vec3 newPosition = Position - Reference;
+
+	if (dx != 0)
+	{
+		float DeltaX = (float)dx * Sensitivity;
+
+		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	if (dy != 0)
+	{
+		float DeltaY = (float)dy * Sensitivity;
+
+		Y = rotate(Y, DeltaY, X);
+		Z = rotate(Z, DeltaY, X);
+
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
+	}
+	
+	return Z * length(newPosition);
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
 }
 
 bool ModuleCamera3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)

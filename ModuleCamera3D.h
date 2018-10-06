@@ -19,7 +19,7 @@ public:
 	void LookAt(const vec3 &Spot);
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
-	void setFreeCam(bool freeCam);
+	vec3 getMovementFactor();
 
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
@@ -27,7 +27,6 @@ public:
 private:
 
 	void CalculateViewMatrix();
-	bool freeCam = true;
 
 public:
 	
@@ -35,7 +34,7 @@ public:
 
 private:
 
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	mat4x4 ViewMatrix;
 };
 
 #endif //__MODULE_CAMERA_3D_H__
