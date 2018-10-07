@@ -101,7 +101,14 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetMouseZ()!=0)
 	{
 		vec3 newPos(0, 0, 0);
-		int Sensitivity = wheelSensitivity;
+		float Sensitivity = wheelSensitivity;
+		vec3 distance= Reference - Position;
+
+		if (length(distance)<zoomDistance)
+		{
+			Sensitivity = length(distance) / zoomDistance;
+			LOG("Small zone");
+		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			Sensitivity = 2;
@@ -116,7 +123,6 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 
 		Position += newPos;
-		Reference += newPos;
 	}
 
 	// Recalculate matrix -------------

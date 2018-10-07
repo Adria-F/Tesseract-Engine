@@ -34,6 +34,7 @@ public:
 	float cameraSpeed = CAMERA_SPEED;
 	float mouseSensitivity = 0.25f;
 	float wheelSensitivity = 10.0f;
+	float zoomDistance = 20.0f;
 
 private:
 
