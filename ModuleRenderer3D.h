@@ -40,6 +40,7 @@ struct Mesh
 	vector<float> faceNormals;
 
 	void Draw();
+	void calculateNormals();
 };
 
 class ModuleRenderer3D : public Module

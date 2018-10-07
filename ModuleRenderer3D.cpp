@@ -280,31 +280,6 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::pushMesh(Mesh* mesh)
 {
-	for (int i = 0; i < (*mesh).num_indices; i+=3)
-	{
-		float x, y, z;
-		vec3 A, B, C, N;
-
-		A = { mesh->vertices[mesh->indices[i] * 3],mesh->vertices[mesh->indices[i] * 3 + 1],mesh->vertices[mesh->indices[i] * 3 + 2]};
-		B = { mesh->vertices[mesh->indices[i+1] * 3],mesh->vertices[mesh->indices[i+1] * 3 + 1],mesh->vertices[mesh->indices[i+1] * 3 + 2] };
-		C = { mesh->vertices[mesh->indices[i+2] * 3],mesh->vertices[mesh->indices[i+2] * 3 + 1],mesh->vertices[mesh->indices[i+2] * 3 + 2] };
-		N = cross(B - A, C - A);
-		N = normalize(N);
-
-		x = (mesh->vertices[mesh->indices[i] * 3] + mesh->vertices[mesh->indices[i+1] * 3] + mesh->vertices[mesh->indices[i+2] * 3]) / 3;
-		y = (mesh->vertices[mesh->indices[i] * 3 +1] + mesh->vertices[mesh->indices[i+1] * 3 + 1] + mesh->vertices[mesh->indices[i+2] * 3 + 1]) / 3;
-		z = (mesh->vertices[mesh->indices[i] * 3 +2] + mesh->vertices[mesh->indices[i+1] * 3 + 2] + mesh->vertices[mesh->indices[i+2] * 3 + 2]) / 3;
-
-		mesh->faceNormals.push_back(x);
-		mesh->faceNormals.push_back(y);
-		mesh->faceNormals.push_back(z);
-		mesh->faceNormals.push_back(N.x);
-		mesh->faceNormals.push_back(N.y);
-		mesh->faceNormals.push_back(N.z);
-		
-
-	}
-
 	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, &mesh->indices[0], GL_STATIC_DRAW);
@@ -412,6 +387,34 @@ void Mesh::Draw()
 
 		glColor3f(1, 1, 1);
 		glLineWidth(2.0f);
+	}
+}
+
+void Mesh::calculateNormals()
+{
+	for (int i = 0; i < num_indices; i += 3)
+	{
+		float x, y, z;
+		vec3 A, B, C, N;
+
+		A = {vertices[indices[i] * 3],vertices[indices[i] * 3 + 1],vertices[indices[i] * 3 + 2] };
+		B = {vertices[indices[i + 1] * 3],vertices[indices[i + 1] * 3 + 1],vertices[indices[i + 1] * 3 + 2] };
+		C = {vertices[indices[i + 2] * 3],vertices[indices[i + 2] * 3 + 1],vertices[indices[i + 2] * 3 + 2] };
+		N = cross(B - A, C - A);
+		N = normalize(N);
+
+		x = (vertices[indices[i] * 3] + vertices[indices[i + 1] * 3] + vertices[indices[i + 2] * 3]) / 3;
+		y = (vertices[indices[i] * 3 + 1] + vertices[indices[i + 1] * 3 + 1] + vertices[indices[i + 2] * 3 + 1]) / 3;
+		z = (vertices[indices[i] * 3 + 2] + vertices[indices[i + 1] * 3 + 2] + vertices[indices[i + 2] * 3 + 2]) / 3;
+
+		faceNormals.push_back(x);
+		faceNormals.push_back(y);
+		faceNormals.push_back(z);
+		faceNormals.push_back(N.x);
+		faceNormals.push_back(N.y);
+		faceNormals.push_back(N.z);
+
+
 	}
 }
 

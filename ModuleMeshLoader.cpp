@@ -99,8 +99,6 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 				t++;
 			}
 
-			LOG("total cords %d", t);
-
 			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
 			aiColor3D color(0.f, 0.f, 0.f);
 			mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
@@ -145,6 +143,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
+
+				newMesh->calculateNormals();
 			}
 			else
 				errorLoading = true;
