@@ -8,7 +8,7 @@
 #include "MathGeoLib/MathGeoLib.h"
 
 PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned),
-fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE)
+fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE)
 {
 	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
 	nHeight = SCREEN_HEIGHT * SCREEN_SIZE;
@@ -47,8 +47,11 @@ void PanelConfiguration::Draw()
 		char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		
 		sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+
+		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption", 0.0f, 100.0f, ImVec2(310, 100));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -189,4 +192,15 @@ void PanelConfiguration::addFPS(float fps, float ms)
 
 	fps_log[FPS_LOG_SIZE - 1] = fps;
 	ms_log[FPS_LOG_SIZE - 1] = ms;
+}
+
+void PanelConfiguration::addMemory(float memory)
+{
+	memory /= 1000000;
+	for (uint i = 0; i < MEMORY_LOG_SIZE - 1; ++i)
+	{
+		memory_log[i] = memory_log[i + 1];
+	}
+
+	memory_log[MEMORY_LOG_SIZE - 1] = memory;
 }

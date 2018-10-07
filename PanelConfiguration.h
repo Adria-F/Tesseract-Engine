@@ -5,6 +5,7 @@
 #include <vector>
 
 #define FPS_LOG_SIZE 100
+#define MEMORY_LOG_SIZE 100
 
 class Module;
 class Application;
@@ -18,11 +19,13 @@ public:
 	void Draw();
 
 	void addFPS(float fps, float ms);
+	void addMemory(float memory);
 
 public:
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
+	std::vector<float> memory_log;
 
 private:
 

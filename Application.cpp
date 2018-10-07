@@ -9,6 +9,9 @@
 #include "ModuleGUI.h"
 #include "ModuleMeshLoader.h"
 
+#include <Windows.h>
+#include <Psapi.h>
+
 #include "rapidjson/filereadstream.h"
 
 using namespace std;
@@ -107,6 +110,13 @@ void Application::FinishUpdate()
 		SDL_Delay(ms_cap - ms_timer.ReadTime());
 
 	gui->logFPS(1 / dt, dt * 1000);
+
+	PROCESS_MEMORY_COUNTERS_EX pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+	SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+
+	gui->logMemory(virtualMemUsedByMe);
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

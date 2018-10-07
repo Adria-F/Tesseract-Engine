@@ -29,6 +29,7 @@ public:
 	bool CleanUp();
 
 	void logFPS(float fps, float ms);
+	void logMemory(float memory);
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 

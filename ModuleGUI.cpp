@@ -171,6 +171,12 @@ void ModuleGUI::logFPS(float fps, float ms)
 		configuration->addFPS(fps, ms);
 }
 
+void ModuleGUI::logMemory(float memory)
+{
+	if (configuration != nullptr)
+		configuration->addMemory(memory);
+}
+
 void ModuleGUI::AddLog(const char* log)
 {
 	if(App->gui && console!=nullptr)
