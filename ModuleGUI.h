@@ -13,6 +13,7 @@ class PanelConsole;
 class PanelAbout;
 class PanelHardwareInfo;
 class PanelElements;
+class PanelProperties;
 
 class ModuleGUI : public Module
 {
@@ -43,6 +44,7 @@ public:
 	std::list<Panel*> panels;
 
 	PanelConfiguration* configuration = nullptr;
+	PanelProperties* properties = nullptr;
 	PanelConsole* console = nullptr;
 	PanelAbout* about = nullptr;
 	PanelHardwareInfo* hardwareInfo = nullptr;

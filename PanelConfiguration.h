@@ -18,7 +18,6 @@ public:
 	void Draw();
 
 	void addFPS(float fps, float ms);
-	void windowConfig();
 
 public:
 

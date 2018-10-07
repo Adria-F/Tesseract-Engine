@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleSceneIntro.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -62,6 +63,8 @@ bool ModuleMeshLoader::CleanUp()
 
 void ModuleMeshLoader::ImportFBX(const char* full_path)
 {
+	App->scene_intro->newScene();
+
 	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	bool errorLoading = false;
 
@@ -72,6 +75,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		{
 			Mesh* newMesh = new Mesh();
 			aiMesh* currentMesh= scene->mMeshes[i];
+
+			newMesh->name = currentMesh->mName.C_Str();
 
 			newMesh->num_vertices = currentMesh->mNumVertices;
 			newMesh->vertices = new float[newMesh->num_vertices * 3];
@@ -116,7 +121,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 						Path.pop_back();
 				Path += path.C_Str();
 
-				newMesh->texture = loadTexture(Path.c_str());
+				newMesh->texture = loadTexture(Path.c_str(), newMesh->width, newMesh->height);
 			}
 			else
 				LOG("Couldn't load the texture from .fbx file");
@@ -153,7 +158,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		LOG("Error loading scene %s", full_path);
 }
 
-GLuint ModuleMeshLoader::loadTexture(const char* path)
+GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height)
 {
 	ILuint ilImage;	
 	GLuint textureID;
@@ -191,6 +196,8 @@ GLuint ModuleMeshLoader::loadTexture(const char* path)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+		width = ImageInfo.Width;
+		height = ImageInfo.Height;
 	}
 	else
 	{

@@ -27,7 +27,7 @@ public:
 	bool CleanUp();
 
 	void ImportFBX(const char* full_path);
-	GLuint loadTexture(const char* path);
+	GLuint loadTexture(const char* path, uint& width, uint& height);
 	
 };
 

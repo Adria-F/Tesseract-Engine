@@ -318,12 +318,15 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::ChangeMeshTexture(const char * path)
 {
-	GLuint tex_id = App->mesh_loader->loadTexture(path);
+	uint width, height;
+	GLuint tex_id = App->mesh_loader->loadTexture(path, width, height);
 
 	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
 	{
 		//glDeleteTextures(1, (GLuint*)(*it_m)->texture);
 		(*it_m)->texture = tex_id;
+		(*it_m)->width = width;
+		(*it_m)->height = height;
 	}
 }
 

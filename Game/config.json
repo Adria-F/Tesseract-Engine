@@ -43,6 +43,13 @@
       "width": 306,
       "pos_X": 0,
       "pos_Y": 18
+    },
+	"Properties": {
+      "name": "Properties",
+      "height": 783,
+      "width": 302,
+      "pos_X": 720,
+      "pos_Y": 18
     }
   }
 }

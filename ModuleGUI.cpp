@@ -9,6 +9,7 @@
 #include "PanelAbout.h"
 #include "PanelHardwareInfo.h"
 #include "PanelElements.h"
+#include "PanelProperties.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -42,6 +43,9 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	panels_aux = document["panels"]["Console"];
 	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
+	panels_aux = document["panels"]["Properties"];
+	panels.push_back(properties = new PanelProperties(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+
 	panels_aux = document["panels"]["Configuration"];
 	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 	
@@ -80,12 +84,11 @@ update_status ModuleGUI::PreUpdate(float dt)
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace Demo", 0, window_flags);
+	ImGui::Begin("DockSpace", 0, window_flags);
 	ImGui::PopStyleVar(3);
 
 	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruInEmptyNodes | ImGuiDockNodeFlags_RenderWindowBg | ImGuiDockNodeFlags_PassthruDockspace;
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruDockspace);
 
 	return update_status(UPDATE_CONTINUE);
 }

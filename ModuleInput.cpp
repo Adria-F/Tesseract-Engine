@@ -185,10 +185,14 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->mesh_loader->ImportFBX(event.drop.file);
 			}
-			if (str == "png")
+			else if (str == "png" || str == "dds")
 			{
 				App->renderer3D->ChangeMeshTexture(event.drop.file);
-			}			
+			}
+			else
+			{
+				LOG("Unsupported file format");
+			}
 			break;
 		}
 		}

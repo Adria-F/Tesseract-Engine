@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "PanelConfiguration.h"
+#include "ModuleInput.h"
 #include "MathGeoLib/MathGeoLib.h"
 
 PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned),
@@ -27,10 +28,12 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
+	ImGui::SetNextWindowSizeConstraints({ 100, 400 }, { 300, (float)App->window->height });
 	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoFocusOnAppearing);
 
-	if (ImGui::CollapsingHeader("Application", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Application"))
 	{
+		ImGui::PushItemWidth(200.0f);
 		static char app_name[120];
 		strcpy_s(app_name, 120, App->getAppName());
 		if (ImGui::InputText("App Name", app_name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
@@ -39,6 +42,7 @@ void PanelConfiguration::Draw()
 		static int framerateCap = App->getFramerateCap();
 		if (ImGui::SliderInt("MaxFPS", &framerateCap, 1, 120))
 			App->setFramerateCap(framerateCap);
+		ImGui::PopItemWidth();
 
 		char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
@@ -49,6 +53,7 @@ void PanelConfiguration::Draw()
 
 	if (ImGui::CollapsingHeader("Window"))
 	{
+		ImGui::PushItemWidth(200.0f);
 		if (ImGui::SliderInt("Width", &nWidth, 0, 1920) || ImGui::SliderInt("Height", &nHeight, 0, 1080))
 		{
 			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
@@ -58,6 +63,7 @@ void PanelConfiguration::Draw()
 		{
 			SDL_SetWindowBrightness(App->window->window, brightness);
 		}
+		ImGui::PopItemWidth();
 
 		ImGui::Text("Refresh rate: %d", mode.refresh_rate);
 
@@ -145,6 +151,7 @@ void PanelConfiguration::Draw()
 		ImGui::Checkbox("Face Normals", &App->renderer3D->Faces);
 		
 	}
+
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		ImGui::Text("Camera Position:");
@@ -154,6 +161,18 @@ void PanelConfiguration::Draw()
 		ImGui::Text(std::to_string(App->camera->Position.y).c_str());
 		ImGui::Text("Z: "); ImGui::SameLine();
 		ImGui::Text(std::to_string(App->camera->Position.z).c_str());
+
+		ImGui::PushItemWidth(100.0f);
+		ImGui::InputFloat("Camera Speed", &App->camera->cameraSpeed);
+		ImGui::InputFloat("Mouse Sensitivity", &App->camera->mouseSensitivity);
+		ImGui::InputFloat("Wheel Sensitivity", &App->camera->wheelSensitivity);
+		ImGui::PopItemWidth();
+	}
+
+	if (ImGui::CollapsingHeader("Input"))
+	{
+		ImGui::Text("Mouse Position:");
+		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
 	}
 
 	checkMoved();
@@ -170,9 +189,4 @@ void PanelConfiguration::addFPS(float fps, float ms)
 
 	fps_log[FPS_LOG_SIZE - 1] = fps;
 	ms_log[FPS_LOG_SIZE - 1] = ms;
-}
-
-void PanelConfiguration::windowConfig()
-{
-
 }

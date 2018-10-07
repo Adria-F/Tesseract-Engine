@@ -16,6 +16,8 @@ class MSphere;
 
 struct Mesh
 {
+	std::string name;
+
 	uint id_vertices = 0;
 	uint num_vertices = 0;
 	float* vertices = nullptr;
@@ -32,6 +34,8 @@ struct Mesh
 
 	uint texture = 0;
 	float* texCoords;
+	uint width = 0;
+	uint height = 0;
 
 	vector<float> faceNormals;
 

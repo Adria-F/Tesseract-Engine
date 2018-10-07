@@ -31,6 +31,9 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
+	float cameraSpeed = CAMERA_SPEED;
+	float mouseSensitivity = 0.25f;
+	float wheelSensitivity = 10.0f;
 
 private:
 
