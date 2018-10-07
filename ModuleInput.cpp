@@ -181,7 +181,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				str=str.substr(i + 1, str.length() - i);
 			}
 
-			if (str == "fbx")
+			if (str == "fbx" || str=="FBX")
 			{
 				App->mesh_loader->ImportFBX(event.drop.file);
 			}

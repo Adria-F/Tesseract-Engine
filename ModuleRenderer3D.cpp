@@ -280,18 +280,28 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::pushMesh(Mesh* mesh)
 {
-	
-	for (int i = 0; i < (*mesh).num_vertices * 3; i = i + 9)
+	for (int i = 0; i < (*mesh).num_indices; i+=3)
 	{
 		float x, y, z;
+		vec3 A, B, C, N;
 
-		x = (mesh->vertices[i] + mesh->vertices[i + 3] + mesh->vertices[i + 6]) / 3;
-		y = (mesh->vertices[i+1] + mesh->vertices[i + 4] + mesh->vertices[i + 7]) / 3;
-		z = (mesh->vertices[i+2] + mesh->vertices[i + 5] + mesh->vertices[i + 8]) / 3;
+		A = { mesh->vertices[mesh->indices[i] * 3],mesh->vertices[mesh->indices[i] * 3 + 1],mesh->vertices[mesh->indices[i] * 3 + 2]};
+		B = { mesh->vertices[mesh->indices[i+1] * 3],mesh->vertices[mesh->indices[i+1] * 3 + 1],mesh->vertices[mesh->indices[i+1] * 3 + 2] };
+		C = { mesh->vertices[mesh->indices[i+2] * 3],mesh->vertices[mesh->indices[i+2] * 3 + 1],mesh->vertices[mesh->indices[i+2] * 3 + 2] };
+		N = cross(B - A, C - A);
+		N = normalize(N);
+
+		x = (mesh->vertices[mesh->indices[i] * 3] + mesh->vertices[mesh->indices[i+1] * 3] + mesh->vertices[mesh->indices[i+2] * 3]) / 3;
+		y = (mesh->vertices[mesh->indices[i] * 3 +1] + mesh->vertices[mesh->indices[i+1] * 3 + 1] + mesh->vertices[mesh->indices[i+2] * 3 + 1]) / 3;
+		z = (mesh->vertices[mesh->indices[i] * 3 +2] + mesh->vertices[mesh->indices[i+1] * 3 + 2] + mesh->vertices[mesh->indices[i+2] * 3 + 2]) / 3;
 
 		mesh->faceNormals.push_back(x);
 		mesh->faceNormals.push_back(y);
 		mesh->faceNormals.push_back(z);
+		mesh->faceNormals.push_back(N.x);
+		mesh->faceNormals.push_back(N.y);
+		mesh->faceNormals.push_back(N.z);
+		
 
 	}
 
@@ -392,15 +402,16 @@ void Mesh::Draw()
 		glColor3f(0, 0.5f, 1);
 
 		glBegin(GL_LINES);
-		for (int i = 0; i < faceNormals.size(); i = i + 3)
+		for (int i = 0; i < faceNormals.size(); i = i + 6)
 		{
 			glVertex3f(faceNormals[i], faceNormals[i + 1], faceNormals[i + 2]);
-			glVertex3f(normals[i] + faceNormals[i], normals[i + 1] + faceNormals[i + 1], normals[i + 2] + faceNormals[i + 2]);
+			glVertex3f(faceNormals[i+3] + faceNormals[i], faceNormals[i+4] + faceNormals[i + 1], faceNormals[i+5] + faceNormals[i + 2]);
+			vert_normal += 9;
 		}
 		glEnd();
 
 		glColor3f(1, 1, 1);
-		glLineWidth(1.0f);
+		glLineWidth(2.0f);
 	}
 }
 
