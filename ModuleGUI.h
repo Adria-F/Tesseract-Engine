@@ -39,6 +39,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	bool isMouseOnGUI() const;
+
 public:
 
 	std::list<Panel*> panels;

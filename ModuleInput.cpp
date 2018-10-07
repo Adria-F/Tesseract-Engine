@@ -147,7 +147,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_MOUSEWHEEL:
-			mouse_z = event.wheel.y;
+			if (!App->gui->isMouseOnGUI())
+				mouse_z = event.wheel.y;
 			break;
 
 		case SDL_MOUSEMOTION:
@@ -212,6 +213,14 @@ bool ModuleInput::CleanUp()
 	controller = NULL;
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+KEY_STATE ModuleInput::GetMouseButton(int id) const
+{
+	if (App->gui->isMouseOnGUI())
+		return KEY_IDLE;
+	else
+		return mouse_buttons[id];
 }
 
 bool ModuleInput::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {

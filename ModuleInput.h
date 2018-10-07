@@ -31,10 +31,7 @@ public:
 		return keyboard[id];
 	}
 
-	KEY_STATE GetMouseButton(int id) const
-	{
-		return mouse_buttons[id];
-	}
+	KEY_STATE GetMouseButton(int id) const;
 
 	KEY_STATE GetController(int id) const
 	{

@@ -251,3 +251,8 @@ void ModuleGUI::OnResize(int width, int height)
 		}
 	}
 }
+
+bool ModuleGUI::isMouseOnGUI() const
+{
+	return ImGui::GetIO().WantCaptureMouse;
+}
