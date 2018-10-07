@@ -89,15 +89,19 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			LOG("New Mesh with %d normals\n", newMesh->num_normals);
 			LOG("New Mesh with %d faces\n", currentMesh->mNumFaces);
 
-			newMesh->texCoords = new float[newMesh->num_vertices * 2];
 
 			int t = 0;
-			for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+			if (currentMesh->HasTextureCoords(0))
 			{
-				newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
-				newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
-				t++;
+				newMesh->texCoords = new float[newMesh->num_vertices * 2];
+				for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+				{
+					newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
+					newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
+					t++;
+				}
 			}
+			
 
 			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
 			aiColor3D color(0.f, 0.f, 0.f);
