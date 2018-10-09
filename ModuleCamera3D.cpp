@@ -124,6 +124,11 @@ update_status ModuleCamera3D::Update(float dt)
 		Position += newPos;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+	{
+		LookAt({ 0,0,0 });
+	}
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
