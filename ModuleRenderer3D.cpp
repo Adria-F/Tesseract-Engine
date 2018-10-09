@@ -329,6 +329,13 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 }
 
 
+Mesh::~Mesh()
+{
+	glDeleteBuffers(1, &id_vertices);
+	glDeleteBuffers(1, &id_indices);
+	glDeleteTextures(1, &texture);
+}
+
 void Mesh::Draw()
 {
 	//Enable

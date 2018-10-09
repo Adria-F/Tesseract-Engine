@@ -24,6 +24,7 @@ class Primitive
 public:
 
 	Primitive();
+	~Primitive();
 
 	virtual void	Render() const;
 	void			SetPos(float x, float y, float z);

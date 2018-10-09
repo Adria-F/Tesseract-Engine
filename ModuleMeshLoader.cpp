@@ -70,7 +70,12 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+		//Saved used texture info
+		string usedPath = "";
+		uint usedTexture = 0;
+		uint usedTextureWidth = 0;
+		uint usedTextureHeight = 0;
+		
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			Mesh* newMesh = new Mesh();
@@ -112,19 +117,37 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			
 			aiString path;
 			aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
-			
+			string currentPath = path.C_Str();
 			if (textureError == aiReturn::aiReturn_SUCCESS)
 			{
-				//Remove the name of the mesh from the path and add the image name
-				std::string Path = full_path;
-				for (int i = Path.size() - 1; i >= 0; i--)
-					if (Path[i] == '\\')
-						break;
-					else
-						Path.pop_back();
-				Path += path.C_Str();
+				if (usedPath != currentPath)
+				{
+					//Remove the name of the mesh from the path and add the image name
+					std::string Path = full_path;
+					for (int i = Path.size() - 1; i >= 0; i--)
+						if (Path[i] == '\\')
+							break;
+						else
+							Path.pop_back();
+					Path += currentPath;
 
-				newMesh->texture = loadTexture(Path.c_str(), newMesh->width, newMesh->height);
+					newMesh->texture = loadTexture(Path.c_str(), newMesh->width, newMesh->height);
+					if (usedTexture == 0)
+					{
+						usedTexture = newMesh->texture;
+						usedTextureWidth = newMesh->width;
+						usedTextureHeight = newMesh->height;
+					}
+				}
+				else
+				{
+					LOG("Texture already loaded");
+					newMesh->texture = usedTexture;
+					newMesh->width = usedTextureWidth;
+					newMesh->height = usedTextureHeight;
+				}
+				if (usedPath == "")
+					usedPath = currentPath;
 			}
 			else
 				LOG("Couldn't load the texture from .fbx file");

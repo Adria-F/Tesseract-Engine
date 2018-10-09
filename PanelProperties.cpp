@@ -43,7 +43,11 @@ void PanelProperties::Draw()
 			ImGui::PushID("Texture" + count);
 			if (ImGui::CollapsingHeader("Texture"))
 			{
-				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->width, mesh->height);
+				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->width, mesh->height);	
+				float panelWidth = ImGui::GetWindowContentRegionWidth();
+				float conversionFactor = panelWidth / mesh->width;
+				ImVec2 imageSize = { mesh->height *conversionFactor, panelWidth };
+				ImGui::Image((ImTextureID)mesh->texture, imageSize);
 			}
 			ImGui::PopID();
 
