@@ -170,8 +170,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
-
-				newMesh->calculateNormals();
+				if(!errorLoading)
+					newMesh->calculateNormals();
 			}
 			else
 				errorLoading = true;
