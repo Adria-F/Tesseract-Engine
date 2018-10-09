@@ -107,7 +107,6 @@ update_status ModuleCamera3D::Update(float dt)
 		if (length(distance)<zoomDistance)
 		{
 			Sensitivity = length(distance) / zoomDistance;
-			LOG("Small zone");
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
