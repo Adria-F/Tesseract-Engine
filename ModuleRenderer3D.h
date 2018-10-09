@@ -16,9 +16,11 @@ class MSphere;
 
 struct Mesh
 {
+	~Mesh();
+
 	std::string name;
 
-	uint id_vertices = 0;
+	uint id_vertices = 0; //to delete
 	uint num_vertices = 0;
 	float* vertices = nullptr;
 
@@ -26,7 +28,6 @@ struct Mesh
 	uint num_indices = 0;
 	uint* indices = nullptr;
 
-	uint id_normal = 0;
 	uint num_normals = 0;
 	float* normals = nullptr;
 

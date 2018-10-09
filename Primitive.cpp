@@ -14,6 +14,11 @@
 Primitive::Primitive() :  color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
 
+Primitive::~Primitive()
+{
+	glDeleteBuffers(1, &my_id);
+}
+
 // ------------------------------------------------------------
 PrimitiveTypes Primitive::GetType() const
 {
