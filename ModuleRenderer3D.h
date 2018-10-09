@@ -8,8 +8,8 @@
 using namespace std;
 
 #define MAX_LIGHTS 8
-#define CHECKERS_H 100
-#define CHECKERS_W 100
+#define CHECKERS_H 256
+#define CHECKERS_W 256
 
 
 class MSphere;
