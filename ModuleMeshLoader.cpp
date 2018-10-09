@@ -174,10 +174,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 					newMesh->calculateNormals();
 				}
 
-				AABB aabbGenerator;
-				aabbGenerator.SetNegativeInfinity();
-				aabbGenerator.Enclose((float3*)newMesh->vertices, newMesh->num_vertices);
-				newMesh->boundingBox = aabbGenerator;
+				newMesh->boundingBox.SetNegativeInfinity();
+				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
 			}
 			else
 				errorLoading = true;
