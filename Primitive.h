@@ -154,3 +154,13 @@ public:
 	vec center;
 	float distance, width, depth, height;
 };
+
+// ============================================
+//class MBoundingBox : public Primitive
+//{
+//public:
+//	MBoundingBox();
+//	MBoundingBox(AABB boundingBox);
+//public:
+//	vec size;
+//};

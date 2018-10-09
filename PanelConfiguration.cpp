@@ -152,6 +152,7 @@ void PanelConfiguration::Draw()
 		ImGui::Checkbox("Wireframe", &App->renderer3D->Wireframe);
 		ImGui::Checkbox("Normals", &App->renderer3D->Normals);
 		ImGui::Checkbox("Face Normals", &App->renderer3D->Faces);
+		ImGui::Checkbox("Bounding Box", &App->renderer3D->ShowBB);
 		
 	}
 

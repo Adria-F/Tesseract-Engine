@@ -584,3 +584,5 @@ MFrustum::MFrustum(float distance, float depth, float width, float height, vec c
 
 	generateBuffer();
 }
+
+

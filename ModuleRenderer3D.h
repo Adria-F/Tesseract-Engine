@@ -34,11 +34,13 @@ struct Mesh
 	vec3 color = { 0,0,0 };
 
 	uint texture = 0;
-	float* texCoords;
+	float* texCoords=nullptr;
 	uint width = 0;
 	uint height = 0;
 
 	vector<float> faceNormals;
+
+	AABB boundingBox;
 
 	void Draw();
 	void calculateNormals();
@@ -80,6 +82,7 @@ public:
 	bool Wireframe = false;
 	bool Normals = false;
 	bool Faces = false;
+	bool ShowBB = false;
 
 	uint buff_id = 0;
 

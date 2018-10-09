@@ -92,21 +92,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 			memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
 			LOG("New Mesh with %d vertices\n",newMesh->num_vertices);
 			LOG("New Mesh with %d normals\n", newMesh->num_normals);
-			LOG("New Mesh with %d faces\n", currentMesh->mNumFaces);
-
-
-			int t = 0;
-			if (currentMesh->HasTextureCoords(0))
-			{
-				newMesh->texCoords = new float[newMesh->num_vertices * 2];
-				for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
-				{
-					newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
-					newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
-					t++;
-				}
-			}
-			
+			LOG("New Mesh with %d faces\n", currentMesh->mNumFaces);			
 
 			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
 			aiColor3D color(0.f, 0.f, 0.f);
@@ -154,6 +140,18 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 			if (currentMesh->HasFaces())
 			{
+				int t = 0;
+				if (currentMesh->HasTextureCoords(0))
+				{
+					newMesh->texCoords = new float[newMesh->num_vertices * 2];
+					for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+					{
+						newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
+						newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
+						t++;
+					}
+				}
+
 				newMesh->num_indices = currentMesh->mNumFaces * 3;
 				newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
 
@@ -162,6 +160,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 					if (currentMesh->mFaces[j].mNumIndices != 3)
 					{
 						LOG("WARNING, geometry face with != 3 indices!");
+						LOG("WARNING, face normals couldn't be loaded");
 						errorLoading = true;
 						break;
 					}
@@ -170,8 +169,15 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
-				if(!errorLoading)
+				if (!errorLoading)
+				{
 					newMesh->calculateNormals();
+				}
+
+				AABB aabbGenerator;
+				aabbGenerator.SetNegativeInfinity();
+				aabbGenerator.Enclose((float3*)newMesh->vertices, newMesh->num_vertices);
+				newMesh->boundingBox = aabbGenerator;
 			}
 			else
 				errorLoading = true;
