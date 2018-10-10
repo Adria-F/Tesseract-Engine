@@ -176,6 +176,17 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 	CalculateViewMatrix();
 }
 
+void ModuleCamera3D::FitCamera(const AABB &boundingBox)
+{
+	vec diagonal = boundingBox.Diagonal();
+	vec center = boundingBox.CenterPoint();
+	Position.z = (center.z - diagonal.Length());
+	Position.y = center.y;
+	Position.x = center.x;
+	LookAt({ center.x,center.y,center.z });
+	CalculateViewMatrix();
+}
+
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {

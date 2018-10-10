@@ -2,6 +2,7 @@
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleCamera3D.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -176,6 +177,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 				newMesh->boundingBox.SetNegativeInfinity();
 				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+				App->camera->FitCamera(newMesh->boundingBox);
 			}
 			else
 				errorLoading = true;
