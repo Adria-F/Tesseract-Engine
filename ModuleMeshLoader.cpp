@@ -76,6 +76,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		uint usedTexture = 0;
 		uint usedTextureWidth = 0;
 		uint usedTextureHeight = 0;
+		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
@@ -177,13 +178,16 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 
 				newMesh->boundingBox.SetNegativeInfinity();
 				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
-				App->camera->FitCamera(newMesh->boundingBox);
+				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
 			}
 			else
 				errorLoading = true;
 
 			if (!errorLoading)
+			{
+				App->camera->FitCamera(*App->camera->BBtoLook);
 				App->renderer3D->pushMesh(newMesh);
+			}
 			errorLoading = false;
 		}
 		aiReleaseImport(scene);

@@ -22,6 +22,8 @@ public:
 	float* GetViewMatrix();
 	vec3 getMovementFactor();
 
+	void renderTotalBB();
+
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
 	bool Load(rapidjson::Document& document);
 
@@ -36,6 +38,7 @@ public:
 	float mouseSensitivity = 0.25f;
 	float wheelSensitivity = 10.0f;
 	float zoomDistance = 20.0f;
+	AABB* BBtoLook=nullptr;
 
 private:
 

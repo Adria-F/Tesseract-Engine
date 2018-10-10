@@ -19,6 +19,7 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 	Position = vec3(0.0f, 30.0f, 80.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	LookAt(Reference);
+
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -184,7 +185,7 @@ void ModuleCamera3D::FitCamera(const AABB &boundingBox)
 	Position.y = center.y;
 	Position.x = center.x;
 	LookAt({ center.x,center.y,center.z });
-	CalculateViewMatrix();
+	//CalculateViewMatrix();
 }
 
 // -----------------------------------------------------------------
@@ -224,6 +225,45 @@ vec3 ModuleCamera3D::getMovementFactor()
 	}
 	
 	return Z * length(newPosition);
+}
+
+void ModuleCamera3D::renderTotalBB()
+{
+	glLineWidth(2.0f);
+	glColor3f(1, 0.5f, 1);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(BBtoLook->CornerPoint(0).x, BBtoLook->CornerPoint(0).y, BBtoLook->CornerPoint(0).z);
+	glVertex3f(BBtoLook->CornerPoint(1).x, BBtoLook->CornerPoint(1).y, BBtoLook->CornerPoint(1).z);
+	glVertex3f(BBtoLook->CornerPoint(0).x, BBtoLook->CornerPoint(0).y, BBtoLook->CornerPoint(0).z);
+	glVertex3f(BBtoLook->CornerPoint(2).x, BBtoLook->CornerPoint(2).y, BBtoLook->CornerPoint(2).z);
+	glVertex3f(BBtoLook->CornerPoint(0).x, BBtoLook->CornerPoint(0).y, BBtoLook->CornerPoint(0).z);
+	glVertex3f(BBtoLook->CornerPoint(4).x, BBtoLook->CornerPoint(4).y, BBtoLook->CornerPoint(4).z);
+	glVertex3f(BBtoLook->CornerPoint(3).x, BBtoLook->CornerPoint(3).y, BBtoLook->CornerPoint(3).z);
+	glVertex3f(BBtoLook->CornerPoint(1).x, BBtoLook->CornerPoint(1).y, BBtoLook->CornerPoint(1).z);
+	glVertex3f(BBtoLook->CornerPoint(3).x, BBtoLook->CornerPoint(3).y, BBtoLook->CornerPoint(3).z);
+	glVertex3f(BBtoLook->CornerPoint(2).x, BBtoLook->CornerPoint(2).y, BBtoLook->CornerPoint(2).z);
+	glVertex3f(BBtoLook->CornerPoint(3).x, BBtoLook->CornerPoint(3).y, BBtoLook->CornerPoint(3).z);
+	glVertex3f(BBtoLook->CornerPoint(7).x, BBtoLook->CornerPoint(7).y, BBtoLook->CornerPoint(7).z);
+	glVertex3f(BBtoLook->CornerPoint(6).x, BBtoLook->CornerPoint(6).y, BBtoLook->CornerPoint(6).z);
+	glVertex3f(BBtoLook->CornerPoint(2).x, BBtoLook->CornerPoint(2).y, BBtoLook->CornerPoint(2).z);
+	glVertex3f(BBtoLook->CornerPoint(6).x, BBtoLook->CornerPoint(6).y, BBtoLook->CornerPoint(6).z);
+	glVertex3f(BBtoLook->CornerPoint(4).x, BBtoLook->CornerPoint(4).y, BBtoLook->CornerPoint(4).z);
+	glVertex3f(BBtoLook->CornerPoint(6).x, BBtoLook->CornerPoint(6).y, BBtoLook->CornerPoint(6).z);
+	glVertex3f(BBtoLook->CornerPoint(7).x, BBtoLook->CornerPoint(7).y, BBtoLook->CornerPoint(7).z);
+	glVertex3f(BBtoLook->CornerPoint(5).x, BBtoLook->CornerPoint(5).y, BBtoLook->CornerPoint(5).z);
+	glVertex3f(BBtoLook->CornerPoint(1).x, BBtoLook->CornerPoint(1).y, BBtoLook->CornerPoint(1).z);
+	glVertex3f(BBtoLook->CornerPoint(5).x, BBtoLook->CornerPoint(5).y, BBtoLook->CornerPoint(5).z);
+	glVertex3f(BBtoLook->CornerPoint(4).x, BBtoLook->CornerPoint(4).y, BBtoLook->CornerPoint(4).z);
+	glVertex3f(BBtoLook->CornerPoint(5).x, BBtoLook->CornerPoint(5).y, BBtoLook->CornerPoint(5).z);
+	glVertex3f(BBtoLook->CornerPoint(7).x, BBtoLook->CornerPoint(7).y, BBtoLook->CornerPoint(7).z);
+
+	glEnd();
+
+	glColor3f(1, 1, 1);
+	glLineWidth(1.0f);
+
 }
 
 // -----------------------------------------------------------------

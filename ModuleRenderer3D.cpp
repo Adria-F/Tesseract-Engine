@@ -334,6 +334,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &id_vertices);
 	glDeleteBuffers(1, &id_indices);
 	glDeleteTextures(1, &texture);
+	App->camera->BBtoLook = nullptr;
 }
 
 void Mesh::Draw()
@@ -442,6 +443,8 @@ void Mesh::Draw()
 
 		glColor3f(1, 1, 1);
 		glLineWidth(1.0f);
+
+		App->camera->renderTotalBB();
 	}
 }
 
