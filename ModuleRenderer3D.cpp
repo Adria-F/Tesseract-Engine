@@ -119,6 +119,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -149,6 +150,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_W, CHECKERS_H,0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return ret;
 }
@@ -331,9 +333,9 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 
 Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &id_vertices);
 	glDeleteBuffers(1, &id_indices);
 	glDeleteTextures(1, &texture);
+	delete(App->camera->BBtoLook);
 	App->camera->BBtoLook = nullptr;
 }
 
