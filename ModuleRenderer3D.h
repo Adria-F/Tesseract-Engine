@@ -20,7 +20,6 @@ struct Mesh
 
 	std::string name;
 
-	uint id_vertices = 0; //to delete
 	uint num_vertices = 0;
 	float* vertices = nullptr;
 
@@ -41,6 +40,10 @@ struct Mesh
 	vector<float> faceNormals;
 
 	AABB boundingBox;
+
+	vec3 position = { 0.0f,0.0f,0.0f };
+	vec3 scale = { 1.0,1.0f,1.0f };
+	Quat rotation = { 0.0f,0.0f,0.0f,0.0f };
 
 	void Draw();
 	void calculateNormals();
@@ -78,7 +81,7 @@ public:
 	bool Cull_Face = true;
 	bool Lighting = true;
 	bool Color_Material = true;
-	bool Texture_2D = false;
+	bool Texture_2D = true;
 	bool Wireframe = false;
 	bool Normals = false;
 	bool Faces = false;

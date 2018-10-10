@@ -4,6 +4,8 @@
 #include "Module.h"
 
 struct Mesh;
+struct aiScene;
+struct aiNode;
 
 class ModuleMeshLoader : public Module
 {
@@ -27,8 +29,16 @@ public:
 	bool CleanUp();
 
 	void ImportFBX(const char* full_path);
+	void loadNodeMesh(const aiScene* scene, aiNode* node, std::string meshPath);
 	GLuint loadTexture(const char* path, uint& width, uint& height);
 	
+public:
+
+	//Saved used texture info
+	std::string usedPath = "";
+	uint usedTexture = 0;
+	uint usedTextureWidth = 0;
+	uint usedTextureHeight = 0;
 };
 
 #endif //__MODULEMESHLOADER_H__

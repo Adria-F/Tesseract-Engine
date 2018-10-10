@@ -29,9 +29,10 @@ void PanelProperties::Draw()
 			ImGui::PushID("Transformation" + count);
 			if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				ImGui::Text("Position:\n X: %f | Y: %f | Z: %f", 0.0f, 0.0f, 0.0f);
-				ImGui::Text("Rotation:\n X: %f | Y: %f | Z: %f", 0.0f, 0.0f, 0.0f);
-				ImGui::Text("Scale:\n X: %f | Y: %f | Z: %f", 1.0f, 1.0f, 1.0f);
+				ImGui::Text("Position:\n X: %f | Y: %f | Z: %f", mesh->position.x, mesh->position.y, mesh->position.z);
+				float3 rot = mesh->rotation.ToEulerXYZ();
+				ImGui::Text("Rotation:\n X: %f | Y: %f | Z: %f", rot.x, rot.y, rot.z);
+				ImGui::Text("Scale:\n X: %f | Y: %f | Z: %f", mesh->scale.x, mesh->scale.y, mesh->scale.z);
 			}
 			ImGui::PopID();
 			ImGui::PushID("Geometry" + count);
