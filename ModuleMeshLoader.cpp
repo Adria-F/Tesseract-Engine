@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Globals.h"
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
@@ -17,6 +18,8 @@
 #pragma comment( lib, "DevIL/libx86/ILU.lib")
 #pragma comment( lib, "DevIL/libx86/ILUT.lib")
 
+void CallLog(const char* str, char* userData);
+
 ModuleMeshLoader::ModuleMeshLoader(bool start_enabled): Module(start_enabled)
 {
 }
@@ -25,6 +28,7 @@ bool ModuleMeshLoader::Init(rapidjson::Document& document)
 {
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	stream.callback=CallLog;
 	aiAttachLogStream(&stream);
 
 	ilInit();
@@ -277,4 +281,9 @@ GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height
 	LOG("Texture creation successful." );
 
 	return textureID;
+}
+
+void CallLog(const char* str, char* userData)
+{
+	LOG("%s", str);
 }

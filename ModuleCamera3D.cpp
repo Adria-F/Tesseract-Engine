@@ -125,6 +125,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
 	{
+		Position = vec3(0.0f, 30.0f, 80.0f);
 		LookAt({ 0,0,0 });
 	}
 
