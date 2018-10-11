@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
+#include "ModuleGUI.h"
 #include "PanelConfiguration.h"
 #include "ModuleInput.h"
 #include "MathGeoLib/MathGeoLib.h"
@@ -76,6 +77,9 @@ void PanelConfiguration::Draw()
 		if (ImGui::SliderInt("Width", &nWidth, 0, 1920) || ImGui::SliderInt("Height", &nHeight, 0, 1080))
 		{
 			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
+	/*		App->window->OnResize(nWidth, nHeight);
+			App->renderer3D->OnResize(nWidth, nHeight);
+			App->gui->OnResize(nWidth, nHeight);*/
 		}
 
 		if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
@@ -89,7 +93,13 @@ void PanelConfiguration::Draw()
 		if (ImGui::Checkbox("FullScreen", &fullscreen))
 		{
 			if (fullscreen)
+			{
 				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+				SDL_GetWindowSize(App->window->window, &nWidth, &nHeight);
+				/*App->window->OnResize(nWidth, nHeight);
+				App->renderer3D->OnResize(nWidth, nHeight);
+				App->gui->OnResize(nWidth, nHeight);*/
+			}
 			else
 				SDL_SetWindowFullscreen(App->window->window, 0);
 		}
@@ -115,9 +125,9 @@ void PanelConfiguration::Draw()
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Full Desktop", &full_desktop))
 		{
-			
-			if (full_desktop)
+			if (full_desktop) {
 				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			}
 			else
 				SDL_SetWindowFullscreen(App->window->window, 0);
 		}

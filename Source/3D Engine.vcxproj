@@ -169,6 +169,7 @@
     <ClInclude Include="PanelElements.h" />
     <ClInclude Include="PanelHardwareInfo.h" />
     <ClInclude Include="PanelProperties.h" />
+    <ClInclude Include="PanelScene.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\cursorstreamwrapper.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="PanelElements.cpp" />
     <ClCompile Include="PanelHardwareInfo.cpp" />
     <ClCompile Include="PanelProperties.cpp" />
+    <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Timer.cpp" />

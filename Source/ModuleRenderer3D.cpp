@@ -8,6 +8,8 @@
 #include "ModuleGUI.h"
 #include "Primitive.h"
 
+#include "PanelScene.h"
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
@@ -83,7 +85,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		glClearDepth(1.0f);//Specifies the depth value used when the depth buffer is cleared.
 		
 		//Initialize clear color
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);//clear values for the color buffers. The initial values are all 0.
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//clear values for the color buffers. The initial values are all 0.
 
 
 		//specify pixel arithmetic glBlendFunc(rgb source blending factors, rgb destination blending factors)
@@ -121,7 +123,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(App->window->width, App->window->height);
 
 	//Texture Test------------------------
 
@@ -170,7 +172,7 @@ bool ModuleRenderer3D::Start()
 	GLuint depthrenderbuffer;
 	glGenRenderbuffers(1, &depthrenderbuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->width, App->window->height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
@@ -195,6 +197,7 @@ bool ModuleRenderer3D::Start()
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 	glViewport(0, 0, App->window->width, App->window->height);

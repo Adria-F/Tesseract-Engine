@@ -14,6 +14,7 @@ class PanelAbout;
 class PanelHardwareInfo;
 class PanelElements;
 class PanelProperties;
+class PanelScene;
 
 class ModuleGUI : public Module
 {
@@ -52,25 +53,9 @@ public:
 	PanelAbout* about = nullptr;
 	PanelHardwareInfo* hardwareInfo = nullptr;
 	PanelElements* ShapeElements = nullptr;
+	PanelScene* Scene = nullptr;
 
-	// TO DELETE --------------------------------
-	bool Sphere_tb = false;
-	bool AABB_tb = false;
-	bool RNGb = false;
-	
-	float aux_A[4] = { 0.0f,0.0f,0.0f,1.0f };
-	float aux_B[4] = { 0.0f,0.0f,0.0f,1.0f };
-
-	float Max_aux_A[3] = { 1.0f,1.0f,1.0f };
-	float Min_aux_A[3] = { 0.0f,0.0f,0.0f };
-	float Max_aux_B[3] = { 1.0f,1.0f,1.0f };
-	float Min_aux_B[3] = { 0.0f,0.0f,0.0f };
-
-	float firstR = 0.0f;
-	int secondR = 0;
-	int min = -50;
-	int max = 50;
-	// -----------------------------------------
+	bool hoveringScene = false;
 };
 
 #endif // !__MODULEGUI_H__

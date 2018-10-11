@@ -16,9 +16,7 @@ void PanelHardwareInfo::Draw()
 {
 	ImGui::Begin(name.c_str(), &active);
 
-	ImGui::Image((ImTextureID)App->renderer3D->renderedTexture, ImGui::GetWindowSize(), { 0,1 }, { 1,0 });
-
-	/*ImGui::Text("CPUs:");
+	ImGui::Text("CPUs:");
 	ImGui::SameLine();
 	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
 	ImGui::Text("%d (Cache: %dB)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
@@ -59,7 +57,7 @@ void PanelHardwareInfo::Draw()
 	if (SDL_HasSSE42())
 		caps += "SSE42, ";
 	ImGui::Text(caps.c_str());
-	ImGui::PopStyleColor();*/
+	ImGui::PopStyleColor();
 
 	ImGui::End();
 }

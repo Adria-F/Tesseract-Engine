@@ -84,7 +84,7 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 		}
 	}
 
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(width*screen_size, height*screen_size);
 	
 	return ret;
 }

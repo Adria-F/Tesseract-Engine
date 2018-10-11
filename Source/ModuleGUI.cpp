@@ -10,6 +10,7 @@
 #include "PanelHardwareInfo.h"
 #include "PanelElements.h"
 #include "PanelProperties.h"
+#include "PanelScene.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -52,6 +53,9 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 
 	panels_aux = document["panels"]["Elements"];
 	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+
+	panels_aux = document["panels"]["Scene"];
+	panels.push_back(Scene = new PanelScene(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -250,8 +254,8 @@ void ModuleGUI::Draw()
 
 void ModuleGUI::OnResize(int width, int height)
 {
-	float screenWidthFactor = (float)width / SCREEN_WIDTH;
-	float screenHeigthFactor = (float)height / SCREEN_HEIGHT;
+	float screenWidthFactor = (float)width / App->window->width;
+	float screenHeigthFactor = (float)height / App->window->height;
 
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
 	{
@@ -284,5 +288,5 @@ void ModuleGUI::OnResize(int width, int height)
 
 bool ModuleGUI::isMouseOnGUI() const
 {
-	return ImGui::GetIO().WantCaptureMouse;
+	return ImGui::GetIO().WantCaptureMouse && !hoveringScene;
 }
