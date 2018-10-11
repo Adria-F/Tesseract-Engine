@@ -1,16 +1,16 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
 
-ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
+ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {}
 
-ModuleSceneIntro::~ModuleSceneIntro()
+ModuleScene::~ModuleScene()
 {}
 
-bool ModuleSceneIntro::Start()
+bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
@@ -27,31 +27,31 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-bool ModuleSceneIntro::CleanUp()
+bool ModuleScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 	return true;
 }
 
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleScene::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
 	return ret;
 }
 
-bool ModuleSceneIntro::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+bool ModuleScene::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
 
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("name", "Scene", allocator);
 	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
-bool ModuleSceneIntro::Load(rapidjson::Document& document) {
+bool ModuleScene::Load(rapidjson::Document& document) {
 	return true;
 }
 
-void ModuleSceneIntro::Draw()
+void ModuleScene::Draw()
 {
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{
@@ -59,7 +59,7 @@ void ModuleSceneIntro::Draw()
 	}
 }
 
-void ModuleSceneIntro::newScene()
+void ModuleScene::newScene()
 {
 	std::list<Primitive*>::iterator it_p;
 	it_p = ShapesToDraw.begin();

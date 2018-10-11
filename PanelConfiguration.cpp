@@ -7,6 +7,8 @@
 #include "ModuleInput.h"
 #include "MathGeoLib/MathGeoLib.h"
 
+#include "mmgr/mmgr.h"
+
 PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned),
 fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE)
 {
@@ -51,7 +53,21 @@ void PanelConfiguration::Draw()
 		sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 
-		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption", 0.0f, 100.0f, ImVec2(310, 100));
+		sMStats stats = m_getMemoryStatistics();
+		addMemory((float)stats.totalReportedMemory);
+
+		/*LOG("----------------------------------");
+		LOG("Total Reported Mem: %u", stats.totalReportedMemory);
+		LOG("Total Actual Mem: %u", stats.totalActualMemory);
+		LOG("Peak Reported Mem: %u", stats.peakReportedMemory);
+		LOG("Peak Actual Mem: %u", stats.peakActualMemory);
+		LOG("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
+		LOG("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
+		LOG("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
+		LOG("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
+		LOG("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);*/
+
+		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(310, 100));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -197,7 +213,7 @@ void PanelConfiguration::addFPS(float fps, float ms)
 
 void PanelConfiguration::addMemory(float memory)
 {
-	memory /= 1000000;
+	//memory /= 1000000;
 	for (uint i = 0; i < MEMORY_LOG_SIZE - 1; ++i)
 	{
 		memory_log[i] = memory_log[i + 1];

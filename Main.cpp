@@ -2,6 +2,11 @@
 #include "Application.h"
 #include "Globals.h"
 
+#ifdef _DEBUG
+	//#define TEST_MEMORY_MANAGER
+	#include "mmgr/mmgr.h"
+#endif
+
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )

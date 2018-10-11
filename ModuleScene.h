@@ -1,5 +1,5 @@
-#ifndef __MODULESCENEINTRO_H__
-#define __MODULESCENEINTRO_H__
+#ifndef __MODULESCENE_H__
+#define __MODULESCENE_H__
 
 #include "Module.h"
 #include "p2DynArray.h"
@@ -18,11 +18,11 @@ using namespace std;
 
 class Primitive;
 
-class ModuleSceneIntro : public Module
+class ModuleScene : public Module
 {
 public:
-	ModuleSceneIntro(bool start_enabled = true);
-	~ModuleSceneIntro();
+	ModuleScene(bool start_enabled = true);
+	~ModuleScene();
 
 	bool Start();
 	update_status Update(float dt);
@@ -47,4 +47,4 @@ public:
 	list<Primitive*> ShapesToDraw;
 
 };
-#endif // !__MODULESCENEINTRO_H__
+#endif // !__MODULESCENE_H__

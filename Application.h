@@ -23,11 +23,9 @@
 class Module;
 class ModuleWindow;
 class ModuleInput;
-class ModuleAudio;
-class ModuleSceneIntro;
+class ModuleScene;
 class ModuleRenderer3D;
 class ModuleCamera3D;
-class ModulePhysics3D;
 class ModuleGUI;
 class ModuleMeshLoader;
 
@@ -36,11 +34,9 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
+	ModuleScene* scene_intro;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
 	ModuleGUI* gui;
 	ModuleMeshLoader* mesh_loader;
 

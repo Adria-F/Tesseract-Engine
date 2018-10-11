@@ -3,10 +3,8 @@
 #include "ModuleMeshLoader.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
 #include "Primitive.h"
 
@@ -333,10 +331,18 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 
 Mesh::~Mesh()
 {
+	RELEASE_ARRAY(vertices);
+
+	RELEASE_ARRAY(normals);
+
+	RELEASE_ARRAY(texCoords);
+
 	glDeleteBuffers(1, &id_indices);
+	RELEASE_ARRAY(indices);
+
 	glDeleteTextures(1, &texture);
-	delete(App->camera->BBtoLook);
-	App->camera->BBtoLook = nullptr;
+
+	RELEASE(App->camera->BBtoLook);
 }
 
 void Mesh::Draw()

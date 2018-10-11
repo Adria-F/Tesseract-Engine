@@ -13,11 +13,9 @@
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
@@ -81,9 +79,9 @@ bool ModuleGUI::Start()
 	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_ButtonActive] = { 0.8f,0.37f,0.0f,1.0f };
 	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_ButtonHovered] = { 0.95f,0.5f,0.0f,1.0f };
 
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBg] = { 1.0f,0.6f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgActive] = { 0.8f,0.37f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgHovered] = { 0.95f,0.5f,0.0f,1.0f };
+	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBg] = { 1.0f,0.6f,0.0f,0.1f };
+	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgActive] = { 0.8f,0.37f,0.0f,0.5f };
+	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgHovered] = { 0.95f,0.5f,0.0f,0.5f };
 
 	return true;
 }
@@ -128,6 +126,11 @@ update_status ModuleGUI::Update(float dt)
 				App->LoadGame();
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
+			if (ImGui::MenuItem("mmgr Test"))
+			{
+				for (int i = 0; i < 100; i++)
+					new char;
+			}
 			if (ImGui::MenuItem("Close", "ESC"))
 				//status = UPDATE_STOP;
 				LOG("Not Working");

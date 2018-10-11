@@ -1,16 +1,11 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGUI.h"
 #include "ModuleMeshLoader.h"
-
-#include <Windows.h>
-#include <Psapi.h>
 
 #include "rapidjson/filereadstream.h"
 
@@ -20,11 +15,9 @@ Application::Application()
 {
 	window = new ModuleWindow();
 	input = new ModuleInput();
-	audio = new ModuleAudio(true);
-	scene_intro = new ModuleSceneIntro();
+	scene_intro = new ModuleScene();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
-	physics = new ModulePhysics3D();
 	gui = new ModuleGUI();
 	mesh_loader = new ModuleMeshLoader();
 
@@ -36,8 +29,6 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(audio);
-	AddModule(physics);
 	AddModule(mesh_loader);
 
 	// Scenes
@@ -110,13 +101,6 @@ void Application::FinishUpdate()
 		SDL_Delay(ms_cap - ms_timer.ReadTime());
 
 	gui->logFPS(1 / dt, dt * 1000);
-
-	PROCESS_MEMORY_COUNTERS_EX pmc;
-	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-	SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
-	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-
-	gui->logMemory(virtualMemUsedByMe);
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

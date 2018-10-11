@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleCamera3D.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -9,6 +9,8 @@
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
+
+#include "mmgr/mmgr.h"
 
 #pragma comment (lib,"Assimp/libx86/assimp.lib")
 #pragma comment( lib, "DevIL/libx86/DevIL.lib")
