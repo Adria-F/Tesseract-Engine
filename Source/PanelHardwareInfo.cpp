@@ -1,6 +1,9 @@
 #include "PanelHardwareInfo.h"
 #include "SDL\include\SDL.h"
 
+#include "Application.h"
+#include "ModuleRenderer3D.h"
+
 PanelHardwareInfo::PanelHardwareInfo(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned): Panel(name, posX, posY, width, height, aligned)
 {
 }
@@ -13,7 +16,9 @@ void PanelHardwareInfo::Draw()
 {
 	ImGui::Begin(name.c_str(), &active);
 
-	ImGui::Text("CPUs:");
+	ImGui::Image((ImTextureID)App->renderer3D->renderedTexture, ImGui::GetWindowSize(), { 0,1 }, { 1,0 });
+
+	/*ImGui::Text("CPUs:");
 	ImGui::SameLine();
 	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
 	ImGui::Text("%d (Cache: %dB)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
@@ -54,7 +59,7 @@ void PanelHardwareInfo::Draw()
 	if (SDL_HasSSE42())
 		caps += "SSE42, ";
 	ImGui::Text(caps.c_str());
-	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();*/
 
 	ImGui::End();
 }

@@ -145,7 +145,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (!App->gui->isMouseOnGUI())
+			//if (!App->gui->isMouseOnGUI())
 				mouse_z = event.wheel.y;
 			break;
 
@@ -215,9 +215,9 @@ bool ModuleInput::CleanUp()
 
 KEY_STATE ModuleInput::GetMouseButton(int id) const
 {
-	if (App->gui->isMouseOnGUI())
-		return KEY_IDLE;
-	else
+	//if (App->gui->isMouseOnGUI())
+		//return KEY_IDLE;
+	//else
 		return mouse_buttons[id];
 }
 

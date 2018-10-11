@@ -74,6 +74,9 @@ public:
 
 public:
 
+	GLuint FramebufferName = 0;
+	GLuint renderedTexture = 0;
+
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
