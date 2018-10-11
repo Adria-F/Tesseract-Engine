@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef __PANELELEMENTS_H__
+#define __PANELELEMENTS_H__
 #include "Panel.h"
 
 class PanelElements:public Panel
@@ -40,3 +40,4 @@ private:
 
 };
 
+#endif //__PANELELEMENTS_H__

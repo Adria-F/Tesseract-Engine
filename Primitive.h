@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __PRIMITIVE_H__
+#define __PRIMITIVE_H__
+
 #include "Color.h"
 #include <vector>
 #include "MathGeoLib/MathGeoLib.h"
@@ -164,3 +166,5 @@ public:
 //public:
 //	vec size;
 //};
+
+#endif // __PRIMITIVE_H__

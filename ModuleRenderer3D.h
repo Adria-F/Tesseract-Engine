@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULERENDERER3D_H__
+#define	__MODULERENDERER3D_H__
+
 #include "Module.h"
 #include "Light.h"
 
@@ -91,3 +93,5 @@ public:
 
 	list<Mesh*> meshes;
 };
+
+#endif // !__MODULERENDERER3D_H__

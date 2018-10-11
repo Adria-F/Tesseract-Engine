@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULESCENEINTRO_H__
+#define __MODULESCENEINTRO_H__
+
 #include "Module.h"
 #include "p2DynArray.h"
 #include "p2List.h"
@@ -45,3 +47,4 @@ public:
 	list<Primitive*> ShapesToDraw;
 
 };
+#endif // !__MODULESCENEINTRO_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MODULE_H__
+#define __MODULE_H__
 
 #include "Globals.h"
 #include "rapidjson/document.h"// rapidjson's DOM-style API
@@ -64,3 +65,5 @@ public:
 	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}*/
 };
+
+#endif // !__MODULE_H__

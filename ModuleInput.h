@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULEINPUT_H__
+#define __MODULEINPUT_H__
+
 #include "Module.h"
 #include "SDL/include/SDL.h"
 #include "SDL\include\SDL_scancode.h"
@@ -86,3 +88,5 @@ public:
 
 	//int mouse_z_motion;
 };
+
+#endif // !__MODULEINPUT_H__
