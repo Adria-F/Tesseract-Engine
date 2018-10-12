@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "ModuleWindow.h"
-#include "rapidjson/prettywriter.h" // for stringify JSON
 
 using namespace rapidjson;
 

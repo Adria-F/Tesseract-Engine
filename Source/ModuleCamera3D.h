@@ -11,6 +11,7 @@ public:
 	ModuleCamera3D(bool start_enabled = true);
 	~ModuleCamera3D();
 
+	bool Init(rapidjson::Document& document);
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
@@ -34,10 +35,10 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
-	float cameraSpeed = CAMERA_SPEED;
-	float mouseSensitivity = 0.25f;
-	float wheelSensitivity = 10.0f;
-	float zoomDistance = 20.0f;
+	float cameraSpeed = 0;
+	float mouseSensitivity = 0;
+	float wheelSensitivity = 0;
+	float zoomDistance = 0;
 	AABB* BBtoLook=nullptr;
 
 private:

@@ -1,4 +1,8 @@
 {
+  "App": {
+    "title": "3D Engine",
+    "frameCap": 60
+  },
   "window": {
     "width": 1024,
     "height": 640,
@@ -7,5 +11,27 @@
     "resizable": true,
     "borderless": false,
     "fullscreen_desktop": false
+  },
+  "camera": {
+    "position": [ 0.0, 30.0, 80.0 ],
+    "reference": [ 0.0,0.0, 0.0 ],
+    "X": [1.0, 0.0, 0.0],
+    "Y": [0.0, 1.0, 0.0],
+    "Z": [0.0, 0.0, 1.0],
+    "cameraSpeed":10.0,
+    "mouseSensitivity": 0.25,
+    "wheelSensitivity":10.0,
+    "zoomDistance": 20.0
+  },
+  "renderer": {
+     "Depth_Test":true,
+     "Cull_Face":true,
+     "Lighting":true,
+     "Color_Material":true,
+     "Texture_2D":true,
+     "Wireframe":false,
+     "Normals":false,
+     "Faces": false,
+     "ShowBB": false
   }
 }

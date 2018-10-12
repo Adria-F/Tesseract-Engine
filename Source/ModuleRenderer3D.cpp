@@ -25,6 +25,16 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init(rapidjson::Document& document)
 {
+	Depth_Test =document["renderer"]["Depth_Test"].GetBool();
+	Cull_Face = document["renderer"]["Cull_Face"].GetBool();
+	Lighting = document["renderer"]["Lighting"].GetBool();
+	Color_Material = document["renderer"]["Color_Material"].GetBool();
+	Texture_2D = document["renderer"]["Texture_2D"].GetBool();
+	Wireframe = document["renderer"]["Wireframe"].GetBool();
+	Normals = document["renderer"]["Normals"].GetBool();
+	Faces = document["renderer"]["Faces"].GetBool();
+	ShowBB = document["renderer"]["ShowBB"].GetBool();
+
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
