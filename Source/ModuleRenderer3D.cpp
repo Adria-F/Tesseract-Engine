@@ -296,8 +296,8 @@ void ModuleRenderer3D::ChangeMeshTexture(const char * path)
 	{
 		//glDeleteTextures(1, (GLuint*)(*it_m)->texture);
 		(*it_m)->texture = tex_id;
-		(*it_m)->width = width;
-		(*it_m)->height = height;
+		(*it_m)->texWidth = width;
+		(*it_m)->texHeight = height;
 	}
 }
 

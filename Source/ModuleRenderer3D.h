@@ -36,8 +36,8 @@ struct Mesh
 
 	uint texture = 0;
 	float* texCoords=nullptr;
-	uint width = 0;
-	uint height = 0;
+	uint texWidth = 0;
+	uint texHeight = 0;
 
 	vector<float> faceNormals;
 

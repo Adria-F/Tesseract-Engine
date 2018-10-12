@@ -18,10 +18,8 @@ void PanelAbout::Draw()
 	//Name and description
 	ImGui::Text("Engine Name");
 	ImGui::NewLine();
-	ImGui::Text("This engine is created as part of the 3D engines\n"
-				"subject in the UPC - CITM.\n"
-				"We attempt to create an engine with all the\n"
-				"features needed in order to create the games\n"
+	ImGui::Text("This engine is created as part of the 3D engines subject in the UPC - CITM.\n"
+				"We attempt to create an engine with all the features needed in order to create the games\n"
 				"for our future projects."
 	);
 
@@ -84,9 +82,7 @@ void PanelAbout::Draw()
 
 	//License
 	ImGui::NewLine();
-	ImGui::Text("This engine is licensed under the Public\n"
-				"Domain, see LICENSE for more information"
-	);
+	ImGui::Text("This engine is licensed under the Public Domain, see LICENSE for more information");
 
 	ImGui::End();
 }

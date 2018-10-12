@@ -27,7 +27,7 @@ void PanelProperties::Draw()
 			ImGui::Text("Mesh name: %s", mesh->name.c_str());
 
 			ImGui::PushID("Transformation" + count);
-			if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+			if (ImGui::CollapsingHeader("Transformation"))
 			{
 				ImGui::Text("Position:\n X: %f | Y: %f | Z: %f", mesh->position.x, mesh->position.y, mesh->position.z);
 				float3 rot = mesh->rotation.ToEulerXYZ();
@@ -39,15 +39,17 @@ void PanelProperties::Draw()
 			if (ImGui::CollapsingHeader("Geometry"))
 			{
 				ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
+				ImGui::Text("Vertices Count: %d", mesh->num_vertices);
+				ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
 			}
 			ImGui::PopID();
 			ImGui::PushID("Texture" + count);
 			if (ImGui::CollapsingHeader("Texture"))
 			{
-				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->width, mesh->height);	
+				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->texWidth, mesh->texHeight);	
 				float panelWidth = ImGui::GetWindowContentRegionWidth();
-				float conversionFactor = panelWidth / mesh->width;
-				ImVec2 imageSize = { mesh->height *conversionFactor, panelWidth };
+				float conversionFactor = panelWidth / mesh->texWidth;
+				ImVec2 imageSize = { mesh->texHeight *conversionFactor, panelWidth };
 				ImGui::Image((ImTextureID)mesh->texture, imageSize);
 			}
 			ImGui::PopID();

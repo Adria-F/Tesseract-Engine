@@ -153,20 +153,20 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 						meshPath.pop_back();
 				meshPath += currentPath;
 
-				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->width, newMesh->height);
+				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
 				if (usedTexture == 0)
 				{
 					usedTexture = newMesh->texture;
-					usedTextureWidth = newMesh->width;
-					usedTextureHeight = newMesh->height;
+					usedTextureWidth = newMesh->texWidth;
+					usedTextureHeight = newMesh->texHeight;
 				}
 			}
 			else
 			{
 				LOG("Texture already loaded");
 				newMesh->texture = usedTexture;
-				newMesh->width = usedTextureWidth;
-				newMesh->height = usedTextureHeight;
+				newMesh->texWidth = usedTextureWidth;
+				newMesh->texHeight = usedTextureHeight;
 			}
 			if (usedPath == "")
 				usedPath = currentPath;

@@ -130,11 +130,6 @@ update_status ModuleGUI::Update(float dt)
 				App->LoadGame();
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
-			if (ImGui::MenuItem("mmgr Test"))
-			{
-				for (int i = 0; i < 100; i++)
-					new char;
-			}
 			if (ImGui::MenuItem("Close", "ESC"))
 				//status = UPDATE_STOP;
 				LOG("Not Working");
@@ -142,25 +137,35 @@ update_status ModuleGUI::Update(float dt)
 			ImGui::EndMenu();
 		}
 		
-		if (ImGui::BeginMenu("Help"))
+		if (ImGui::BeginMenu("3D Tools"))
 		{
-			if (ImGui::MenuItem("Hardware Info",NULL, hardwareInfo->isActive()))
-				hardwareInfo->toggleActive();
+			if (ImGui::MenuItem("Basic 3D Shapes", NULL, ShapeElements->isActive()))
+				ShapeElements->toggleActive();
+			if (ImGui::MenuItem("Mesh Properties", NULL, properties->isActive()))
+				properties->toggleActive();
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Debug"))
+		{
 			if (ImGui::MenuItem("Console", NULL, console->isActive()))
 				console->toggleActive();
 			if (ImGui::MenuItem("Config", NULL, configuration->isActive()))
 				configuration->toggleActive();
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Hardware Info",NULL, hardwareInfo->isActive()))
+				hardwareInfo->toggleActive();
 			if (ImGui::MenuItem("About", NULL, about->isActive()))
 				about->toggleActive();
+			if (ImGui::MenuItem("GitHub Repository"))
+				App->RequestBrowser("https://github.com/Adria-F/Engines");
 			ImGui::EndMenu();
 		}
-		
-		if (ImGui::BeginMenu("3D"))
-		{
-			if (ImGui::MenuItem("3D Shapes", NULL, ShapeElements->isActive()))
-				ShapeElements->toggleActive();
-			ImGui::EndMenu();
-		}
+	
 	}
 	ImGui::EndMainMenuBar();
 
