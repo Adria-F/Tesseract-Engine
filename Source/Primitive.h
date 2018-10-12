@@ -91,7 +91,7 @@ class MLine : public Primitive
 {
 public:
 	MLine();
-	MLine(float x, float y, float z);
+	MLine(float x, float y, float z, vec origin);
 	void Render() const;
 public:
 	vec origin;
@@ -108,6 +108,10 @@ public:
 public:
 	vec origin;
 	vec destination;
+	vec arrowHead1;
+	vec arrowHead2;
+private:
+	float defaultHeadLength = 2;
 };
 
 // ============================================

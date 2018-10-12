@@ -29,11 +29,17 @@ void PanelElements::Draw()
 	}
 	if (ImGui::CollapsingHeader("Sphere"))
 	{
+		if (S_Ring < 4)
+			S_Ring = 4;
 		ImGui::InputInt("Sphere Rings",&S_Ring, 1.0f, 2.0f);
+		if (S_Sectors < 4)
+			S_Sectors = 4;
 		ImGui::InputInt("Sphere Sectors", &S_Sectors, 1.0f, 6.0f);
 
 		ImGui::NewLine();
-		ImGui::DragFloat("Shpere Radius", &Sphere_R, 1.0f, 1.0f);
+		if (Sphere_R <= 0)
+			Sphere_R = 1;
+		ImGui::DragFloat("Shpere Radius", &Sphere_R, 1.0f, 1.0f, 500.0f);
 		ImGui::DragFloat3("Sphere Center", Sphere_C);
 		
 
@@ -45,12 +51,20 @@ void PanelElements::Draw()
 	}
 	if (ImGui::CollapsingHeader("Cylinder"))
 	{
+		if (Cy_Ring < 2)
+			Cy_Ring = 2;
 		ImGui::InputInt("Cylinder Rings", &Cy_Ring, 1.0f, 2.0f);
+		if (Cy_Sectors < 10)
+			Cy_Sectors = 10;
 		ImGui::InputInt("Cylinder Sectors", &Cy_Sectors, 1.0f, 6.0f);
 
 		ImGui::NewLine();
-		ImGui::DragFloat("Cylinder Radius", &Cylinder_R, 1.0f, 1.0f);
-		ImGui::DragFloat("Cylinder Height", &Cylinder_H, 1.0f, 1.0f);
+		if (Cylinder_R <= 0)
+			Cylinder_R = 1;
+		ImGui::DragFloat("Cylinder Radius", &Cylinder_R, 1.0f, 1.0f, 500.0f);
+		if (Cylinder_H <= 0)
+			Cylinder_H = 1;
+		ImGui::DragFloat("Cylinder Height", &Cylinder_H, 1.0f, 1.0f, 500.0f);
 		ImGui::DragFloat3("Cylinder Center", Cylinder_C);
 
 
@@ -61,12 +75,20 @@ void PanelElements::Draw()
 	}
 	if (ImGui::CollapsingHeader("Capsule"))
 	{
+		if (Ca_Ring < 4)
+			Ca_Ring = 4;
 		ImGui::InputInt("Capsule Rings", &Ca_Ring, 1.0f, 2.0f);
+		if (Ca_Sectors < 10)
+			Ca_Sectors = 10;
 		ImGui::InputInt("Capsule Sectors", &Ca_Sectors, 1.0f, 6.0f);
 
 		ImGui::NewLine();
-		ImGui::DragFloat("Capsule Radius", &Capsule_R, 1.0f, 1.0f);
-		ImGui::DragFloat("Capsule Height", &Capsule_H, 1.0f, 1.0f);
+		if (Capsule_R <= 0)
+			Capsule_R = 1;
+		ImGui::DragFloat("Capsule Radius", &Capsule_R, 1.0f, 1.0f, 500.0f);
+		if (Capsule_H <= 0)
+			Capsule_H = 1;
+		ImGui::DragFloat("Capsule Height", &Capsule_H, 1.0f, 1.0f, 500.0f);
 		ImGui::DragFloat3("Capsule Center", Capsule_C);
 
 
@@ -77,12 +99,20 @@ void PanelElements::Draw()
 	}
 	if (ImGui::CollapsingHeader("Frustum"))
 	{
-		ImGui::DragFloat("Frustum Distance", &Frustum_Ds, 1.0f, 1.0f);
+		if (Frustum_Ds <= 0)
+			Frustum_Ds = 1;
+		ImGui::DragFloat("Frustum Distance", &Frustum_Ds, 1.0f, 1.0f, 500.0f);
 
 		ImGui::NewLine();
-		ImGui::DragFloat("Frustum Width", &Frustum_W, 1.0f, 1.0f);
-		ImGui::DragFloat("Frustum Height", &Frustum_H, 1.0f, 1.0f);
-		ImGui::DragFloat("Frustum Depth", &Frustum_D, 1.0f, 1.0f);
+		if (Frustum_W <= 0)
+			Frustum_W = 1;
+		ImGui::DragFloat("Frustum Width", &Frustum_W, 1.0f, 1.0f, 500.0f);
+		if (Frustum_H <= 0)
+			Frustum_H = 1;
+		ImGui::DragFloat("Frustum Height", &Frustum_H, 1.0f, 1.0f, 500.0f);
+		if (Frustum_D <= 0)
+			Frustum_D = 1;
+		ImGui::DragFloat("Frustum Depth", &Frustum_D, 1.0f, 1.0f, 500.0f);
 
 		ImGui::NewLine();
 		ImGui::DragFloat3("Frustum Origin", Frustum_C);

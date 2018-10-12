@@ -17,6 +17,8 @@ Primitive::Primitive() :  color(White), wire(false), axis(false), type(Primitive
 Primitive::~Primitive()
 {
 	glDeleteBuffers(1, &my_id);
+	shape.clear();
+	indices.clear();
 }
 
 // ------------------------------------------------------------
@@ -36,11 +38,6 @@ void Primitive::generateBuffer()
 // ------------------------------------------------------------
 void Primitive::Render() const
 {
-	/*if (wire)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
-	
 	if (axis == true)
 	{
 		// Draw Axis Grid
@@ -84,9 +81,6 @@ void Primitive::Render() const
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-	//glColor3f(color.r, color.g, color.b);
-
 }
 
 // ------------------------------------------------------------
@@ -171,8 +165,8 @@ MSphere::MSphere(float radius, int rings, int sectors, vec pos) : Primitive(), r
 		xz = radius * cosf(stackAngle);             // r * cos(u)
 		y = initialPos.y + radius * sinf(stackAngle);              // r * sin(u)
 
-													// add (sectorCount+1) vertices per stack
-													// the first and last vertices have same position and normal, but different tex coods
+		// add (sectorCount+1) vertices per stack
+		// the first and last vertices have same position and normal, but different tex coods
 		for (int j = 0; j <= sectors; ++j)
 		{
 			sectorAngle = j * sectorStep;
@@ -318,7 +312,7 @@ MLine::MLine() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-MLine::MLine(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
+MLine::MLine(float x, float y, float z, vec origin) : Primitive(), origin(origin.x, origin.y, origin.z), destination(x, y, z)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
@@ -409,6 +403,22 @@ MArrow::MArrow() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 MArrow::MArrow(float x, float y, float z, vec pos) : Primitive(), origin(pos.x, pos.y, pos.z), destination(x, y, z)
 {
 	type = PrimitiveTypes::Primitive_Line;
+
+	vec Y{ 0.0f,1.0f,0.0f }; //Vertical Axis
+	vec direction = destination - origin;
+	vec rotAxis = Cross(direction, Y); //Get the rotation axis of the head
+	rotAxis.Normalize();
+	float3x3 rotMatrix;
+
+	rotMatrix = rotMatrix.RotateAxisAngle(rotAxis, 30 * pi / 180); //Get rotation matrxi for head 1
+	arrowHead1 = rotMatrix*direction;
+	arrowHead1 = arrowHead1.Normalized()*defaultHeadLength;
+	arrowHead1 = destination - arrowHead1; //Get the vertex position
+
+	rotMatrix = rotMatrix.RotateAxisAngle(rotAxis, -30 * pi / 180); //Get rotation matrxi for head 2
+	arrowHead2 = rotMatrix*direction;
+	arrowHead2 = arrowHead2.Normalized()*defaultHeadLength;
+	arrowHead2 = destination - arrowHead2; //Get the vertex position
 }
 
 void MArrow::Render() const
@@ -421,10 +431,10 @@ void MArrow::Render() const
 	glVertex3f(destination.x, destination.y, destination.z);
 
 	glVertex3f(destination.x, destination.y, destination.z);
-	glVertex3f(destination.x-2, destination.y-1, destination.z);
+	glVertex3f(arrowHead1.x, arrowHead1.y, arrowHead1.z);
 
 	glVertex3f(destination.x, destination.y, destination.z);
-	glVertex3f(destination.x - 2, destination.y + 1, destination.z);
+	glVertex3f(arrowHead2.x, arrowHead2.y, arrowHead2.z);
 
 	glEnd();
 
