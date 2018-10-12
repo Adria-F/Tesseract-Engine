@@ -219,8 +219,8 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-bool ModuleGUI::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
-	
+bool ModuleGUI::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+{
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Name", 2, allocator);
 	document.AddMember("Pepe", "paco", allocator);

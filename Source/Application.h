@@ -68,7 +68,7 @@ public:
 	void RequestBrowser(const char * url) const;
 
 	bool LoadGame();
-	bool SaveGame();
+	bool SaveGame() const;
 
 private:
 

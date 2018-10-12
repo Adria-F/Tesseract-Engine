@@ -34,7 +34,7 @@ public:
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 
-	bool Save(rapidjson::Document& document,rapidjson::FileWriteStream& os);
+	bool Save(rapidjson::Document& document,rapidjson::FileWriteStream& os)const;
 	bool Load(rapidjson::Document& document);
 
 	void Draw();

@@ -23,9 +23,7 @@ public:
 	float* GetViewMatrix();
 	vec3 getMovementFactor();
 
-	void renderTotalBB();
-
-	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const;
 	bool Load(rapidjson::Document& document);
 
 private:
