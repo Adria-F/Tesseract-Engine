@@ -16,7 +16,7 @@ void PanelAbout::Draw()
 	ImGui::Begin(name.c_str(), &active);
 
 	//Name and description
-	ImGui::Text("Engine Name");
+	ImGui::Text("Tesseract-Engine");
 	ImGui::NewLine();
 	ImGui::Text("This engine is created as part of the 3D engines subject in the UPC - CITM.\n"
 				"We attempt to create an engine with all the features needed in order to create the games\n"
