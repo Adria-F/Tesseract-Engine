@@ -76,6 +76,7 @@ public:
 
 	GLuint FramebufferName = 0;
 	GLuint renderedTexture = 0;
+	GLuint depthrenderbuffer = 0;
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
