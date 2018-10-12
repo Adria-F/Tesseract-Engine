@@ -31,7 +31,6 @@ PanelConfiguration::~PanelConfiguration()
 
 void PanelConfiguration::Draw()
 {
-	ImGui::SetNextWindowSizeConstraints({ 100, 400 }, { 300, (float)App->window->height });
 	ImGui::Begin(name.c_str(),&active, ImGuiWindowFlags_NoFocusOnAppearing);
 
 	if (ImGui::CollapsingHeader("Application"))
@@ -57,18 +56,17 @@ void PanelConfiguration::Draw()
 		sMStats stats = m_getMemoryStatistics();
 		addMemory((float)stats.totalReportedMemory);
 
-		/*LOG("----------------------------------");
-		LOG("Total Reported Mem: %u", stats.totalReportedMemory);
-		LOG("Total Actual Mem: %u", stats.totalActualMemory);
-		LOG("Peak Reported Mem: %u", stats.peakReportedMemory);
-		LOG("Peak Actual Mem: %u", stats.peakActualMemory);
-		LOG("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
-		LOG("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
-		LOG("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
-		LOG("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
-		LOG("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);*/
-
-		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(310, 100));
+		ImGui::PlotHistogram("##memory", &memory_log[0], memory_log.size(), 0, "Memory Consumption (Bytes)", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(310, 100));
+		
+		ImGui::Text("Total Reported Mem: %u", stats.totalReportedMemory);
+		ImGui::Text("Total Actual Mem: %u", stats.totalActualMemory);
+		ImGui::Text("Peak Reported Mem: %u", stats.peakReportedMemory);
+		ImGui::Text("Peak Actual Mem: %u", stats.peakActualMemory);
+		ImGui::Text("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
+		ImGui::Text("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
+		ImGui::Text("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
+		ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
+		ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

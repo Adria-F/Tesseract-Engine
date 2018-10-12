@@ -147,7 +147,7 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 			{
 				//Remove the name of the mesh from the path and add the image name
 				for (int i = meshPath.size() - 1; i >= 0; i--)
-					if (meshPath[i] == '\\')
+					if (meshPath[i] == '/' || meshPath[i] == '\\')
 						break;
 					else
 						meshPath.pop_back();
