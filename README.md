@@ -4,7 +4,7 @@ This is a 3D Engine created by [Adrià Ferrer](https://github.com/Adria-F) and [M
  [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/).
 
 If you want to take a look to our repository click [Here](https://github.com/Adria-F/Engines).
-If you want to download the latest release click [here](https://github.com/Adria-F/Engines/releases).
+If you want to download the latest release click [here](https://github.com/Adria-F/Engines/releases/latest).
 
 ##  Controls:
 
