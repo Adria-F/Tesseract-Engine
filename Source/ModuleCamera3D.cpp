@@ -125,7 +125,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
 	{
-		Position = vec3(0.0f, 30.0f, 80.0f);
 		LookAt({ 0,0,0 });
 	}
 
@@ -180,7 +179,7 @@ void ModuleCamera3D::FitCamera(const AABB &boundingBox)
 {
 	vec diagonal = boundingBox.Diagonal();
 	vec center = boundingBox.CenterPoint();
-	Position.z = (center.z - diagonal.Length());
+	Position.z = (diagonal.Length() - center.z);
 	Position.y = center.y;
 	Position.x = center.x;
 	LookAt({ center.x,center.y,center.z });

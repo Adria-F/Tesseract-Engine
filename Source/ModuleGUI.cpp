@@ -104,7 +104,7 @@ update_status ModuleGUI::PreUpdate(float dt)
 	ImGui::PopStyleVar(3);
 
 	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_RenderWindowBg);
 
 	return update_status(UPDATE_CONTINUE);
 }

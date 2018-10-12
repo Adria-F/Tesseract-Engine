@@ -14,7 +14,7 @@ PanelProperties::~PanelProperties()
 
 void PanelProperties::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 	if (App->renderer3D->meshes.size() > 0)
 	{
@@ -46,11 +46,16 @@ void PanelProperties::Draw()
 			ImGui::PushID("Texture" + count);
 			if (ImGui::CollapsingHeader("Texture"))
 			{
-				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->texWidth, mesh->texHeight);	
-				float panelWidth = ImGui::GetWindowContentRegionWidth();
-				float conversionFactor = panelWidth / mesh->texWidth;
-				ImVec2 imageSize = { mesh->texHeight *conversionFactor, panelWidth };
-				ImGui::Image((ImTextureID)mesh->texture, imageSize);
+				if (mesh->texture != 0)
+				{
+					ImGui::Text("Texture Size:\n Width: %d | Height: %d", mesh->texWidth, mesh->texHeight);
+					float panelWidth = ImGui::GetWindowContentRegionWidth();
+					float conversionFactor = panelWidth / mesh->texWidth;
+					ImVec2 imageSize = { mesh->texHeight *conversionFactor, panelWidth };
+					ImGui::Image((ImTextureID)mesh->texture, imageSize);
+				}
+				else
+					ImGui::Text("No texture");
 			}
 			ImGui::PopID();
 

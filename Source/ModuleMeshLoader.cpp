@@ -203,12 +203,12 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 				else
 				{
 					memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
-				}
-
-				newMesh->boundingBox.SetNegativeInfinity();
-				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
-				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
+				}				
 			}
+
+			newMesh->boundingBox.SetNegativeInfinity();
+			newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+			App->camera->BBtoLook->Enclose(newMesh->boundingBox);
 
 			newMesh->position = pos;
 			newMesh->scale = scale;
@@ -253,7 +253,7 @@ GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height
 		{
 			error = ilGetError();
 			LOG("Image conversion failed - IL error: %s", iluErrorString(error));
-			return -1;
+			return 0;
 		}
 
 		glGenTextures(1, &textureID);
@@ -272,7 +272,7 @@ GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height
 	{
 		error = ilGetError();
 		LOG("Image load failed - IL error: %s", iluErrorString(error));
-		return -1;
+		return 0;
 	}
 
 	ilDeleteImages(1, &ilImage);

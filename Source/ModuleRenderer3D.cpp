@@ -85,7 +85,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		glClearDepth(1.0f);//Specifies the depth value used when the depth buffer is cleared.
 		
 		//Initialize clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//clear values for the color buffers. The initial values are all 0.
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);//clear values for the color buffers. The initial values are all 0.
 
 
 		//specify pixel arithmetic glBlendFunc(rgb source blending factors, rgb destination blending factors)
