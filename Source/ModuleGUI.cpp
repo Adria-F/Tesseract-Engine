@@ -124,8 +124,13 @@ update_status ModuleGUI::Update(float dt)
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
 			if (ImGui::MenuItem("Close", "ESC"))
-				//status = UPDATE_STOP;
-				LOG("Not Working");
+			{
+				ImGui::EndMenu(); //End menu
+				ImGui::EndMainMenuBar(); //End main menu
+				ImGui::End(); //End main docking window
+				ImGui::EndFrame(); //End frame
+				return UPDATE_STOP;
+			}
 
 			ImGui::EndMenu();
 		}
