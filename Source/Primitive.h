@@ -158,13 +158,6 @@ public:
 };
 
 // ============================================
-//class MBoundingBox : public Primitive
-//{
-//public:
-//	MBoundingBox();
-//	MBoundingBox(AABB boundingBox);
-//public:
-//	vec size;
-//};
+
 
 #endif // __PRIMITIVE_H__
