@@ -364,7 +364,8 @@ void ModuleRenderer3D::DrawBB(const AABB& BB, vec3 color) const
 	glLineWidth(1.0f);
 }
 
-bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+{
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 	document.AddMember("name", "render", allocator);

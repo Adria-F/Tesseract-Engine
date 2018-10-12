@@ -50,7 +50,7 @@ public:
 		return true; 
 	}
 
-	virtual bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)
+	virtual bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
 	{
 		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 		rapidjson::Writer<rapidjson::FileWriteStream> writer(os);

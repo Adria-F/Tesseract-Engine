@@ -203,7 +203,7 @@ bool Application::LoadGame()
 	return ret;
 }
 
-bool Application::SaveGame()
+bool Application::SaveGame()const
 {
 	bool ret = true;
 
@@ -214,7 +214,7 @@ bool Application::SaveGame()
 
 	rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
 
-	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
+	for (list<Module*>::const_iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{
 		ret = (*item)->Save(document, os);
 	}

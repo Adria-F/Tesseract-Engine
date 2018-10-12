@@ -220,8 +220,8 @@ KEY_STATE ModuleInput::GetMouseButton(int id) const
 		return mouse_buttons[id];
 }
 
-bool ModuleInput::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
-
+bool ModuleInput::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+{
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("name", "input", allocator);
 

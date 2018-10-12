@@ -71,7 +71,7 @@ public:
 
 	void DrawBB(const AABB& BB,vec3 color)const;
 
-	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
+	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const;
 	bool Load(rapidjson::Document& document);
 
 public:

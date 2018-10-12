@@ -244,7 +244,7 @@ void ModuleCamera3D::CalculateViewMatrix()
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 }
 
-bool ModuleCamera3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)
+bool ModuleCamera3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
 {
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("name", "camera", allocator);
