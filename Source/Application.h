@@ -32,13 +32,13 @@ class ModuleMeshLoader;
 class Application
 {
 public:
-	ModuleWindow* window;
-	ModuleInput* input;
-	ModuleScene* scene_intro;
-	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
-	ModuleGUI* gui;
-	ModuleMeshLoader* mesh_loader;
+	ModuleWindow* window=nullptr;
+	ModuleInput* input=nullptr;
+	ModuleScene* scene_intro=nullptr;
+	ModuleRenderer3D* renderer3D = nullptr;
+	ModuleCamera3D* camera = nullptr;
+	ModuleGUI* gui = nullptr;
+	ModuleMeshLoader* mesh_loader = nullptr;
 
 private:
 

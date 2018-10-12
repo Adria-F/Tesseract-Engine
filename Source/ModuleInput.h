@@ -69,7 +69,7 @@ public:
 	bool Load(rapidjson::Document& document);
 
 public:
-	KEY_STATE* keyboard;
+	KEY_STATE* keyboard=nullptr;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
 	KEY_STATE player_controll[MAX_BUTTONS];
 
