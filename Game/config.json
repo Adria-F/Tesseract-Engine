@@ -7,56 +7,5 @@
     "resizable": true,
     "borderless": false,
     "fullscreen_desktop": false
-  },
-  "panels": {
-    "Hardware_Info": {
-      "name": "Hardware Info",
-      "height": 438,
-      "width": 354,
-      "pos_X": 1086,
-      "pos_Y": 18
-    },
-    "Console": {
-      "name": "Console",
-      "height": 176,
-      "width": 720,
-      "pos_X": 0,
-      "pos_Y": 466
-    },
-    "Configuration": {
-      "name": "Configuration",
-      "height": 783,
-      "width": 302,
-      "pos_X": 720,
-      "pos_Y": 18
-    },
-    "About": {
-      "name": "About",
-      "height": 438,
-      "width": 354,
-      "pos_X": 1086,
-      "pos_Y": 18
-    },
-    "Elements": {
-      "name": "3D Elements",
-      "height": 449,
-      "width": 306,
-      "pos_X": 0,
-      "pos_Y": 18
-    },
-    "Properties": {
-      "name": "Properties",
-      "height": 783,
-      "width": 302,
-      "pos_X": 720,
-      "pos_Y": 18
-    },
-    "Scene": {
-      "name": "Scene",
-      "height": 783,
-      "width": 302,
-      "pos_X": 720,
-      "pos_Y": 18
-    }
   }
 }

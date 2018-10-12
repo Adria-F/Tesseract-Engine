@@ -3,7 +3,7 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 
-PanelProperties::PanelProperties(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned): Panel(name, posX, posY, width, height, aligned)
+PanelProperties::PanelProperties(const char* name): Panel(name)
 {
 	active = true;
 }

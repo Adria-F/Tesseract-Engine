@@ -6,7 +6,7 @@
 class PanelScene:public Panel
 {
 public:
-	PanelScene(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned = CENTER);
+	PanelScene(const char* name);
 	~PanelScene();
 
 	void Draw();

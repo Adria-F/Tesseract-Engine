@@ -6,7 +6,7 @@
 class PanelProperties : public Panel
 {
 public:
-	PanelProperties(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned = NO_ALINGNMENT);
+	PanelProperties(const char* name);
 	~PanelProperties();
 
 	void Draw();

@@ -3,7 +3,7 @@
 #include "PanelElements.h"
 #include "Primitive.h"
 
-PanelElements::PanelElements(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned)
+PanelElements::PanelElements(const char* name) : Panel(name)
 {
 	active = true;
 }
@@ -93,6 +93,5 @@ void PanelElements::Draw()
 		}
 	}
 
-	checkMoved();
 	ImGui::End();
 }

@@ -167,7 +167,6 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->window->OnResize(event.window.data1, event.window.data2);
 				App->renderer3D->OnResize(event.window.data1, event.window.data2);
-				App->gui->OnResize(event.window.data1, event.window.data2);
 			}
 			break;
 		}

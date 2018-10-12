@@ -36,28 +36,21 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
-	rapidjson::Value& panels_aux = document["panels"]["Hardware_Info"];
-	panels.push_back(hardwareInfo = new PanelHardwareInfo(panels_aux["name"].GetString(),panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(hardwareInfo = new PanelHardwareInfo("Hardware Info"));
 	
-	panels_aux = document["panels"]["Console"];
-	panels.push_back(console = new PanelConsole(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(console = new PanelConsole("Console"));
 	
-	panels_aux = document["panels"]["Properties"];
-	panels.push_back(properties = new PanelProperties(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(properties = new PanelProperties("Properties"));
 
-	panels_aux = document["panels"]["Configuration"];
-	panels.push_back(configuration = new PanelConfiguration(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(configuration = new PanelConfiguration("Configuration"));
 	
-	panels_aux = document["panels"]["About"];
-	panels.push_back(about = new PanelAbout(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(about = new PanelAbout("About"));
 
-	panels_aux = document["panels"]["Elements"];
-	panels.push_back(ShapeElements = new PanelElements(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(ShapeElements = new PanelElements("3D Elements"));
 
-	panels_aux = document["panels"]["Scene"];
-	panels.push_back(Scene = new PanelScene(panels_aux["name"].GetString(), panels_aux["pos_X"].GetFloat(), panels_aux["pos_Y"].GetFloat(), panels_aux["width"].GetFloat(), panels_aux["height"].GetFloat()));
+	panels.push_back(Scene = new PanelScene("Scene"));
 
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
 }
@@ -248,6 +241,7 @@ void ModuleGUI::Draw()
 	{
 		if ((*it_p)->isActive())
 		{
+			ImGui::SetNextWindowSizeConstraints({ 10,10 }, { (float)App->window->width, (float)App->window->height });
 			(*it_p)->Draw();
 		}
 	}
@@ -255,40 +249,6 @@ void ModuleGUI::Draw()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-}
-
-void ModuleGUI::OnResize(int width, int height)
-{
-	float screenWidthFactor = (float)width / App->window->width;
-	float screenHeigthFactor = (float)height / App->window->height;
-
-	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
-	{
-		if ((*it_p)->isActive())
-		{
-			ImVec2 pos = (*it_p)->pos;
-			ImVec2 size = (*it_p)->size;
-
-			switch ((*it_p)->aligned)
-			{
-			case TOP:
-				pos.y = 13;
-				break;
-			case LEFT:
-				pos.x = 0;
-				break;
-			case RIGHT:
-				pos.x = App->window->width - size.x;
-				break;
-			case BOTTOM:
-				pos.y = App->window->height - size.y;
-				break;
-			}
-
-			ImGui::SetWindowPos((*it_p)->getName(), { pos.x*screenWidthFactor, pos.y*screenHeigthFactor });
-			ImGui::SetWindowSize((*it_p)->getName(), {size.x*screenWidthFactor, size.y*screenHeigthFactor});
-		}
-	}
 }
 
 bool ModuleGUI::isMouseOnGUI() const

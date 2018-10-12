@@ -3,7 +3,7 @@
 #include "DevIL\include\il.h"
 #include "Assimp/include/version.h"
 
-PanelAbout::PanelAbout(const char* name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned)
+PanelAbout::PanelAbout(const char* name) : Panel(name)
 {
 }
 

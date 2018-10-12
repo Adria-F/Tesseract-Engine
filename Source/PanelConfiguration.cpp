@@ -10,7 +10,7 @@
 
 #include "mmgr/mmgr.h"
 
-PanelConfiguration::PanelConfiguration(const char * name, float posX, float posY, float width, float height, panelAlingnment aligned) : Panel(name, posX, posY, width, height, aligned),
+PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
 fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE)
 {
 	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
@@ -78,8 +78,7 @@ void PanelConfiguration::Draw()
 		{
 			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
 	/*		App->window->OnResize(nWidth, nHeight);
-			App->renderer3D->OnResize(nWidth, nHeight);
-			App->gui->OnResize(nWidth, nHeight);*/
+			App->renderer3D->OnResize(nWidth, nHeight);*/
 		}
 
 		if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
@@ -205,7 +204,6 @@ void PanelConfiguration::Draw()
 		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
 	}
 
-	checkMoved();
 	ImGui::End();
 }
 

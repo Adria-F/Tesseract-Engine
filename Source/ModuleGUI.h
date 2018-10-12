@@ -39,8 +39,6 @@ public:
 
 	void Draw();
 
-	void OnResize(int width, int height);
-
 	bool isMouseOnGUI() const;
 
 public:
