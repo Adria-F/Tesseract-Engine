@@ -272,6 +272,8 @@ void ModuleRenderer3D::pushMesh(Mesh* mesh)
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	glDeleteFramebuffers(1, &FramebufferName);
+	glGenFramebuffers(1, &FramebufferName);
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 	glDeleteTextures(1, &renderedTexture);
 	glGenTextures(1, &renderedTexture);
