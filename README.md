@@ -29,7 +29,7 @@ If you want to download the latest release click [here](https://github.com/Adria
 * glmath to use math operations compatibles with OpenGL.
 * [Assimp](http://www.assimp.org/) to import .FBX/.fbx of 3D models.
 * [DevIL](http://openil.sourceforge.net/) to import the .png and .dds to create te textures.
-* [mmgr](https://github.com/ConfettiFX/The-Forge/tree/master/Common_3/ThirdParty/OpenSource/FluidStudios/MemoryManager) to manage the memory used.
+* [mmgr](http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml) to manage the memory used.
 
 ## License
 

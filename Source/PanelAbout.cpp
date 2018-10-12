@@ -80,6 +80,9 @@ void PanelAbout::Draw()
 	if (ImGui::Selectable(devilVersion.c_str(), false, 0, { 135, 13 }))
 		App->RequestBrowser("http://openil.sourceforge.net/");
 
+	if (ImGui::Selectable("mmgr - version 1.0", false, 0, { 130, 13 }))
+		App->RequestBrowser("http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml");
+
 	//License
 	ImGui::NewLine();
 	ImGui::Text("This engine is licensed under the Public Domain, see LICENSE for more information");
