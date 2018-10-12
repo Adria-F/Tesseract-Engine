@@ -670,13 +670,13 @@
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </None>
-    <None Include="Game\config.json">
+    <None Include="..\Game\config.json">
       <Filter>Sources\Tools\Files</Filter>
     </None>
-    <None Include="Game\load.json">
+    <None Include="..\Game\load.json">
       <Filter>Sources\Tools\Files</Filter>
     </None>
-    <None Include="Game\save.json">
+    <None Include="..\Game\save.json">
       <Filter>Sources\Tools\Files</Filter>
     </None>
   </ItemGroup>

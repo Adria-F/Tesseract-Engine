@@ -10,6 +10,7 @@
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/filewritestream.h"
+
 #include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
 
@@ -43,11 +44,11 @@ private:
 
 	Timer	ms_timer;
 	float	dt;
-	//p2List<Module*> list_modules;
-	std::list<Module*> list_modules;
 
-	int framerateCap = 60;
-	std::string appName = TITLE;
+	std::list<Module*> list_modules;
+	std::string appName;
+
+	int framerateCap;
 
 public:
 

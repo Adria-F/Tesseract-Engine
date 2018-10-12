@@ -8,20 +8,33 @@
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
-	CalculateViewMatrix();
-
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	Position = vec3(0.0f, 30.0f, 80.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
-	LookAt(Reference);
-
+	
 }
 
 ModuleCamera3D::~ModuleCamera3D()
 {}
+
+bool ModuleCamera3D::Init(rapidjson::Document & document)
+{
+	CalculateViewMatrix();
+
+	rapidjson::Value& cameraConf = document["camera"];
+
+	X = vec3(cameraConf["X"][0].GetFloat(), cameraConf["X"][1].GetFloat(), cameraConf["X"][2].GetFloat());
+	Y = vec3(cameraConf["Y"][0].GetFloat(), cameraConf["Y"][1].GetFloat(), cameraConf["Y"][2].GetFloat());
+	Z = vec3(cameraConf["Z"][0].GetFloat(), cameraConf["Z"][1].GetFloat(), cameraConf["Z"][2].GetFloat());
+
+	Position = vec3(cameraConf["position"][0].GetFloat(), cameraConf["position"][1].GetFloat(), cameraConf["position"][2].GetFloat());
+	Reference = vec3(cameraConf["reference"][0].GetFloat(), cameraConf["reference"][1].GetFloat(), cameraConf["reference"][2].GetFloat());
+	LookAt(Reference);
+
+	cameraSpeed = cameraConf["cameraSpeed"].GetFloat();
+	mouseSensitivity = cameraConf["mouseSensitivity"].GetFloat();
+	wheelSensitivity = cameraConf["wheelSensitivity"].GetFloat();
+	zoomDistance = cameraConf["zoomDistance"].GetFloat();
+
+	return true;
+}
 
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()

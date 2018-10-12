@@ -83,11 +83,11 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	bool Depth_Test = true;
-	bool Cull_Face = true;
-	bool Lighting = true;
-	bool Color_Material = true;
-	bool Texture_2D = true;
+	bool Depth_Test = false;
+	bool Cull_Face = false;
+	bool Lighting = false;
+	bool Color_Material = false;
+	bool Texture_2D = false;
 	bool Wireframe = false;
 	bool Normals = false;
 	bool Faces = false;
