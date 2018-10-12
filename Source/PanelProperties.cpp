@@ -31,6 +31,7 @@ void PanelProperties::Draw()
 			{
 				ImGui::Text("Position:\n X: %f | Y: %f | Z: %f", mesh->position.x, mesh->position.y, mesh->position.z);
 				float3 rot = mesh->rotation.ToEulerXYZ();
+				rot *= 180/pi;
 				ImGui::Text("Rotation:\n X: %f | Y: %f | Z: %f", rot.x, rot.y, rot.z);
 				ImGui::Text("Scale:\n X: %f | Y: %f | Z: %f", mesh->scale.x, mesh->scale.y, mesh->scale.z);
 			}

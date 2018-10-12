@@ -127,9 +127,9 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 
 		memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
 		memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
-		LOG("New Mesh with %d vertices\n", newMesh->num_vertices);
-		LOG("New Mesh with %d normals\n", newMesh->num_normals);
-		LOG("New Mesh with %d faces\n", currentMesh->mNumFaces);
+		LOG("New Mesh with %d vertices", newMesh->num_vertices);
+		LOG("New Mesh with %d normals", newMesh->num_normals);
+		LOG("New Mesh with %d faces", currentMesh->mNumFaces);
 
 		aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
 		aiColor3D color(0.f, 0.f, 0.f);
@@ -140,9 +140,9 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 
 		aiString path;
 		aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
-		string currentPath = path.C_Str();
 		if (textureError == aiReturn::aiReturn_SUCCESS)
 		{
+			string currentPath = path.C_Str();
 			if (usedPath != currentPath)
 			{
 				//Remove the name of the mesh from the path and add the image name
@@ -154,6 +154,13 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 				meshPath += currentPath;
 
 				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+				if (newMesh->texture == 0) //Texture not found at root
+				{
+					LOG("Texture not found at .fbx root");
+					LOG("Looking at Assets/Textures folder");
+					meshPath = "Assets/Textures/" + currentPath;
+					newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+				}
 				if (usedTexture == 0)
 				{
 					usedTexture = newMesh->texture;
@@ -172,7 +179,7 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 				usedPath = currentPath;
 		}
 		else
-			LOG("Couldn't load the texture from .fbx file");
+			LOG("Couldn't read the texture from .fbx file");
 
 		if (currentMesh->HasFaces())
 		{
@@ -285,5 +292,11 @@ GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height
 
 void CallLog(const char* str, char* userData)
 {
-	LOG("%s", str);
+	//To remove the \n at the end of each line
+	//Our log function already does that
+	std::string msg = str;
+	msg.pop_back();
+	msg.pop_back();
+
+	LOG("%s", msg.c_str());
 }
