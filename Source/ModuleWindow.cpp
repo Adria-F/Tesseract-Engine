@@ -88,6 +88,15 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	return ret;
 }
 
+bool ModuleWindow::Start()
+{
+	bool ret = true;
+
+	SDL_MaximizeWindow(window);
+
+	return ret;
+}
+
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {

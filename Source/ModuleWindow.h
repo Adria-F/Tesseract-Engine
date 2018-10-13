@@ -14,6 +14,7 @@ public:
 	virtual ~ModuleWindow();
 
 	bool Init(rapidjson::Document& document);
+	bool Start();
 	bool CleanUp();
 
 	void SetTitle(const char* title);
