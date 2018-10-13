@@ -12,10 +12,7 @@
 
 PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
 fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE)
-{
-	nWidth = SCREEN_WIDTH * SCREEN_SIZE;
-	nHeight = SCREEN_HEIGHT * SCREEN_SIZE;
-	
+{	
 	resizable = WIN_RESIZABLE;
 
 	brightness = SDL_GetWindowBrightness(App->window->window);
@@ -72,11 +69,10 @@ void PanelConfiguration::Draw()
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		ImGui::PushItemWidth(200.0f);
-		if (ImGui::SliderInt("Width", &nWidth, 0, 1920) || ImGui::SliderInt("Height", &nHeight, 0, 1080))
-		{
-			SDL_SetWindowSize(App->window->window, nWidth, nHeight);
-	/*		App->window->OnResize(nWidth, nHeight);
-			App->renderer3D->OnResize(nWidth, nHeight);*/
+		if (!fullscreen && (ImGui::InputInt("Width", &App->window->width, 50, 100, ImGuiInputTextFlags_ReadOnly) || ImGui::InputInt("Height", &App->window->height, 50, 100, ImGuiInputTextFlags_ReadOnly)))
+		{			
+			SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
+			App->renderer3D->OnResize(App->window->width, App->window->height);
 		}
 
 		if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
@@ -92,13 +88,23 @@ void PanelConfiguration::Draw()
 			if (fullscreen)
 			{
 				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-				SDL_GetWindowSize(App->window->window, &nWidth, &nHeight);
-				/*App->window->OnResize(nWidth, nHeight);
-				App->renderer3D->OnResize(nWidth, nHeight);
-				App->gui->OnResize(nWidth, nHeight);*/
+				prevWidth = App->window->width;
+				prevHeight = App->window->height;
+
+				SDL_DisplayMode dM;
+				SDL_GetDesktopDisplayMode(0, &dM);
+				SDL_SetWindowSize(App->window->window, dM.w, dM.h);
+				App->window->OnResize(dM.w, dM.h);
+				App->renderer3D->OnResize(dM.w, dM.h);
 			}
 			else
-				SDL_SetWindowFullscreen(App->window->window, 0);
+			{
+				SDL_SetWindowSize(App->window->window, prevWidth, prevHeight);
+				App->window->OnResize(prevWidth, prevHeight);
+				App->renderer3D->OnResize(prevWidth, prevHeight);
+
+				SDL_SetWindowFullscreen(App->window->window,  0);				
+			}
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Resizable", &resizable))

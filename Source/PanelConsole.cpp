@@ -10,7 +10,16 @@ PanelConsole::~PanelConsole()
 
 void PanelConsole::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_MenuBar);
+
+	ImGui::BeginMenuBar();
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.9f,0.45f,0.0f,0.7f });
+	if (ImGui::Button("Clear"))
+	{
+		Buffer.clear();
+	}		
+	ImGui::PopStyleColor();
+	ImGui::EndMenuBar();
 
 	ImGui::TextUnformatted(Buffer.begin());
 

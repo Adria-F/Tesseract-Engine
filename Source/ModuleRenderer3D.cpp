@@ -207,7 +207,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
 	
-	if (App->renderer3D->ShowBB)
+	if (App->renderer3D->ShowBB && App->camera->BBtoLook != nullptr)
 	{
 		App->renderer3D->DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
 	}
