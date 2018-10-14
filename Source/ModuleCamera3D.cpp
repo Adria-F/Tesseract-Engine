@@ -192,7 +192,7 @@ void ModuleCamera3D::FitCamera(const AABB &boundingBox)
 {
 	vec diagonal = boundingBox.Diagonal();
 	vec center = boundingBox.CenterPoint();
-	Position.z = (diagonal.Length() + center.z);
+	Position.z = (center.z+ diagonal.Length());
 	Position.y = center.y;
 	Position.x = center.x;
 	LookAt({ center.x,center.y,center.z });

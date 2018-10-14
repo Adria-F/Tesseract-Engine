@@ -222,16 +222,7 @@ void ModuleGUI::handleInput(SDL_Event * event)
 bool ModuleGUI::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
 {
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Name", 2, allocator);
-	document.AddMember("Pepe", "paco", allocator);
-
-	rapidjson::Value Obj(rapidjson::kObjectType);
-	Obj.AddMember("tete", "gym\n", allocator);
-	rapidjson::Value Ovj(rapidjson::kObjectType);
-	Ovj.AddMember("tinc", "gana", allocator);
-	Obj.AddMember("pilota", Ovj, allocator);
-	document.AddMember("chistorra", Obj, allocator);
-
+	document.AddMember("name", "gui", allocator);
 	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 
 	return true;

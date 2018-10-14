@@ -237,6 +237,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
+	
+	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
+	{
+		RELEASE((*it_m));
+	}
+
+	meshes.clear();
 
 	SDL_GL_DeleteContext(context);
 
@@ -393,6 +400,7 @@ Mesh::~Mesh()
 	glDeleteTextures(1, &texture);
 
 	RELEASE(App->camera->BBtoLook);
+
 }
 
 void Mesh::Draw()
