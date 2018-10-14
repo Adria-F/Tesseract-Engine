@@ -30,6 +30,8 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	resizable = configwindow["resizable"].GetBool();
 	borderless = configwindow["borderless"].GetBool();
 	fullscreen_desktop = configwindow["fullscreen_desktop"].GetBool();
+	screen_margin_w = configwindow["screen_margin"][0].GetInt();
+	screen_margin_h = configwindow["screen_margin"][1].GetInt();
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -38,6 +40,11 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	}
 	else
 	{
+		SDL_DisplayMode desktopSize;
+		SDL_GetDesktopDisplayMode(0, &desktopSize);
+		width = desktopSize.w - screen_margin_w;
+		height = desktopSize.h - screen_margin_h;
+
 		//Create window
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
@@ -69,7 +76,7 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(App->getAppName(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width* screen_size, height* screen_size, flags);
+		window = SDL_CreateWindow(App->getAppName(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width * screen_size, height * screen_size, flags);
 
 		if(window == NULL)
 		{
@@ -85,15 +92,6 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 
 	OnResize(width*screen_size, height*screen_size);
 	
-	return ret;
-}
-
-bool ModuleWindow::Start()
-{
-	bool ret = true;
-
-	SDL_MaximizeWindow(window);
-
 	return ret;
 }
 

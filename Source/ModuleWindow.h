@@ -14,7 +14,6 @@ public:
 	virtual ~ModuleWindow();
 
 	bool Init(rapidjson::Document& document);
-	bool Start();
 	bool CleanUp();
 
 	void SetTitle(const char* title);
@@ -34,6 +33,8 @@ public:
 	int height=0;
 	int width=0;
 	int screen_size=0;
+	int screen_margin_w = 0;
+	int screen_margin_h = 0;
 	
 	bool fullscreen=false;
 	bool resizable = false;
