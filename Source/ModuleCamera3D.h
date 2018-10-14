@@ -32,7 +32,12 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	vec3 X = { 1.0f,0.0f,0.0f };
+	vec3 Y = { 0.0f,1.0f,0.0f };
+	vec3 Z = { 0.0f,0.0f,1.0f };
+	vec3 Position = { 0.0f,0.0f,10.0f }; 
+	vec3 Reference = { 0.0f,0.0f,0.0f };
+
 	float cameraSpeed = 0;
 	float mouseSensitivity = 0;
 	float wheelSensitivity = 0;

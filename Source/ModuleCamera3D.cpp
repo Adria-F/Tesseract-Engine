@@ -18,20 +18,32 @@ bool ModuleCamera3D::Init(rapidjson::Document & document)
 {
 	CalculateViewMatrix();
 
-	rapidjson::Value& cameraConf = document["camera"];
+	if (document.HasMember("camera"))
+	{
+		rapidjson::Value& cameraConf = document["camera"];
 
-	X = vec3(cameraConf["X"][0].GetFloat(), cameraConf["X"][1].GetFloat(), cameraConf["X"][2].GetFloat());
-	Y = vec3(cameraConf["Y"][0].GetFloat(), cameraConf["Y"][1].GetFloat(), cameraConf["Y"][2].GetFloat());
-	Z = vec3(cameraConf["Z"][0].GetFloat(), cameraConf["Z"][1].GetFloat(), cameraConf["Z"][2].GetFloat());
+		if (cameraConf.HasMember("X"))
+			X = vec3(cameraConf["X"][0].GetFloat(), cameraConf["X"][1].GetFloat(), cameraConf["X"][2].GetFloat());
+		if (cameraConf.HasMember("Y"))
+			Y = vec3(cameraConf["Y"][0].GetFloat(), cameraConf["Y"][1].GetFloat(), cameraConf["Y"][2].GetFloat());
+		if (cameraConf.HasMember("Z"))
+			Z = vec3(cameraConf["Z"][0].GetFloat(), cameraConf["Z"][1].GetFloat(), cameraConf["Z"][2].GetFloat());
 
-	Position = vec3(cameraConf["position"][0].GetFloat(), cameraConf["position"][1].GetFloat(), cameraConf["position"][2].GetFloat());
-	Reference = vec3(cameraConf["reference"][0].GetFloat(), cameraConf["reference"][1].GetFloat(), cameraConf["reference"][2].GetFloat());
-	LookAt(Reference);
+		if (cameraConf.HasMember("position"))
+			Position = vec3(cameraConf["position"][0].GetFloat(), cameraConf["position"][1].GetFloat(), cameraConf["position"][2].GetFloat());
+		if (cameraConf.HasMember("reference"))
+			Reference = vec3(cameraConf["reference"][0].GetFloat(), cameraConf["reference"][1].GetFloat(), cameraConf["reference"][2].GetFloat());
+		LookAt(Reference);
 
-	cameraSpeed = cameraConf["cameraSpeed"].GetFloat();
-	mouseSensitivity = cameraConf["mouseSensitivity"].GetFloat();
-	wheelSensitivity = cameraConf["wheelSensitivity"].GetFloat();
-	zoomDistance = cameraConf["zoomDistance"].GetFloat();
+		if (cameraConf.HasMember("cameraSpeed"))
+			cameraSpeed = cameraConf["cameraSpeed"].GetFloat();
+		if (cameraConf.HasMember("mouseSensitivity"))
+			mouseSensitivity = cameraConf["mouseSensitivity"].GetFloat();
+		if (cameraConf.HasMember("wheelSensitivity"))
+			wheelSensitivity = cameraConf["wheelSensitivity"].GetFloat();
+		if (cameraConf.HasMember("zoomDistance"))
+			zoomDistance = cameraConf["zoomDistance"].GetFloat();
+	}
 
 	return true;
 }

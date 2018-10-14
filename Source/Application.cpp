@@ -64,9 +64,15 @@ bool Application::Init()
 
 	//init vars from config
 
-	appName = document["App"]["title"].GetString();
+	if (document.HasMember("App"))
+	{
+		rapidjson::Value& appConfig = document["App"];
 
-	framerateCap = document["App"]["frameCap"].GetInt();
+		if (appConfig.HasMember("title"))
+			appName = document["App"]["title"].GetString();
+		if (appConfig.HasMember("frameCap"))
+			framerateCap = document["App"]["frameCap"].GetInt();
+	}
 
 	//TO be able to use RNG in any file without worrying about initializing the seed
 	START_RNG_SEED();

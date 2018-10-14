@@ -25,16 +25,31 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init(rapidjson::Document& document)
 {
-	vsync = document["renderer"]["Vsync"].GetBool();
-	Depth_Test =document["renderer"]["Depth_Test"].GetBool();
-	Cull_Face = document["renderer"]["Cull_Face"].GetBool();
-	Lighting = document["renderer"]["Lighting"].GetBool();
-	Color_Material = document["renderer"]["Color_Material"].GetBool();
-	Texture_2D = document["renderer"]["Texture_2D"].GetBool();
-	Wireframe = document["renderer"]["Wireframe"].GetBool();
-	Normals = document["renderer"]["Normals"].GetBool();
-	Faces = document["renderer"]["Faces"].GetBool();
-	ShowBB = document["renderer"]["ShowBB"].GetBool();
+	if (document.HasMember("renderer"))
+	{
+		rapidjson::Value& rendererConfig = document["renderer"];
+
+		if (rendererConfig.HasMember("Vsync"))
+			vsync = document["renderer"]["Vsync"].GetBool();
+		if (rendererConfig.HasMember("Depth_Test"))
+			Depth_Test = document["renderer"]["Depth_Test"].GetBool();
+		if (rendererConfig.HasMember("Cull_Face"))
+			Cull_Face = document["renderer"]["Cull_Face"].GetBool();
+		if (rendererConfig.HasMember("Lighting"))
+			Lighting = document["renderer"]["Lighting"].GetBool();
+		if (rendererConfig.HasMember("Color_Material"))
+			Color_Material = document["renderer"]["Color_Material"].GetBool();
+		if (rendererConfig.HasMember("Texture_2D"))
+			Texture_2D = document["renderer"]["Texture_2D"].GetBool();
+		if (rendererConfig.HasMember("Wireframe"))
+			Wireframe = document["renderer"]["Wireframe"].GetBool();
+		if (rendererConfig.HasMember("Normals"))
+			Normals = document["renderer"]["Normals"].GetBool();
+		if (rendererConfig.HasMember("Faces"))
+			Faces = document["renderer"]["Faces"].GetBool();
+		if (rendererConfig.HasMember("ShowBB"))
+			ShowBB = document["renderer"]["ShowBB"].GetBool();
+	}
 
 	LOG("Creating 3D Renderer context");
 	bool ret = true;

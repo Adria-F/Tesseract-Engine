@@ -20,18 +20,31 @@ bool ModuleWindow::Init(rapidjson::Document& document)
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	Value& configwindow = document["window"];
+	if (document.HasMember("window"))
+	{
+		Value& configwindow = document["window"];
 
-	width = configwindow["width"].GetInt();
-	height = configwindow["height"].GetInt();
-	screen_size = configwindow["screen_size"].GetInt();
+		if (configwindow.HasMember("width"))
+			width = configwindow["width"].GetInt();
+		if (configwindow.HasMember("height"))
+			height = configwindow["height"].GetInt();
+		if (configwindow.HasMember("screen_size"))
+			screen_size = configwindow["screen_size"].GetInt();
 
-	fullscreen = configwindow["fullscreen"].GetBool();
-	resizable = configwindow["resizable"].GetBool();
-	borderless = configwindow["borderless"].GetBool();
-	fullscreen_desktop = configwindow["fullscreen_desktop"].GetBool();
-	screen_margin_w = configwindow["screen_margin"][0].GetInt();
-	screen_margin_h = configwindow["screen_margin"][1].GetInt();
+		if (configwindow.HasMember("fullscreen"))
+			fullscreen = configwindow["fullscreen"].GetBool();
+		if (configwindow.HasMember("resizable"))
+			resizable = configwindow["resizable"].GetBool();
+		if (configwindow.HasMember("borderless"))
+			borderless = configwindow["borderless"].GetBool();
+		if (configwindow.HasMember("fullscreen_desktop"))
+			fullscreen_desktop = configwindow["fullscreen_desktop"].GetBool();
+		if (configwindow.HasMember("screen_margin"))
+		{
+			screen_margin_w = configwindow["screen_margin"][0].GetInt();
+			screen_margin_h = configwindow["screen_margin"][1].GetInt();
+		}
+	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
