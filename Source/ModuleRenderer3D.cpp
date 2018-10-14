@@ -421,17 +421,20 @@ Mesh::~Mesh()
 
 void Mesh::Draw()
 {
-	//Enable
-	glEnableClientState(GL_VERTEX_ARRAY);
+	//Set texture or color material
 	if (texture > 0)
 		glBindTexture(GL_TEXTURE_2D, texture);
 	else
 		glColor3f(color.x, color.y, color.z);	
+	//Assign Vertices
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-	//Draw
 	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+	//Assign texture
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, &texCoords[0]);
+	if (texCoords != nullptr)
+		glTexCoordPointer(2, GL_FLOAT, 0, &texCoords[0]);
+	//Draw
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	//Disable
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -442,7 +445,7 @@ void Mesh::Draw()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	if (App->renderer3D->Normals)
+	if (App->renderer3D->Normals && normals != nullptr)
 	{
 		glLineWidth(2.0f);
 		glColor3f(0, 0.5f, 1);
@@ -459,7 +462,7 @@ void Mesh::Draw()
 		glLineWidth(1.0f);
 	}
 
-	if (App->renderer3D->Faces)
+	if (App->renderer3D->Faces && faceNormals.size() > 0)
 	{
 		int vert_normal=0;
 
@@ -507,8 +510,6 @@ void Mesh::calculateNormals()
 		faceNormals.push_back(N.x);
 		faceNormals.push_back(N.y);
 		faceNormals.push_back(N.z);
-
-
 	}
 }
 

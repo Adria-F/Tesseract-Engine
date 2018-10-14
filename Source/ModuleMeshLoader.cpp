@@ -112,74 +112,82 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 	vec3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
-
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		Mesh* newMesh = new Mesh();
 		aiMesh* currentMesh = scene->mMeshes[node->mMeshes[i]];
-
 		newMesh->name = currentMesh->mName.C_Str();
 
 		newMesh->num_vertices = currentMesh->mNumVertices;
-		newMesh->vertices = new float[newMesh->num_vertices * 3];
-		newMesh->num_normals = currentMesh->mNumVertices;
-		newMesh->normals = new float[newMesh->num_normals * 3];
-
+		newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at elast 3 vertices
 		memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
-		memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
+		if (currentMesh->HasNormals())
+		{
+			newMesh->num_normals = currentMesh->mNumVertices;
+			newMesh->normals = new float[newMesh->num_normals * 3];
+			memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
+		}
+
 		LOG("New Mesh with %d vertices", newMesh->num_vertices);
 		LOG("New Mesh with %d normals", newMesh->num_normals);
 		LOG("New Mesh with %d faces", currentMesh->mNumFaces);
 
-		aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
-		aiColor3D color(0.f, 0.f, 0.f);
-		mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-		newMesh->color.x = color.r;
-		newMesh->color.y = color.g;
-		newMesh->color.z = color.b;
-
-		aiString path;
-		aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
-		if (textureError == aiReturn::aiReturn_SUCCESS)
+		if (currentMesh->mMaterialIndex < scene->mNumMaterials)
 		{
-			string currentPath = path.C_Str();
-			if (usedPath != currentPath)
-			{
-				//Remove the name of the mesh from the path and add the image name
-				for (int i = meshPath.size() - 1; i >= 0; i--)
-					if (meshPath[i] == '/' || meshPath[i] == '\\')
-						break;
-					else
-						meshPath.pop_back();
-				meshPath += currentPath;
+			aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
+			aiColor3D color(0.f, 0.f, 0.f);
+			mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			newMesh->color.x = color.r;
+			newMesh->color.y = color.g;
+			newMesh->color.z = color.b;
 
-				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
-				if (newMesh->texture == 0) //Texture not found at root
+			aiString path;
+			aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
+			if (textureError == aiReturn::aiReturn_SUCCESS)
+			{
+				string currentPath = path.C_Str();
+				if (usedPath != currentPath)
 				{
-					LOG("Texture not found at .fbx root");
-					LOG("Looking at Assets/Textures folder");
-					meshPath = "Assets/Textures/" + currentPath;
+					//Remove the name of the mesh from the path and add the image name
+					for (int i = meshPath.size() - 1; i >= 0; i--)
+						if (meshPath[i] == '/' || meshPath[i] == '\\')
+							break;
+						else
+							meshPath.pop_back();
+					meshPath += currentPath;
+
 					newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+					if (newMesh->texture == 0) //Texture not found at root
+					{
+						LOG("Texture not found at .fbx root");
+						LOG("Looking at Assets/Textures folder");
+						meshPath = "Assets/Textures/" + currentPath;
+						newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+					}
+					if (usedTexture == 0)
+					{
+						usedTexture = newMesh->texture;
+						usedTextureWidth = newMesh->texWidth;
+						usedTextureHeight = newMesh->texHeight;
+					}
 				}
-				if (usedTexture == 0)
+				else
 				{
-					usedTexture = newMesh->texture;
-					usedTextureWidth = newMesh->texWidth;
-					usedTextureHeight = newMesh->texHeight;
+					LOG("Texture already loaded");
+					newMesh->texture = usedTexture;
+					newMesh->texWidth = usedTextureWidth;
+					newMesh->texHeight = usedTextureHeight;
 				}
+				if (usedPath == "")
+					usedPath = currentPath;
 			}
 			else
-			{
-				LOG("Texture already loaded");
-				newMesh->texture = usedTexture;
-				newMesh->texWidth = usedTextureWidth;
-				newMesh->texHeight = usedTextureHeight;
-			}
-			if (usedPath == "")
-				usedPath = currentPath;
+				LOG("Couldn't read the texture from .fbx file");
 		}
 		else
-			LOG("Couldn't read the texture from .fbx file");
+		{
+			LOG("Mesh material index is out of scene materials array");
+		}
 
 		if (currentMesh->HasFaces())
 		{
@@ -193,6 +201,10 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 					newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
 					t++;
 				}
+			}
+			else
+			{
+				LOG("Current mesh has no Texture Coordinates, so will not draw any texture assigned");
 			}
 
 			newMesh->num_indices = currentMesh->mNumFaces * 3;
@@ -222,7 +234,10 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 			newMesh->rotation = rot;
 		}
 		else
+		{
+			LOG("Current mesh has no faces, so will not be loaded");
 			errorLoading = true;
+		}
 
 		if (!errorLoading)
 		{
