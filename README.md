@@ -12,10 +12,16 @@ If you want to download the latest release click [here](https://github.com/Adria
 * Right click + “WASD” to move the camera.
 * Alt + left click to rotate the camera arround an object.
 * Mouse wheel to zoom in/out.
+* Mouse wheel click to move the camera across camera local Y and X axis.
 * F to focus the camera around the geometry.
 * SHIFT + Movement to duplicate the movement speed.
 * CTRL + Movement to reducethe movement speed.
 * Drag and drop of .FBX/.fbx/.png/.dds
+
+## Innovation:
+
+We are using a frame buffer to draw all the scene on a gl texture, which we then draw into an ImGui window.
+This texture, accepts windows resizing without deforming.
 
 ## Libraries
 
