@@ -25,6 +25,7 @@
     "zoomDistance": 20.0
   },
   "renderer": {
+	 "Vsync":false,
      "Depth_Test":true,
      "Cull_Face":true,
      "Lighting":true,

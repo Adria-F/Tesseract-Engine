@@ -44,11 +44,9 @@ Application::Application()
 
 Application::~Application()
 {
-	////p2List_item<Module*>* item = list_modules.getLast();
-
 	for (list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend() && (*item)==NULL; item++)
 	{
-		delete (*item);
+		RELEASE((*item));
 	}
 }
 
@@ -138,7 +136,6 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	list<Module*>::iterator item = list_modules.begin();
 
 	for (list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend() && ret == true; item++)
 	{

@@ -24,7 +24,7 @@ ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	delete[] keyboard;
+	RELEASE_ARRAY(keyboard);
 }
 
 // Called before render is available

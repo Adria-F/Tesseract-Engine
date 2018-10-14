@@ -181,9 +181,7 @@ bool ModuleGUI::CleanUp()
 {
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
 	{
-		if (*it_p != nullptr)
-			delete *it_p;
-		*it_p = nullptr;
+		RELEASE((*it_p));
 	}
 
 	panels.clear();

@@ -69,8 +69,7 @@ void ModuleScene::newScene()
 	it_p = ShapesToDraw.begin();
 	while (it_p != ShapesToDraw.end())
 	{
-		delete ((*it_p));
-		(*it_p) = nullptr;
+		RELEASE((*it_p));
 		it_p++;
 	}
 	ShapesToDraw.clear();
@@ -79,8 +78,7 @@ void ModuleScene::newScene()
 	it_m = App->renderer3D->meshes.begin();
 	while (it_m != App->renderer3D->meshes.end())
 	{
-		delete ((*it_m));
-		(*it_m) = nullptr;
+		RELEASE((*it_m));
 		it_m++;
 	}
 	App->renderer3D->meshes.clear();

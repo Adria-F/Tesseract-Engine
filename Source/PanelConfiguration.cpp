@@ -43,6 +43,14 @@ void PanelConfiguration::Draw()
 			App->setFramerateCap(framerateCap);
 		ImGui::PopItemWidth();
 
+		if (ImGui::Checkbox("Vsync", &App->renderer3D->vsync))
+		{
+			if (App->renderer3D->vsync)
+				SDL_GL_SetSwapInterval(1);
+			else
+				SDL_GL_SetSwapInterval(0);
+		}
+
 		char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));

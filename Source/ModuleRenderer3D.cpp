@@ -25,6 +25,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init(rapidjson::Document& document)
 {
+	vsync = document["renderer"]["Vsync"].GetBool();
 	Depth_Test =document["renderer"]["Depth_Test"].GetBool();
 	Cull_Face = document["renderer"]["Cull_Face"].GetBool();
 	Lighting = document["renderer"]["Lighting"].GetBool();
@@ -63,7 +64,7 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if(vsync && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix. Specify which matrix is the current matrix

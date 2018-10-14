@@ -85,6 +85,7 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
+	bool vsync = false;
 	bool Depth_Test = false;
 	bool Cull_Face = false;
 	bool Lighting = false;

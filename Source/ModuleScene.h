@@ -37,11 +37,6 @@ public:
 
 public:
 
-	Sphere S_Test_A;
-	Sphere S_Test_B;
-	AABB   AABB_Test_A;
-	AABB   AABB_Test_B;
-
 	list<Primitive*> ShapesToDraw;
 
 };
