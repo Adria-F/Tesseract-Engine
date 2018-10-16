@@ -77,6 +77,8 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentTransformation.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glMath\glmath.h" />
@@ -216,6 +218,8 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glMath\glmath.cpp" />

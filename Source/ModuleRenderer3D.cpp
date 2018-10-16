@@ -8,6 +8,9 @@
 #include "ModuleGUI.h"
 #include "Primitive.h"
 
+#include "ComponentMesh.h"
+#include "ComponentTexture.h"
+
 #include "PanelScene.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -399,6 +402,19 @@ bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteS
 
 bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 	return true;
+}
+
+ComponentMesh* ModuleRenderer3D::CreateComponentMesh()
+{
+	ComponentMesh* ret;
+
+	return ret;
+}
+ComponentTexture* ModuleRenderer3D::CreateComponentTexture()
+{
+	ComponentTexture* ret;
+
+	return ret;
 }
 
 

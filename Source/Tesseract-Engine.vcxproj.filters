@@ -456,7 +456,15 @@
     <ClInclude Include="ComponentTransformation.h">
       <Filter>Sources\Modules\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleTextures.h" />
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTexture.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTextures.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -666,7 +674,15 @@
     <ClCompile Include="ComponentTransformation.cpp">
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleTextures.cpp" />
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTexture.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

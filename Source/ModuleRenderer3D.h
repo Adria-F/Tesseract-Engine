@@ -15,6 +15,9 @@ using namespace std;
 
 
 class MSphere;
+class Component;
+class ComponentMesh;
+class ComponentTexture;
 
 struct Mesh
 {
@@ -73,6 +76,11 @@ public:
 
 	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const;
 	bool Load(rapidjson::Document& document);
+
+	ComponentMesh* CreateComponentMesh();
+	ComponentTexture* CreateComponentTexture();
+
+
 
 public:
 
