@@ -456,6 +456,12 @@
     <ClInclude Include="ComponentTransformation.h">
       <Filter>Sources\Modules\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTexture.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -663,6 +669,12 @@
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ComponentTransformation.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTexture.cpp">
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
   </ItemGroup>

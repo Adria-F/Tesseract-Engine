@@ -5,6 +5,7 @@
 #include <string>
 
 class Component;
+class ComponentTransformation;
 enum componentType;
 
 class GameObject
@@ -13,8 +14,10 @@ public:
 	GameObject();
 	~GameObject();
 
-	Component* AddComponent(Component& component);
-	void RemoveComponent(componentType type);
+	Component* AddComponent(componentType type);
+	void RemoveComponent(Component& component);
+
+	ComponentTransformation* CreateComponentTransformation();
 
 	void Update();
 
