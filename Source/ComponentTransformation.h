@@ -10,8 +10,8 @@ public:
 	ComponentTransformation();
 	~ComponentTransformation();
 
-	void DrawInfo();
-	bool Update();
+	void DrawInfo() {}
+	bool Update() { return true; }
 
 public:
 

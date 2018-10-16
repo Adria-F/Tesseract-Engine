@@ -456,6 +456,7 @@
     <ClInclude Include="ComponentTransformation.h">
       <Filter>Sources\Modules\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleTextures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -665,6 +666,7 @@
     <ClCompile Include="ComponentTransformation.cpp">
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
