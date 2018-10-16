@@ -70,6 +70,8 @@ public:
 	bool LoadGame();
 	bool SaveGame() const;
 
+	float GetDeltaTime() const;
+
 private:
 
 	void AddModule(Module* mod);

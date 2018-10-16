@@ -229,3 +229,8 @@ bool Application::SaveGame()const
 	
 	return ret;
 }
+
+float Application::GetDeltaTime() const
+{
+	return dt;
+}
