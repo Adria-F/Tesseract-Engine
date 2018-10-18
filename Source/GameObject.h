@@ -24,7 +24,7 @@ public:
 public:
 
 	std::list<Component*> components;
-	std::list<GameObject*> childs;
+	std::vector<GameObject*> childs;
 
 	GameObject* parent = nullptr;
 

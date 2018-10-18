@@ -7,6 +7,8 @@ struct Mesh;
 struct aiScene;
 struct aiNode;
 
+class GameObject;
+
 class ModuleMeshLoader : public Module
 {
 public:
@@ -29,6 +31,7 @@ public:
 	bool CleanUp();
 
 	void ImportFBX(const char* full_path);
+	void LoadGameObjects(aiNode* node, GameObject* parent);
 	void loadNodeMesh(const aiScene* scene, aiNode* node, std::string meshPath);
 	GLuint loadTexture(const char* path, uint& width, uint& height);
 	

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Globals.h"
+#include "GameObject.h"
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
@@ -87,12 +88,42 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		usedTextureHeight = 0;
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
+		LoadGameObjects(root,nullptr);
 		loadNodeMesh(scene, root, full_path);
 		
 		aiReleaseImport(scene);
 	}
 	else
 		LOG("Error loading scene %s", full_path);
+}
+
+void ModuleMeshLoader::LoadGameObjects(aiNode* node, GameObject* parent)
+{
+	if (node!=nullptr)
+	{
+		GameObject* newGameObject = new GameObject();
+		
+		newGameObject->name = node->mName.C_Str();
+		newGameObject->parent = parent;
+
+		App->scene_intro->GameObjects.push_back(newGameObject);
+
+		if (parent != nullptr)
+		{
+			parent->childs.push_back(newGameObject);
+		}
+
+		LOG("New GameObject with name %s", newGameObject->name.c_str());
+
+		for (uint i = 0; i < node->mNumChildren; i++)
+		{
+			if (node->mChildren[i] != nullptr)
+			{
+				LoadGameObjects(node->mChildren[i],newGameObject);
+			}
+		}
+		
+	}
 }
 
 void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::string meshPath)

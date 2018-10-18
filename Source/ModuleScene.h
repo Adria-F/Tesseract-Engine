@@ -6,6 +6,7 @@
 #include "MathGeoLib/MathGeoLib.h"
 
 #include <list>
+#include <vector>
 
 #define ROAD_HEIGHT 9
 #define ROAD_WIDTH 15
@@ -15,6 +16,7 @@
 using namespace std;
 
 class Primitive;
+class GameObject;
 
 class ModuleScene : public Module
 {
@@ -38,6 +40,7 @@ public:
 public:
 
 	list<Primitive*> ShapesToDraw;
+	vector<GameObject*> GameObjects;
 
 };
 #endif // !__MODULESCENE_H__

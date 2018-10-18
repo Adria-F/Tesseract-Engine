@@ -167,6 +167,34 @@ update_status ModuleGUI::Update(float dt)
 	}
 	ImGui::EndMainMenuBar();
 
+	ImGui::Begin("test");
+	if (ImGui::TreeNode("Loxel Entities"))
+	{
+		if (ImGui::TreeNode("Base"))
+		{
+			ImGui::Indent();
+			for (int i = 0; i < 2; i++)
+			{
+				ImGui::TreeNodeEx("pepe", ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow);
+				ImGui::TreePop();
+			}
+			ImGui::Text("Num Slots");
+			ImGui::Text("Count");
+			ImGui::Unindent();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Slots"))
+		{
+			ImGui::TreePop();
+		}
+		ImGui::TreePop();
+	}
+	ImGui::Indent();
+	ImGui::Text("Previous Modifications");
+	ImGui::Text("Debug Ticks");
+	ImGui::Unindent();
+	ImGui::End();
+
 	return status;
 }
 
