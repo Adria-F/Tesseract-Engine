@@ -70,4 +70,9 @@ enum update_status
 #define VSYNC false
 #define TITLE "3D Engine"
 
+// Files PATHS
+#define PATHS_AMOUNT 2
+#define ASSETS_FOLDER "./Assets/"
+#define LIBRARY_FOLDER "./Library/"
+
 #endif // !__GLOBALS_H__

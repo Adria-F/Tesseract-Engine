@@ -15,7 +15,7 @@ struct Texture
 class ModuleTextures : public Module
 {
 public:
-	ModuleTextures();
+	ModuleTextures(bool start_enabled = true);
 	~ModuleTextures();
 
 	Texture* loadTexture(const char* path);

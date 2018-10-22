@@ -9,7 +9,7 @@
 #pragma comment( lib, "DevIL/libx86/ILU.lib")
 #pragma comment( lib, "DevIL/libx86/ILUT.lib")
 
-ModuleTextures::ModuleTextures()
+ModuleTextures::ModuleTextures(bool start_enabled) : Module(start_enabled)
 {
 }
 
