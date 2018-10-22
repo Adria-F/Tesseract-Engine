@@ -16,9 +16,6 @@ GameObject::~GameObject()
 {
 }
 
-
-
-
 void GameObject::Update()
 {
 

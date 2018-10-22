@@ -88,7 +88,7 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		usedTextureHeight = 0;
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
-		LoadGameObjects(root,nullptr);
+		//LoadGameObjects(scene,root,nullptr);
 		loadNodeMesh(scene, root, full_path);
 		
 		aiReleaseImport(scene);
@@ -97,21 +97,196 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		LOG("Error loading scene %s", full_path);
 }
 
-void ModuleMeshLoader::LoadGameObjects(aiNode* node, GameObject* parent)
+void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameObject* parent)
 {
+	bool errorLoading = false;
+
 	if (node!=nullptr)
 	{
-		GameObject* newGameObject = new GameObject();
-		
+		//Get pos, scale and rotation of the Game Object
+		aiVector3D translation;
+		aiVector3D scaling;
+		aiQuaternion rotation;
+		node->mTransformation.Decompose(scaling, rotation, translation);
+		vec3 pos(translation.x, translation.y, translation.z);
+		vec3 scale(scaling.x, scaling.y, scaling.z);
+		Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+		//Create the Game Object with the information
+		GameObject* newGameObject = new GameObject(/*pos,scale,rotation*/);
+
+		//Get name and set parent
 		newGameObject->name = node->mName.C_Str();
 		newGameObject->parent = parent;
 
+		//Add the Game Object to the scene
 		App->scene_intro->GameObjects.push_back(newGameObject);
 
+		//Add the Game Object to the Children list of the parent
 		if (parent != nullptr)
 		{
 			parent->childs.push_back(newGameObject);
 		}
+		
+		// Generate a game object for each mesh
+		for (int i = 0; i < node->mNumMeshes; i++)
+		{
+			//Creating the GameObject
+			GameObject* GameObjectFromMesh = new GameObject();
+
+			//Creating the mesh for the componentMesh and getting the mesh from assimp
+			Mesh* newMesh = new Mesh();
+			aiMesh* currentMesh = scene->mMeshes[node->mMeshes[i]];
+			
+			//Getting mesh information
+			newGameObject->name = currentMesh->mName.C_Str();
+			newGameObject->parent = newGameObject;
+			newMesh->num_vertices = currentMesh->mNumVertices;
+
+			//Copying Vertices array
+			newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at elast 3 vertices
+			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+
+			//Copying Face Normals
+			if (currentMesh->HasNormals())
+			{
+				newMesh->num_normals = currentMesh->mNumVertices;
+				newMesh->normals = new float[newMesh->num_normals * 3];
+				memcpy(newMesh->normals, currentMesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
+			}
+
+			//Loging Info
+			LOG("New Mesh with %d vertices", newMesh->num_vertices);
+			LOG("New Mesh with %d normals", newMesh->num_normals);
+			LOG("New Mesh with %d faces", currentMesh->mNumFaces);
+
+			//Textures
+			//if (currentMesh->mMaterialIndex < scene->mNumMaterials)
+			//{
+			//	aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
+			//	aiColor3D color(0.f, 0.f, 0.f);
+			//	mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			//	newMesh->color.x = color.r;
+			//	newMesh->color.y = color.g;
+			//	newMesh->color.z = color.b;
+
+			//	aiString path;
+			//	aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
+			//	if (textureError == aiReturn::aiReturn_SUCCESS)
+			//	{
+			//		string currentPath = path.C_Str();
+			//		if (usedPath != currentPath)
+			//		{
+			//			//Remove the name of the mesh from the path and add the image name
+			//			for (int i = meshPath.size() - 1; i >= 0; i--)
+			//				if (meshPath[i] == '/' || meshPath[i] == '\\')
+			//					break;
+			//				else
+			//					meshPath.pop_back();
+			//			meshPath += currentPath;
+
+			//			newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+			//			if (newMesh->texture == 0) //Texture not found at root
+			//			{
+			//				LOG("Texture not found at .fbx root");
+			//				LOG("Looking at Assets/Textures folder");
+			//				meshPath = "Assets/Textures/" + currentPath;
+			//				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
+			//			}
+			//			if (usedTexture == 0)
+			//			{
+			//				usedTexture = newMesh->texture;
+			//				usedTextureWidth = newMesh->texWidth;
+			//				usedTextureHeight = newMesh->texHeight;
+			//			}
+			//		}
+			//		else
+			//		{
+			//			LOG("Texture already loaded");
+			//			newMesh->texture = usedTexture;
+			//			newMesh->texWidth = usedTextureWidth;
+			//			newMesh->texHeight = usedTextureHeight;
+			//		}
+			//		if (usedPath == "")
+			//			usedPath = currentPath;
+			//	}
+			//	else
+			//		LOG("Couldn't read the texture from .fbx file");
+			//}
+			//else
+			//{
+			//	LOG("Mesh material index is out of scene materials array");
+			//}
+
+			//Copying texture coords
+			if (currentMesh->HasFaces())
+			{
+				int t = 0;
+				if (currentMesh->HasTextureCoords(0))
+				{
+					newMesh->texCoords = new float[newMesh->num_vertices * 2];
+					for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+					{
+						newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;
+						newMesh->texCoords[q + 1] = currentMesh->mTextureCoords[0][t].y;
+						t++;
+					}
+				}
+				else
+				{
+					LOG("Current mesh has no Texture Coordinates, so will not draw any texture assigned");
+				}
+
+				//Copying indices
+				newMesh->num_indices = currentMesh->mNumFaces * 3;
+				newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
+
+				for (int j = 0; j < currentMesh->mNumFaces; ++j)
+				{
+					if (currentMesh->mFaces[j].mNumIndices != 3)
+					{
+						LOG("WARNING, geometry face with != 3 indices!");
+						LOG("WARNING, face normals couldn't be loaded");
+						errorLoading = true;
+						break;
+					}
+					else
+					{
+						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
+					}
+				}
+
+				//Generating Local BoundingBox
+				newMesh->boundingBox.SetNegativeInfinity();
+				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+
+				//Generating Global BoundingBox
+				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
+
+				newMesh->position = pos;
+				newMesh->scale = scale;
+				newMesh->rotation = rot;
+
+				/*newMesh->position = pos;
+				newMesh->scale = scale;
+				newMesh->rotation = rot;*/
+			}
+			else
+			{
+				LOG("Current mesh has no faces, so will not be loaded");
+				errorLoading = true;
+			}
+
+			if (!errorLoading)
+			{
+				newMesh->calculateNormals();
+				App->renderer3D->pushMesh(newMesh);
+
+				//AddComponentMesh(mesh);
+			}
+			errorLoading = false;
+		}
+		App->camera->FitCamera(*App->camera->BBtoLook);
 
 		LOG("New GameObject with name %s", newGameObject->name.c_str());
 
@@ -119,10 +294,10 @@ void ModuleMeshLoader::LoadGameObjects(aiNode* node, GameObject* parent)
 		{
 			if (node->mChildren[i] != nullptr)
 			{
-				LoadGameObjects(node->mChildren[i],newGameObject);
+				LoadGameObjects(scene,node->mChildren[i], newGameObject);
 			}
 		}
-		
+
 	}
 }
 
@@ -278,6 +453,7 @@ void ModuleMeshLoader::loadNodeMesh(const aiScene* scene, aiNode* node, std::str
 		errorLoading = false;
 	}
 	App->camera->FitCamera(*App->camera->BBtoLook);
+
 }
 
 GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height)
