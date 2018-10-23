@@ -15,7 +15,7 @@ enum componentType
 class Component
 {
 public:
-	Component() {}
+	Component(GameObject* gameobject,componentType type):gameObject(gameobject),type(type) {}
 	~Component() {}
 
 	virtual void DrawInfo() {}

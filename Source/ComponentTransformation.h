@@ -7,7 +7,8 @@
 class ComponentTransformation : public Component
 {
 public:
-	ComponentTransformation();
+
+	ComponentTransformation(GameObject* parent, componentType type) :Component(parent, type) {}
 	~ComponentTransformation();
 
 	void DrawInfo();

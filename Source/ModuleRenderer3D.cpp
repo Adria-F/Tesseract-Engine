@@ -404,19 +404,6 @@ bool ModuleRenderer3D::Load(rapidjson::Document& document) {
 	return true;
 }
 
-ComponentMesh* ModuleRenderer3D::CreateComponentMesh()
-{
-	ComponentMesh* ret;
-
-	return ret;
-}
-ComponentTexture* ModuleRenderer3D::CreateComponentTexture()
-{
-	ComponentTexture* ret;
-
-	return ret;
-}
-
 
 Mesh::~Mesh()
 {

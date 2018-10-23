@@ -1,12 +1,10 @@
 #include "ComponentTexture.h"
 
 
-
-ComponentTexture::ComponentTexture()
+ComponentTexture::~ComponentTexture()
 {
 }
 
-
-ComponentTexture::~ComponentTexture()
+void ComponentTexture::DrawInfo()
 {
 }

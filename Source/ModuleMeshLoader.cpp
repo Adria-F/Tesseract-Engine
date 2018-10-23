@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 #include "ModuleMeshLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
@@ -88,8 +90,8 @@ void ModuleMeshLoader::ImportFBX(const char* full_path)
 		usedTextureHeight = 0;
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
-		//LoadGameObjects(scene,root,nullptr);
-		loadNodeMesh(scene, root, full_path);
+		LoadGameObjects(scene,root,nullptr);
+		//loadNodeMesh(scene, root, full_path);
 		
 		aiReleaseImport(scene);
 	}
@@ -282,7 +284,20 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 				newMesh->calculateNormals();
 				App->renderer3D->pushMesh(newMesh);
 
-				//AddComponentMesh(mesh);
+				//Add the mesh inside the cilds(>1) or parent(<1)
+				if (node->mNumMeshes > 1)
+				{
+					ComponentMesh* component;
+					component =(ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
+					component->mesh = newMesh;
+
+				}
+				else
+				{
+					ComponentMesh* component;
+					component = (ComponentMesh*)newGameObject->AddComponent(MESH);
+					component->mesh = newMesh;
+				}
 			}
 			errorLoading = false;
 		}

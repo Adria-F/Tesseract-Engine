@@ -7,10 +7,8 @@ class Mesh;
 class ComponentMesh : public Component
 {
 public:
-
-	ComponentMesh();
 	
-	ComponentMesh(Mesh* mesh);
+	ComponentMesh(GameObject* parent, componentType type) :Component(parent, type) {}
 
 	~ComponentMesh();
 
