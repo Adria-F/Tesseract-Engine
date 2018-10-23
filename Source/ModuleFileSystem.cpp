@@ -1,5 +1,8 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
+#include "ModuleMeshLoader.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleTextures.h"
 #include "PhysFS\include\physfs.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
@@ -18,7 +21,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -47,7 +50,7 @@ bool ModuleFileSystem::addPath(const char * path)
 	return ret;
 }
 
-void ModuleFileSystem::readFile(const char * path, char** buffer)
+uint ModuleFileSystem::readFile(const char * path, char** buffer)
 {
 	PHYSFS_file* file = PHYSFS_openRead(path);
 	if (file != nullptr)
@@ -56,56 +59,53 @@ void ModuleFileSystem::readFile(const char * path, char** buffer)
 		*buffer = new char[size];
 		PHYSFS_read(file, *buffer, 1, size);
 		PHYSFS_close(file);
+		return size;
 	}
+	return 0;
 }
 
-void ModuleFileSystem::readFile(const char * path, float ** buffer)
-{
-	PHYSFS_file* file = PHYSFS_openRead(path);
-	if (file != nullptr)
-	{
-		PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(file);
-		*buffer = new float[size];
-		PHYSFS_read(file, *buffer, 1, size);
-		PHYSFS_close(file);
-	}
-}
-
-void ModuleFileSystem::writeFile(const char * path, const void * buffer, uint size)
+uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint size)
 {
 	PHYSFS_file* file = PHYSFS_openWrite(path);
 	if (file != nullptr)
 	{
-		PHYSFS_write(file, (const void*)buffer, 1, size);
+		uint written = PHYSFS_write(file, (const void*)buffer, 1, size);
 		PHYSFS_close(file);
+		return written;
 	}
+	return 0;
 }
 
-const char* ModuleFileSystem::getExtension(const char * path)
+void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
 {
-	std::string str = path;
+	std::string str = normalizePath(full_path);
+	uint pos_slash = str.find_last_of('/');
+	uint pos_dot = str.find_last_of('.');
 
-	size_t i = str.rfind('.', str.length());
-	if (i != std::string::npos) {
-		str = str.substr(i + 1, str.length() - i);
+	if (path != nullptr)
+	{
+		if (pos_slash < str.length())
+			*path = str.substr(0, pos_slash + 1);
+		else
+			path->clear();
 	}
-
-	return str.c_str();
+	if (filename != nullptr)
+	{
+		if (pos_slash < str.length())
+			*filename = str.substr(pos_slash + 1, pos_dot - pos_slash-1);
+		else
+			*filename = str.substr(0, str.length() - pos_dot);
+	}
+	if (extension != nullptr)
+	{
+		if (pos_dot < str.length())
+			*extension = str.substr(pos_dot + 1);
+		else
+			extension->clear();
+	}
 }
 
-const char* ModuleFileSystem::getFileName(const char* path)
-{
-	const char* test = normalizePath(path);
-	std::string str = test;
-	size_t i = str.rfind('/', str.length());
-	if (i != std::string::npos) {
-		str = str.substr(i + 1, str.length() - i);
-	}
-
-	return str.c_str();
-}
-
-const char * ModuleFileSystem::normalizePath(const char * path)
+std::string ModuleFileSystem::normalizePath(const char * path)
 {
 	std::string str = path;
 
@@ -116,4 +116,23 @@ const char * ModuleFileSystem::normalizePath(const char * path)
 	}
 
 	return str.c_str();
+}
+
+void ModuleFileSystem::manageDroppedFiles(const char* path)
+{
+	std::string extension = path;
+	splitPath(path, nullptr, nullptr, &extension);
+
+	if (extension == "fbx" || extension == "FBX")
+	{
+		App->mesh_loader->ImportFBX(path);
+	}
+	else if (extension == "png" || extension == "dds")
+	{
+		App->renderer3D->ChangeMeshTexture(path);
+	}
+	else
+	{
+		LOG("Unsupported file format");
+	}
 }

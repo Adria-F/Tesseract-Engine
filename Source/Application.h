@@ -28,6 +28,7 @@ class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModuleGUI;
 class ModuleMeshLoader;
+class ModuleTextures;
 class ModuleFileSystem;
 
 class Application
@@ -40,6 +41,7 @@ public:
 	ModuleCamera3D* camera = nullptr;
 	ModuleGUI* gui = nullptr;
 	ModuleMeshLoader* mesh_loader = nullptr;
+	ModuleTextures* textures = nullptr;
 	ModuleFileSystem* fileSystem = nullptr;
 
 private:

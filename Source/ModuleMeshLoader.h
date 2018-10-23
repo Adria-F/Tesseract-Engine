@@ -6,6 +6,7 @@
 struct Mesh;
 struct aiScene;
 struct aiNode;
+struct aiMesh;
 
 class GameObject;
 
@@ -34,6 +35,10 @@ public:
 	void LoadGameObjects(const aiScene* scene,aiNode* node, GameObject* parent);
 	void loadNodeMesh(const aiScene* scene, aiNode* node, std::string meshPath);
 	GLuint loadTexture(const char* path, uint& width, uint& height);
+
+	Mesh* importMesh(aiMesh mesh);
+	Mesh* loadMesh(const char* path);
+	bool saveMesh(Mesh* mesh);
 	
 public:
 

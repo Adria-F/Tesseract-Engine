@@ -71,8 +71,14 @@ enum update_status
 #define TITLE "3D Engine"
 
 // Files PATHS
-#define PATHS_AMOUNT 2
-#define ASSETS_FOLDER "./Assets/"
-#define LIBRARY_FOLDER "./Library/"
+#define PATHS_AMOUNT 4
+#define ASSETS_FOLDER "/Assets/"
+#define LIBRARY_FOLDER "/Library/"
+#define MESHES_FOLDER "/Library/Meshes/"
+#define TEXTURES_FOLDER "/Library/Textures/"
+
+// Own format files
+#define MESH_EXTENSION ".tesseractMesh"
+#define TEXTURES_EXTENSION ".dds"
 
 #endif // !__GLOBALS_H__

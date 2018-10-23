@@ -11,13 +11,13 @@ public:
 
 	bool addPath(const char* path);
 
-	void readFile(const char* path, char** buffer);
-	void readFile(const char* path, float** buffer);
-	void writeFile(const char* path, const void* buffer, uint size);
+	uint readFile(const char* path, char** buffer);
+	uint writeFile(const char* path, const void* buffer, uint size);
 
-	const char* getExtension(const char* path);
-	const char* getFileName(const char* path);
-	const char* normalizePath(const char* path);
+	void splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
+	std::string normalizePath(const char* path);
+
+	void manageDroppedFiles(const char* path);
 };
 
 #endif // !__MODULEFILESYSTEM_H__

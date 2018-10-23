@@ -7,7 +7,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
-#include "ModuleMeshLoader.h"
+#include "ModuleFileSystem.h"
 
 #define MAX_KEYS 300
 
@@ -172,25 +172,7 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 		case (SDL_DROPFILE):
 		{
-			string str = event.drop.file;
-
-			size_t i = str.rfind('.', str.length());
-			if (i != string::npos) {
-				str=str.substr(i + 1, str.length() - i);
-			}
-
-			if (str == "fbx" || str=="FBX")
-			{
-				App->mesh_loader->ImportFBX(event.drop.file);
-			}
-			else if (str == "png" || str == "dds")
-			{
-				App->renderer3D->ChangeMeshTexture(event.drop.file);
-			}
-			else
-			{
-				LOG("Unsupported file format");
-			}
+			App->fileSystem->manageDroppedFiles(event.drop.file);
 			break;
 		}
 		}

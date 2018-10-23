@@ -18,6 +18,7 @@ public:
 	ModuleTextures(bool start_enabled = true);
 	~ModuleTextures();
 
+	bool importTexture(const char* path);
 	Texture* loadTexture(const char* path);
 
 public:

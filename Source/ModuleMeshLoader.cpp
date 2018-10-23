@@ -7,6 +7,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
 #include "ModuleCamera3D.h"
+#include "Assimp/include/mesh.h"
+#include "ModuleFileSystem.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -139,6 +141,7 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 			//Creating the mesh for the componentMesh and getting the mesh from assimp
 			Mesh* newMesh = new Mesh();
 			aiMesh* currentMesh = scene->mMeshes[node->mMeshes[i]];
+			newMesh->name = currentMesh->mName.C_Str();
 			
 			//Getting mesh information
 			newMesh->num_vertices = currentMesh->mNumVertices;
@@ -281,6 +284,7 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 			{
 				newMesh->calculateNormals();
 				App->renderer3D->pushMesh(newMesh);
+				saveMesh(newMesh);
 
 				//Add the mesh inside the cilds(>1) or parent(<1)
 				if (node->mNumMeshes > 1)
@@ -528,6 +532,101 @@ GLuint ModuleMeshLoader::loadTexture(const char* path, uint& width, uint& height
 	LOG("Texture creation successful." );
 
 	return textureID;
+}
+
+Mesh* ModuleMeshLoader::importMesh(aiMesh mesh)
+{
+	return nullptr;
+}
+
+Mesh* ModuleMeshLoader::loadMesh(const char* path)
+{
+	Mesh* ret = new Mesh();
+	App->fileSystem->splitPath(path, nullptr, &ret->name, nullptr);
+
+	//Get the buffer
+	char* cursor = nullptr;
+	App->fileSystem->readFile(path, &cursor);
+
+	//Load ranges
+	uint ranges[2];
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+	cursor += bytes;
+
+	ret->num_vertices = ranges[0];
+	ret->num_indices = ranges[1];
+	ret->num_normals = ret->num_vertices;
+
+	//Load vertices
+	bytes = sizeof(float)*ret->num_vertices;
+	ret->vertices = new float[ret->num_vertices];
+	memcpy(ret->vertices, cursor, bytes);
+	cursor += bytes;
+
+	//Load indices
+	bytes = sizeof(uint)*ret->num_indices;
+	ret->indices = new uint[ret->num_indices];
+	memcpy(ret->indices, cursor, bytes);
+	cursor += bytes;
+
+	//Load normals
+	bytes = sizeof(float)*ret->num_vertices;
+	ret->normals = new float[ret->num_normals];
+	memcpy(ret->normals, cursor, bytes);
+	cursor += bytes;
+
+	//Load tex_coords
+	bytes = sizeof(float)*ret->num_vertices * 2;
+	ret->texCoords = new float[ret->num_vertices * 2];
+	memcpy(ret->texCoords, cursor, bytes);
+
+	//Calculate bounding box
+	ret->boundingBox.SetNegativeInfinity();
+	ret->boundingBox.Enclose((float3*)ret->vertices, ret->num_vertices);
+
+	return ret;
+}
+
+bool ModuleMeshLoader::saveMesh(Mesh* mesh)
+{
+	bool ret = true;
+
+	//	Vertices | Indices | Normals(vertices) | Texture coords (verties*2)
+	uint ranges[2] = { mesh->num_vertices, mesh->num_indices};
+	
+	//Total size of the buffer
+	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_vertices + sizeof(float)*mesh->num_vertices*2;
+	char* buffer = new char[size];
+	char* cursor = buffer;
+
+	//Store ranges
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+	cursor += bytes;
+
+	//Store vertices
+	bytes = sizeof(float)*mesh->num_vertices;
+	memcpy(cursor, mesh->vertices, bytes);
+	cursor += bytes;
+	
+	//Store indices
+	bytes = sizeof(uint)*mesh->num_indices;
+	memcpy(cursor, mesh->indices, bytes);
+	cursor += bytes;
+
+	//Store normals
+	bytes = sizeof(float)*mesh->num_normals;
+	memcpy(cursor, mesh->normals, bytes);
+	cursor += bytes;
+
+	//Store tex_coords
+	bytes = sizeof(float)*mesh->num_vertices*2;
+	memcpy(cursor, mesh->texCoords, bytes);
+
+	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size);
+
+	return ret;
 }
 
 void CallLog(const char* str, char* userData)
