@@ -134,15 +134,13 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
 			//Creating the GameObject
-			GameObject* GameObjectFromMesh = new GameObject();
+			GameObject* GameObjectFromMesh = nullptr;
 
 			//Creating the mesh for the componentMesh and getting the mesh from assimp
 			Mesh* newMesh = new Mesh();
 			aiMesh* currentMesh = scene->mMeshes[node->mMeshes[i]];
 			
 			//Getting mesh information
-			newGameObject->name = currentMesh->mName.C_Str();
-			newGameObject->parent = newGameObject;
 			newMesh->num_vertices = currentMesh->mNumVertices;
 
 			//Copying Vertices array
@@ -287,6 +285,11 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 				//Add the mesh inside the cilds(>1) or parent(<1)
 				if (node->mNumMeshes > 1)
 				{
+					//Getting mesh information
+					GameObjectFromMesh = new GameObject(/*pos,scale,rotation*/);
+					GameObjectFromMesh->name = currentMesh->mName.C_Str();
+					GameObjectFromMesh->parent = newGameObject;
+					
 					ComponentMesh* component;
 					component =(ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
 					component->mesh = newMesh;
