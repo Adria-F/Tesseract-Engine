@@ -42,17 +42,20 @@ bool ModuleTextures::importTexture(const char* path)
 			return false;
 		}
 
-		glGenTextures(1, &ret->id);
-		glBindTexture(GL_TEXTURE_2D, ret->id);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
-		ret->width = ImageInfo.Width;
-		ret->height = ImageInfo.Height;
+		ILuint size;
+		ILubyte *data;
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
+		size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+		if (size > 0) {
+			data = new ILubyte[size]; // allocate data buffer
+			if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
+			{
+				std::string filename = path;
+				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
+				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
+			}
+			RELEASE_ARRAY(data);
+		}
 	}
 	else
 	{
