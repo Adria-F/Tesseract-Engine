@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleMeshLoader.h"
+#include "GameObject.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {}
@@ -60,6 +61,11 @@ void ModuleScene::Draw()
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{
 		(*it)->Render();
+	}
+
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		GameObjects[i]->Draw();
 	}
 }
 

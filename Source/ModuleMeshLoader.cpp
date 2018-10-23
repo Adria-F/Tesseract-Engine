@@ -163,64 +163,6 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 			LOG("New Mesh with %d normals", newMesh->num_normals);
 			LOG("New Mesh with %d faces", currentMesh->mNumFaces);
 
-			//Textures
-			//if (currentMesh->mMaterialIndex < scene->mNumMaterials)
-			//{
-			//	aiMaterial* mat = scene->mMaterials[currentMesh->mMaterialIndex];
-			//	aiColor3D color(0.f, 0.f, 0.f);
-			//	mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-			//	newMesh->color.x = color.r;
-			//	newMesh->color.y = color.g;
-			//	newMesh->color.z = color.b;
-
-			//	aiString path;
-			//	aiReturn textureError = mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
-			//	if (textureError == aiReturn::aiReturn_SUCCESS)
-			//	{
-			//		string currentPath = path.C_Str();
-			//		if (usedPath != currentPath)
-			//		{
-			//			//Remove the name of the mesh from the path and add the image name
-			//			for (int i = meshPath.size() - 1; i >= 0; i--)
-			//				if (meshPath[i] == '/' || meshPath[i] == '\\')
-			//					break;
-			//				else
-			//					meshPath.pop_back();
-			//			meshPath += currentPath;
-
-			//			newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
-			//			if (newMesh->texture == 0) //Texture not found at root
-			//			{
-			//				LOG("Texture not found at .fbx root");
-			//				LOG("Looking at Assets/Textures folder");
-			//				meshPath = "Assets/Textures/" + currentPath;
-			//				newMesh->texture = loadTexture(meshPath.c_str(), newMesh->texWidth, newMesh->texHeight);
-			//			}
-			//			if (usedTexture == 0)
-			//			{
-			//				usedTexture = newMesh->texture;
-			//				usedTextureWidth = newMesh->texWidth;
-			//				usedTextureHeight = newMesh->texHeight;
-			//			}
-			//		}
-			//		else
-			//		{
-			//			LOG("Texture already loaded");
-			//			newMesh->texture = usedTexture;
-			//			newMesh->texWidth = usedTextureWidth;
-			//			newMesh->texHeight = usedTextureHeight;
-			//		}
-			//		if (usedPath == "")
-			//			usedPath = currentPath;
-			//	}
-			//	else
-			//		LOG("Couldn't read the texture from .fbx file");
-			//}
-			//else
-			//{
-			//	LOG("Mesh material index is out of scene materials array");
-			//}
-
 			//Copying texture coords
 			if (currentMesh->HasFaces())
 			{
@@ -283,8 +225,9 @@ void ModuleMeshLoader::LoadGameObjects(const aiScene* scene,aiNode* node, GameOb
 			if (!errorLoading)
 			{
 				newMesh->calculateNormals();
-				App->renderer3D->pushMesh(newMesh);
 				saveMesh(newMesh);
+				newMesh->GenerateBuffer();
+				App->renderer3D->pushMesh(newMesh);
 
 				//Add the mesh inside the cilds(>1) or parent(<1)
 				if (node->mNumMeshes > 1)

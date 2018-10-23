@@ -4,11 +4,13 @@
 #include "Component.h"
 
 class Mesh;
+class GameObject;
+
 class ComponentMesh : public Component
 {
 public:
 	
-	ComponentMesh(GameObject* parent, componentType type) :Component(parent, type) {}
+	ComponentMesh(GameObject* parent, componentType type);
 
 	~ComponentMesh();
 
