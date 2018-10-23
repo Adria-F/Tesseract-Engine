@@ -14,6 +14,10 @@ public:
 	void readFile(const char* path, char** buffer);
 	void readFile(const char* path, float** buffer);
 	void writeFile(const char* path, const void* buffer, uint size);
+
+	const char* getExtension(const char* path);
+	const char* getFileName(const char* path);
+	const char* normalizePath(const char* path);
 };
 
 #endif // !__MODULEFILESYSTEM_H__

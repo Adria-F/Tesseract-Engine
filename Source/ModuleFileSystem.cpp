@@ -80,3 +80,40 @@ void ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 		PHYSFS_close(file);
 	}
 }
+
+const char* ModuleFileSystem::getExtension(const char * path)
+{
+	std::string str = path;
+
+	size_t i = str.rfind('.', str.length());
+	if (i != std::string::npos) {
+		str = str.substr(i + 1, str.length() - i);
+	}
+
+	return str.c_str();
+}
+
+const char* ModuleFileSystem::getFileName(const char* path)
+{
+	const char* test = normalizePath(path);
+	std::string str = test;
+	size_t i = str.rfind('/', str.length());
+	if (i != std::string::npos) {
+		str = str.substr(i + 1, str.length() - i);
+	}
+
+	return str.c_str();
+}
+
+const char * ModuleFileSystem::normalizePath(const char * path)
+{
+	std::string str = path;
+
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == '\\')
+			str[i] = '/';
+	}
+
+	return str.c_str();
+}
