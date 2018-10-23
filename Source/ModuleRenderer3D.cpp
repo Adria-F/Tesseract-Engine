@@ -230,12 +230,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		App->renderer3D->DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
 	}
-	
-	//Draw meshes
-	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
-	{
-		(*it_m)->Draw();
-	}
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -247,8 +241,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	SDL_GL_SwapWindow(App->window->window);
 
-
-	
 	return UPDATE_CONTINUE;
 }
 
@@ -271,11 +263,6 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::pushMesh(Mesh* mesh)
 {
-	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, &mesh->indices[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 	meshes.push_back(mesh);
 }
 
@@ -422,72 +409,12 @@ Mesh::~Mesh()
 
 }
 
-void Mesh::Draw()
+void Mesh::GenerateBuffer()
 {
-	//Set texture or color material
-	if (texture > 0)
-		glBindTexture(GL_TEXTURE_2D, texture);
-	else
-		glColor3f(color.x, color.y, color.z);	
-	//Assign Vertices
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glGenBuffers(1, (GLuint*)&(id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-	//Assign texture
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	if (texCoords != nullptr)
-		glTexCoordPointer(2, GL_FLOAT, 0, &texCoords[0]);
-	//Draw
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	//Disable
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, &indices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	if (texture > 0)
-		glBindTexture(GL_TEXTURE_2D, 0);
-	else
-		glColor3f(1, 1, 1);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if (App->renderer3D->Normals && normals != nullptr)
-	{
-		glLineWidth(2.0f);
-		glColor3f(0, 0.5f, 1);
-		
-		glBegin(GL_LINES);
-		for (int i = 0; i < num_vertices*3; i=i+3)
-		{
-			glVertex3f(vertices[i], vertices[i+1], vertices[i + 2]);
-			glVertex3f(-normals[i]*3 + vertices[i], -normals[i + 1]*3 + vertices[i + 1], -normals[i + 2]*3 + vertices[i + 2]);
-		}
-		glEnd();
-
-		glColor3f(1, 1, 1);
-		glLineWidth(1.0f);
-	}
-
-	if (App->renderer3D->Faces && faceNormals.size() > 0)
-	{
-		int vert_normal=0;
-
-		glLineWidth(2.0f);
-		glColor3f(0, 0.5f, 1);
-
-		glBegin(GL_LINES);
-		for (int i = 0; i < faceNormals.size(); i = i + 6)
-		{
-			glVertex3f(faceNormals[i], faceNormals[i + 1], faceNormals[i + 2]);
-			glVertex3f(faceNormals[i+3] + faceNormals[i], faceNormals[i+4] + faceNormals[i + 1], faceNormals[i+5] + faceNormals[i + 2]);
-			vert_normal += 9;
-		}
-		glEnd();
-
-		glColor3f(1, 1, 1);
-		glLineWidth(2.0f);
-	}
-	if (App->renderer3D->ShowBB)
-	{
-		App->renderer3D->DrawBB(boundingBox, { 0, 0.5f, 1 });
-	}
 }
 
 void Mesh::calculateNormals()

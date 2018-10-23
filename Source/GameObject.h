@@ -4,8 +4,11 @@
 #include <list>
 #include <string>
 
+struct Mesh;
+
 class Component;
 class ComponentTransformation;
+
 enum componentType;
 
 class GameObject
@@ -20,6 +23,7 @@ public:
 	ComponentTransformation* CreateComponentTransformation();
 
 	void Update();
+	void Draw();
 
 public:
 

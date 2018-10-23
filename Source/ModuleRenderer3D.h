@@ -52,6 +52,7 @@ struct Mesh
 
 	void Draw();
 	void calculateNormals();
+	void GenerateBuffer();
 };
 
 class ModuleRenderer3D : public Module
