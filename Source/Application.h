@@ -27,9 +27,10 @@ class ModuleScene;
 class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModuleGUI;
-class ModuleMeshLoader;
+class ModuleMeshes;
 class ModuleTextures;
 class ModuleFileSystem;
+class ModuleSceneLoader;
 
 class Application
 {
@@ -40,9 +41,10 @@ public:
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
 	ModuleGUI* gui = nullptr;
-	ModuleMeshLoader* mesh_loader = nullptr;
 	ModuleTextures* textures = nullptr;
+	ModuleMeshes* meshes = nullptr;
 	ModuleFileSystem* fileSystem = nullptr;
+	ModuleSceneLoader* scene_loader= nullptr;
 
 private:
 
