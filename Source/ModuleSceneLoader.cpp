@@ -77,8 +77,8 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 		aiVector3D scaling;
 		aiQuaternion rotation;
 		node->mTransformation.Decompose(scaling, rotation, translation);
-		vec3 pos(translation.x, translation.y, translation.z);
-		vec3 scale(scaling.x, scaling.y, scaling.z);
+		vec pos(translation.x, translation.y, translation.z);
+		vec scale(scaling.x, scaling.y, scaling.z);
 		Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
 		//Create the Game Object with the information
@@ -173,13 +173,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				//Generating Global BoundingBox
 				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
 
-				newMesh->position = pos;
-				newMesh->scale = scale;
-				newMesh->rotation = rot;
-
-				/*newMesh->position = pos;
-				newMesh->scale = scale;
-				newMesh->rotation = rot;*/
 			}
 			else
 			{
@@ -209,6 +202,10 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				}
 				else
 				{
+					newMesh->position = pos;
+					newMesh->scale = scale;
+					newMesh->rotation = rot;
+
 					ComponentMesh* component;
 					component = (ComponentMesh*)newGameObject->AddComponent(MESH);
 					component->mesh = newMesh;

@@ -58,6 +58,27 @@ Mesh* ModuleMeshes::loadMesh(const char* path)
 	bytes = sizeof(float)*ret->num_vertices * 2;
 	ret->texCoords = new float[ret->num_vertices * 2];
 	memcpy(ret->texCoords, cursor, bytes);
+	cursor += bytes;
+
+	//Load position
+	float position[3];
+	bytes = sizeof(float) * 3;
+	memcpy(position, cursor, bytes);
+	ret->position = { position[0],position[1],position[2] };
+	cursor += bytes;
+
+	//Load scale
+	float scale[3];
+	bytes = sizeof(float) * 3;
+	memcpy(scale, cursor, bytes);
+	ret->scale = { scale[0],scale[1],scale[2] };
+	cursor += bytes;
+
+	//Load rotation
+	float rotation[4];
+	bytes = sizeof(float) * 4;
+	memcpy(rotation, cursor, bytes);
+	ret->rotation = { rotation[0],rotation[1],rotation[2],rotation[3] };
 
 	//Calculate bounding box
 	ret->boundingBox.SetNegativeInfinity();
@@ -74,7 +95,8 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	uint ranges[2] = { mesh->num_vertices, mesh->num_indices};
 	
 	//Total size of the buffer
-	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_vertices + sizeof(float)*mesh->num_vertices*2;
+	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_vertices + sizeof(float)*mesh->num_vertices * 2;
+	size += sizeof(float) * 10;
 	char* buffer = new char[size];
 	char* cursor = buffer;
 
@@ -100,7 +122,25 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 
 	//Store tex_coords
 	bytes = sizeof(float)*mesh->num_vertices*2;
-	memcpy(cursor, mesh->texCoords, bytes);
+	memcpy(cursor, mesh->texCoords, bytes);	
+	cursor += bytes;
+
+	//Store position
+	float position[3] = { mesh->position.x ,mesh->position.y,mesh->position.z };
+	bytes = sizeof(position);
+	memcpy(cursor, position, bytes);
+	cursor += bytes;
+
+	//Store scale
+	float scale[3] = { mesh->scale.x ,mesh->scale.y,mesh->scale.z };
+	bytes = sizeof(scale);
+	memcpy(cursor, scale, bytes);
+	cursor += bytes;
+
+	//Store rotation
+	float rotation[4] = { mesh->rotation.x ,mesh->rotation.y,mesh->rotation.z,mesh->rotation.w };
+	bytes = sizeof(rotation);
+	memcpy(cursor, rotation, bytes);
 
 	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size);
 
