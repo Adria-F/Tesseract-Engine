@@ -1,8 +1,9 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
-#include "ModuleMeshLoader.h"
+#include "ModuleSceneLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
+
 #include "PhysFS\include\physfs.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
@@ -50,6 +51,15 @@ bool ModuleFileSystem::addPath(const char * path)
 	return ret;
 }
 
+bool ModuleFileSystem::fileExists(const char* path)
+{
+	std::string full_path = path;
+	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
+	full_path = TEXTURES_FOLDER + full_path + TEXTURES_EXTENSION;
+	
+	return PHYSFS_exists(full_path.c_str());
+}
+
 uint ModuleFileSystem::readFile(const char * path, char** buffer)
 {
 	PHYSFS_file* file = PHYSFS_openRead(path);
@@ -57,10 +67,18 @@ uint ModuleFileSystem::readFile(const char * path, char** buffer)
 	{
 		PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(file);
 		*buffer = new char[size];
-		PHYSFS_read(file, *buffer, 1, size);
+		uint read = PHYSFS_read(file, *buffer, 1, size);
 		PHYSFS_close(file);
+
+		if (read != size)
+		{
+			LOG("Error on reading file: Read data size does not match file size - PHYSFS: %s", PHYSFS_getLastError());
+			return 0;
+		}
+
 		return size;
 	}
+	LOG("Error opening file for reading - PHYSFS: %d", PHYSFS_getLastError());
 	return 0;
 }
 
@@ -69,11 +87,38 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 	PHYSFS_file* file = PHYSFS_openWrite(path);
 	if (file != nullptr)
 	{
-		uint written = PHYSFS_write(file, (const void*)buffer, 1, size);
+		uint written = PHYSFS_write(file, (const void*)buffer, 1, size);		
 		PHYSFS_close(file);
+
+		if (written != size)
+		{
+			LOG("Error on writting file: Written data size does not match buffer size - PHYSFS: %s", PHYSFS_getLastError());
+			return 0;
+		}
+
 		return written;
 	}
+	LOG("Error opening file for writting - PHYSFS: %d", PHYSFS_getLastError());
 	return 0;
+}
+
+uint ModuleFileSystem::duplicateFile(const char* path, const void* buffer, uint size)
+{
+	uint num_version = 1;
+
+	std::string filename = path;
+	App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
+	std::string full_path = TEXTURES_FOLDER + filename + '(' + std::to_string(num_version) + ')' + TEXTURES_EXTENSION;
+
+	while (fileExists(full_path.c_str()))
+	{
+		num_version++;
+		full_path = TEXTURES_FOLDER + filename + '(' + std::to_string(num_version) + ')' + TEXTURES_EXTENSION;
+	}
+
+	writeFile(full_path.c_str(), buffer, size);
+
+	return num_version;
 }
 
 void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
@@ -125,11 +170,16 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 
 	if (extension == "fbx" || extension == "FBX")
 	{
-		App->mesh_loader->ImportFBX(path);
+		App->scene_loader->importFBXScene(path);
 	}
-	else if (extension == "png" || extension == "dds")
+	else if (extension == "png")
 	{
-		App->renderer3D->ChangeMeshTexture(path);
+		App->textures->importTexture(path);
+		App->textures->loadTexture(path);
+	}
+	else if (extension == "dds")
+	{
+		App->textures->loadTexture(path);
 	}
 	else
 	{

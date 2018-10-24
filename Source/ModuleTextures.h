@@ -18,6 +18,10 @@ public:
 	ModuleTextures(bool start_enabled = true);
 	~ModuleTextures();
 
+	bool Init(rapidjson::Document& document);
+
+	bool CleanUp();
+
 	bool importTexture(const char* path);
 	Texture* loadTexture(const char* path);
 

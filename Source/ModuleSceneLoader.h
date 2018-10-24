@@ -3,14 +3,24 @@
 
 #include "Module.h"
 
+class GameObject;
+struct aiScene;
+struct aiNode;
+
 class ModuleSceneLoader : public Module
 {
 public:
-	ModuleSceneLoader();
+	ModuleSceneLoader(bool start_enabled = true);
 	~ModuleSceneLoader();
 
+	bool Init(rapidjson::Document& document);
+
+	bool CleanUp();
+
 	//bool loadSceneFromFile();
-	bool importFBXScene();
+	bool importFBXScene(const char* path);
+
+	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
 };
 
 #endif // !__MODULESCENELOADER_H__

@@ -5,9 +5,10 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
-#include "ModuleMeshLoader.h"
 #include "ModuleTextures.h"
+#include "ModuleMeshes.h"
 #include "ModuleFileSystem.h"
+#include "ModuleSceneLoader.h"
 
 #include "rapidjson/filereadstream.h"
 
@@ -21,9 +22,10 @@ Application::Application()
 	scene_intro = new ModuleScene();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
-	gui = new ModuleGUI();
-	mesh_loader = new ModuleMeshLoader();
+	gui = new ModuleGUI();	
+	scene_loader = new ModuleSceneLoader();
 	textures = new ModuleTextures();
+	meshes = new ModuleMeshes();
 	fileSystem = new ModuleFileSystem();
 
 	// The order of calls is very important!
@@ -35,8 +37,9 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(mesh_loader);
+	AddModule(scene_loader);
 	AddModule(textures);
+	AddModule(meshes);
 
 	// Scenes
 	AddModule(scene_intro);

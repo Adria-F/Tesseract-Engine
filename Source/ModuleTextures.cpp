@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Globals.h"
 #include "ModuleFileSystem.h"
+
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
@@ -14,9 +15,24 @@ ModuleTextures::ModuleTextures(bool start_enabled) : Module(start_enabled)
 {
 }
 
-
 ModuleTextures::~ModuleTextures()
 {
+}
+
+bool ModuleTextures::Init(rapidjson::Document & document)
+{
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+
+	return true;
+}
+
+bool ModuleTextures::CleanUp()
+{
+	ilShutDown();
+	return true;
 }
 
 bool ModuleTextures::importTexture(const char* path)
@@ -52,7 +68,13 @@ bool ModuleTextures::importTexture(const char* path)
 			{
 				std::string filename = path;
 				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
+				if (App->fileSystem->fileExists(path))
+				{
+					uint num = App->fileSystem->duplicateFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
+					LOG("File with same name already exists - Saved as: %s(%d)", filename.c_str(), num);
+				}
+				else
+					App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
 			}
 			RELEASE_ARRAY(data);
 		}

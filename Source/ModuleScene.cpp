@@ -3,7 +3,7 @@
 #include "ModuleScene.h"
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleMeshLoader.h"
+#include "ModuleSceneLoader.h"
 #include "GameObject.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
@@ -18,7 +18,7 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	//Load Baker House model
-	App->mesh_loader->ImportFBX("Assets/Models/BakerHouse.fbx");
+	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 
 	//Shapes examples
 	/*ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));

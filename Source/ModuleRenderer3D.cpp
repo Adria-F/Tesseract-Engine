@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleMeshLoader.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
@@ -312,20 +311,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-void ModuleRenderer3D::ChangeMeshTexture(const char * path)
-{
-	uint width, height;
-	GLuint tex_id = App->mesh_loader->loadTexture(path, width, height);
-
-	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
-	{
-		//glDeleteTextures(1, (GLuint*)(*it_m)->texture);
-		(*it_m)->texture = tex_id;
-		(*it_m)->texWidth = width;
-		(*it_m)->texHeight = height;
-	}
 }
 
 void ModuleRenderer3D::DrawBB(const AABB& BB, vec3 color) const
