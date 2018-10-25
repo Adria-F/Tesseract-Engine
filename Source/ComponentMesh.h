@@ -14,6 +14,9 @@ public:
 
 	~ComponentMesh();
 
+	bool Update();
+
+
 	void DrawInfo();
 
 public:

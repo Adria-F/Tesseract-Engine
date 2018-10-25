@@ -65,7 +65,7 @@ void ModuleScene::Draw()
 
 	for (int i = 0; i < GameObjects.size(); i++)
 	{
-		GameObjects[i]->Draw();
+		GameObjects[i]->Update();
 	}
 }
 

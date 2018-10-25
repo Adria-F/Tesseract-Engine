@@ -57,11 +57,16 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
 		LoadGameObjects(scene, root, nullptr);
-
 		aiReleaseImport(scene);
 	}
 	else
 		LOG("Error loading scene %s", path);
+
+	return false;
+}
+
+bool ModuleSceneLoader::importFSScene(const char * path)
+{
 
 	return false;
 }
@@ -94,6 +99,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 		//Add the Game Object to the Children list of the parent
 		if (parent != nullptr)
 		{
+			App->textures->loadTexture("Baker_house");
 			parent->childs.push_back(newGameObject);
 		}
 
@@ -199,6 +205,14 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					component = (ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
 					component->mesh = newMesh;
 
+					if (App->textures->textures.size() > 0)
+					{
+						list<Texture*>::iterator it_tex = App->textures->textures.begin();
+
+						ComponentTexture* material = (ComponentTexture*)GameObjectFromMesh->AddComponent(MATERIAL);
+						material->Material = *it_tex;
+
+					}
 				}
 				else
 				{
@@ -209,7 +223,18 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					ComponentMesh* component;
 					component = (ComponentMesh*)newGameObject->AddComponent(MESH);
 					component->mesh = newMesh;
+
+					if (App->textures->textures.size() > 0)
+					{
+						list<Texture*>::iterator it_tex = App->textures->textures.begin();
+
+						ComponentTexture* material = (ComponentTexture*)newGameObject->AddComponent(MATERIAL);
+						material->Material = *it_tex;
+
+					}
 				}
+
+				
 			}
 			errorLoading = false;
 		}

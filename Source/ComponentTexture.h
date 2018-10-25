@@ -3,15 +3,23 @@
 
 #include "Component.h"
 
+class Texture;
+
 class ComponentTexture : public Component
 {
 public:
 	
-	ComponentTexture(GameObject* parent, componentType type) :Component(parent, type) {}
+	ComponentTexture(GameObject* gameobject, componentType type) :Component(gameobject, type) {}
 
 	~ComponentTexture();
 
+	bool Update();
+
 	void DrawInfo();
+
+public: 
+
+	Texture* Material;
 
 };
 

@@ -19,6 +19,7 @@ public:
 
 	//bool loadSceneFromFile();
 	bool importFBXScene(const char* path);
+	bool importFSScene(const char* path);
 
 	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
 };
