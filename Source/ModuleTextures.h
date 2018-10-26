@@ -25,9 +25,12 @@ public:
 	bool importTexture(const char* path);
 	Texture* loadTexture(const char* path);
 
+	Texture* loadIcon(const char* path);
+
 public:
 
 	std::list<Texture*> textures;
+	std::list<Texture*> icons;
 };
 
 #endif // !__MODULETEXTURES_H__

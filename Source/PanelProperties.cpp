@@ -14,7 +14,7 @@ PanelProperties::~PanelProperties()
 
 void PanelProperties::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar);	
 
 	if (App->renderer3D->meshes.size() > 0)
 	{

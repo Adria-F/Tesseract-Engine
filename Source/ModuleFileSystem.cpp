@@ -3,6 +3,7 @@
 #include "ModuleSceneLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
+#include "ModuleGUI.h"
 
 #include "PhysFS\include\physfs.h"
 
@@ -38,6 +39,14 @@ ModuleFileSystem::~ModuleFileSystem()
 	PHYSFS_deinit();
 }
 
+bool ModuleFileSystem::Start()
+{
+	//importAssets();
+	getAssetsFiles();
+
+	return true;
+}
+
 bool ModuleFileSystem::addPath(const char * path)
 {
 	bool ret = true;
@@ -51,11 +60,16 @@ bool ModuleFileSystem::addPath(const char * path)
 	return ret;
 }
 
-bool ModuleFileSystem::fileExists(const char* path)
+bool ModuleFileSystem::fileExists(const char* path, const char* atDirectory, const char* withExtension)
 {
 	std::string full_path = path;
-	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-	full_path = TEXTURES_FOLDER + full_path + TEXTURES_EXTENSION;
+	if (atDirectory != nullptr || withExtension != nullptr)
+		App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
+	
+	if (atDirectory != nullptr)
+		full_path = atDirectory + full_path;
+	if (withExtension != nullptr)
+		full_path += withExtension;
 	
 	return PHYSFS_exists(full_path.c_str());
 }
@@ -170,19 +184,81 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 
 	if (extension == "fbx" || extension == "FBX")
 	{
-		App->scene_loader->importFBXScene(path);
+		//App->scene_loader->importFBXScene(path);
 	}
-	else if (extension == "png")
+	else if (extension == "png" || extension == "dds")
 	{
-		App->textures->importTexture(path);
-		App->textures->loadTexture(path);
-	}
-	else if (extension == "dds")
-	{
+		std::string full_path = path;
+		if (PHYSFS_exists(path)) //It means that the path starts from /Game
+		{
+			full_path = PHYSFS_getRealDir(path);
+			full_path += path;
+		}
+		App->textures->importTexture(full_path.c_str());
 		App->textures->loadTexture(path);
 	}
 	else
 	{
 		LOG("Unsupported file format");
+	}
+}
+
+void ModuleFileSystem::importAssets()
+{
+	importFilesAt(ASSETS_FOLDER);
+}
+
+void ModuleFileSystem::importFilesAt(const char * path)
+{
+	char** files = PHYSFS_enumerateFiles(path);
+
+	for (char **i = files; *i != NULL; i++)
+	{		
+		std::string currPath = path;
+		currPath += *i;
+		
+		if (PHYSFS_isDirectory(currPath.c_str()))
+		{
+			currPath += '/';
+			importFilesAt(currPath.c_str());
+		}
+		else
+			manageDroppedFiles(currPath.c_str());
+	}
+}
+
+void ModuleFileSystem::getAssetsFiles()
+{
+	App->gui->assets->clearElements();
+	getFilesAt(ASSETS_FOLDER);
+}
+
+void ModuleFileSystem::getFilesAt(const char * path, assetsElement * element)
+{
+	char** files = PHYSFS_enumerateFiles(path);
+
+	for (char **i = files; *i != NULL; i++)
+	{
+		assetsElement* newElem = new assetsElement();
+		
+		std::string currPath = path;
+		currPath += *i;
+		std::string extension = "";
+		splitPath(currPath.c_str(), nullptr, &newElem->name, &extension);
+		if (extension.length() > 0)
+			newElem->name += '.' + extension;
+
+		if (PHYSFS_isDirectory(currPath.c_str()))
+		{
+			currPath += '/';
+			getFilesAt(currPath.c_str(), newElem);
+		}
+		else
+			newElem->type = assetsElement::elementType::FILE;
+
+		if (element != nullptr)
+			element->pushElement(newElem);
+		else
+			App->gui->assets->pushElement(newElem);
 	}
 }

@@ -15,6 +15,9 @@ class PanelHardwareInfo;
 class PanelElements;
 class PanelProperties;
 class PanelScene;
+class PanelAssets;
+
+class Texture;
 
 class ModuleGUI : public Module
 {
@@ -52,6 +55,10 @@ public:
 	PanelHardwareInfo* hardwareInfo = nullptr;
 	PanelElements* ShapeElements = nullptr;
 	PanelScene* Scene = nullptr;
+	PanelAssets* assets = nullptr;
+
+	Texture* folder = nullptr;
+	Texture* file = nullptr;
 
 	bool hoveringScene = false;
 };

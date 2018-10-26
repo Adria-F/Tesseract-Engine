@@ -11,12 +11,14 @@
 #include "PanelElements.h"
 #include "PanelProperties.h"
 #include "PanelScene.h"
+#include "PanelAssets.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleTextures.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
@@ -50,6 +52,8 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 
 	panels.push_back(Scene = new PanelScene("Scene"));
 
+	panels.push_back(assets = new PanelAssets("Assets"));
+
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
@@ -79,6 +83,11 @@ bool ModuleGUI::Start()
 	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBg] = { 1.0f,0.6f,0.0f,0.1f };
 	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgActive] = { 0.8f,0.37f,0.0f,0.5f };
 	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgHovered] = { 0.95f,0.5f,0.0f,0.5f };
+
+	ImGui::GetStyle().WindowMinSize = { 125, 100 };
+
+	folder = App->textures->loadIcon("Icons/folder.png");
+	file = App->textures->loadIcon("Icons/file.png");
 
 	return true;
 }

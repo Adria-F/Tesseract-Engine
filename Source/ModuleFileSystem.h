@@ -2,6 +2,7 @@
 #define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
+#include "PanelAssets.h"
 
 class ModuleFileSystem : public Module
 {
@@ -9,8 +10,10 @@ public:
 	ModuleFileSystem(bool start_enabled = true);
 	~ModuleFileSystem();
 
+	bool Start();
+
 	bool addPath(const char* path);
-	bool fileExists(const char* path);
+	bool fileExists(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
 	uint readFile(const char* path, char** buffer);
 	uint writeFile(const char* path, const void* buffer, uint size);
@@ -23,6 +26,12 @@ public:
 	std::string normalizePath(const char* path);
 
 	void manageDroppedFiles(const char* path);
+
+	void importAssets();
+	void importFilesAt(const char* path);
+	
+	void getAssetsFiles();
+	void getFilesAt(const char* path, assetsElement* element = nullptr);
 };
 
 #endif // !__MODULEFILESYSTEM_H__

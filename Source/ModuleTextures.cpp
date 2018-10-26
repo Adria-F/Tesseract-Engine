@@ -50,13 +50,6 @@ bool ModuleTextures::importTexture(const char* path)
 	{
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
-		
-		if (!success)
-		{
-			error = ilGetError();
-			LOG("Image conversion failed - IL error: %s", iluErrorString(error));
-			return false;
-		}
 
 		ILuint size;
 		ILubyte *data;
@@ -68,7 +61,7 @@ bool ModuleTextures::importTexture(const char* path)
 			{
 				std::string filename = path;
 				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-				if (App->fileSystem->fileExists(path))
+				if (App->fileSystem->fileExists(path, TEXTURES_FOLDER, TEXTURES_EXTENSION))
 				{
 					uint num = App->fileSystem->duplicateFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
 					LOG("File with same name already exists - Saved as: %s(%d)", filename.c_str(), num);
@@ -137,6 +130,56 @@ Texture* ModuleTextures::loadTexture(const char* path)
 
 	LOG("Texture creation successful.");
 	textures.push_back(ret);
+
+	return ret;
+}
+
+Texture * ModuleTextures::loadIcon(const char * path)
+{
+	Texture* ret = new Texture();
+	ILuint ilImage;
+	bool success;
+	ILenum error;
+
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
+
+	success = ilLoadImage(path);
+
+	if (success)
+	{
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+
+		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+		if (!success)
+		{
+			error = ilGetError();
+			LOG("Image conversion failed - IL error: %s", iluErrorString(error));
+			return 0;
+		}
+
+		glGenTextures(1, &ret->id);
+		glBindTexture(GL_TEXTURE_2D, ret->id);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+		ret->width = ImageInfo.Width;
+		ret->height = ImageInfo.Height;
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	else
+	{
+		LOG("Error loading texture: %s", path);
+		return 0;
+	}
+
+	ilDeleteImages(1, &ilImage);
+	icons.push_back(ret);
 
 	return ret;
 }
