@@ -3,6 +3,7 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
+
 #include "Panel.h"
 #include "PanelConfiguration.h"
 #include "PanelConsole.h"
@@ -12,6 +13,7 @@
 #include "PanelProperties.h"
 #include "PanelScene.h"
 #include "PanelAssets.h"
+#include "PanelHierarchy.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -53,6 +55,8 @@ bool ModuleGUI::Init(rapidjson::Document& document)
 	panels.push_back(Scene = new PanelScene("Scene"));
 
 	panels.push_back(assets = new PanelAssets("Assets"));
+
+	panels.push_back(hierarchy = new PanelHierarchy("Assets"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -126,7 +130,7 @@ update_status ModuleGUI::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{	
-			if (ImGui::MenuItem("Save", "ctrl+s"))
+			if (ImGui::MenuItem("Save", "ctrl+S"))
 				App->SaveGame();
 			if (ImGui::MenuItem("Load"))
 				App->LoadGame();
@@ -150,6 +154,8 @@ update_status ModuleGUI::Update(float dt)
 				ShapeElements->toggleActive();
 			if (ImGui::MenuItem("Mesh Properties", NULL, properties->isActive()))
 				properties->toggleActive();
+			if(ImGui::MenuItem("Game Objects",NULL,hierarchy->isActive()))
+				hierarchy->toggleActive();
 			ImGui::EndMenu();
 		}
 
@@ -175,34 +181,6 @@ update_status ModuleGUI::Update(float dt)
 	
 	}
 	ImGui::EndMainMenuBar();
-
-	ImGui::Begin("test");
-	if (ImGui::TreeNode("Loxel Entities"))
-	{
-		if (ImGui::TreeNode("Base"))
-		{
-			ImGui::Indent();
-			for (int i = 0; i < 2; i++)
-			{
-				ImGui::TreeNodeEx("pepe", ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow);
-				ImGui::TreePop();
-			}
-			ImGui::Text("Num Slots");
-			ImGui::Text("Count");
-			ImGui::Unindent();
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode("Slots"))
-		{
-			ImGui::TreePop();
-		}
-		ImGui::TreePop();
-	}
-	ImGui::Indent();
-	ImGui::Text("Previous Modifications");
-	ImGui::Text("Debug Ticks");
-	ImGui::Unindent();
-	ImGui::End();
 
 	return status;
 }

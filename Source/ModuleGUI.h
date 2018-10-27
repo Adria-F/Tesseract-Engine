@@ -16,6 +16,7 @@ class PanelElements;
 class PanelProperties;
 class PanelScene;
 class PanelAssets;
+class PanelHierarchy;
 
 class Texture;
 
@@ -56,6 +57,7 @@ public:
 	PanelElements* ShapeElements = nullptr;
 	PanelScene* Scene = nullptr;
 	PanelAssets* assets = nullptr;
+	PanelHierarchy* hierarchy = nullptr;
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;

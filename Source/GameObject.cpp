@@ -19,17 +19,21 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	if (active)
 	{
-		if((*it_c)->type==MATERIAL)
-			(*it_c)->Update();
-	}
+		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+		{
+			if ((*it_c)->type == MATERIAL)
+				(*it_c)->Update();
+		}
 
-	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
-	{
-		if ((*it_c)->type == MESH)
-			(*it_c)->Update();
+		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+		{
+			if ((*it_c)->type == MESH)
+				(*it_c)->Update();
+		}
 	}
+	
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
