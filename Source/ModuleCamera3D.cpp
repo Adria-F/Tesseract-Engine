@@ -14,35 +14,25 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 ModuleCamera3D::~ModuleCamera3D()
 {}
 
-bool ModuleCamera3D::Init(rapidjson::Document & document)
+bool ModuleCamera3D::Init(JSON_File* document)
 {
 	CalculateViewMatrix();
 
-	if (document.HasMember("camera"))
+	JSON_Value* cameraConf = document->getValue("camera");
+	if (cameraConf != nullptr)
 	{
-		rapidjson::Value& cameraConf = document["camera"];
+		X = vec3(cameraConf->getVector("X", 3)[0], cameraConf->getVector("X", 3)[1], cameraConf->getVector("X", 3)[2]);
+		Y = vec3(cameraConf->getVector("Y", 3)[0], cameraConf->getVector("Y", 3)[1], cameraConf->getVector("Y", 3)[2]);
+		Z = vec3(cameraConf->getVector("Z", 3)[0], cameraConf->getVector("Z", 3)[1], cameraConf->getVector("Z", 3)[2]);
 
-		if (cameraConf.HasMember("X"))
-			X = vec3(cameraConf["X"][0].GetFloat(), cameraConf["X"][1].GetFloat(), cameraConf["X"][2].GetFloat());
-		if (cameraConf.HasMember("Y"))
-			Y = vec3(cameraConf["Y"][0].GetFloat(), cameraConf["Y"][1].GetFloat(), cameraConf["Y"][2].GetFloat());
-		if (cameraConf.HasMember("Z"))
-			Z = vec3(cameraConf["Z"][0].GetFloat(), cameraConf["Z"][1].GetFloat(), cameraConf["Z"][2].GetFloat());
-
-		if (cameraConf.HasMember("position"))
-			Position = vec3(cameraConf["position"][0].GetFloat(), cameraConf["position"][1].GetFloat(), cameraConf["position"][2].GetFloat());
-		if (cameraConf.HasMember("reference"))
-			Reference = vec3(cameraConf["reference"][0].GetFloat(), cameraConf["reference"][1].GetFloat(), cameraConf["reference"][2].GetFloat());
+		Position = vec3(cameraConf->getVector("position", 3)[0], cameraConf->getVector("position", 3)[1], cameraConf->getVector("position", 3)[2]);
+		Reference = vec3(cameraConf->getVector("reference", 3)[0], cameraConf->getVector("reference", 3)[1], cameraConf->getVector("reference", 3)[2]);
 		LookAt(Reference);
 
-		if (cameraConf.HasMember("cameraSpeed"))
-			cameraSpeed = cameraConf["cameraSpeed"].GetFloat();
-		if (cameraConf.HasMember("mouseSensitivity"))
-			mouseSensitivity = cameraConf["mouseSensitivity"].GetFloat();
-		if (cameraConf.HasMember("wheelSensitivity"))
-			wheelSensitivity = cameraConf["wheelSensitivity"].GetFloat();
-		if (cameraConf.HasMember("zoomDistance"))
-			zoomDistance = cameraConf["zoomDistance"].GetFloat();
+		cameraSpeed = cameraConf->getFloat("cameraSpeed");
+		mouseSensitivity = cameraConf->getFloat("mouseSensitivity");
+		wheelSensitivity = cameraConf->getFloat("wheelSensitivity");
+		zoomDistance = cameraConf->getFloat("zoomDistance");
 	}
 
 	return true;
@@ -256,14 +246,15 @@ void ModuleCamera3D::CalculateViewMatrix()
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 }
 
-bool ModuleCamera3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+bool ModuleCamera3D::Save(JSON_File* document)const
 {
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("name", "camera", allocator);
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	JSON_Value* camera = document->createValue();
+	camera->addString("name", "camera");
+	document->addValue("camera", camera);
+
 	return true;
 }
-bool ModuleCamera3D::Load(rapidjson::Document& document)
+bool ModuleCamera3D::Load(JSON_File* document)
 {
 	return true;
 }

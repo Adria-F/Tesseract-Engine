@@ -13,7 +13,7 @@ public:
 	ModuleSceneLoader(bool start_enabled = true);
 	~ModuleSceneLoader();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 
 	bool CleanUp();
 

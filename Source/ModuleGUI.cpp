@@ -30,7 +30,7 @@ ModuleGUI::~ModuleGUI()
 {
 }
 
-bool ModuleGUI::Init(rapidjson::Document& document)
+bool ModuleGUI::Init(JSON_File* document)
 {
 
 	ImGui::CreateContext();
@@ -232,15 +232,15 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-bool ModuleGUI::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+bool ModuleGUI::Save(JSON_File* document)const
 {
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("name", "gui", allocator);
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	JSON_Value* gui = document->createValue();
+	gui->addString("name", "gui");
+	document->addValue("gui", gui);
 
 	return true;
 }
-bool ModuleGUI::Load(rapidjson::Document& document) {
+bool ModuleGUI::Load(JSON_File* document) {
 	return true;
 }
 

@@ -15,35 +15,24 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init(rapidjson::Document& document)
+bool ModuleWindow::Init(JSON_File* document)
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	if (document.HasMember("window"))
+	JSON_Value* configWindow = document->getValue("window");
+	if (configWindow != nullptr)
 	{
-		Value& configwindow = document["window"];
+		width = configWindow->getInt("width");
+		height = configWindow->getInt("height");
+		screen_size = configWindow->getInt("screen_size");
 
-		if (configwindow.HasMember("width"))
-			width = configwindow["width"].GetInt();
-		if (configwindow.HasMember("height"))
-			height = configwindow["height"].GetInt();
-		if (configwindow.HasMember("screen_size"))
-			screen_size = configwindow["screen_size"].GetInt();
-
-		if (configwindow.HasMember("fullscreen"))
-			fullscreen = configwindow["fullscreen"].GetBool();
-		if (configwindow.HasMember("resizable"))
-			resizable = configwindow["resizable"].GetBool();
-		if (configwindow.HasMember("borderless"))
-			borderless = configwindow["borderless"].GetBool();
-		if (configwindow.HasMember("fullscreen_desktop"))
-			fullscreen_desktop = configwindow["fullscreen_desktop"].GetBool();
-		if (configwindow.HasMember("screen_margin"))
-		{
-			screen_margin_w = configwindow["screen_margin"][0].GetInt();
-			screen_margin_h = configwindow["screen_margin"][1].GetInt();
-		}
+		fullscreen = configWindow->getBool("fullscreen");
+		resizable = configWindow->getBool("resizable");
+		borderless = configWindow->getBool("borderless");
+		fullscreen_desktop = configWindow->getBool("fullscreen_desktop");
+		screen_margin_w = configWindow->getVector("screen_margin", 2)[0];
+		screen_margin_h = configWindow->getVector("screen_margin", 2)[1];
 	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -134,17 +123,15 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-bool ModuleWindow:: Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) const 
+bool ModuleWindow::Save(JSON_File* document) const
 {
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("window", 2, allocator);
-
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-	
+	JSON_Value* window = document->createValue();
+	window->addInt("window Info", 2);
+	document->addValue("window", window);
 
 	return true;
 }
-bool ModuleWindow::Load(rapidjson::Document& document) {
+bool ModuleWindow::Load(JSON_File* document) {
 	return true;
 }
 

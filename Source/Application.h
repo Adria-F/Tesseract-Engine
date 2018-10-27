@@ -7,9 +7,6 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "glMath/glmath.h"
 #include "ImGui\imgui.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/filewritestream.h"
 
 #include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -21,6 +18,7 @@
 #include <string>
 
 class Module;
+class JSONManager;
 class ModuleWindow;
 class ModuleInput;
 class ModuleScene;
@@ -35,6 +33,8 @@ class ModuleSceneLoader;
 class Application
 {
 public:
+	JSONManager* JSON_manager = nullptr;
+	
 	ModuleWindow* window=nullptr;
 	ModuleInput* input=nullptr;
 	ModuleScene* scene_intro=nullptr;

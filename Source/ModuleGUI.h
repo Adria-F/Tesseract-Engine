@@ -26,7 +26,7 @@ public:
 	ModuleGUI(bool start_enabled = true);
 	~ModuleGUI();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
@@ -38,8 +38,8 @@ public:
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 
-	bool Save(rapidjson::Document& document,rapidjson::FileWriteStream& os)const;
-	bool Load(rapidjson::Document& document);
+	bool Save(JSON_File* document)const;
+	bool Load(JSON_File* document);
 
 	void Draw();
 

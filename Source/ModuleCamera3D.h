@@ -11,7 +11,7 @@ public:
 	ModuleCamera3D(bool start_enabled = true);
 	~ModuleCamera3D();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
@@ -23,8 +23,8 @@ public:
 	float* GetViewMatrix();
 	vec3 getMovementFactor();
 
-	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const;
-	bool Load(rapidjson::Document& document);
+	bool Save(JSON_File* document)const;
+	bool Load(JSON_File* document);
 
 private:
 

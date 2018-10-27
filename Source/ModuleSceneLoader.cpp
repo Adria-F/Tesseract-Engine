@@ -30,7 +30,7 @@ ModuleSceneLoader::~ModuleSceneLoader()
 {
 }
 
-bool ModuleSceneLoader::Init(rapidjson::Document & document)
+bool ModuleSceneLoader::Init(JSON_File* document)
 {
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);

@@ -10,13 +10,14 @@
 #include "ModuleFileSystem.h"
 #include "ModuleSceneLoader.h"
 
-#include "rapidjson/filereadstream.h"
+#include "JSONManager.h"
 
 using namespace std;
-using namespace rapidjson;
 
 Application::Application()
 {
+	JSON_manager = new JSONManager();
+	
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	scene_intro = new ModuleScene();
@@ -63,24 +64,14 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	rapidjson::Document document;
-	FILE* fp = fopen("config.json", "rb");
-	char readBuffer[65536];
-
-	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-
-	document.ParseStream(is);
+	JSON_File* document = JSON_manager->openReadFile("config.json");
 
 	//init vars from config
-
-	if (document.HasMember("App"))
+	JSON_Value* appConfig = document->getValue("App");
+	if (appConfig != nullptr)
 	{
-		rapidjson::Value& appConfig = document["App"];
-
-		if (appConfig.HasMember("title"))
-			appName = document["App"]["title"].GetString();
-		if (appConfig.HasMember("frameCap"))
-			framerateCap = document["App"]["frameCap"].GetInt();
+		appName = appConfig->getString("title");
+		framerateCap = appConfig->getInt("frameCap");
 	}
 
 	//TO be able to use RNG in any file without worrying about initializing the seed
@@ -100,7 +91,7 @@ bool Application::Init()
 		ret = (*item)->Start();
 	}
 	
-	fclose(fp);
+	JSON_manager->closeFile(document);
 	ms_timer.Start();
 	return ret;
 }
@@ -198,19 +189,14 @@ bool Application::LoadGame()
 {
 	bool ret=false;
 
-	rapidjson::Document document;
-	FILE* fp = fopen("load.json", "rb");
-	char readBuffer[65536];
-
-	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-
-	document.ParseStream(is);
-	fclose(fp);
+	JSON_File* document = JSON_manager->openReadFile("load.json");
 
 	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
 	{
 		ret = (*item)->Load(document);
 	}
+
+	JSON_manager->closeFile(document);
 
 	return ret;
 }
@@ -219,22 +205,26 @@ bool Application::SaveGame()const
 {
 	bool ret = true;
 
-	rapidjson::Document document;
-	document.SetObject();
-	FILE* fp = fopen("save.json", "wb");
-	char writeBuffer[655360];
-
-	rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+	JSON_File* document = JSON_manager->openWriteFile("save.json");
 
 	for (list<Module*>::const_iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{
-		ret = (*item)->Save(document, os);
+		ret = (*item)->Save(document);
 	}
 
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-	document.Accept(writer);
+	document->Write();
 	
-	fclose(fp);
+	JSON_manager->closeFile(document);
+
+	/*JSONManager* manager = new JSONManager();
+	JSON_File* file = manager->openWriteFile("test.json");
+	JSON_Value* val = file->createValue();
+	val->addInt("testSON", 33);
+	file->addValue("test", val);
+	file->Write();
+	JSON_File* file = manager->openReadFile("test.json");
+	int result = file->getValue("test")->getInt("testSON");
+	manager->closeFile(file);*/
 	
 	return ret;
 }

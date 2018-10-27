@@ -63,7 +63,7 @@ public:
 	ModuleRenderer3D(bool start_enabled = true);
 	~ModuleRenderer3D();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
@@ -75,8 +75,8 @@ public:
 
 	void DrawBB(const AABB& BB,vec3 color)const;
 
-	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const;
-	bool Load(rapidjson::Document& document);
+	bool Save(JSON_File* document)const;
+	bool Load(JSON_File* document);
 
 	ComponentMesh* CreateComponentMesh();
 	ComponentTexture* CreateComponentTexture();

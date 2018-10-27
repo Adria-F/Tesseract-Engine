@@ -2,9 +2,7 @@
 #define __MODULE_H__
 
 #include "Globals.h"
-#include "rapidjson/document.h"// rapidjson's DOM-style API
-#include "rapidjson/prettywriter.h" // for stringify JSON
-#include "rapidjson/filewritestream.h"
+#include "JSONManager.h"
 
 class Module
 {
@@ -20,7 +18,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init(rapidjson::Document& document) 
+	virtual bool Init(JSON_File* document) 
 	{
 		return true; 
 	}
@@ -50,14 +48,12 @@ public:
 		return true; 
 	}
 
-	virtual bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+	virtual bool Save(JSON_File* document)const
 	{
-		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-		rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 		return true;
 	}
 
-	virtual bool Load(rapidjson::Document& document)
+	virtual bool Load(JSON_File* document)
 	{
 		return true;
 	}

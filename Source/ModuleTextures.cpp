@@ -19,7 +19,7 @@ ModuleTextures::~ModuleTextures()
 {
 }
 
-bool ModuleTextures::Init(rapidjson::Document & document)
+bool ModuleTextures::Init(JSON_File* document)
 {
 	ilInit();
 	iluInit();

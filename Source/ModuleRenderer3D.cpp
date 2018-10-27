@@ -25,32 +25,21 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init(rapidjson::Document& document)
+bool ModuleRenderer3D::Init(JSON_File* document)
 {
-	if (document.HasMember("renderer"))
+	JSON_Value* rendererConfig = document->getValue("renderer");
+	if (rendererConfig != nullptr)
 	{
-		rapidjson::Value& rendererConfig = document["renderer"];
-
-		if (rendererConfig.HasMember("Vsync"))
-			vsync = document["renderer"]["Vsync"].GetBool();
-		if (rendererConfig.HasMember("Depth_Test"))
-			Depth_Test = document["renderer"]["Depth_Test"].GetBool();
-		if (rendererConfig.HasMember("Cull_Face"))
-			Cull_Face = document["renderer"]["Cull_Face"].GetBool();
-		if (rendererConfig.HasMember("Lighting"))
-			Lighting = document["renderer"]["Lighting"].GetBool();
-		if (rendererConfig.HasMember("Color_Material"))
-			Color_Material = document["renderer"]["Color_Material"].GetBool();
-		if (rendererConfig.HasMember("Texture_2D"))
-			Texture_2D = document["renderer"]["Texture_2D"].GetBool();
-		if (rendererConfig.HasMember("Wireframe"))
-			Wireframe = document["renderer"]["Wireframe"].GetBool();
-		if (rendererConfig.HasMember("Normals"))
-			Normals = document["renderer"]["Normals"].GetBool();
-		if (rendererConfig.HasMember("Faces"))
-			Faces = document["renderer"]["Faces"].GetBool();
-		if (rendererConfig.HasMember("ShowBB"))
-			ShowBB = document["renderer"]["ShowBB"].GetBool();
+		vsync = rendererConfig->getBool("Vsync");
+		Depth_Test = rendererConfig->getBool("Depth_Test");
+		Cull_Face = rendererConfig->getBool("Cull_Face");
+		Lighting = rendererConfig->getBool("Lighting");
+		Color_Material = rendererConfig->getBool("Color_Material");
+		Texture_2D = rendererConfig->getBool("Texture_2D");
+		Wireframe = rendererConfig->getBool("Wireframe");
+		Normals = rendererConfig->getBool("Normals");
+		Faces = rendererConfig->getBool("Faces");
+		ShowBB = rendererConfig->getBool("ShowBB");
 	}
 
 	LOG("Creating 3D Renderer context");
@@ -142,12 +131,17 @@ bool ModuleRenderer3D::Init(rapidjson::Document& document)
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		if (Depth_Test)
+			glEnable(GL_DEPTH_TEST);
+		if (Cull_Face)
+			glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
+		if (Lighting)
+			glEnable(GL_LIGHTING);
+		if (Color_Material)
+			glEnable(GL_COLOR_MATERIAL);
+		if (Texture_2D)
+			glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -362,17 +356,16 @@ void ModuleRenderer3D::DrawBB(const AABB& BB, vec3 color) const
 	glLineWidth(1.0f);
 }
 
-bool ModuleRenderer3D::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os)const
+bool ModuleRenderer3D::Save(JSON_File* document)const
 {
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	JSON_Value* renderer = document->createValue();
+	renderer->addString("name", "render");
+	document->addValue("renderer", renderer);
 
-	document.AddMember("name", "render", allocator);
-
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
 	return true;
 }
 
-bool ModuleRenderer3D::Load(rapidjson::Document& document) {
+bool ModuleRenderer3D::Load(JSON_File* document) {
 	return true;
 }
 

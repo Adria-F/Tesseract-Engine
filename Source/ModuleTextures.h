@@ -18,7 +18,7 @@ public:
 	ModuleTextures(bool start_enabled = true);
 	~ModuleTextures();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 
 	bool CleanUp();
 

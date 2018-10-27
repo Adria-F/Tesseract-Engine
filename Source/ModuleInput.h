@@ -24,7 +24,7 @@ public:
 	ModuleInput(bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init(rapidjson::Document& document);
+	bool Init(JSON_File* document);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 

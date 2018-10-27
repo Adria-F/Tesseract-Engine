@@ -28,7 +28,7 @@ ModuleInput::~ModuleInput()
 }
 
 // Called before render is available
-bool ModuleInput::Init(rapidjson::Document& document)
+bool ModuleInput::Init(JSON_File* document)
 {
 	LOG("Init SDL input event system");
 	bool ret = true;
