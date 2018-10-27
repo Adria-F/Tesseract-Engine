@@ -94,7 +94,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 		//Get name and set parent
 		newGameObject->name = node->mName.C_Str();
-
 		newGameObject->parent = parent;
 		if (parent == nullptr)
 		{
@@ -110,7 +109,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 			App->textures->loadTexture("Baker_house");
 			parent->childs.push_back(newGameObject);
 		}
-
 
 		// Generate a game object for each mesh
 		for (int i = 0; i < node->mNumMeshes; i++)
@@ -181,10 +179,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					}
 				}
 
-				//Generating Local BoundingBox
-				newMesh->boundingBox.SetNegativeInfinity();
-				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
-
 				//Generating Global BoundingBox
 				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
 
@@ -202,7 +196,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				newMesh->GenerateBuffer();
 				App->renderer3D->pushMesh(newMesh);
 
-				//Add the mesh inside the cilds(>1) or parent(<1)
+				//Add the mesh inside the childs(>1) or parent(<1)
 				if (node->mNumMeshes > 1)
 				{
 					//Getting mesh information
@@ -210,10 +204,12 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					GameObjectFromMesh->name = currentMesh->mName.C_Str();
 					GameObjectFromMesh->parent = newGameObject;
 
+					//Adding Mesh Component
 					ComponentMesh* component;
 					component = (ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
 					component->mesh = newMesh;
 
+					//Seting the same Material as the parent
 					if (App->textures->textures.size() > 0)
 					{
 						list<Texture*>::iterator it_tex = App->textures->textures.begin();
@@ -222,6 +218,13 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 						material->Material = *it_tex;
 
 					}
+
+					//Creating the BoundingBox
+					GameObjectFromMesh->boundingBox.SetNegativeInfinity();
+					GameObjectFromMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+
+					//Enclose the Child BoundingBox to the parent's bb
+					newGameObject->boundingBox.Enclose(GameObjectFromMesh->boundingBox);
 				}
 				else
 				{
@@ -241,9 +244,12 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 						material->Material = *it_tex;
 
 					}
+
+					newGameObject->boundingBox.SetNegativeInfinity();
+					newGameObject->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
 				}
 
-				
+				App->camera->BBtoLook->Enclose(newGameObject->boundingBox);
 			}
 			errorLoading = false;
 		}

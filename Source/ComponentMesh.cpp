@@ -71,10 +71,6 @@ bool ComponentMesh::Update()
 		glColor3f(1, 1, 1);
 		glLineWidth(2.0f);
 	}
-	if (App->renderer3D->ShowBB)
-	{
-		App->renderer3D->DrawBB(mesh->boundingBox, { 0, 0.5f, 1 });
-	}
 
 	return true;
 }
