@@ -22,6 +22,9 @@ public:
 	bool importFSScene(const char* path);
 
 	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
+
+private:
+	int root_counter;
 };
 
 #endif // !__MODULESCENELOADER_H__

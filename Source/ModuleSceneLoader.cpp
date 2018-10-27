@@ -37,6 +37,8 @@ bool ModuleSceneLoader::Init(rapidjson::Document & document)
 	stream.callback = CallLog;
 	aiAttachLogStream(&stream);
 
+	root_counter = 0;
+
 	return true;
 }
 
@@ -54,6 +56,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		root_counter++;
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
 		LoadGameObjects(scene, root, nullptr);
@@ -91,7 +94,12 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 		//Get name and set parent
 		newGameObject->name = node->mName.C_Str();
+
 		newGameObject->parent = parent;
+		if (parent == nullptr)
+		{
+			newGameObject->name += "_"+to_string(root_counter);
+		}
 
 		//Add the Game Object to the scene
 		App->scene_intro->GameObjects.push_back(newGameObject);
@@ -102,6 +110,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 			App->textures->loadTexture("Baker_house");
 			parent->childs.push_back(newGameObject);
 		}
+
 
 		// Generate a game object for each mesh
 		for (int i = 0; i < node->mNumMeshes; i++)
