@@ -24,6 +24,7 @@ public:
 
 	void Update();
 	void Draw();
+	void DrawBB(const AABB& BB, vec3 color)const;
 
 public:
 
@@ -34,6 +35,8 @@ public:
 
 	bool active = true;
 	std::string name = "";
+
+	AABB boundingBox;
 };
 
 #endif // !__GAMEOBJECTS_H__

@@ -21,8 +21,14 @@ void PanelHierarchy::Draw()
 
 	if (App->scene_intro->GameObjects.size() > 0)
 	{
-		GameObject* rootname = App->scene_intro->GameObjects[0];
-		FillTree(rootname);
+		for (int i = 0; i < App->scene_intro->GameObjects.size(); i++)
+		{
+			GameObject* gameobject = App->scene_intro->GameObjects[i];
+			if (gameobject->parent == nullptr)
+			{
+				FillTree(gameobject);
+			}
+		}
 	}
 
 	ImGui::End();

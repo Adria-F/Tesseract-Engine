@@ -37,6 +37,8 @@ bool ModuleSceneLoader::Init(JSON_File* document)
 	stream.callback = CallLog;
 	aiAttachLogStream(&stream);
 
+	root_counter = 0;
+
 	return true;
 }
 
@@ -54,6 +56,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		root_counter++;
 		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
 		LoadGameObjects(scene, root, nullptr);
@@ -88,10 +91,15 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 		//Create the Game Object with the information
 		GameObject* newGameObject = new GameObject(/*pos,scale,rotation*/);
+		newGameObject->boundingBox.maxPoint = newGameObject->boundingBox.minPoint = { 0,0,0 };
 
 		//Get name and set parent
 		newGameObject->name = node->mName.C_Str();
 		newGameObject->parent = parent;
+		if (parent == nullptr)
+		{
+			newGameObject->name += "_"+to_string(root_counter);
+		}
 
 		//Add the Game Object to the scene
 		App->scene_intro->GameObjects.push_back(newGameObject);
@@ -101,6 +109,16 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 		{
 			App->textures->loadTexture("Baker_house");
 			parent->childs.push_back(newGameObject);
+		}
+
+		LOG("New GameObject with name %s", newGameObject->name.c_str());
+
+		for (uint i = 0; i < node->mNumChildren; i++)
+		{
+			if (node->mChildren[i] != nullptr)
+			{
+				LoadGameObjects(scene, node->mChildren[i],newGameObject);
+			}
 		}
 
 		// Generate a game object for each mesh
@@ -171,14 +189,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 						memcpy(&newMesh->indices[j * 3], currentMesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
-
-				//Generating Local BoundingBox
-				newMesh->boundingBox.SetNegativeInfinity();
-				newMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
-
-				//Generating Global BoundingBox
-				App->camera->BBtoLook->Enclose(newMesh->boundingBox);
-
 			}
 			else
 			{
@@ -193,7 +203,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				newMesh->GenerateBuffer();
 				App->renderer3D->pushMesh(newMesh);
 
-				//Add the mesh inside the cilds(>1) or parent(<1)
+				//Add the mesh inside the childs(>1) or parent(<1)
 				if (node->mNumMeshes > 1)
 				{
 					//Getting mesh information
@@ -201,10 +211,14 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					GameObjectFromMesh->name = currentMesh->mName.C_Str();
 					GameObjectFromMesh->parent = newGameObject;
 
+					GameObjectFromMesh->boundingBox.maxPoint = GameObjectFromMesh->boundingBox.minPoint = { 0,0,0 };
+
+					//Adding Mesh Component
 					ComponentMesh* component;
 					component = (ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
 					component->mesh = newMesh;
 
+					//Seting the same Material as the parent
 					if (App->textures->textures.size() > 0)
 					{
 						list<Texture*>::iterator it_tex = App->textures->textures.begin();
@@ -213,43 +227,53 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 						material->Material = *it_tex;
 
 					}
+
+					//Creating the BoundingBox
+					GameObjectFromMesh->boundingBox.SetNegativeInfinity();
+					GameObjectFromMesh->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+
+					//Enclose the Child BoundingBox to the parent's bb
+					if (GameObjectFromMesh->parent != nullptr)
+					{
+						newGameObject->boundingBox.Enclose(GameObjectFromMesh->boundingBox);
+						newGameObject->childs.push_back(GameObjectFromMesh);
+					}
 				}
 				else
 				{
+					//Seting mesh information
 					newMesh->position = pos;
 					newMesh->scale = scale;
 					newMesh->rotation = rot;
 
+					//Adding Mesh Component
 					ComponentMesh* component;
 					component = (ComponentMesh*)newGameObject->AddComponent(MESH);
 					component->mesh = newMesh;
 
+					//Seting the same Material as the parent
 					if (App->textures->textures.size() > 0)
 					{
 						list<Texture*>::iterator it_tex = App->textures->textures.begin();
 
 						ComponentTexture* material = (ComponentTexture*)newGameObject->AddComponent(MATERIAL);
 						material->Material = *it_tex;
-
 					}
-				}
 
-				
+					//Creating the BoundingBox
+					newGameObject->boundingBox.SetNegativeInfinity();
+					newGameObject->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
+				}
+				App->camera->BBtoLook->Enclose(newGameObject->boundingBox);
 			}
 			errorLoading = false;
 		}
+
+		if(parent!=nullptr)
+			parent->boundingBox.Enclose(newGameObject->boundingBox);
+
+
 		App->camera->FitCamera(*App->camera->BBtoLook);
-
-		LOG("New GameObject with name %s", newGameObject->name.c_str());
-
-		for (uint i = 0; i < node->mNumChildren; i++)
-		{
-			if (node->mChildren[i] != nullptr)
-			{
-				LoadGameObjects(scene, node->mChildren[i], newGameObject);
-			}
-		}
-
 	}
 }
 

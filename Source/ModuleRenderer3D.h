@@ -73,7 +73,6 @@ public:
 
 	void OnResize(int width, int height);
 
-	void DrawBB(const AABB& BB,vec3 color)const;
 
 	bool Save(JSON_File* document)const;
 	bool Load(JSON_File* document);
