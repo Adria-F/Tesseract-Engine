@@ -184,7 +184,7 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 
 	if (extension == "fbx" || extension == "FBX")
 	{
-		//App->scene_loader->importFBXScene(path);
+		App->scene_loader->importFBXScene(path);
 	}
 	else if (extension == "png" || extension == "dds")
 	{
