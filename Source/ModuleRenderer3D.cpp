@@ -9,6 +9,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
+#include "ComponentCamera.h"
 
 #include "PanelScene.h"
 
@@ -197,7 +198,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(App->camera->camera->getViewMatrix());
 	glLoadMatrixf(App->camera->GetViewMatrix());
+
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -219,13 +222,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
 	
-	
-
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
 	base_plane.Render();
 
-	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
 
@@ -293,8 +293,11 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	//glLoadMatrixf(App->camera->camera->getViewProjMatrix());
 	glLoadMatrixf(&ProjectionMatrix);
+
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

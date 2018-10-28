@@ -9,7 +9,8 @@ enum componentType
 
 	TRANSFORMATION,
 	MESH,
-	MATERIAL
+	MATERIAL,
+	CAMERA
 };
 
 class Component

@@ -480,6 +480,9 @@
     <ClInclude Include="JSONManager.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -712,6 +715,9 @@
     </ClCompile>
     <ClCompile Include="JSONManager.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

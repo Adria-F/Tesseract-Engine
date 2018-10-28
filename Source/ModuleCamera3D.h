@@ -5,6 +5,8 @@
 
 #define CAMERA_SPEED 10.0f
 
+class ComponentCamera;
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -44,9 +46,12 @@ public:
 	float zoomDistance = 0;
 	AABB* BBtoLook=nullptr;
 
+	ComponentCamera* camera = nullptr;
+
 private:
 
 	mat4x4 ViewMatrix;
+
 };
 
 #endif //__MODULE_CAMERA_3D_H__

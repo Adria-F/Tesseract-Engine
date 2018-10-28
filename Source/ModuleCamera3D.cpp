@@ -5,6 +5,8 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleGUI.h"
+#include "Component.h"
+#include "ComponentCamera.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
@@ -34,6 +36,9 @@ bool ModuleCamera3D::Init(JSON_File* document)
 		wheelSensitivity = cameraConf->getFloat("wheelSensitivity");
 		zoomDistance = cameraConf->getFloat("zoomDistance");
 	}
+
+	camera = new ComponentCamera(nullptr, CAMERA);
+
 
 	return true;
 }
