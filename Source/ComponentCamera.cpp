@@ -2,15 +2,19 @@
 #include "ComponentCamera.h"
 
 
-ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type):Component(gameObject,type)
+ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Component(gameObject, type)
 {
-	frustum = new Frustum();
+	frustum.type = math::FrustumType::PerspectiveFrustum;
 
-	frustum->SetPos({ 0.0f,30.0f,80.0f });
-	frustum->SetFront({ 0.0f,0.0f,-1.0f });
-	frustum->SetUp({ 0.0f,1.0f,0.0f });
-	frustum->SetViewPlaneDistances(1.0f, 100.0f);
-	frustum->SetVerticalFovAndAspectRatio(DEGTORAD*90.0f, 16.0f / 9.0f);
+	frustum.pos = { 0.0f,30.0f,80.0f };
+	frustum.front = { 0.0f,0.0f,-1.0f };
+	frustum.up = { 0.0f,1.0f,0.0f };
+
+	frustum.nearPlaneDistance = 0.1f;
+	frustum.farPlaneDistance = 1000.0f;
+
+	frustum.verticalFov = DEGTORAD * 90.0f;
+	setAspectRatio(16.0f / 9.0f);
 }
 
 ComponentCamera::~ComponentCamera()
@@ -19,18 +23,23 @@ ComponentCamera::~ComponentCamera()
 
 float * ComponentCamera::getViewMatrix()
 {
-	float4x4 matrix;
-	matrix = frustum->ViewMatrix();
+	static float4x4 matrix;
+	matrix = frustum.ViewMatrix();
 	matrix.Transpose();
 
 	return (float*)matrix.v;
 }
 
-float * ComponentCamera::getViewProjMatrix()
+float * ComponentCamera::getProjectionMatrix()
 {
-	float4x4 matrix;
-	matrix = frustum->ViewProjMatrix();
+	static float4x4 matrix;
+	matrix = frustum.ProjectionMatrix();
 	matrix.Transpose();
 
 	return (float*)matrix.v;
+}
+
+void ComponentCamera::setAspectRatio(float aspectRatio)
+{
+	frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*aspectRatio);
 }

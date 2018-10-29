@@ -102,16 +102,7 @@
     <ClInclude Include="ImGui\imgui_impl_opengl2.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\Algorithm\GJK.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Algorithm\SAT.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\emscripten\library_system.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Geometry\AABB.h">
@@ -183,9 +174,6 @@
     <ClInclude Include="MathGeoLib\Math\BitOps.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Callstack.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\Math\FixedPoint.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
@@ -204,9 +192,6 @@
     <ClInclude Include="MathGeoLib\Math\float4.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4d.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\Math\float4x4.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
@@ -223,12 +208,6 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Math\FloatCmp.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\grisu3.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\InclWindows.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Math\MathAll.h">
@@ -252,9 +231,6 @@
     <ClInclude Include="MathGeoLib\Math\MatrixProxy.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MiniFloat.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\Math\myassert.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
@@ -271,9 +247,6 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Math\Reinterpret.h">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\simd.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Math\SSEMath.h">
@@ -536,9 +509,6 @@
     <ClCompile Include="ImGui\imgui_impl_opengl2.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="MathGeoLib\Algorithm\GJK.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
     <ClCompile Include="MathGeoLib\Algorithm\Random\LCG.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
@@ -561,9 +531,6 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Geometry\OBB.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\PBVolume.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Geometry\Plane.cpp">
@@ -590,9 +557,6 @@
     <ClCompile Include="MathGeoLib\Math\BitOps.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\Callstack.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
     <ClCompile Include="MathGeoLib\Math\float2.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
@@ -608,16 +572,7 @@
     <ClCompile Include="MathGeoLib\Math\float4.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float4d.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
     <ClCompile Include="MathGeoLib\Math\float4x4.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\grisu3.c">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\grisu3_cpp.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Math\MathFunc.cpp">
@@ -627,9 +582,6 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Math\MathOps.cpp">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\MiniFloat.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Math\Polynomial.cpp">
@@ -734,9 +686,6 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </None>
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_SSE.inl">
-      <Filter>Sources\Tools\MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\Math\float2.inl">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </None>
     <None Include="MathGeoLib\Math\Matrix.inl">

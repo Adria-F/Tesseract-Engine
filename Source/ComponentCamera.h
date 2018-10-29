@@ -11,11 +11,13 @@ public:
 	~ComponentCamera();
 
 	float* getViewMatrix();
-	float* getViewProjMatrix();
+	float* getProjectionMatrix();
+
+	void setAspectRatio(float aspectRatio);
 
 public:
 
-	Frustum* frustum= nullptr;
+	Frustum frustum;
 
 };
 
