@@ -14,6 +14,8 @@ public:
 	float* getProjectionMatrix();
 
 	void setAspectRatio(float aspectRatio);
+	void DrawFrustum();
+
 
 public:
 

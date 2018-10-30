@@ -24,6 +24,7 @@ public:
 	void FitCamera(const AABB &boundingBox);
 	float* GetViewMatrix();
 	vec3 getMovementFactor();
+	void DrawFrustum();
 
 	bool Save(JSON_File* document)const;
 	bool Load(JSON_File* document);

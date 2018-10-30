@@ -228,6 +228,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
+	App->camera->camera->DrawFrustum();
 
 	SDL_GL_SwapWindow(App->window->window);
 

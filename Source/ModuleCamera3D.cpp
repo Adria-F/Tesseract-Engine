@@ -245,6 +245,8 @@ vec3 ModuleCamera3D::getMovementFactor()
 	return Z * length(newPosition);
 }
 
+
+
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
