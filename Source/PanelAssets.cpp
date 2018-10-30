@@ -73,7 +73,7 @@ void PanelAssets::Draw()
 		}
 		
 		ImGui::PushID(i);
-		if (ImGui::ImageButton((ImTextureID)(((*it_e)->type == assetsElement::FOLDER) ? App->gui->folder->id : App->gui->file->id), { 50, 50 }))
+		if (ImGui::ImageButton((ImTextureID)(((*it_e)->type == assetsElement::FOLDER) ? App->gui->folder->GL_id : App->gui->file->GL_id), { 50, 50 }))
 		{
 			if ((*it_e)->type == assetsElement::FOLDER)
 			{

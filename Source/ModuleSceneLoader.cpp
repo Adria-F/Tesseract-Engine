@@ -106,8 +106,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 		//Add the Game Object to the Children list of the parent
 		if (parent != nullptr)
-		{
-			App->textures->loadTexture("Baker_house");
+		{			
 			parent->childs.push_back(newGameObject);
 		}
 
@@ -202,6 +201,19 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 			if (!errorLoading)
 			{
+				Texture* currTexture = nullptr;
+				if (scene->HasMaterials())
+				{
+					aiString path;
+					aiReturn textureError = scene->mMaterials[currentMesh->mMaterialIndex]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
+					string currentPath = path.C_Str();
+					if (textureError == aiReturn::aiReturn_SUCCESS)
+					{
+						if (App->textures->importTexture(currentPath.c_str()))
+							currTexture = App->textures->loadTexture(currentPath.c_str()); //Should check if it exists to not reallocate memory
+					}
+				}
+
 				newMesh->calculateNormals();
 				App->meshes->saveMesh(newMesh);
 				newMesh->GenerateBuffer();
@@ -222,15 +234,9 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					component = (ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
 					component->mesh = newMesh;
 
-					//Seting the same Material as the parent
-					if (App->textures->textures.size() > 0)
-					{
-						list<Texture*>::iterator it_tex = App->textures->textures.begin();
-
-						ComponentTexture* material = (ComponentTexture*)GameObjectFromMesh->AddComponent(MATERIAL);
-						material->Material = *it_tex;
-
-					}
+					//Seting the Material
+					ComponentTexture* material = (ComponentTexture*)GameObjectFromMesh->AddComponent(MATERIAL);
+					material->Material = currTexture;
 
 					//Creating the BoundingBox
 					GameObjectFromMesh->boundingBox.SetNegativeInfinity();
@@ -255,14 +261,9 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					component = (ComponentMesh*)newGameObject->AddComponent(MESH);
 					component->mesh = newMesh;
 
-					//Seting the same Material as the parent
-					if (App->textures->textures.size() > 0)
-					{
-						list<Texture*>::iterator it_tex = App->textures->textures.begin();
-
-						ComponentTexture* material = (ComponentTexture*)newGameObject->AddComponent(MATERIAL);
-						material->Material = *it_tex;
-					}
+					//Seting the Material
+					ComponentTexture* material = (ComponentTexture*)newGameObject->AddComponent(MATERIAL);
+					material->Material = currTexture;
 
 					//Creating the BoundingBox
 					newGameObject->boundingBox.SetNegativeInfinity();

@@ -44,7 +44,13 @@ bool ModuleTextures::importTexture(const char* path)
 	ilGenImages(1, &ilImage);
 	ilBindImage(ilImage);
 
-	success = ilLoadImage(path);
+	char* buffer = nullptr;
+	std::string full_path = ASSETS_FOLDER;
+	full_path += "Textures/";
+	full_path += path;
+	uint size = App->fileSystem->readFile(full_path.c_str(), &buffer);
+
+	success = ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
 
 	if (success)
 	{
@@ -60,14 +66,8 @@ bool ModuleTextures::importTexture(const char* path)
 			if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
 			{
 				std::string filename = path;
-				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-				if (App->fileSystem->fileExists(path, TEXTURES_FOLDER, TEXTURES_EXTENSION))
-				{
-					uint num = App->fileSystem->duplicateFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
-					LOG("File with same name already exists - Saved as: %s(%d)", filename.c_str(), num);
-				}
-				else
-					App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size);
+				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);			
+				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size, true); //Overwrite must be set to false when scenes save/load is completed
 			}
 			RELEASE_ARRAY(data);
 		}
@@ -107,8 +107,8 @@ Texture* ModuleTextures::loadTexture(const char* path)
 			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 				iluFlipImage();
 
-			glGenTextures(1, &ret->id);
-			glBindTexture(GL_TEXTURE_2D, ret->id);
+			glGenTextures(1, &ret->GL_id);
+			glBindTexture(GL_TEXTURE_2D, ret->GL_id);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -159,8 +159,8 @@ Texture * ModuleTextures::loadIcon(const char * path)
 			return 0;
 		}
 
-		glGenTextures(1, &ret->id);
-		glBindTexture(GL_TEXTURE_2D, ret->id);
+		glGenTextures(1, &ret->GL_id);
+		glBindTexture(GL_TEXTURE_2D, ret->GL_id);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);

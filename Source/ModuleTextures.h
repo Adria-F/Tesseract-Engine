@@ -9,7 +9,7 @@ struct Texture
 	uint width = 0;
 	uint height = 0;
 
-	uint id = 0;
+	uint GL_id = 0;
 };
 
 class ModuleTextures : public Module

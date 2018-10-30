@@ -62,16 +62,7 @@ bool ModuleFileSystem::addPath(const char * path)
 
 bool ModuleFileSystem::fileExists(const char* path, const char* atDirectory, const char* withExtension)
 {
-	std::string full_path = path;
-	if (atDirectory != nullptr || withExtension != nullptr)
-		App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-	
-	if (atDirectory != nullptr)
-		full_path = atDirectory + full_path;
-	if (withExtension != nullptr)
-		full_path += withExtension;
-	
-	return PHYSFS_exists(full_path.c_str());
+	return PHYSFS_exists(getFullPath(path, atDirectory, withExtension));
 }
 
 uint ModuleFileSystem::readFile(const char * path, char** buffer)
@@ -96,8 +87,14 @@ uint ModuleFileSystem::readFile(const char * path, char** buffer)
 	return 0;
 }
 
-uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint size)
+uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint size, bool overwrite)
 {
+	if (!overwrite)
+	{
+		path = getAvailablePath(path);
+		LOG("File with same name already exists - Saved as: %s", path);
+	}
+
 	PHYSFS_file* file = PHYSFS_openWrite(path);
 	if (file != nullptr)
 	{
@@ -116,23 +113,23 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 	return 0;
 }
 
-uint ModuleFileSystem::duplicateFile(const char* path, const void* buffer, uint size)
+const char* ModuleFileSystem::getAvailablePath(const char* path)
 {
 	uint num_version = 1;
 
-	std::string filename = path;
-	App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-	std::string full_path = TEXTURES_FOLDER + filename + '(' + std::to_string(num_version) + ')' + TEXTURES_EXTENSION;
+	std::string directory;
+	std::string filename;
+	std::string extension;
+	App->fileSystem->splitPath(path, &directory, &filename, &extension);
 
+	std::string full_path = path;
 	while (fileExists(full_path.c_str()))
 	{
 		num_version++;
-		full_path = TEXTURES_FOLDER + filename + '(' + std::to_string(num_version) + ')' + TEXTURES_EXTENSION;
+		full_path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
 	}
 
-	writeFile(full_path.c_str(), buffer, size);
-
-	return num_version;
+	return full_path.c_str();
 }
 
 void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
@@ -153,7 +150,7 @@ void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::
 		if (pos_slash < str.length())
 			*filename = str.substr(pos_slash + 1, pos_dot - pos_slash-1);
 		else
-			*filename = str.substr(0, str.length() - pos_dot);
+			*filename = str.substr(0, pos_dot);
 	}
 	if (extension != nullptr)
 	{
@@ -175,6 +172,20 @@ std::string ModuleFileSystem::normalizePath(const char * path)
 	}
 
 	return str.c_str();
+}
+
+const char* ModuleFileSystem::getFullPath(const char * path, const char * atDirectory, const char * withExtension)
+{
+	std::string full_path = path;
+	if (atDirectory != nullptr || withExtension != nullptr)
+		App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
+
+	if (atDirectory != nullptr)
+		full_path = atDirectory + full_path;
+	if (withExtension != nullptr)
+		full_path += withExtension;
+
+	return full_path.c_str();
 }
 
 void ModuleFileSystem::manageDroppedFiles(const char* path)

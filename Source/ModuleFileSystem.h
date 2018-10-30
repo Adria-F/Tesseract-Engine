@@ -16,14 +16,15 @@ public:
 	bool fileExists(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
 	uint readFile(const char* path, char** buffer);
-	uint writeFile(const char* path, const void* buffer, uint size);
-
-	//Manage saving files with same name adding (num_version) at the end of filename
-	//returns num_version
-	uint duplicateFile(const char* path, const void* buffer, uint size);
+	uint writeFile(const char* path, const void* buffer, uint size, bool overwrite = false);
+	
+	//Check if the file exists and returns filename+(num_version)
+	//num_version is equivalent to the amounts of times that a file with given name exists -1
+	const char* getAvailablePath(const char* path);
 
 	void splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
 	std::string normalizePath(const char* path);
+	const char* getFullPath(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
 	void manageDroppedFiles(const char* path);
 

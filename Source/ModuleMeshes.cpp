@@ -155,7 +155,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	bytes = sizeof(rotation);
 	memcpy(cursor, rotation, bytes);
 
-	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size);
+	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
 
 	return ret;
 }

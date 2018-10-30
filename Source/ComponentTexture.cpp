@@ -9,8 +9,8 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
-	if (Material->id > 0)
-		glBindTexture(GL_TEXTURE_2D, Material->id);
+	if (Material != nullptr)
+		glBindTexture(GL_TEXTURE_2D, Material->GL_id);
 	else
 		glColor3f(1, 1, 1);
 
