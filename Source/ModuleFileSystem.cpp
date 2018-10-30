@@ -190,6 +190,8 @@ const char* ModuleFileSystem::getFullPath(const char * path, const char * atDire
 
 void ModuleFileSystem::manageDroppedFiles(const char* path)
 {
+	//Import to the assets folder and convert+import to the library folder. Name will be: name+(num_version)
+
 	std::string extension = path;
 	splitPath(path, nullptr, nullptr, &extension);
 

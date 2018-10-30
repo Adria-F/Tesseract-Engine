@@ -15,11 +15,16 @@ void startRNGSeed()
 
 //Float between 0 and 1
 float getRandom()
-{
+{	
 	return ldexp(pcg32_random_r(&rng), -32);
 }
 
 int getRandomBetween(int min, int max)
 {
 	return (min < max) ? pcg32_boundedrand_r(&rng, (max - min)) + min : (min == max) ? max : 0;
+}
+
+uint generateUID()
+{
+	return pcg32_random_r(&rng);
 }
