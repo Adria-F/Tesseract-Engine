@@ -132,12 +132,15 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 			aiMesh* currentMesh = scene->mMeshes[node->mMeshes[i]];
 			newMesh->name = currentMesh->mName.C_Str();
 
-			//Getting mesh information
-			newMesh->num_vertices = currentMesh->mNumVertices;
+			if (currentMesh->mNumVertices > 0)
+			{
+				//Getting mesh information
+				newMesh->num_vertices = currentMesh->mNumVertices;
 
-			//Copying Vertices array
-			newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at elast 3 vertices
-			memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+				//Copying Vertices array
+				newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at least 3 vertices
+				memcpy(newMesh->vertices, currentMesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+			}
 
 			//Copying Face Normals
 			if (currentMesh->HasNormals())
@@ -158,7 +161,8 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				int t = 0;
 				if (currentMesh->HasTextureCoords(0))
 				{
-					newMesh->texCoords = new float[newMesh->num_vertices * 2];
+					newMesh->num_texCoords = currentMesh->mNumVertices;
+					newMesh->texCoords = new float[newMesh->num_texCoords * 2];
 					for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
 					{
 						newMesh->texCoords[q] = currentMesh->mTextureCoords[0][t].x;

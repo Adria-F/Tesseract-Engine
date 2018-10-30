@@ -27,38 +27,51 @@ Mesh* ModuleMeshes::loadMesh(const char* path)
 	App->fileSystem->readFile(path, &cursor);
 
 	//Load ranges
-	uint ranges[2];
+	uint ranges[4];
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
 
 	ret->num_vertices = ranges[0];
 	ret->num_indices = ranges[1];
-	ret->num_normals = ret->num_vertices;
+	ret->num_normals = ranges[2];
+	ret->num_texCoords = ranges[3];
 
 	//Load vertices
-	bytes = sizeof(float)*ret->num_vertices;
-	ret->vertices = new float[ret->num_vertices];
-	memcpy(ret->vertices, cursor, bytes);
-	cursor += bytes;
+	if (ret->num_vertices > 0)
+	{
+		bytes = sizeof(float)*ret->num_vertices * 3;
+		ret->vertices = new float[ret->num_vertices * 3];
+		memcpy(ret->vertices, cursor, bytes);
+		cursor += bytes;
+	}
 
 	//Load indices
-	bytes = sizeof(uint)*ret->num_indices;
-	ret->indices = new uint[ret->num_indices];
-	memcpy(ret->indices, cursor, bytes);
-	cursor += bytes;
+	if (ret->num_indices > 0)
+	{
+		bytes = sizeof(uint)*ret->num_indices;
+		ret->indices = new uint[ret->num_indices];
+		memcpy(ret->indices, cursor, bytes);
+		cursor += bytes;
+	}
 
 	//Load normals
-	bytes = sizeof(float)*ret->num_vertices;
-	ret->normals = new float[ret->num_normals];
-	memcpy(ret->normals, cursor, bytes);
-	cursor += bytes;
+	if (ret->num_normals > 0)
+	{
+		bytes = sizeof(float)*ret->num_normals * 3;
+		ret->normals = new float[ret->num_normals * 3];
+		memcpy(ret->normals, cursor, bytes);
+		cursor += bytes;
+	}
 
 	//Load tex_coords
-	bytes = sizeof(float)*ret->num_vertices * 2;
-	ret->texCoords = new float[ret->num_vertices * 2];
-	memcpy(ret->texCoords, cursor, bytes);
-	cursor += bytes;
+	if (ret->num_texCoords > 0)
+	{
+		bytes = sizeof(float)*ret->num_texCoords * 2;
+		ret->texCoords = new float[ret->num_texCoords * 2];
+		memcpy(ret->texCoords, cursor, bytes);
+		cursor += bytes;
+	}
 
 	//Load position
 	float position[3];
@@ -92,10 +105,10 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	bool ret = true;
 
 	//	Vertices | Indices | Normals(vertices) | Texture coords (verties*2)
-	uint ranges[2] = { mesh->num_vertices, mesh->num_indices};
+	uint ranges[4] = { mesh->num_vertices, mesh->num_indices, mesh->num_normals, mesh->num_texCoords};
 	
 	//Total size of the buffer
-	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_vertices + sizeof(float)*mesh->num_vertices * 2;
+	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices*3 + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_normals*3 + sizeof(float)*mesh->num_texCoords * 2;
 	size += sizeof(float) * 10;
 	char* buffer = new char[size];
 	char* cursor = buffer;
@@ -106,7 +119,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	cursor += bytes;
 
 	//Store vertices
-	bytes = sizeof(float)*mesh->num_vertices;
+	bytes = sizeof(float)*mesh->num_vertices*3;
 	memcpy(cursor, mesh->vertices, bytes);
 	cursor += bytes;
 	
@@ -116,12 +129,12 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	cursor += bytes;
 
 	//Store normals
-	bytes = sizeof(float)*mesh->num_normals;
+	bytes = sizeof(float)*mesh->num_normals*3;
 	memcpy(cursor, mesh->normals, bytes);
 	cursor += bytes;
 
 	//Store tex_coords
-	bytes = sizeof(float)*mesh->num_vertices*2;
+	bytes = sizeof(float)*mesh->num_texCoords*2;
 	memcpy(cursor, mesh->texCoords, bytes);	
 	cursor += bytes;
 

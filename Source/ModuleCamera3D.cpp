@@ -148,6 +148,8 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt({ 0,0,0 });
 	}
 
+	camera->frustum.pos = { Position.x, Position.y, Position.z };
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 

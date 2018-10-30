@@ -221,6 +221,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Draw Scene  ---------------------------
 	App->scene_intro->Draw();
+	App->camera->camera->DrawFrustum();
 	
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -228,7 +229,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
-	App->camera->camera->DrawFrustum();
 
 	SDL_GL_SwapWindow(App->window->window);
 
