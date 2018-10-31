@@ -58,7 +58,8 @@ bool ModuleScene::Load(rapidjson::Document& document) {
 
 void ModuleScene::Draw()
 {
-	GameObjects[1]->active = false;
+	//selected_GO = GameObjects[0];
+	//GameObjects[1]->active = false;
 
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{

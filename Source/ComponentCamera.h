@@ -16,6 +16,7 @@ public:
 	void setAspectRatio(float aspectRatio);
 	void DrawFrustum();
 
+	void DrawInfo();
 
 public:
 

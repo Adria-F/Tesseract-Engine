@@ -38,12 +38,12 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 {
 	uint flags;
 
-	flags = ImGuiTreeNodeFlags_OpenOnArrow;
+	flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (gameobject->childs.size() <= 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
-		flags |= ImGuiTreeNodeFlags_Bullet;
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 15);
 	}
 
 
@@ -51,8 +51,11 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1,0,0,1 });
 	}
-	
-	if (ImGui::TreeNodeEx(gameobject->name.c_str(), flags))
+
+	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
+	if (ImGui::IsItemClicked(0))
+		App->scene_intro->selected_GO = gameobject;
+	if (opened)
 	{
 		if (gameobject->childs.size() > 0)
 		{
@@ -60,9 +63,9 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 			{
 				FillTree(gameobject->childs[i]);
 			}
-		}
+		}		
 		ImGui::TreePop();
-	}
+	}	
 
 	if (!gameobject->active)
 	{

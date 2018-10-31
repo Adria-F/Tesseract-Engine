@@ -33,19 +33,24 @@ void GameObject::Update()
 			if ((*it_c)->type == MESH)
 				(*it_c)->Update();
 		}
-	}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+		if (App->renderer3D->ShowBB)
+		{
+			DrawBB(boundingBox, { 0, 0.5f, 1 });
+		}
 
-	if (App->renderer3D->ShowBB)
-	{
-		DrawBB(boundingBox, { 0, 0.5f, 1 });
-	}
+		if (App->renderer3D->ShowBB && App->camera->BBtoLook != nullptr)
+		{
+			DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
+		}
 
-	if (App->renderer3D->ShowBB && App->camera->BBtoLook != nullptr)
-	{
-		DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
-	}
+		for (int i = 0; i < childs.size(); i++)
+		{
+			childs[i]->Update();
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}	
 }
 
 void GameObject::Draw()

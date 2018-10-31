@@ -95,3 +95,13 @@ void ComponentCamera::DrawFrustum()
 	glColor3f(1, 1, 1);
 	glLineWidth(1.0f);
 }
+
+void ComponentCamera::DrawInfo()
+{
+	ImGui::Checkbox("", &active);
+	ImGui::SameLine();
+
+	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
+	{
+	}
+}

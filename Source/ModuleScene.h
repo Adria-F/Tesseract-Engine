@@ -42,5 +42,7 @@ public:
 	list<Primitive*> ShapesToDraw;
 	vector<GameObject*> GameObjects;
 
+	GameObject* selected_GO = nullptr;
+
 };
 #endif // !__MODULESCENE_H__

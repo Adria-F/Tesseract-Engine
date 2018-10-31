@@ -13,7 +13,7 @@ class PanelConsole;
 class PanelAbout;
 class PanelHardwareInfo;
 class PanelElements;
-class PanelProperties;
+class PanelInspector;
 class PanelScene;
 class PanelAssets;
 class PanelHierarchy;
@@ -50,7 +50,7 @@ public:
 	std::list<Panel*> panels;
 
 	PanelConfiguration* configuration = nullptr;
-	PanelProperties* properties = nullptr;
+	PanelInspector* inspector = nullptr;
 	PanelConsole* console = nullptr;
 	PanelAbout* about = nullptr;
 	PanelHardwareInfo* hardwareInfo = nullptr;

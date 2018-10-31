@@ -99,13 +99,11 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 		if (parent == nullptr)
 		{
 			newGameObject->name += "_"+to_string(root_counter);
+
+			//Add the Game Object to the scene
+			App->scene_intro->GameObjects.push_back(newGameObject);
 		}
-
-		//Add the Game Object to the scene
-		App->scene_intro->GameObjects.push_back(newGameObject);
-
-		//Add the Game Object to the Children list of the parent
-		if (parent != nullptr)
+		else
 		{			
 			parent->childs.push_back(newGameObject);
 		}

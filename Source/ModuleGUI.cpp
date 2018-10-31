@@ -10,7 +10,7 @@
 #include "PanelAbout.h"
 #include "PanelHardwareInfo.h"
 #include "PanelElements.h"
-#include "PanelProperties.h"
+#include "PanelInspector.h"
 #include "PanelScene.h"
 #include "PanelAssets.h"
 #include "PanelHierarchy.h"
@@ -44,7 +44,7 @@ bool ModuleGUI::Init(JSON_File* document)
 	
 	panels.push_back(console = new PanelConsole("Console"));
 	
-	panels.push_back(properties = new PanelProperties("Properties"));
+	panels.push_back(inspector = new PanelInspector("Inspector"));
 
 	panels.push_back(configuration = new PanelConfiguration("Configuration"));
 	
@@ -152,8 +152,8 @@ update_status ModuleGUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("Basic 3D Shapes", NULL, ShapeElements->isActive()))
 				ShapeElements->toggleActive();
-			if (ImGui::MenuItem("Mesh Properties", NULL, properties->isActive()))
-				properties->toggleActive();
+			if (ImGui::MenuItem("Mesh Properties", NULL, inspector->isActive()))
+				inspector->toggleActive();
 			if(ImGui::MenuItem("Game Objects",NULL,hierarchy->isActive()))
 				hierarchy->toggleActive();
 			ImGui::EndMenu();

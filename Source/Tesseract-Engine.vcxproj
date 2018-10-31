@@ -171,7 +171,7 @@
     <ClInclude Include="PanelElements.h" />
     <ClInclude Include="PanelHardwareInfo.h" />
     <ClInclude Include="PanelHierarchy.h" />
-    <ClInclude Include="PanelProperties.h" />
+    <ClInclude Include="PanelInspector.h" />
     <ClInclude Include="PanelScene.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="rapidjson\allocators.h" />
@@ -279,7 +279,7 @@
     <ClCompile Include="PanelElements.cpp" />
     <ClCompile Include="PanelHardwareInfo.cpp" />
     <ClCompile Include="PanelHierarchy.cpp" />
-    <ClCompile Include="PanelProperties.cpp" />
+    <ClCompile Include="PanelInspector.cpp" />
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RNG.cpp" />
