@@ -98,7 +98,9 @@ void ComponentCamera::DrawFrustum()
 
 void ComponentCamera::DrawInfo()
 {
+	ImGui::PushID("toggleCamera");
 	ImGui::Checkbox("", &active);
+	ImGui::PopID();
 	ImGui::SameLine();
 
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))

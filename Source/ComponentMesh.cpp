@@ -15,6 +15,8 @@ ComponentMesh::~ComponentMesh()
 
 bool ComponentMesh::Update()
 {
+	if (!active)
+		return false;
 
 	//Assign Vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -77,7 +79,9 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::DrawInfo()
 {
+	ImGui::PushID("toggleMesh");
 	ImGui::Checkbox("", &active);
+	ImGui::PopID();
 	ImGui::SameLine();
 
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))

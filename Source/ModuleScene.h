@@ -29,9 +29,9 @@ public:
 	bool CleanUp();
 	//void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	bool Save(rapidjson::Document& document, rapidjson::FileWriteStream& os);
+	bool Save(JSON_File* document);
 
-	bool Load(rapidjson::Document& document);
+	bool Load(JSON_File* document);
 
 	void Draw();
 

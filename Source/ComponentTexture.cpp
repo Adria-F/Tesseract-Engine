@@ -9,6 +9,9 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
+	if (!active)
+		return false;
+
 	if (Material != nullptr)
 		glBindTexture(GL_TEXTURE_2D, Material->GL_id);
 	else
@@ -19,7 +22,9 @@ bool ComponentTexture::Update()
 
 void ComponentTexture::DrawInfo()
 {
+	ImGui::PushID("toggleTexture");
 	ImGui::Checkbox("", &active);
+	ImGui::PopID();
 	ImGui::SameLine();
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))

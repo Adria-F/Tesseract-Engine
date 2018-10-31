@@ -45,14 +45,15 @@ update_status ModuleScene::Update(float dt)
 	return ret;
 }
 
-bool ModuleScene::Save(rapidjson::Document& document, rapidjson::FileWriteStream& os) {
+bool ModuleScene::Save(JSON_File* document) {
 
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("name", "Scene", allocator);
-	rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+	JSON_Value* scene = document->createValue();
+	scene->addString("name", "scene");
+	document->addValue("scene", scene);
+	
 	return true;
 }
-bool ModuleScene::Load(rapidjson::Document& document) {
+bool ModuleScene::Load(JSON_File* document) {
 	return true;
 }
 

@@ -28,8 +28,10 @@ void PanelInspector::Draw()
 		GameObject* go = App->scene_intro->selected_GO;
 		char name[120];
 		strcpy_s(name, 120, go->name.c_str());
-		if (ImGui::InputText("", name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll)) //BUG: When clicking on some items, cannot write
+		ImGui::PushID("GO name");
+		if (ImGui::InputText("", name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 			go->name = name;		
+		ImGui::PopID();
 		ImGui::Checkbox("Active", &go->active);
 		ImGui::Separator();
 
