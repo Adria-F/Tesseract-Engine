@@ -63,8 +63,9 @@ bool JSON_File::Write()
 {
 	if (os != nullptr)
 	{
-		rapidjson::Writer<rapidjson::FileWriteStream> writer(*os);
-		document->Accept(writer);
+		//rapidjson::Writer<rapidjson::FileWriteStream> writer(*os);
+		rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(*os);
+		document->Accept(writer);		
 
 		return true;
 	}
@@ -103,7 +104,20 @@ JSON_Value::~JSON_Value()
 	RELEASE(value);
 }
 
+void JSON_Value::convertToArray()
+{
+	RELEASE(value);
+	value = new rapidjson::Value(rapidjson::kArrayType);
+}
+
 void JSON_Value::addInt(const char* name, int value)
+{
+	std::string str = name;
+	rapidjson::Value index(str.c_str(), str.size(), *allocator);
+	this->value->AddMember(index, value, *allocator);
+}
+
+void JSON_Value::addUint(const char * name, uint value)
 {
 	std::string str = name;
 	rapidjson::Value index(str.c_str(), str.size(), *allocator);
@@ -147,10 +161,45 @@ void JSON_Value::addVector(const char * name, float * vec, int vector_size)
 	this->value->AddMember(index, a, *allocator);
 }
 
+void JSON_Value::addVector3(const char * name, float3 vec)
+{
+	std::string str = name;
+	rapidjson::Value index(str.c_str(), str.size(), *allocator);
+
+	rapidjson::Value a(rapidjson::kArrayType);
+	a.PushBack(vec.x, *allocator);
+	a.PushBack(vec.y, *allocator);
+	a.PushBack(vec.z, *allocator);
+
+	this->value->AddMember(index, a, *allocator);
+}
+
+void JSON_Value::addQuat(const char * name, Quat quat)
+{
+	std::string str = name;
+	rapidjson::Value index(str.c_str(), str.size(), *allocator);
+
+	rapidjson::Value a(rapidjson::kArrayType);
+	a.PushBack(quat.x, *allocator);
+	a.PushBack(quat.y, *allocator);
+	a.PushBack(quat.z, *allocator);
+	a.PushBack(quat.w, *allocator);
+
+	this->value->AddMember(index, a, *allocator);
+}
+
 int JSON_Value::getInt(const char* name)
 {	
 	if (value->HasMember(name))
 		return value->operator[](name).GetInt();
+	else
+		return 0;
+}
+
+uint JSON_Value::getUint(const char * name)
+{
+	if (value->HasMember(name))
+		return value->operator[](name).GetUint();
 	else
 		return 0;
 }
@@ -199,6 +248,64 @@ float* JSON_Value::getVector(const char * name, int vector_size)
 	return nullptr;
 }
 
+float3 JSON_Value::getVector3(const char * name)
+{
+	if (value->HasMember(name))
+	{
+		rapidjson::Value& a = value->operator[](name);
+		if (a.IsArray() && a.Size() >= 3)
+		{
+			float3 ret;
+			ret.x = a[0].GetFloat();
+			ret.y = a[1].GetFloat();
+			ret.z = a[2].GetFloat();
+
+			return ret;
+		}
+	}
+
+	return float3();
+}
+
+Quat JSON_Value::getQuat(const char * name)
+{
+	if (value->HasMember(name))
+	{
+		rapidjson::Value& a = value->operator[](name);
+		if (a.IsArray() && a.Size() >= 4)
+		{
+			Quat ret;
+			ret.x = a[0].GetFloat();
+			ret.y = a[1].GetFloat();
+			ret.z = a[2].GetFloat();
+			ret.w = a[3].GetFloat();
+
+			return ret;
+		}
+	}
+
+	return Quat();
+}
+
+JSON_Value * JSON_Value::createValue()
+{
+	return new JSON_Value(allocator);
+}
+
+void JSON_Value::addValue(const char * name, JSON_Value * value)
+{
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		this->value->AddMember(index, *value->getRapidJSONValue(), *allocator);
+	}
+	else if (this->value->GetType() == rapidjson::kArrayType)
+	{
+		this->value->PushBack(*value->getRapidJSONValue(), *allocator);
+	}
+}
+
 JSON_Value * JSON_Value::getValue(const char * name)
 {
 	if (value->HasMember(name))
@@ -215,8 +322,7 @@ JSON_Value * JSON_Value::getValue(const char * name)
 
 void JSON_Value::setValue(rapidjson::Value * value)
 {
-	if (value != nullptr)
-		RELEASE(value);
+	RELEASE(this->value);
 
 	this->value = value;
 }

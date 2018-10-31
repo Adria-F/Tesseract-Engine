@@ -20,3 +20,19 @@ bool ComponentTransformation::Update()
 {
 	return true;
 }
+
+void ComponentTransformation::Save(JSON_Value * component) const
+{
+	JSON_Value* transformation = component->createValue();
+
+	transformation->addInt("Type", type);
+	transformation->addVector3("Position", position);
+	transformation->addQuat("Rotation", rotation);
+	transformation->addVector3("Scale", scale);
+
+	component->addValue("",transformation);
+}
+
+void ComponentTransformation::Load(JSON_Value * component)
+{
+}

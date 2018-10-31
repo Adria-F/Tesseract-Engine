@@ -23,7 +23,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, SCENES_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -62,7 +62,7 @@ bool ModuleFileSystem::addPath(const char * path)
 
 bool ModuleFileSystem::fileExists(const char* path, const char* atDirectory, const char* withExtension)
 {
-	return PHYSFS_exists(getFullPath(path, atDirectory, withExtension));
+	return PHYSFS_exists(getFullPath(path, atDirectory, withExtension).c_str());
 }
 
 uint ModuleFileSystem::readFile(const char * path, char** buffer)
@@ -174,7 +174,7 @@ std::string ModuleFileSystem::normalizePath(const char * path)
 	return str.c_str();
 }
 
-const char* ModuleFileSystem::getFullPath(const char * path, const char * atDirectory, const char * withExtension)
+std::string ModuleFileSystem::getFullPath(const char * path, const char * atDirectory, const char * withExtension)
 {
 	std::string full_path = path;
 	if (atDirectory != nullptr || withExtension != nullptr)

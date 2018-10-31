@@ -43,3 +43,17 @@ void ComponentTexture::DrawInfo()
 			ImGui::Text("No texture");
 	}
 }
+
+void ComponentTexture::Save(JSON_Value * component) const
+{
+	JSON_Value* texture = component->createValue();
+
+	texture->addInt("Type", type);
+	texture->addString("texture", Material->name.c_str());
+
+	component->addValue("", texture);
+}
+
+void ComponentTexture::Load(JSON_Value * component)
+{
+}

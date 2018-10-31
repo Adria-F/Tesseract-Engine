@@ -23,6 +23,9 @@ public:
 
 	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
 
+	bool saveScene(const char* scene_name);
+	bool loadScene(const char* scene_name);
+
 private:
 	int root_counter;
 };

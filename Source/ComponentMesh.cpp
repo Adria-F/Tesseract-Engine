@@ -91,3 +91,17 @@ void ComponentMesh::DrawInfo()
 		ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
 	}
 }
+
+void ComponentMesh::Save(JSON_Value * component) const
+{
+	JSON_Value* mesh = component->createValue();
+
+	mesh->addInt("Type", type);
+	mesh->addString("mesh", this->mesh->name.c_str());
+
+	component->addValue("", mesh);
+}
+
+void ComponentMesh::Load(JSON_Value * component)
+{
+}

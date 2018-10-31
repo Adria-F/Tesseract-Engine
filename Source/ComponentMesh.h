@@ -15,9 +15,10 @@ public:
 	~ComponentMesh();
 
 	bool Update();
-
-
 	void DrawInfo();
+
+	void Save(JSON_Value* component) const;
+	void Load(JSON_Value* component);
 
 public:
 

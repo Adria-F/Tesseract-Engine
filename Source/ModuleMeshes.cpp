@@ -73,7 +73,7 @@ Mesh* ModuleMeshes::loadMesh(const char* path)
 		cursor += bytes;
 	}
 
-	//Load position
+	/*//Load position
 	float position[3];
 	bytes = sizeof(float) * 3;
 	memcpy(position, cursor, bytes);
@@ -91,7 +91,7 @@ Mesh* ModuleMeshes::loadMesh(const char* path)
 	float rotation[4];
 	bytes = sizeof(float) * 4;
 	memcpy(rotation, cursor, bytes);
-	ret->rotation = { rotation[0],rotation[1],rotation[2],rotation[3] };
+	ret->rotation = { rotation[0],rotation[1],rotation[2],rotation[3] };*/
 
 	//Calculate bounding box
 	ret->boundingBox.SetNegativeInfinity();
@@ -109,7 +109,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	
 	//Total size of the buffer
 	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices*3 + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_normals*3 + sizeof(float)*mesh->num_texCoords * 2;
-	size += sizeof(float) * 10;
+	//size += sizeof(float) * 10;
 	char* buffer = new char[size];
 	char* cursor = buffer;
 
@@ -138,7 +138,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	memcpy(cursor, mesh->texCoords, bytes);	
 	cursor += bytes;
 
-	//Store position
+	/*//Store position
 	float position[3] = { mesh->position.x ,mesh->position.y,mesh->position.z };
 	bytes = sizeof(position);
 	memcpy(cursor, position, bytes);
@@ -153,7 +153,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	//Store rotation
 	float rotation[4] = { mesh->rotation.x ,mesh->rotation.y,mesh->rotation.z,mesh->rotation.w };
 	bytes = sizeof(rotation);
-	memcpy(cursor, rotation, bytes);
+	memcpy(cursor, rotation, bytes);*/
 
 	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
 

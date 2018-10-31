@@ -90,8 +90,8 @@ Texture* ModuleTextures::loadTexture(const char* path)
 	char* buffer = nullptr;
 	std::string full_path = path;
 	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-	full_path = TEXTURES_FOLDER + full_path + TEXTURES_EXTENSION;
-	uint size = App->fileSystem->readFile(full_path.c_str(), &buffer);
+	ret->name = full_path;
+	uint size = App->fileSystem->readFile(App->fileSystem->getFullPath(full_path.c_str(), TEXTURES_FOLDER, TEXTURES_EXTENSION).c_str(), &buffer);
 
 	if (buffer != nullptr && size > 0)
 	{

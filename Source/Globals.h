@@ -45,7 +45,7 @@ float getRandom();
 #define GET_RANDOM_BETWEEN(min, max) getRandomBetween(min, max);
 int getRandomBetween(int min, int max);
 
-#define GENERATE_UID();
+#define GENERATE_UID() generateUID();
 uint generateUID();
 
 #define CAP(n) ((n <= 0.0f) ? n=0.0f : (n >= 1.0f) ? n=1.0f : n=n)
@@ -74,14 +74,16 @@ enum update_status
 #define TITLE "3D Engine"
 
 // Files PATHS
-#define PATHS_AMOUNT 4
-#define ASSETS_FOLDER "/Assets/"
-#define LIBRARY_FOLDER "/Library/"
-#define MESHES_FOLDER "/Library/Meshes/"
-#define TEXTURES_FOLDER "/Library/Textures/"
+#define PATHS_AMOUNT 5
+#define ASSETS_FOLDER "Assets/"
+#define LIBRARY_FOLDER "Library/"
+#define MESHES_FOLDER "Library/Meshes/"
+#define TEXTURES_FOLDER "Library/Textures/"
+#define SCENES_FOLDER "Library/Scenes/"
 
 // Own format files
 #define MESH_EXTENSION ".tesseractMesh"
 #define TEXTURES_EXTENSION ".dds"
+#define SCENES_EXTENSION ".tesseractScene"
 
 #endif // !__GLOBALS_H__

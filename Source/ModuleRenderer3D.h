@@ -39,17 +39,14 @@ struct Mesh
 
 	uint num_texCoords = 0;
 	float* texCoords=nullptr;
-	uint texture = 0;
-	uint texWidth = 0;
-	uint texHeight = 0;
 
 	vector<float> faceNormals;
 
 	AABB boundingBox;
 
-	vec position = { 0.0f,0.0f,0.0f };
+	/*vec position = { 0.0f,0.0f,0.0f };
 	vec scale = { 1.0,1.0f,1.0f };
-	Quat rotation = { 0.0f,0.0f,0.0f,0.0f };
+	Quat rotation = { 0.0f,0.0f,0.0f,0.0f };*/
 
 	void Draw();
 	void calculateNormals();

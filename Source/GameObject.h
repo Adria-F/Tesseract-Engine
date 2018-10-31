@@ -18,13 +18,14 @@ public:
 	~GameObject();
 
 	Component* AddComponent(componentType type);
-	void RemoveComponent(Component& component);
-
-	ComponentTransformation* CreateComponentTransformation();
+	void RemoveComponent(Component* component);
 
 	void Update();
 	void Draw();
-	void DrawBB(const AABB& BB, vec3 color)const;
+	void DrawBB(const AABB& BB, vec3 color) const;
+
+	void Save(JSON_Value* gameobject);
+	void Load(JSON_Value* gameobject);
 
 public:
 
@@ -35,6 +36,7 @@ public:
 
 	bool active = true;
 	std::string name = "";
+	uint UID = 0;
 
 	AABB boundingBox;
 };

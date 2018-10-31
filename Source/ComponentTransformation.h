@@ -14,6 +14,9 @@ public:
 	void DrawInfo();
 	bool Update();
 
+	void Save(JSON_Value* component) const;
+	void Load(JSON_Value* component);
+
 public:
 
 	float3 position = { 0.0f,0.0f,0.0f };

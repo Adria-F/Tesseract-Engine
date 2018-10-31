@@ -334,8 +334,6 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &id_indices);
 	RELEASE_ARRAY(indices);
 
-	glDeleteTextures(1, &texture);
-
 	RELEASE(App->camera->BBtoLook);
 
 }

@@ -6,6 +6,8 @@
 
 struct Texture
 {
+	std::string name = "";
+
 	uint width = 0;
 	uint height = 0;
 

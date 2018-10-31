@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleMeshes.h"
 #include "GameObject.h"
+#include "ModuleFileSystem.h"
 
 #include "Component.h"
 #include "ComponentTransformation.h"
@@ -227,6 +228,13 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 					GameObjectFromMesh->boundingBox.maxPoint = GameObjectFromMesh->boundingBox.minPoint = { 0,0,0 };
 
+					//Seting transformation
+					ComponentTransformation* transformation;
+					transformation = (ComponentTransformation*)GameObjectFromMesh->AddComponent(TRANSFORMATION);
+					transformation->position = pos;
+					transformation->scale = scale;
+					transformation->rotation = rot;
+
 					//Adding Mesh Component
 					ComponentMesh* component;
 					component = (ComponentMesh*)GameObjectFromMesh->AddComponent(MESH);
@@ -249,10 +257,12 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 				}
 				else
 				{
-					//Seting mesh information
-					newMesh->position = pos;
-					newMesh->scale = scale;
-					newMesh->rotation = rot;
+					//Seting transformation
+					ComponentTransformation* transformation;
+					transformation = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+					transformation->position = pos;
+					transformation->scale = scale;
+					transformation->rotation = rot;
 
 					//Adding Mesh Component
 					ComponentMesh* component;
@@ -278,6 +288,30 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 		App->camera->FitCamera(*App->camera->BBtoLook);
 	}
+}
+
+bool ModuleSceneLoader::saveScene(const char* scene_name)
+{
+	JSON_File* scene = App->JSON_manager->openWriteFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
+
+	JSON_Value* gameObjects = scene->createValue();
+	gameObjects->convertToArray();
+
+	for (int i = 0; i < App->scene_intro->GameObjects.size(); i++)
+	{
+		App->scene_intro->GameObjects[i]->Save(gameObjects);
+	}
+
+	scene->addValue("Game Objects", gameObjects);
+	scene->Write();
+	App->JSON_manager->closeFile(scene);
+
+	return true;
+}
+
+bool ModuleSceneLoader::loadScene(const char * scene_name)
+{
+	return false;
 }
 
 void CallLog(const char* str, char* userData)

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Globals.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera3D.h"
@@ -11,6 +12,7 @@
 
 GameObject::GameObject()
 {
+	UID = GENERATE_UID();
 }
 
 
@@ -82,16 +84,11 @@ Component* GameObject::AddComponent(componentType type)
 	return ret;
 }
 
-void GameObject::RemoveComponent(Component& component)
+void GameObject::RemoveComponent(Component* component)
 {
+	components.remove(component);
 
-}
-
-ComponentTransformation* GameObject::CreateComponentTransformation()
-{
-	ComponentTransformation* ret;
-
-	return ret;
+	RELEASE(component);
 }
 
 void GameObject::DrawBB(const AABB& BB, vec3 color) const
@@ -141,4 +138,33 @@ void GameObject::DrawBB(const AABB& BB, vec3 color) const
 
 	glColor3f(1, 1, 1);
 	glLineWidth(1.0f);
+}
+
+void GameObject::Save(JSON_Value* gameobject)
+{
+	JSON_Value* gameObject = gameobject->createValue();
+
+	gameObject->addUint("UID", UID);
+	gameObject->addUint("ParentUID", (parent != nullptr) ? parent->UID : 0);
+	gameObject->addString("Name", name.c_str());
+
+	JSON_Value* Components = gameobject->createValue();
+	Components->convertToArray();
+	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	{
+		(*it_c)->Save(Components);
+	}
+
+	gameObject->addValue("Components", Components);
+
+	gameobject->addValue("", gameObject);
+
+	for (int i = 0; i < childs.size(); i++)
+	{
+		childs[i]->Save(gameobject);
+	}
+}
+
+void GameObject::Load(JSON_Value* gameobject)
+{
 }

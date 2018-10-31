@@ -127,6 +127,23 @@ bool ModuleWindow::Save(JSON_File* document) const
 {
 	JSON_Value* window = document->createValue();
 	window->addInt("window Info", 2);
+	window->convertToArray();
+	JSON_Value* transform = window->createValue();
+	JSON_Value* rotation = window->createValue();
+	JSON_Value* scale = window->createValue();
+	transform->addInt("TransX", 1);
+	transform->addInt("TransY", 2);
+	transform->addInt("TransZ", 3);
+	rotation->addInt("RotX", 4);
+	rotation->addInt("RotY", 5);
+	rotation->addInt("RotZ", 6);
+	scale->addInt("ScaleX", 7);
+	scale->addInt("ScaleY", 8);
+	scale->addInt("ScaleZ", 9);
+
+	window->addValue("",transform);
+	window->addValue("",rotation);
+	window->addValue("",scale);
 	document->addValue("window", window);
 
 	return true;

@@ -22,6 +22,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleTextures.h"
 
+#include "ModuleSceneLoader.h"
+
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
 }
@@ -134,6 +136,10 @@ update_status ModuleGUI::Update(float dt)
 				App->SaveGame();
 			if (ImGui::MenuItem("Load"))
 				App->LoadGame();
+			if (ImGui::MenuItem("Save Scene"))
+				App->scene_loader->saveScene("sceneTest");
+			if (ImGui::MenuItem("Load Scene"))
+				App->scene_loader->loadScene("sceneTest");
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
 			if (ImGui::MenuItem("Close", "ESC"))
