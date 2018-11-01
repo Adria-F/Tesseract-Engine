@@ -13,7 +13,7 @@ public:
 	~ModuleMeshes() {}
 
 	Mesh* importMesh(aiMesh mesh);
-	Mesh* loadMesh(const char* path);
+	Mesh* loadMesh(const char* meshName);
 	bool saveMesh(Mesh* mesh);
 	
 };

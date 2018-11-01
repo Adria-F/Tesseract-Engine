@@ -17,14 +17,15 @@ Mesh* ModuleMeshes::importMesh(aiMesh mesh)
 	return nullptr;
 }
 
-Mesh* ModuleMeshes::loadMesh(const char* path)
+Mesh* ModuleMeshes::loadMesh(const char* meshName)
 {
 	Mesh* ret = new Mesh();
-	App->fileSystem->splitPath(path, nullptr, &ret->name, nullptr);
+	ret->name = meshName;
+	std::string path = App->fileSystem->getFullPath(meshName, MESHES_FOLDER, MESH_EXTENSION);
 
 	//Get the buffer
 	char* cursor = nullptr;
-	App->fileSystem->readFile(path, &cursor);
+	App->fileSystem->readFile(path.c_str(), &cursor);
 
 	//Load ranges
 	uint ranges[4];
@@ -96,6 +97,8 @@ Mesh* ModuleMeshes::loadMesh(const char* path)
 	//Calculate bounding box
 	ret->boundingBox.SetNegativeInfinity();
 	ret->boundingBox.Enclose((float3*)ret->vertices, ret->num_vertices);
+
+	ret->GenerateBuffer();
 
 	return ret;
 }

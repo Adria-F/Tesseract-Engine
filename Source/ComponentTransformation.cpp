@@ -35,4 +35,7 @@ void ComponentTransformation::Save(JSON_Value * component) const
 
 void ComponentTransformation::Load(JSON_Value * component)
 {
+	position = component->getVector3("Position");
+	rotation = component->getQuat("Rotation");
+	scale = component->getVector3("Scale");
 }

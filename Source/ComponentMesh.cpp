@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "GameObject.h"
+#include "ModuleMeshes.h"
 
 
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
@@ -102,6 +103,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 	component->addValue("", mesh);
 }
 
-void ComponentMesh::Load(JSON_Value * component)
+void ComponentMesh::Load(JSON_Value* component)
 {
+	mesh = App->meshes->loadMesh(component->getString("mesh"));
 }

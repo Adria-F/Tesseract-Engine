@@ -306,11 +306,25 @@ void JSON_Value::addValue(const char * name, JSON_Value * value)
 	}
 }
 
-JSON_Value * JSON_Value::getValue(const char * name)
+JSON_Value* JSON_Value::getValue(const char* name)
 {
 	if (value->HasMember(name))
 	{
 		rapidjson::Value& trueValue = value->operator[](name);
+		JSON_Value* ret = new JSON_Value(allocator);
+		ret->getRapidJSONValue()->CopyFrom(trueValue, *allocator, false);
+
+		return ret;
+	}
+
+	return nullptr;
+}
+
+JSON_Value* JSON_Value::getValueFromArray(int index)
+{
+	if (value->IsArray() && value->Size() > index)
+	{
+		rapidjson::Value& trueValue = value->operator[](index);
 		JSON_Value* ret = new JSON_Value(allocator);
 		ret->getRapidJSONValue()->CopyFrom(trueValue, *allocator, false);
 
