@@ -44,10 +44,6 @@ struct Mesh
 
 	AABB boundingBox;
 
-	/*vec position = { 0.0f,0.0f,0.0f };
-	vec scale = { 1.0,1.0f,1.0f };
-	Quat rotation = { 0.0f,0.0f,0.0f,0.0f };*/
-
 	void Draw();
 	void calculateNormals();
 	void GenerateBuffer();

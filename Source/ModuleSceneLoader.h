@@ -5,7 +5,10 @@
 
 class GameObject;
 struct aiScene;
-struct aiNode;
+struct aiNode; 
+struct aiMesh;
+
+struct Mesh;
 
 class ModuleSceneLoader : public Module
 {
@@ -21,6 +24,7 @@ public:
 	bool importFBXScene(const char* path);
 	bool importFSScene(const char* path);
 
+	Mesh* LoadGOMesh(aiMesh* currentMesh);
 	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
 
 	bool saveScene(const char* scene_name);

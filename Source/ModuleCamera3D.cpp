@@ -18,17 +18,16 @@ ModuleCamera3D::~ModuleCamera3D()
 
 bool ModuleCamera3D::Init(JSON_File* document)
 {
-	CalculateViewMatrix();
 
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)
 	{
-		X = vec3(cameraConf->getVector("X", 3)[0], cameraConf->getVector("X", 3)[1], cameraConf->getVector("X", 3)[2]);
-		Y = vec3(cameraConf->getVector("Y", 3)[0], cameraConf->getVector("Y", 3)[1], cameraConf->getVector("Y", 3)[2]);
-		Z = vec3(cameraConf->getVector("Z", 3)[0], cameraConf->getVector("Z", 3)[1], cameraConf->getVector("Z", 3)[2]);
+		X = vec(cameraConf->getVector("X", 3)[0], cameraConf->getVector("X", 3)[1], cameraConf->getVector("X", 3)[2]);
+		Y = vec(cameraConf->getVector("Y", 3)[0], cameraConf->getVector("Y", 3)[1], cameraConf->getVector("Y", 3)[2]);
+		Z = vec(cameraConf->getVector("Z", 3)[0], cameraConf->getVector("Z", 3)[1], cameraConf->getVector("Z", 3)[2]);
 
-		Position = vec3(cameraConf->getVector("position", 3)[0], cameraConf->getVector("position", 3)[1], cameraConf->getVector("position", 3)[2]);
-		Reference = vec3(cameraConf->getVector("reference", 3)[0], cameraConf->getVector("reference", 3)[1], cameraConf->getVector("reference", 3)[2]);
+		Position = vec(cameraConf->getVector("position", 3)[0], cameraConf->getVector("position", 3)[1], cameraConf->getVector("position", 3)[2]);
+		Reference = vec(cameraConf->getVector("reference", 3)[0], cameraConf->getVector("reference", 3)[1], cameraConf->getVector("reference", 3)[2]);
 		LookAt(Reference);
 
 		cameraSpeed = cameraConf->getFloat("cameraSpeed");
@@ -65,7 +64,7 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		vec3 newPos(0, 0, 0);
+		vec newPos(0, 0, 0);
 		float speed = cameraSpeed * dt;
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			speed *= 2;
@@ -96,7 +95,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE)==KEY_REPEAT)
 	{
-		vec3 newPos(0, 0, 0);
+		vec newPos(0, 0, 0);
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 		
@@ -119,13 +118,13 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetMouseZ()!=0)
 	{
-		vec3 newPos(0, 0, 0);
+		vec newPos(0, 0, 0);
 		float Sensitivity = wheelSensitivity;
-		vec3 distance= Reference - Position;
+		vec vec_distance= Reference - Position;
 
-		if (length(distance)<zoomDistance)
+		if (vec_distance.Length()<zoomDistance)
 		{
-			Sensitivity = length(distance) / zoomDistance;
+			Sensitivity = vec_distance.Length() / zoomDistance;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
@@ -148,53 +147,43 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt({ 0,0,0 });
 	}
 
-	camera->frustum.pos = { Position.x, Position.y, Position.z };
-
-	// Recalculate matrix -------------
-	CalculateViewMatrix();
+	camera->frustum.pos = Position;
 
 	return UPDATE_CONTINUE;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
+void ModuleCamera3D::Look(const vec &Position, const vec &Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	Z = (Position - Reference).Normalized();
+	X = (vec(0.0f, 1.0f, 0.0f).Cross(Z)).Normalized();
+	Y = Z.Cross(X);
 
 	if (!RotateAroundReference)
 	{
 		this->Reference = this->Position;
 		this->Position += Z * 0.05f;
 	}
-
-	CalculateViewMatrix();
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt(const vec3 &Spot)
+void ModuleCamera3D::LookAt(const vec &Spot)
 {
 	Reference = Spot;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	CalculateViewMatrix();
+	Z = (Position - Reference).Normalized();
+	X = (vec(0.0f, 1.0f, 0.0f).Cross(Z)).Normalized();
+	Y = Z.Cross(X);
 }
 
-
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3 &Movement)
+void ModuleCamera3D::Move(const vec &Movement)
 {
 	Position += Movement;
 	Reference += Movement;
-
-	CalculateViewMatrix();
 }
 
 void ModuleCamera3D::FitCamera(const AABB &boundingBox)
@@ -205,54 +194,39 @@ void ModuleCamera3D::FitCamera(const AABB &boundingBox)
 	Position.y = center.y;
 	Position.x = center.x;
 	LookAt({ center.x,center.y,center.z });
-	//CalculateViewMatrix();
 }
 
-// -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
-{
-	return &ViewMatrix;
-}
-
-vec3 ModuleCamera3D::getMovementFactor()
+vec ModuleCamera3D::getMovementFactor()
 {
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	vec3 newPosition = Position - Reference;
+	vec newPosition = Position - Reference;
 
 	if (dx != 0)
 	{
 		float DeltaX = (float)dx * mouseSensitivity;
 
-		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		/*X = Rotate(X, DeltaX, vec(0.0f, 1.0f, 0.0f));
+		Y = Rotate(Y, DeltaX, vec(0.0f, 1.0f, 0.0f));
+		Z = Rotate(Z, DeltaX, vec(0.0f, 1.0f, 0.0f));*/
 	}
 
 	if (dy != 0)
 	{
 		float DeltaY = (float)dy * mouseSensitivity;
 
-		Y = rotate(Y, DeltaY, X);
-		Z = rotate(Z, DeltaY, X);
+		/*Y = rotate(Y, DeltaY, X);
+		Z = rotate(Z, DeltaY, X);*/
 
 		if (Y.y < 0.0f)
 		{
-			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-			Y = cross(Z, X);
+			Z = vec(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = Z.Cross(X);
 		}
 	}
 	
-	return Z * length(newPosition);
-}
-
-
-
-// -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
-{
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
+	return Z * newPosition.Length();
 }
 
 bool ModuleCamera3D::Save(JSON_File* document)const
