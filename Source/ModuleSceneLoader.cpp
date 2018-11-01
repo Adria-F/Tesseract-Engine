@@ -13,6 +13,7 @@
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
 
+#include <map>
 //#include "mmgr/mmgr.h"
 
 #include "Assimp/include/cimport.h"
@@ -316,9 +317,42 @@ bool ModuleSceneLoader::saveScene(const char* scene_name)
 	return true;
 }
 
-bool ModuleSceneLoader::loadScene(const char * scene_name)
+bool ModuleSceneLoader::loadScene(const char* scene_name)
 {
-	return false;
+	App->scene_intro->newScene();
+	App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
+
+	JSON_File* scene = App->JSON_manager->openReadFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
+
+	JSON_Value* gameObjects = scene->getValue("Game Objects"); //It is an array of values
+	if (gameObjects->getRapidJSONValue()->IsArray()) //Just make sure
+	{
+		std::map<uint, GameObject*> gameobjects;
+		for (int i = 0; i < gameObjects->getRapidJSONValue()->Size(); i++)
+		{
+			GameObject* GO = new GameObject();
+			GO->Load(gameObjects->getValueFromArray(i));
+			gameobjects.insert(std::pair<uint, GameObject*>(GO->UID, GO));
+			App->camera->BBtoLook->Enclose(GO->boundingBox);
+		}
+
+		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
+		{
+			if ((*it_go).second->parentUID == 0) //If it has no parent, add it to the scene list
+				App->scene_intro->GameObjects.push_back((*it_go).second);
+			else
+			{
+				GameObject* parent = gameobjects[(*it_go).second->parentUID];
+				(*it_go).second->parent = parent;
+				parent->childs.push_back((*it_go).second);
+				parent->boundingBox.Enclose((*it_go).second->boundingBox);
+			}
+		}
+	}
+
+	//App->camera->FitCamera(*App->camera->BBtoLook);
+	App->JSON_manager->closeFile(scene);
+	return true;
 }
 
 void CallLog(const char* str, char* userData)

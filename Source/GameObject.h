@@ -36,6 +36,7 @@ public:
 
 	bool active = true;
 	std::string name = "";
+	uint parentUID = 0;
 	uint UID = 0;
 
 	AABB boundingBox;

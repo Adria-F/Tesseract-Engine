@@ -167,4 +167,27 @@ void GameObject::Save(JSON_Value* gameobject)
 
 void GameObject::Load(JSON_Value* gameobject)
 {
+	UID = gameobject->getUint("UID");
+	parentUID = gameobject->getUint("ParentUID");
+	name = gameobject->getString("Name");
+
+	JSON_Value* Components = gameobject->getValue("Components"); //It is an array of values
+	if (Components->getRapidJSONValue()->IsArray()) //Just make sure
+	{
+		for (int i = 0; i < Components->getRapidJSONValue()->Size(); i++)
+		{
+			JSON_Value* componentData = Components->getValueFromArray(i); //Get the component data
+			Component* component = AddComponent((componentType)componentData->getInt("Type")); //Create the component type
+			component->Load(componentData); //Load its info
+		}
+	}
+
+	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	{
+		if ((*it_c)->type == MESH)
+		{
+			boundingBox.SetNegativeInfinity();
+			boundingBox.Enclose((float3*)((ComponentMesh*)(*it_c))->mesh->vertices, ((ComponentMesh*)(*it_c))->mesh->num_vertices);
+		}
+	}
 }

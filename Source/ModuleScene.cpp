@@ -19,6 +19,7 @@ bool ModuleScene::Start()
 
 	//Load Baker House model
 	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
+	//App->scene_loader->loadScene("sceneTest");
 
 	//Shapes examples
 	/*ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));

@@ -56,4 +56,5 @@ void ComponentTexture::Save(JSON_Value * component) const
 
 void ComponentTexture::Load(JSON_Value * component)
 {
+	Material = App->textures->loadTexture(component->getString("texture"));
 }
