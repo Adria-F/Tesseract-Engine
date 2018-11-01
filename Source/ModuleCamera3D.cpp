@@ -18,6 +18,7 @@ ModuleCamera3D::~ModuleCamera3D()
 
 bool ModuleCamera3D::Init(JSON_File* document)
 {
+	camera = new ComponentCamera(nullptr, CAMERA);
 
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)
@@ -35,9 +36,6 @@ bool ModuleCamera3D::Init(JSON_File* document)
 		wheelSensitivity = cameraConf->getFloat("wheelSensitivity");
 		zoomDistance = cameraConf->getFloat("zoomDistance");
 	}
-
-	camera = new ComponentCamera(nullptr, CAMERA);
-
 
 	return true;
 }
@@ -147,7 +145,7 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt({ 0,0,0 });
 	}
 
-	camera->frustum.pos = Position;
+	camera->frustum.pos=Position;
 
 	return UPDATE_CONTINUE;
 }
@@ -174,9 +172,18 @@ void ModuleCamera3D::LookAt(const vec &Spot)
 {
 	Reference = Spot;
 
-	Z = (Position - Reference).Normalized();
-	X = (vec(0.0f, 1.0f, 0.0f).Cross(Z)).Normalized();
-	Y = Z.Cross(X);
+	//caluclate direction to look
+	vec dir = Spot - camera->frustum.pos;
+
+	//caluclate the new view matrix
+	float3x3 viewMat = float3x3::LookAt(camera->frustum.front, dir.Normalized(), camera->frustum.up, vec(0.0f, 1.0f, 0.0f));
+
+	//set new front and up for the frustum
+	camera->frustum.front = viewMat.MulDir(camera->frustum.front).Normalized();
+	camera->frustum.up = viewMat.MulDir(camera->frustum.up).Normalized();
+
+	Z = -viewMat.MulDir(camera->frustum.front).Normalized();
+	X = camera->frustum.WorldRight();
 }
 
 // -----------------------------------------------------------------
