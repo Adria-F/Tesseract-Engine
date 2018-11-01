@@ -13,6 +13,7 @@
 GameObject::GameObject()
 {
 	UID = GENERATE_UID();
+	boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
 }
 
 
@@ -41,9 +42,9 @@ void GameObject::Update()
 			DrawBB(boundingBox, { 0, 0.5f, 1 });
 		}
 
-		if (App->renderer3D->ShowBB && App->camera->BBtoLook != nullptr)
+		if (App->renderer3D->ShowBB)
 		{
-			DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
+			DrawBB(App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
 		}
 
 		for (int i = 0; i < childs.size(); i++)

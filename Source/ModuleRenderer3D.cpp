@@ -334,7 +334,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &id_indices);
 	RELEASE_ARRAY(indices);
 
-	RELEASE(App->camera->BBtoLook);
+	//RELEASE(App->camera->BBtoLook);
 
 }
 
