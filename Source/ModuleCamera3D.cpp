@@ -72,12 +72,12 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += camera->frustum.front*speed;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= camera->frustum.front*speed;
 
 
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camera->frustum.WorldRight()*speed;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camera->frustum.WorldRight()*speed;
 
 		Position += newPos;
 		Reference += newPos;
@@ -89,6 +89,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
 		Position = Reference + getMovementFactor();
+		LookAt({ 0.0f,0.0f,0.0f });
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE)==KEY_REPEAT)
@@ -147,6 +148,10 @@ update_status ModuleCamera3D::Update(float dt)
 
 	camera->frustum.pos=Position;
 
+	Z = -camera->frustum.front;
+	Y = camera->frustum.up;
+	X = camera->frustum.WorldRight();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -181,9 +186,6 @@ void ModuleCamera3D::LookAt(const vec &Spot)
 	//set new front and up for the frustum
 	camera->frustum.front = viewMat.MulDir(camera->frustum.front).Normalized();
 	camera->frustum.up = viewMat.MulDir(camera->frustum.up).Normalized();
-
-	Z = -viewMat.MulDir(camera->frustum.front).Normalized();
-	X = camera->frustum.WorldRight();
 }
 
 // -----------------------------------------------------------------
@@ -212,27 +214,26 @@ vec ModuleCamera3D::getMovementFactor()
 
 	if (dx != 0)
 	{
-		float DeltaX = (float)dx * mouseSensitivity;
+		float DeltaX = (float)dx * 0.025;
 
-		/*X = Rotate(X, DeltaX, vec(0.0f, 1.0f, 0.0f));
-		Y = Rotate(Y, DeltaX, vec(0.0f, 1.0f, 0.0f));
-		Z = Rotate(Z, DeltaX, vec(0.0f, 1.0f, 0.0f));*/
+		Quat rotation = Quat::RotateY(DeltaX);
+		camera->frustum.front = rotation.Mul(camera->frustum.front).Normalized();
+		camera->frustum.up = rotation.Mul(camera->frustum.up).Normalized();
 	}
 
 	if (dy != 0)
 	{
-		float DeltaY = (float)dy * mouseSensitivity;
+		float DeltaY = (float)dy * 0.025;
+		
+		Quat rotation = Quat::RotateAxisAngle(camera->frustum.WorldRight(),DeltaY);
 
-		/*Y = rotate(Y, DeltaY, X);
-		Z = rotate(Z, DeltaY, X);*/
-
-		if (Y.y < 0.0f)
+		if (rotation.Mul(camera->frustum.up).Normalized().y > 0.0f)
 		{
-			Z = vec(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-			Y = Z.Cross(X);
+			camera->frustum.up = rotation.Mul(camera->frustum.up).Normalized();
+			camera->frustum.front = rotation.Mul(camera->frustum.front).Normalized();
 		}
 	}
-	
+
 	return Z * newPosition.Length();
 }
 
