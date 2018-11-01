@@ -20,7 +20,7 @@
     "Y": [0.0, 1.0, 0.0],
     "Z": [0.0, 0.0, 1.0],
     "cameraSpeed":10.0,
-    "mouseSensitivity": 0.25,
+    "mouseSensitivity": 0.007,
     "wheelSensitivity":10.0,
     "zoomDistance": 20.0
   },

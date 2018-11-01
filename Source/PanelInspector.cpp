@@ -29,8 +29,10 @@ void PanelInspector::Draw()
 		char name[120];
 		strcpy_s(name, 120, go->name.c_str());
 		ImGui::PushID("GO name");
+		ImGui::PushItemWidth(150);
 		if (ImGui::InputText("", name, 120, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 			go->name = name;		
+		ImGui::PopItemWidth();
 		ImGui::PopID();
 		ImGui::Checkbox("Active", &go->active);
 		ImGui::Separator();
@@ -41,7 +43,8 @@ void PanelInspector::Draw()
 			ImGui::Separator();
 		}
 
-		ImGui::Button("Add Component", { ImGui::GetWindowWidth(), 25.0f });
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 300) / 2);
+		ImGui::Button("Add Component", { 300, 25.0f });
 	}
 
 	ImGui::End();

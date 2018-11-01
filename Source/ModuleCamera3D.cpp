@@ -89,7 +89,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
 		Position = Reference + getMovementFactor();
-		LookAt({ 0.0f,0.0f,0.0f });
+		LookAt(Reference);
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE)==KEY_REPEAT)
@@ -214,7 +214,7 @@ vec ModuleCamera3D::getMovementFactor()
 
 	if (dx != 0)
 	{
-		float DeltaX = (float)dx * 0.025;
+		float DeltaX = (float)dx * mouseSensitivity;
 
 		Quat rotation = Quat::RotateY(DeltaX);
 		camera->frustum.front = rotation.Mul(camera->frustum.front).Normalized();
@@ -223,7 +223,7 @@ vec ModuleCamera3D::getMovementFactor()
 
 	if (dy != 0)
 	{
-		float DeltaY = (float)dy * 0.025;
+		float DeltaY = (float)dy * mouseSensitivity;
 		
 		Quat rotation = Quat::RotateAxisAngle(camera->frustum.WorldRight(),DeltaY);
 

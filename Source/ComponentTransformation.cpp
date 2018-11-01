@@ -9,11 +9,53 @@ void ComponentTransformation::DrawInfo()
 {
 	if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		ImGui::Text("Position:\n X: %f | Y: %f | Z: %f", position.x, position.y, position.z);
+		ImGui::PushItemWidth(75);
+		ImGui::Text("Position:");
+		ImGui::Text("X:"); ImGui::SameLine();
+		ImGui::PushID("1");
+		ImGui::InputFloat("", &position.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:"); ImGui::SameLine();
+		ImGui::PushID("2");
+		ImGui::InputFloat("", &position.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:"); ImGui::SameLine();
+		ImGui::PushID("3");
+		ImGui::InputFloat("", &position.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::PopID();
+
 		float3 rot = rotation.ToEulerXYZ();
-		rot *= 180 / pi;
-		ImGui::Text("Rotation:\n X: %f | Y: %f | Z: %f", rot.x, rot.y, rot.z);
-		ImGui::Text("Scale:\n X: %f | Y: %f | Z: %f", scale.x, scale.y, scale.z);
+		rot *= RADTODEG;
+		ImGui::Text("Rotation:");
+		ImGui::Text("X:"); ImGui::SameLine();
+		ImGui::PushID("4");
+		ImGui::InputFloat("", &rot.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:"); ImGui::SameLine();
+		ImGui::PushID("5");
+		ImGui::InputFloat("", &rot.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:"); ImGui::SameLine();
+		ImGui::PushID("6");
+		ImGui::InputFloat("", &rot.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::PopID();
+		rot *= DEGTORAD;
+		rotation = rotation.FromEulerXYZ(rot.x, rot.y, rot.z);
+
+		ImGui::Text("Scale:");
+		ImGui::Text("X:"); ImGui::SameLine();
+		ImGui::PushID("7");
+		ImGui::InputFloat("", &scale.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Y:"); ImGui::SameLine();
+		ImGui::PushID("8");
+		ImGui::InputFloat("", &scale.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+		ImGui::PopID();
+		ImGui::Text("Z:"); ImGui::SameLine();
+		ImGui::PushID("9");
+		ImGui::InputFloat("", &scale.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::PopID();
+		ImGui::PopItemWidth();
 	}
 }
 bool ComponentTransformation::Update()

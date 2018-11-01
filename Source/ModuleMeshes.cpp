@@ -21,7 +21,9 @@ Mesh* ModuleMeshes::loadMesh(const char* meshName)
 {
 	Mesh* ret = new Mesh();
 	ret->name = meshName;
-	std::string path = App->fileSystem->getFullPath(meshName, MESHES_FOLDER, MESH_EXTENSION);
+	std::string path = MESHES_FOLDER;
+	path += meshName;
+	path += MESH_EXTENSION;
 
 	//Get the buffer
 	char* cursor = nullptr;
