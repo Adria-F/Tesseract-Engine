@@ -59,7 +59,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		root_counter++;
-		App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
+		App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 		aiNode* root = scene->mRootNode;
 		LoadGameObjects(scene, root, nullptr);
 		aiReleaseImport(scene);
@@ -107,6 +107,12 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 
 			//Add the Game Object to the scene
 			App->scene_intro->GameObjects.push_back(newGameObject);
+
+			ComponentTransformation*transformation = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+			transformation->position = pos;
+			transformation->scale = scale;
+			transformation->rotation = rot;
+			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 		}
 		else
 		{			
@@ -166,6 +172,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					transformation->position = pos;
 					transformation->scale = scale;
 					transformation->rotation = rot;
+					transformation->localMatrix.Set(float4x4::FromTRS(pos,rot,scale));
 
 					//Adding Mesh Component
 					ComponentMesh* component;
@@ -196,6 +203,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					transformation->position = pos;
 					transformation->scale = scale;
 					transformation->rotation = rot;
+					transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 					//Adding Mesh Component
 					ComponentMesh* component = (ComponentMesh*)newGameObject->AddComponent(MESH);
@@ -209,7 +217,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					newGameObject->boundingBox.SetNegativeInfinity();
 					newGameObject->boundingBox.Enclose((float3*)currentMesh->mVertices, newMesh->num_vertices);
 				}
-				App->camera->BBtoLook->Enclose(newGameObject->boundingBox);
+				App->camera->BBtoLook.Enclose(newGameObject->boundingBox);
 			}
 			errorLoading = false;
 		}
@@ -217,7 +225,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 		if(parent!=nullptr)
 			parent->boundingBox.Enclose(newGameObject->boundingBox);
 
-		App->camera->FitCamera(*App->camera->BBtoLook);
+		App->camera->FitCamera(App->camera->BBtoLook);
 	}
 }
 
@@ -320,7 +328,7 @@ bool ModuleSceneLoader::saveScene(const char* scene_name)
 bool ModuleSceneLoader::loadScene(const char* scene_name)
 {
 	App->scene_intro->newScene();
-	App->camera->BBtoLook = new AABB({ 0,0,0 }, { 0,0,0 });
+	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
 	JSON_File* scene = App->JSON_manager->openReadFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
 
@@ -333,7 +341,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name)
 			GameObject* GO = new GameObject();
 			GO->Load(gameObjects->getValueFromArray(i));
 			gameobjects.insert(std::pair<uint, GameObject*>(GO->UID, GO));
-			App->camera->BBtoLook->Enclose(GO->boundingBox);
+			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
 
 		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
@@ -350,7 +358,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name)
 		}
 	}
 
-	//App->camera->FitCamera(*App->camera->BBtoLook);
+	App->camera->FitCamera(App->camera->BBtoLook);
 	App->JSON_manager->closeFile(scene);
 	return true;
 }

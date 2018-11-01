@@ -13,6 +13,7 @@
 GameObject::GameObject()
 {
 	UID = GENERATE_UID();
+	boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
 }
 
 
@@ -33,7 +34,14 @@ void GameObject::Update()
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 		{
 			if ((*it_c)->type == MESH)
+			{
+				ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
+
+				glPushMatrix();
+				glMultMatrixf((float*)transform->globalMatrix.v);
 				(*it_c)->Update();
+				glPopMatrix();
+			}
 		}
 
 		if (App->renderer3D->ShowBB)
@@ -41,9 +49,9 @@ void GameObject::Update()
 			DrawBB(boundingBox, { 0, 0.5f, 1 });
 		}
 
-		if (App->renderer3D->ShowBB && App->camera->BBtoLook != nullptr)
+		if (App->renderer3D->ShowBB)
 		{
-			DrawBB(*App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
+			DrawBB(App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
 		}
 
 		for (int i = 0; i < childs.size(); i++)
@@ -190,4 +198,19 @@ void GameObject::Load(JSON_Value* gameobject)
 			boundingBox.Enclose((float3*)((ComponentMesh*)(*it_c))->mesh->vertices, ((ComponentMesh*)(*it_c))->mesh->num_vertices);
 		}
 	}
+}
+
+Component* GameObject::GetComponent(componentType type)
+{
+	Component* ret = nullptr;
+	for (list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	{
+		if ((*it_c)->type == type)
+		{
+			ret = *it_c;
+			break;
+		}
+	}
+	
+	return ret;
 }

@@ -18,7 +18,7 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	//Load Baker House model
-	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
+	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	//App->scene_loader->loadScene("sceneTest");
 
 	//Shapes examples

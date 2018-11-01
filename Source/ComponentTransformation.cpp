@@ -21,6 +21,11 @@ bool ComponentTransformation::Update()
 	return true;
 }
 
+void ComponentTransformation::RecalculateMatrix()
+{
+
+}
+
 void ComponentTransformation::Save(JSON_Value * component) const
 {
 	JSON_Value* transformation = component->createValue();

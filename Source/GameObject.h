@@ -27,6 +27,8 @@ public:
 	void Save(JSON_Value* gameobject);
 	void Load(JSON_Value* gameobject);
 
+	Component* GetComponent(componentType type);
+
 public:
 
 	std::list<Component*> components;

@@ -39,7 +39,7 @@ public:
 	float mouseSensitivity = 0;
 	float wheelSensitivity = 0;
 	float zoomDistance = 0;
-	AABB* BBtoLook=nullptr;
+	AABB BBtoLook;
 
 	ComponentCamera* camera = nullptr;
 

@@ -6,10 +6,12 @@
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
 #include "Primitive.h"
+#include "GameObject.h"
 
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
 #include "ComponentCamera.h"
+#include "ComponentTransformation.h"
 
 #include "PanelScene.h"
 
@@ -208,6 +210,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+	if(App->scene_intro->GameObjects.size()>0)
+		CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -219,7 +224,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	//Draw Scene  ---------------------------
+	//Draw Scene  ---------------------------	
+
 	App->scene_intro->Draw();
 	App->camera->camera->DrawFrustum();
 	
@@ -322,6 +328,29 @@ bool ModuleRenderer3D::Load(JSON_File* document) {
 	return true;
 }
 
+void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameOject)
+{
+	ComponentTransformation* transform = (ComponentTransformation*)gameOject->GetComponent(TRANSFORMATION);
+
+	if (transform != nullptr)
+	{
+		if (gameOject->parent == nullptr)
+		{
+			transform->globalMatrix = transform->localMatrix;
+		}
+		else
+		{
+			transform->globalMatrix = ((ComponentTransformation*)gameOject->parent->GetComponent(TRANSFORMATION))->globalMatrix*transform->localMatrix;
+		}
+
+
+		for (int i = 0; i < gameOject->childs.size(); i++)
+		{
+			CalculateGlobalMatrix(gameOject->childs[i]);
+		}
+	}
+}
+
 
 Mesh::~Mesh()
 {
@@ -334,7 +363,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &id_indices);
 	RELEASE_ARRAY(indices);
 
-	RELEASE(App->camera->BBtoLook);
+	//RELEASE(App->camera->BBtoLook);
 
 }
 
