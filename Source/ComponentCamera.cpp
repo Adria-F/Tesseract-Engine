@@ -105,5 +105,53 @@ void ComponentCamera::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
+		ImGui::InputFloat("Near Plane", &frustum.nearPlaneDistance);
+		ImGui::InputFloat("Far Plane", &frustum.farPlaneDistance);
+		ImGui::NewLine();
+		if (ImGui::SliderFloat("FOV", &frustum.verticalFov, 10, 180))
+		{
+			setAspectRatio(frustum.AspectRatio());
+		}
+		float AR = frustum.AspectRatio();
+		if (ImGui::InputFloat("Aspect Ratio", &AR, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			setAspectRatio(AR);
+		}
 	}
+}
+
+void ComponentCamera::Save(JSON_Value * component) const
+{
+	JSON_Value* camera = component->createValue();
+
+	camera->addInt("Type", type);
+	
+	camera->addInt("Frustum Type", frustum.type);
+
+	camera->addVector3("Position", frustum.pos);
+	camera->addVector3("Front", frustum.front);
+	camera->addVector3("Up", frustum.up);
+	
+	camera->addFloat("Near Plane", frustum.nearPlaneDistance);
+	camera->addFloat("Far Plane", frustum.farPlaneDistance);
+
+	camera->addFloat("VFOV", frustum.verticalFov);
+	camera->addFloat("Aspect Ratio", frustum.AspectRatio());
+
+	component->addValue("", camera);
+}
+
+void ComponentCamera::Load(JSON_Value * component)
+{
+	frustum.type = (math::FrustumType)component->getInt("Frustum Type");
+
+	frustum.pos = component->getVector3("Position");
+	frustum.front = component->getVector3("Front");
+	frustum.up = component->getVector3("Up");
+
+	frustum.nearPlaneDistance = component->getFloat("Near Plane");
+	frustum.farPlaneDistance = component->getFloat("Far Plane");
+
+	frustum.verticalFov = component->getFloat("VFOV");
+	setAspectRatio(component->getFloat("Aspect Ratio"));
 }

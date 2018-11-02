@@ -88,8 +88,7 @@ update_status ModuleCamera3D::Update(float dt)
 	// Rotation over object ----------------
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
-		Position = Reference + getMovementFactor();
-		LookAt(Reference);
+		camera->frustum.pos = Position = Reference + getMovementFactor();
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE)==KEY_REPEAT)
@@ -233,8 +232,8 @@ vec ModuleCamera3D::getMovementFactor()
 			camera->frustum.front = rotation.Mul(camera->frustum.front).Normalized();
 		}
 	}
-
-	return Z * newPosition.Length();
+	
+	return -camera->frustum.front * newPosition.Length();
 }
 
 bool ModuleCamera3D::Save(JSON_File* document)const
