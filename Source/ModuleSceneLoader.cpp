@@ -172,7 +172,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					transformation->position = pos;
 					transformation->scale = scale;
 					transformation->rotation = rot;
-					transformation->localMatrix.Set(float4x4::FromTRS(pos,rot,scale));
+					transformation->RecalculateMatrix();
 
 					//Adding Mesh Component
 					ComponentMesh* component;
@@ -203,7 +203,7 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 					transformation->position = pos;
 					transformation->scale = scale;
 					transformation->rotation = rot;
-					transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+					transformation->RecalculateMatrix();
 
 					//Adding Mesh Component
 					ComponentMesh* component = (ComponentMesh*)newGameObject->AddComponent(MESH);
@@ -328,9 +328,12 @@ bool ModuleSceneLoader::saveScene(const char* scene_name)
 bool ModuleSceneLoader::loadScene(const char* scene_name)
 {
 	App->scene_intro->newScene();
+	LOG("Loading scene: %s", scene_name);
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
 	JSON_File* scene = App->JSON_manager->openReadFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
+	if (scene == nullptr)
+		return false;
 
 	JSON_Value* gameObjects = scene->getValue("Game Objects"); //It is an array of values
 	if (gameObjects->getRapidJSONValue()->IsArray()) //Just make sure

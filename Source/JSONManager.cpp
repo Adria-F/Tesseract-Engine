@@ -14,7 +14,10 @@ JSON_File* JSONManager::openReadFile(const char * path)
 	FILE* fp = fopen(path, "rb");
 	char readBuffer[65536];
 
-	return new JSON_File(new rapidjson::FileReadStream(fp, readBuffer, sizeof(readBuffer)), fp);
+	if (fp != nullptr)
+		return new JSON_File(new rapidjson::FileReadStream(fp, readBuffer, sizeof(readBuffer)), fp);
+	else
+		return nullptr;
 }
 
 JSON_File* JSONManager::openWriteFile(const char * path)
@@ -22,7 +25,10 @@ JSON_File* JSONManager::openWriteFile(const char * path)
 	FILE* fp = fopen(path, "wb");
 	char writeBuffer[65536];
 
-	return new JSON_File(new rapidjson::FileWriteStream(fp, writeBuffer, sizeof(writeBuffer)), fp);
+	if (fp != nullptr)
+		return new JSON_File(new rapidjson::FileWriteStream(fp, writeBuffer, sizeof(writeBuffer)), fp);
+	else
+		return nullptr;
 }
 
 void JSONManager::closeFile(JSON_File* file)
@@ -188,6 +194,23 @@ void JSON_Value::addQuat(const char * name, Quat quat)
 	this->value->AddMember(index, a, *allocator);
 }
 
+void JSON_Value::addTransform(const char * name, float4x4 mat)
+{
+	std::string str = name;
+	rapidjson::Value index(str.c_str(), str.size(), *allocator);
+
+	rapidjson::Value a(rapidjson::kArrayType);
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			a.PushBack(mat.v[i][j], *allocator);
+		}
+	}
+
+	this->value->AddMember(index, a, *allocator);
+}
+
 int JSON_Value::getInt(const char* name)
 {	
 	if (value->HasMember(name))
@@ -285,6 +308,31 @@ Quat JSON_Value::getQuat(const char * name)
 	}
 
 	return Quat();
+}
+
+float4x4 JSON_Value::getTransform(const char * name)
+{
+	if (value->HasMember(name))
+	{
+		rapidjson::Value& a = value->operator[](name);
+		if (a.IsArray() && a.Size() >= 16)
+		{
+			float4x4 ret;
+			int count = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ret.v[i][j] = a[count].GetFloat();
+					count++;
+				}
+			}
+
+			return ret;
+		}
+	}	
+
+	return float4x4();
 }
 
 JSON_Value * JSON_Value::createValue()

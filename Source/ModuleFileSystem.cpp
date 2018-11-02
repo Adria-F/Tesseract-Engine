@@ -41,8 +41,7 @@ ModuleFileSystem::~ModuleFileSystem()
 
 bool ModuleFileSystem::Start()
 {
-	//importAssets();
-	getAssetsFiles();
+	//importFilesAt(ASSETS_FOLDER);
 
 	return true;
 }
@@ -216,11 +215,6 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 	}
 }
 
-void ModuleFileSystem::importAssets()
-{
-	importFilesAt(ASSETS_FOLDER);
-}
-
 void ModuleFileSystem::importFilesAt(const char * path)
 {
 	char** files = PHYSFS_enumerateFiles(path);
@@ -240,13 +234,7 @@ void ModuleFileSystem::importFilesAt(const char * path)
 	}
 }
 
-void ModuleFileSystem::getAssetsFiles()
-{
-	App->gui->assets->clearElements();
-	getFilesAt(ASSETS_FOLDER);
-}
-
-void ModuleFileSystem::getFilesAt(const char * path, assetsElement * element)
+void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements, assetsElement * element)
 {
 	char** files = PHYSFS_enumerateFiles(path);
 
@@ -264,7 +252,7 @@ void ModuleFileSystem::getFilesAt(const char * path, assetsElement * element)
 		if (PHYSFS_isDirectory(currPath.c_str()))
 		{
 			currPath += '/';
-			getFilesAt(currPath.c_str(), newElem);
+			getFilesAt(currPath.c_str(), elements, newElem);
 		}
 		else
 			newElem->type = assetsElement::elementType::FILE;
@@ -272,6 +260,6 @@ void ModuleFileSystem::getFilesAt(const char * path, assetsElement * element)
 		if (element != nullptr)
 			element->pushElement(newElem);
 		else
-			App->gui->assets->pushElement(newElem);
+			elements.push_back(newElem);
 	}
 }

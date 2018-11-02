@@ -27,7 +27,6 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
-	//void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 	bool Save(JSON_File* document);
 
@@ -35,9 +34,14 @@ public:
 
 	void Draw();
 
+	void wantToSaveScene();
+	void wantToLoadScene();
+
 	void newScene();
 
 public:
+
+	std::string scene_name = "";
 
 	list<Primitive*> ShapesToDraw;
 	vector<GameObject*> GameObjects;

@@ -79,7 +79,7 @@ enum update_status
 #define LIBRARY_FOLDER "Library/"
 #define MESHES_FOLDER "Library/Meshes/"
 #define TEXTURES_FOLDER "Library/Textures/"
-#define SCENES_FOLDER "Library/Scenes/"
+#define SCENES_FOLDER "Assets/Scenes/"
 
 // Own format files
 #define MESH_EXTENSION ".tesseractMesh"

@@ -7,6 +7,8 @@
 PanelAssets::PanelAssets(const char* name) : Panel(name)
 {
 	active = true;
+
+	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
 }
 
 PanelAssets::~PanelAssets()
@@ -35,7 +37,8 @@ void PanelAssets::Draw()
 	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 40);
 	if (ImGui::Button("Reload"))
 	{
-		App->fileSystem->getAssetsFiles();
+		clearElements();
+		App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
 	}
 	ImGui::PopStyleColor();
 	ImGui::EndMenuBar();
@@ -111,18 +114,4 @@ void PanelAssets::clearElements()
 	elements.clear();
 
 	currElement = nullptr;
-}
-
-assetsElement::~assetsElement()
-{
-	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
-	{
-		RELEASE(*it_e);
-	}
-	elements.clear();
-}
-
-void assetsElement::pushElement(assetsElement* element)
-{
-	elements.push_back(element);
 }

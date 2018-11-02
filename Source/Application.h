@@ -52,9 +52,12 @@ private:
 	float	dt;
 
 	std::list<Module*> list_modules;
-	std::string appName;
+	std::string appName = "";
 
-	int framerateCap;
+	int framerateCap = 60;
+
+	bool doSave = false;
+	bool doLoad = false;
 
 public:
 
@@ -73,8 +76,11 @@ public:
 
 	void RequestBrowser(const char * url) const;
 
-	bool LoadGame();
-	bool SaveGame() const;
+	bool LoadConfig();
+	bool SaveConfig() const;
+
+	void Load();
+	void Save();
 
 	float GetDeltaTime() const;
 

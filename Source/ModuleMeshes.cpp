@@ -101,6 +101,7 @@ Mesh* ModuleMeshes::loadMesh(const char* meshName)
 	ret->boundingBox.Enclose((float3*)ret->vertices, ret->num_vertices);
 
 	ret->GenerateBuffer();
+	App->renderer3D->meshes.push_back(ret);
 
 	return ret;
 }

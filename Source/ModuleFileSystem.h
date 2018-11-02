@@ -2,7 +2,7 @@
 #define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
-#include "PanelAssets.h"
+#include "Panel.h"
 
 class ModuleFileSystem : public Module
 {
@@ -28,11 +28,9 @@ public:
 
 	void manageDroppedFiles(const char* path);
 
-	void importAssets();
 	void importFilesAt(const char* path);
 	
-	void getAssetsFiles();
-	void getFilesAt(const char* path, assetsElement* element = nullptr);
+	void getFilesAt(const char* path, std::list<assetsElement*>& elements, assetsElement* element = nullptr);
 };
 
 #endif // !__MODULEFILESYSTEM_H__

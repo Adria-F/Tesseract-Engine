@@ -30,8 +30,13 @@ public:
 	bool saveScene(const char* scene_name);
 	bool loadScene(const char* scene_name);
 
+public:
+
+	std::string next_loadedScene_name = "";
+
 private:
-	int root_counter;
+
+	int root_counter;	
 };
 
 #endif // !__MODULESCENELOADER_H__

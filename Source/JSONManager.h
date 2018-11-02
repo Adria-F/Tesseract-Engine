@@ -29,6 +29,7 @@ public:
 	void addVector(const char* name, float* vec, int vector_size);
 	void addVector3(const char* name, float3 vec);
 	void addQuat(const char* name, Quat quat);
+	void addTransform(const char* name, float4x4 mat);
 
 	int getInt(const char* name);
 	uint getUint(const char* name);
@@ -38,6 +39,7 @@ public:
 	float* getVector(const char* name, int vector_size);
 	float3 getVector3(const char* name);
 	Quat getQuat(const char* name);
+	float4x4 getTransform(const char* name);
 
 	JSON_Value* createValue();
 	void addValue(const char* name, JSON_Value* value);

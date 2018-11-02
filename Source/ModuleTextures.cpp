@@ -31,7 +31,26 @@ bool ModuleTextures::Init(JSON_File* document)
 
 bool ModuleTextures::CleanUp()
 {
+	std::list<Texture*>::iterator it_t;
+	it_t = textures.begin();
+	while (it_t != textures.end())
+	{
+		RELEASE((*it_t));
+		it_t++;
+	}
+	textures.clear();
+
+	std::list<Texture*>::iterator it_i;
+	it_i = icons.begin();
+	while (it_i != icons.end())
+	{
+		RELEASE((*it_i));
+		it_i++;
+	}
+	icons.clear();
+
 	ilShutDown();
+	
 	return true;
 }
 
@@ -182,4 +201,9 @@ Texture * ModuleTextures::loadIcon(const char * path)
 	icons.push_back(ret);
 
 	return ret;
+}
+
+Texture::~Texture()
+{
+	glDeleteTextures(1, &GL_id);
 }

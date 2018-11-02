@@ -17,6 +17,7 @@ class PanelInspector;
 class PanelScene;
 class PanelAssets;
 class PanelHierarchy;
+class PanelFileDialog;
 
 class Texture;
 
@@ -38,6 +39,9 @@ public:
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 
+	void SaveDialogAt(const char* path);
+	void LoadDialogAt(const char* path);
+
 	bool Save(JSON_File* document)const;
 	bool Load(JSON_File* document);
 
@@ -58,6 +62,7 @@ public:
 	PanelScene* Scene = nullptr;
 	PanelAssets* assets = nullptr;
 	PanelHierarchy* hierarchy = nullptr;
+	PanelFileDialog* fileDialog = nullptr;
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;

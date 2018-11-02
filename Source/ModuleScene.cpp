@@ -4,6 +4,8 @@
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleSceneLoader.h"
+#include "ModuleGUI.h"
+
 #include "GameObject.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
@@ -18,8 +20,8 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	//Load Baker House model
-	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
-	App->scene_loader->loadScene("sceneTest");
+	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
+	//App->scene_loader->loadScene("sceneTest");
 
 	//Shapes examples
 	/*ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));
@@ -36,6 +38,7 @@ bool ModuleScene::Start()
 bool ModuleScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
+	newScene();
 	return true;
 }
 
@@ -60,9 +63,6 @@ bool ModuleScene::Load(JSON_File* document) {
 
 void ModuleScene::Draw()
 {
-	//selected_GO = GameObjects[0];
-	//GameObjects[1]->active = false;
-
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{
 		(*it)->Render();
@@ -74,8 +74,21 @@ void ModuleScene::Draw()
 	}
 }
 
+void ModuleScene::wantToSaveScene()
+{
+	App->gui->SaveDialogAt(SCENES_FOLDER);
+}
+
+void ModuleScene::wantToLoadScene()
+{
+	App->gui->LoadDialogAt(SCENES_FOLDER);
+}
+
 void ModuleScene::newScene()
 {
+	selected_GO = nullptr;
+
+	LOG("Unloading scene");
 	std::list<Primitive*>::iterator it_p;
 	it_p = ShapesToDraw.begin();
 	while (it_p != ShapesToDraw.end())
@@ -93,4 +106,11 @@ void ModuleScene::newScene()
 		it_m++;
 	}
 	App->renderer3D->meshes.clear();
+
+	int size = GameObjects.size();
+	for (int i = 0; i < size; i++)
+	{
+		RELEASE(GameObjects[i]);
+	}
+	GameObjects.clear();
 }

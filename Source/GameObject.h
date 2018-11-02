@@ -37,7 +37,10 @@ public:
 	GameObject* parent = nullptr;
 
 	bool active = true;
+	bool selected = false;
+	
 	std::string name = "";
+	
 	uint parentUID = 0;
 	uint UID = 0;
 

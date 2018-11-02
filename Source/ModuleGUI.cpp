@@ -14,6 +14,7 @@
 #include "PanelScene.h"
 #include "PanelAssets.h"
 #include "PanelHierarchy.h"
+#include "PanelFileDialog.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -58,7 +59,9 @@ bool ModuleGUI::Init(JSON_File* document)
 
 	panels.push_back(assets = new PanelAssets("Assets"));
 
-	panels.push_back(hierarchy = new PanelHierarchy("Assets"));
+	panels.push_back(hierarchy = new PanelHierarchy("Hierarchy"));
+
+	panels.push_back(fileDialog = new PanelFileDialog("Files"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -132,14 +135,10 @@ update_status ModuleGUI::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{	
-			if (ImGui::MenuItem("Save", "ctrl+S"))
-				App->SaveGame();
-			if (ImGui::MenuItem("Load"))
-				App->LoadGame();
 			if (ImGui::MenuItem("Save Scene"))
-				App->scene_loader->saveScene("sceneTest");
+				App->scene_intro->wantToSaveScene();
 			if (ImGui::MenuItem("Load Scene"))
-				App->scene_loader->loadScene("sceneTest");
+				App->scene_intro->wantToLoadScene();
 			if (ImGui::MenuItem("New Scene"))
 				App->scene_intro->newScene();
 			if (ImGui::MenuItem("Close", "ESC"))
@@ -236,6 +235,16 @@ void ModuleGUI::AddLog(const char* log)
 void ModuleGUI::handleInput(SDL_Event * event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
+}
+
+void ModuleGUI::SaveDialogAt(const char * path)
+{
+	fileDialog->SaveAt(path);
+}
+
+void ModuleGUI::LoadDialogAt(const char * path)
+{
+	fileDialog->LoadAt(path);
 }
 
 bool ModuleGUI::Save(JSON_File* document)const

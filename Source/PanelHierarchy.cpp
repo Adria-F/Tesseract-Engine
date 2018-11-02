@@ -52,9 +52,19 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1,0,0,0.5f });
 	}
 
+	if (gameobject->selected)
+	{
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
 	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
 	if (ImGui::IsItemClicked(0))
+	{
+		if (App->scene_intro->selected_GO != nullptr)
+			App->scene_intro->selected_GO->selected = false;
 		App->scene_intro->selected_GO = gameobject;
+		gameobject->selected = true;
+	}
 	if (opened)
 	{
 		if (gameobject->childs.size() > 0)

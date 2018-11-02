@@ -19,6 +19,21 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	std::list<Component*>::iterator it_c;
+	it_c = components.begin();
+	while (it_c != components.end())
+	{
+		RELEASE((*it_c));
+		it_c++;
+	}
+	components.clear();
+
+	int size = childs.size();
+	for (int i = 0; i < size; i++)
+	{
+		RELEASE(childs[i]);
+	}
+	childs.clear();
 }
 
 void GameObject::Update()
@@ -44,7 +59,9 @@ void GameObject::Update()
 			}
 		}
 
-		if (App->renderer3D->ShowBB)
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		if (App->renderer3D->ShowBB || selected)
 		{
 			DrawBB(boundingBox, { 0, 0.5f, 1 });
 		}
@@ -57,9 +74,7 @@ void GameObject::Update()
 		for (int i = 0; i < childs.size(); i++)
 		{
 			childs[i]->Update();
-		}
-
-		glBindTexture(GL_TEXTURE_2D, 0);
+		}		
 	}	
 }
 
@@ -101,7 +116,7 @@ void GameObject::RemoveComponent(Component* component)
 
 void GameObject::DrawBB(const AABB& BB, vec3 color) const
 {
-	glLineWidth(2.0f);
+	glLineWidth(1.5f);
 	glColor3f(color.x, color.y, color.z);
 
 	glBegin(GL_LINES);

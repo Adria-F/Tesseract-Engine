@@ -21,7 +21,7 @@ class Component
 {
 public:
 	Component(GameObject* gameobject,componentType type):gameObject(gameobject),type(type) { UID = GENERATE_UID(); }
-	~Component() {}
+	virtual ~Component() {}
 
 	virtual void DrawInfo() {}
 	virtual bool Update() { return true; }

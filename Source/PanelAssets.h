@@ -5,22 +5,6 @@
 #include <list>
 #include <stack>
 
-struct assetsElement
-{
-	~assetsElement();
-
-	enum elementType
-	{
-		FOLDER = 0,
-		FILE
-	}type;
-
-	std::string name;
-	std::list<assetsElement*> elements;
-
-	void pushElement(assetsElement* element);
-};
-
 class PanelAssets : public Panel
 {
 public:

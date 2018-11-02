@@ -205,7 +205,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	//lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -246,11 +246,13 @@ bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 	
-	for (list<Mesh*>::iterator it_m = meshes.begin(); it_m != meshes.end(); it_m++)
+	std::list<Mesh*>::iterator it_m;
+	it_m = meshes.begin();
+	while (it_m != meshes.end())
 	{
 		RELEASE((*it_m));
+		it_m++;
 	}
-
 	meshes.clear();
 
 	SDL_GL_DeleteContext(context);

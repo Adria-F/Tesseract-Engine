@@ -66,21 +66,24 @@ bool Application::Init()
 
 	JSON_File* document = JSON_manager->openReadFile("config.json");
 
-	//init vars from config
-	JSON_Value* appConfig = document->getValue("App");
-	if (appConfig != nullptr)
+	if (document != nullptr)
 	{
-		appName = appConfig->getString("title");
-		framerateCap = appConfig->getInt("frameCap");
-	}
+		//init vars from config
+		JSON_Value* appConfig = document->getValue("App");
+		if (appConfig != nullptr)
+		{
+			appName = appConfig->getString("title");
+			framerateCap = appConfig->getInt("frameCap");
+		}
 
-	//TO be able to use RNG in any file without worrying about initializing the seed
-	START_RNG_SEED();
+		//TO be able to use RNG in any file without worrying about initializing the seed
+		START_RNG_SEED();
 
-	// Call Init() in all modules
-	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
-	{
-		ret = (*item)->Init(document);
+		// Call Init() in all modules
+		for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
+		{
+			ret = (*item)->Init(document);
+		}
 	}
 
 	// After all Init calls we call Start() in all modules
@@ -112,6 +115,17 @@ void Application::FinishUpdate()
 		SDL_Delay(ms_cap - ms_timer.ReadTime());
 
 	gui->logFPS(1 / dt, dt * 1000);
+
+	if (doSave)
+	{
+		scene_loader->saveScene(scene_intro->scene_name.c_str());
+		doSave = false;
+	}
+	if (doLoad)
+	{
+		scene_loader->loadScene(scene_loader->next_loadedScene_name.c_str());
+		doLoad = false;
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -185,11 +199,13 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-bool Application::LoadGame()
+bool Application::LoadConfig()
 {
 	bool ret=false;
 
 	JSON_File* document = JSON_manager->openReadFile("load.json");
+	if (document == nullptr)
+		return false;
 
 	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
 	{
@@ -201,7 +217,7 @@ bool Application::LoadGame()
 	return ret;
 }
 
-bool Application::SaveGame()const
+bool Application::SaveConfig()const
 {
 	bool ret = true;
 
@@ -215,18 +231,18 @@ bool Application::SaveGame()const
 	document->Write();
 	
 	JSON_manager->closeFile(document);
-
-	/*JSONManager* manager = new JSONManager();
-	JSON_File* file = manager->openWriteFile("test.json");
-	JSON_Value* val = file->createValue();
-	val->addInt("testSON", 33);
-	file->addValue("test", val);
-	file->Write();
-	JSON_File* file = manager->openReadFile("test.json");
-	int result = file->getValue("test")->getInt("testSON");
-	manager->closeFile(file);*/
 	
 	return ret;
+}
+
+void Application::Load()
+{
+	doLoad = true;
+}
+
+void Application::Save()
+{
+	doSave = true;
 }
 
 float Application::GetDeltaTime() const
