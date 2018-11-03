@@ -193,8 +193,6 @@ void ModuleSceneLoader::LoadGameObjects(const aiScene* scene, aiNode* node, Game
 						newGameObject->boundingBox.Enclose(GameObjectFromMesh->boundingBox);
 						newGameObject->childs.push_back(GameObjectFromMesh);
 					}
-
-					App->scene_intro->GameObjects.push_back(GameObjectFromMesh);
 				}
 				else
 				{

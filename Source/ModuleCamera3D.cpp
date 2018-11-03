@@ -7,6 +7,7 @@
 #include "ModuleGUI.h"
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "GameObject.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {

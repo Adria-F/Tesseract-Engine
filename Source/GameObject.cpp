@@ -3,11 +3,13 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera3D.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
 
 
 GameObject::GameObject()
@@ -38,6 +40,19 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	//TODO:Use the render camera for the frustum culling 
+	if (!GetComponent(CAMERA))
+	{
+		if (App->scene_intro->auxCameraCulling->ContainsAABB(boundingBox))
+		{
+			active = true;
+		}
+		else
+		{
+			active = false;
+		}
+	}
+	
 	if (active)
 	{
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
@@ -52,11 +67,18 @@ void GameObject::Update()
 			{
 				ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
 
-				glPushMatrix();
-				glMultMatrixf((float*)transform->globalMatrix.v);
+				//comented to test the frustum culling
+				//glPushMatrix();
+				//glMultMatrixf((float*)transform->globalMatrix.v);
 				(*it_c)->Update();
-				glPopMatrix();
+				//glPopMatrix();
 			}
+		}
+
+		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+		{
+			if ((*it_c)->type == CAMERA)
+				(*it_c)->Update();
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -100,6 +122,10 @@ Component* GameObject::AddComponent(componentType type)
 		break;
 	case MATERIAL:
 		ret = new ComponentTexture(this, type);
+		components.push_back(ret);
+		break;
+	case CAMERA:
+		ret = new ComponentCamera(this, type);
 		components.push_back(ret);
 		break;
 	}

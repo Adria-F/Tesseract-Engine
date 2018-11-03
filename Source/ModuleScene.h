@@ -17,6 +17,7 @@ using namespace std;
 
 class Primitive;
 class GameObject;
+class ComponentCamera;
 
 class ModuleScene : public Module
 {
@@ -47,6 +48,9 @@ public:
 	vector<GameObject*> GameObjects;
 
 	GameObject* selected_GO = nullptr;
+	GameObject* cameraCulling = nullptr;
+
+	ComponentCamera* auxCameraCulling = nullptr;
 
 };
 #endif // !__MODULESCENE_H__

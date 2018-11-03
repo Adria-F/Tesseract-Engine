@@ -6,6 +6,7 @@
 #define CAMERA_SPEED 10.0f
 
 class ComponentCamera;
+class GameObject;
 
 class ModuleCamera3D : public Module
 {

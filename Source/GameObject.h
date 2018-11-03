@@ -5,6 +5,7 @@
 #include <string>
 
 struct Mesh;
+struct JSON_Value;
 
 class Component;
 class ComponentTransformation;

@@ -10,6 +10,8 @@ public:
 	ComponentCamera(GameObject* gameobject, componentType type);
 	~ComponentCamera();
 
+	bool Update();
+
 	float* getViewMatrix();
 	float* getProjectionMatrix();
 
@@ -18,13 +20,14 @@ public:
 
 	void DrawInfo();
 
+	bool ContainsAABB(const AABB& boundingBox);
+
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 
 public:
 
 	Frustum frustum;
-
 };
 
 #endif

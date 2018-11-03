@@ -3,8 +3,11 @@
 #include "ModuleScene.h"
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleInput.h"
 #include "ModuleSceneLoader.h"
 #include "ModuleGUI.h"
+#include "Component.h"
+#include "ComponentCamera.h"
 
 #include "GameObject.h"
 
@@ -32,6 +35,13 @@ bool ModuleScene::Start()
 	ShapesToDraw.push_back(new MSphere(10, 6, 12, { 0.0f, 0.0f, -20.0f }));
 	ShapesToDraw.push_back(new MFrustum(10, 10, 5, 3, { -30.0f, 20.0f, 0.0f }));*/
 
+
+	//Camera test for the frustum culling
+
+	cameraCulling = new GameObject();
+	auxCameraCulling =(ComponentCamera*)cameraCulling->AddComponent(CAMERA);
+	GameObjects.push_back(cameraCulling);
+
 	return ret;
 }
 
@@ -45,6 +55,22 @@ bool ModuleScene::CleanUp()
 update_status ModuleScene::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
+
+	vec newPos(0, 0, 0);
+	float speed = 10.0f * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed *= 2;
+	else if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+		speed /= 2;
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) newPos += auxCameraCulling->frustum.front*speed;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) newPos -= auxCameraCulling->frustum.front*speed;
+
+
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) newPos -= auxCameraCulling->frustum.WorldRight()*speed;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) newPos += auxCameraCulling->frustum.WorldRight()*speed;
+
+	auxCameraCulling->frustum.pos += newPos;
 
 	return ret;
 }
@@ -69,7 +95,7 @@ void ModuleScene::Draw()
 	}
 
 	for (int i = 0; i < GameObjects.size(); i++)
-	{
+	{	
 		GameObjects[i]->Update();
 	}
 }
