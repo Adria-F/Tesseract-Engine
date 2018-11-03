@@ -53,7 +53,7 @@ float * ComponentCamera::getProjectionMatrix()
 
 void ComponentCamera::setAspectRatio(float aspectRatio)
 {
-	frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*aspectRatio);
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov*0.5f)*aspectRatio);
 }
 
 void ComponentCamera::DrawFrustum()
@@ -120,11 +120,15 @@ void ComponentCamera::DrawInfo()
 		ImGui::InputFloat("Near Plane", &frustum.nearPlaneDistance);
 		ImGui::InputFloat("Far Plane", &frustum.farPlaneDistance);
 		ImGui::NewLine();
-		if (ImGui::SliderFloat("FOV", &frustum.verticalFov, 10, 180))
-		{
-			setAspectRatio(frustum.AspectRatio());
-		}
+
 		float AR = frustum.AspectRatio();
+		float VFOV = frustum.verticalFov*RADTODEG;
+		if (ImGui::SliderFloat("FOV", &VFOV, 10, 179))
+		{
+			frustum.verticalFov = VFOV*DEGTORAD;
+			setAspectRatio(AR);
+		}
+		ImGui::Text(std::to_string(frustum.horizontalFov*RADTODEG).c_str());
 		if (ImGui::InputFloat("Aspect Ratio", &AR, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			setAspectRatio(AR);

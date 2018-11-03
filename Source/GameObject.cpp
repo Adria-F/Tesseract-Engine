@@ -69,7 +69,7 @@ void GameObject::Update()
 
 				//comented to test the frustum culling
 				//glPushMatrix();
-				//glMultMatrixf((float*)transform->globalMatrix.v);
+				//glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
 				(*it_c)->Update();
 				//glPopMatrix();
 			}

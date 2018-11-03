@@ -41,19 +41,23 @@ bool ModuleScene::Start()
 	//Camera test for the frustum culling
 
 	cameraCulling = new GameObject();
+	cameraCulling->name = "Camera";
 	auxCameraCulling =(ComponentCamera*)cameraCulling->AddComponent(CAMERA);
 	GameObjects.push_back(cameraCulling);
 
 
 	test_1 = new GameObject();
+	test_1->name = "1";
 	test_1->boundingBox = AABB({ -2,-2,-9.0f }, { -1,-1,-8 });
 	GameObjects.push_back(test_1);
 
 	test_2 = new GameObject();
+	test_2->name = "2";
 	test_2->boundingBox = AABB({ 2,2,9.0f }, { 1,1,8 });
 	GameObjects.push_back(test_2);
 
 	test_3 = new GameObject();
+	test_3->name = "3";
 	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
 	GameObjects.push_back(test_3);
 

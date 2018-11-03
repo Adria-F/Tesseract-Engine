@@ -47,7 +47,8 @@ MATH_BEGIN_NAMESPACE
 
 float Frustum::AspectRatio() const
 {
-	return horizontalFov / verticalFov;
+	return Tan(horizontalFov / 2) / Tan(verticalFov / 2);
+	//return horizontalFov / verticalFov;
 }
 
 float Frustum::NearPlaneWidth() const
