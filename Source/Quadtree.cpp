@@ -9,12 +9,16 @@ Quadtree::Quadtree()
 	QT_Box.maxPoint = { 10.0f,10.0f,10.0f };
 
 	maxElements = 1;
+	maxLevels = 3;
+	level = 0;
 }
 
-Quadtree::Quadtree(AABB limits)
+Quadtree::Quadtree(AABB limits,int level)
 {
 	QT_Box = limits;
 	maxElements = 1;
+	maxLevels = 3;
+	this->level = level;
 }
 
 
@@ -24,27 +28,35 @@ Quadtree::~Quadtree()
 
 void Quadtree::Insert(GameObject * gameObject)
 {
-	
-	if (QT_Box.Contains(gameObject->boundingBox))
+	if (gameObject != nullptr && QT_Box.Intersects(gameObject->boundingBox))
 	{
-		LOG("one to push");
-
-		if (container.size() < maxElements)
+		if (children.size() > 0)
 		{
-			container.push_back(gameObject);
+			for (int i = 0; i < children.size(); i++)
+			{
+				children[i]->Insert(gameObject);
+			}
 		}
 		else
 		{
-			if (children.size() > 0)
+			container.push_back(gameObject);
+			
+			if (level<maxLevels && container.size() > maxElements)
 			{
-				for (int i = 0; i < children.size(); i++)
+				if (children.size() <= 0)
 				{
-					children[i]->Insert(gameObject);
+					Split();
 				}
-			}
-			else
-			{
-				Split();
+
+				for (int j = 0; j < container.size(); j++)
+				{
+					for (int i = 0; i < children.size(); i++)
+					{
+						children[i]->Insert(container[j]);
+					}
+				}
+
+				container.clear();
 			}
 		}
 	}
@@ -76,22 +88,22 @@ void Quadtree::Split()
 
 	//first Child
 	AABB first({ QT_Box.minPoint }, { QT_Box.minPoint + diagonal });
-	children.push_back(new Quadtree(first));
+	children.push_back(new Quadtree(first,level+1));
 
 	//second Child
 	vec secondMin = QT_Box.minPoint + vec(x / 2, 0.0f, 0.0f);
 	AABB second( secondMin ,  secondMin + diagonal );
-	children.push_back(new Quadtree(second));
+	children.push_back(new Quadtree(second, level + 1));
 
 	//third Child
 	vec thirdMin = QT_Box.minPoint + vec(0.0f, 0.0f, z/2);
 	AABB third(thirdMin, thirdMin + diagonal);
-	children.push_back(new Quadtree(third));
+	children.push_back(new Quadtree(third, level + 1));
 
 	//fourth Child
 	AABB fourth(QT_Box.maxPoint-diagonal, QT_Box.maxPoint);
-	children.push_back(new Quadtree(fourth));
-	
+	children.push_back(new Quadtree(fourth, level + 1));
+
 }
 
 void Quadtree::Remove(GameObject * gameObject)
@@ -100,10 +112,43 @@ void Quadtree::Remove(GameObject * gameObject)
 
 void Quadtree::Intersect(vector<GameObject*>& gameObjects, const AABB & boundingBox)
 {
+	if (QT_Box.Intersects(boundingBox))
+	{
+		if (children.size() <= 0)
+		{
+			for (int i = 0; i < container.size(); i++)
+			{
+				gameObjects.push_back(container[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				children[i]->Intersect(gameObjects, boundingBox);
+			}
+		}
+	}
 }
 
 void Quadtree::Clear()
 {
+	if (children.size() > 0)
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			children[i]->Clear();
+		}
+
+		children.clear();
+	}
+
+	for (int i = 0; i < container.size(); i++)
+	{
+		container[i] = nullptr;
+	}
+	container.clear();
+
 }
 
 void Quadtree::DrawQT()
