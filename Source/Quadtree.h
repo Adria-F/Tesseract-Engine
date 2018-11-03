@@ -7,24 +7,29 @@ class Quadtree
 {
 public:
 
+	Quadtree();
 	Quadtree(AABB limits);
 	~Quadtree();
 
 	void Insert(GameObject* gameObject);
+	void Split();
 	void Remove(GameObject* gameObject);
 
 	void Intersect(vector<GameObject*>& gameObjects, const AABB& boundingBox);
+	void DrawQT();
 
 	void Clear();
 
 
 private:
 
-	AABB QTBox;
+	AABB QT_Box;
 
-	list<GameObject*> container;
+	vector<GameObject*> container;
 
 	int maxElements = 0;
+
+	vector<Quadtree*> children;
 
 };
 

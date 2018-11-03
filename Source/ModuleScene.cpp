@@ -9,6 +9,8 @@
 #include "Component.h"
 #include "ComponentCamera.h"
 
+#include "Quadtree.h"
+
 #include "GameObject.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
@@ -41,6 +43,26 @@ bool ModuleScene::Start()
 	cameraCulling = new GameObject();
 	auxCameraCulling =(ComponentCamera*)cameraCulling->AddComponent(CAMERA);
 	GameObjects.push_back(cameraCulling);
+
+
+	test_1 = new GameObject();
+	test_1->boundingBox = AABB({ -2,-2,-9.0f }, { -1,-1,-8 });
+	GameObjects.push_back(test_1);
+
+	test_2 = new GameObject();
+	test_2->boundingBox = AABB({ 2,2,9.0f }, { 1,1,8 });
+	GameObjects.push_back(test_2);
+
+	test_3 = new GameObject();
+	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
+	GameObjects.push_back(test_3);
+
+	quadTree = new Quadtree();
+
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		quadTree->Insert(GameObjects[i]);
+	}
 
 	return ret;
 }
@@ -98,6 +120,8 @@ void ModuleScene::Draw()
 	{	
 		GameObjects[i]->Update();
 	}
+
+	quadTree->DrawQT();
 }
 
 void ModuleScene::wantToSaveScene()

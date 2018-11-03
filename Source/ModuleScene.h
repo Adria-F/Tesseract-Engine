@@ -18,6 +18,7 @@ using namespace std;
 class Primitive;
 class GameObject;
 class ComponentCamera;
+class Quadtree;
 
 class ModuleScene : public Module
 {
@@ -51,6 +52,11 @@ public:
 	GameObject* cameraCulling = nullptr;
 
 	ComponentCamera* auxCameraCulling = nullptr;
+	Quadtree* quadTree=nullptr;
+
+	GameObject* test_1 = nullptr;
+	GameObject* test_2 = nullptr;
+	GameObject* test_3 = nullptr;
 
 };
 #endif // !__MODULESCENE_H__

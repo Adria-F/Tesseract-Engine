@@ -7,7 +7,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 {
 	frustum.type = math::FrustumType::PerspectiveFrustum;
 
-	frustum.pos = { -10.0f,5.0f,7.0f };
+	frustum.pos = { -10.0f,5.0f,-9.0f };
 	frustum.front = { 0.0f,0.0f,-1.0f };
 	frustum.up = { 0.0f,1.0f,0.0f };
 
