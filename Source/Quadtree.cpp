@@ -24,27 +24,37 @@ Quadtree::~Quadtree()
 
 void Quadtree::Insert(GameObject * gameObject)
 {
-	
-	if (QT_Box.Contains(gameObject->boundingBox))
+	if (QT_Box.Intersects(gameObject->boundingBox))
 	{
 		LOG("one to push");
 
-		if (container.size() < maxElements)
+		if (children.size() > 0)
 		{
-			container.push_back(gameObject);
+			for (int i = 0; i < children.size(); i++)
+			{
+				children[i]->Insert(gameObject);
+			}
 		}
 		else
 		{
-			if (children.size() > 0)
+			container.push_back(gameObject);
+			
+			if (container.size() > maxElements)
 			{
-				for (int i = 0; i < children.size(); i++)
+				if (children.size() <= 0)
 				{
-					children[i]->Insert(gameObject);
+					Split();
 				}
-			}
-			else
-			{
-				Split();
+
+				for (int j = 0; j < container.size(); j++)
+				{
+					for (int i = 0; i < children.size(); i++)
+					{
+						children[i]->Insert(container[j]);
+					}
+				}
+
+				container.clear();
 			}
 		}
 	}
@@ -91,7 +101,7 @@ void Quadtree::Split()
 	//fourth Child
 	AABB fourth(QT_Box.maxPoint-diagonal, QT_Box.maxPoint);
 	children.push_back(new Quadtree(fourth));
-	
+
 }
 
 void Quadtree::Remove(GameObject * gameObject)
@@ -100,6 +110,23 @@ void Quadtree::Remove(GameObject * gameObject)
 
 void Quadtree::Intersect(vector<GameObject*>& gameObjects, const AABB & boundingBox)
 {
+	if (QT_Box.Intersects(boundingBox))
+	{
+		if (children.size() <= 0)
+		{
+			for (int i = 0; i < container.size(); i++)
+			{
+				gameObjects.push_back(container[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				children[i]->Intersect(gameObjects, boundingBox);
+			}
+		}
+	}
 }
 
 void Quadtree::Clear()
