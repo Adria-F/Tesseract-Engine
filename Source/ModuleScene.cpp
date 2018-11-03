@@ -24,6 +24,7 @@ bool ModuleScene::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	quadTree = new Quadtree();
 	//Load Baker House model
 	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	//App->scene_loader->loadScene("sceneTest");
@@ -57,13 +58,6 @@ bool ModuleScene::Start()
 	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
 	GameObjects.push_back(test_3);
 
-	quadTree = new Quadtree();
-
-	for (int i = 0; i < GameObjects.size(); i++)
-	{
-		quadTree->Insert(GameObjects[i]);
-	}
-
 	return ret;
 }
 
@@ -93,6 +87,21 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) newPos += auxCameraCulling->frustum.WorldRight()*speed;
 
 	auxCameraCulling->frustum.pos += newPos;
+
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	{
+		quadTree->Clear();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+	{
+		quadTree->Clear();
+		for (int i = 0; i < GameObjects.size(); i++)
+		{
+			FillQuadtree(GameObjects[i]);
+		}
+	}
+
 
 	return ret;
 }
@@ -136,6 +145,8 @@ void ModuleScene::wantToLoadScene()
 
 void ModuleScene::newScene()
 {
+	quadTree->Clear();
+
 	selected_GO = nullptr;
 
 	LOG("Unloading scene");
@@ -163,4 +174,18 @@ void ModuleScene::newScene()
 		RELEASE(GameObjects[i]);
 	}
 	GameObjects.clear();
+}
+
+void ModuleScene::FillQuadtree(GameObject* gameObject)
+{
+	if (gameObject != nullptr)
+	{
+		quadTree->Insert(gameObject);
+
+		for (int i = 0; i < gameObject->childs.size(); i++)
+		{
+			FillQuadtree(gameObject->childs[i]);
+		}
+	}
+		
 }

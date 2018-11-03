@@ -8,7 +8,7 @@ class Quadtree
 public:
 
 	Quadtree();
-	Quadtree(AABB limits);
+	Quadtree(AABB limits, int level);
 	~Quadtree();
 
 	void Insert(GameObject* gameObject);
@@ -28,6 +28,8 @@ private:
 	vector<GameObject*> container;
 
 	int maxElements = 0;
+	int maxLevels = 0;
+	int level = 0;
 
 	vector<Quadtree*> children;
 

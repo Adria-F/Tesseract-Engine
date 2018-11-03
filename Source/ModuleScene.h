@@ -41,6 +41,8 @@ public:
 
 	void newScene();
 
+	void FillQuadtree(GameObject* gameObject);
+
 public:
 
 	std::string scene_name = "";
