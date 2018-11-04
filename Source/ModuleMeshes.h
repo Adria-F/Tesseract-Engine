@@ -12,7 +12,7 @@ public:
 	ModuleMeshes(bool start_enabled = true);
 	~ModuleMeshes() {}
 
-	Mesh* importMesh(aiMesh mesh);
+	Mesh* importMesh(aiMesh* mesh);
 	Mesh* loadMesh(const char* meshName);
 	bool saveMesh(Mesh* mesh);
 	
