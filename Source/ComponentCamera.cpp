@@ -12,7 +12,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	frustum.up = { 0.0f,1.0f,0.0f };
 
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
+	frustum.farPlaneDistance = 1000.0f;
 
 	frustum.verticalFov = DEGTORAD * 90.0f;
 	setAspectRatio(16.0f / 9.0f);

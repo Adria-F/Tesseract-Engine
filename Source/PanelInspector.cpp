@@ -36,7 +36,10 @@ void PanelInspector::Draw()
 		ImGui::PopID();
 		ImGui::Checkbox("Active", &go->active);
 		ImGui::SameLine();
-		ImGui::Checkbox("Static", &go->isStatic);
+		if (ImGui::Checkbox("Static", &go->isStatic))
+		{
+			App->scene_intro->StartQuadTree();
+		}
 		ImGui::Separator();
 
 		for (std::list<Component*>::iterator it_c = go->components.begin(); it_c != go->components.end(); it_c++)

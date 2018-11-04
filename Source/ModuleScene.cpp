@@ -62,10 +62,8 @@ bool ModuleScene::Start()
 	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
 	GameObjects.push_back(test_3);
 
-	for (int i = 0; i < GameObjects.size(); i++)
-	{
-		FillQuadtree(GameObjects[i]);
-	}
+	
+	StartQuadTree();
 
 	return ret;
 }
@@ -100,11 +98,18 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		quadTree->Clear();
+
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 	{
 		quadTree->Clear();
+
+		for (int i = 0; i < GameObjects.size(); i++)
+		{
+			ResizeQuadTree(GameObjects[i]);
+		}
+
 		for (int i = 0; i < GameObjects.size(); i++)
 		{
 			FillQuadtree(GameObjects[i]);
@@ -137,7 +142,7 @@ void ModuleScene::Draw()
 
 	//Static objects-------------------------------------------------------------------
 	//Fill the vector of the objects inside the same quads of the camera's bb
-	quadTree->Intersect(ObjectsToDraw, auxCameraCulling->cameraBB);
+	quadTree->Intersect(ObjectsToDraw, auxCameraCulling->frustum);
 
 	//From the possible objects only draw the ones inside the frustum
 	for (int i = 0; i < ObjectsToDraw.size(); i++)
@@ -175,8 +180,6 @@ void ModuleScene::Draw()
 		GameObjects[i]->Update();
 		GameObjects[i]->culling = false;
 	}
-
-
 
 	quadTree->DrawQT();
 
@@ -226,6 +229,21 @@ void ModuleScene::newScene()
 	GameObjects.clear();
 }
 
+void ModuleScene::StartQuadTree()
+{
+	quadTree->Clear();
+
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		ResizeQuadTree(GameObjects[i]);
+	}
+
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		FillQuadtree(GameObjects[i]);
+	}
+}
+
 void ModuleScene::FillQuadtree(GameObject* gameObject)
 {
 	if (gameObject != nullptr && gameObject->isStatic)
@@ -238,4 +256,18 @@ void ModuleScene::FillQuadtree(GameObject* gameObject)
 		}
 	}
 		
+}
+
+void ModuleScene::ResizeQuadTree(GameObject* gameObject)
+{
+	if (gameObject != nullptr && gameObject->isStatic)
+	{
+		quadTree->QT_Box.Enclose(gameObject->boundingBox);
+
+		for (int i = 0; i < gameObject->childs.size(); i++)
+		{
+			ResizeQuadTree(gameObject->childs[i]);
+		}
+	}
+
 }

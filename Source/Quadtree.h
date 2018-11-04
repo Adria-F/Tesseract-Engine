@@ -16,14 +16,17 @@ public:
 	void Remove(GameObject* gameObject);
 
 	void Intersect(vector<GameObject*>& gameObjects, const AABB& boundingBox);
+	void Intersect(vector<GameObject*>& gameObjects, const Frustum& boundingBox);
 	void DrawQT();
 
 	void Clear();
 
 
-private:
+public:
 
 	AABB QT_Box;
+
+private:
 
 	vector<GameObject*> container;
 

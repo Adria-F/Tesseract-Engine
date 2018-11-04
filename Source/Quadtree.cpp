@@ -5,8 +5,7 @@
 
 Quadtree::Quadtree()
 {
-	QT_Box.minPoint = { -10.0f,-10.0f,-10.0f };
-	QT_Box.maxPoint = { 10.0f,10.0f,10.0f };
+	QT_Box.SetNegativeInfinity();
 
 	maxElements = 1;
 	maxLevels = 3;
@@ -131,8 +130,57 @@ void Quadtree::Intersect(vector<GameObject*>& gameObjects, const AABB & bounding
 	}
 }
 
+void Quadtree::Intersect(vector<GameObject*>& gameObjects, const Frustum& frustum)
+{
+	Plane planes[6];
+	float3 BBcorners[8];
+	int counter = 0;
+
+	QT_Box.GetCornerPoints(BBcorners);
+	frustum.GetPlanes(planes);
+
+	for (int i = 0; i < 6; i++)
+	{
+		//This number checks if the bb is outside of a plane
+		int aux_count = counter;
+
+		for (int j = 0; j < 8; j++)
+		{
+			if (!planes[i].IsOnPositiveSide(BBcorners[j]))
+			{
+				counter++;
+				break;
+			}
+		}
+		if (aux_count == counter)
+		{
+			break;
+		}
+	}
+
+	if (counter == 6)
+	{
+		if (children.size() <= 0)
+		{
+			for (int i = 0; i < container.size(); i++)
+			{
+				gameObjects.push_back(container[i]);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				children[i]->Intersect(gameObjects, frustum);
+			}
+		}
+	}
+}
+
 void Quadtree::Clear()
 {
+	QT_Box.SetNegativeInfinity();
+
 	if (children.size() > 0)
 	{
 		for (int i = 0; i < children.size(); i++)

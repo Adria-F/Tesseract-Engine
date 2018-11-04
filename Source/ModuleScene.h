@@ -41,7 +41,9 @@ public:
 
 	void newScene();
 
-	void FillQuadtree(GameObject* gameObject);
+	void StartQuadTree();
+	void FillQuadtree(GameObject* gameObject); 
+	void ResizeQuadTree(GameObject* gameObject);
 
 public:
 
