@@ -22,7 +22,6 @@ public:
 
 	bool CleanUp();
 
-	//bool loadSceneFromFile();
 	bool importFBXScene(const char* path);
 	GameObject* loadGO(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures);
 

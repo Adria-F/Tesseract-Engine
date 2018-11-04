@@ -44,7 +44,7 @@ void GameObject::Update()
 {
 	//TODO:Use the render camera for the frustum culling 
 	
-	if (active && culling)
+	if (active && (culling || !App->renderer3D->Frustum_Culling))
 	{
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 		{

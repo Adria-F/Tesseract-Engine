@@ -190,7 +190,7 @@ void PanelConfiguration::Draw()
 		ImGui::Checkbox("Normals", &App->renderer3D->Normals);
 		ImGui::Checkbox("Face Normals", &App->renderer3D->Faces);
 		ImGui::Checkbox("Show All Bounding Boxes", &App->renderer3D->ShowBB);
-		
+		ImGui::Checkbox("Frustum Culling", &App->renderer3D->Frustum_Culling);		
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))

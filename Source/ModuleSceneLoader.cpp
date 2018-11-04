@@ -63,9 +63,13 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		vector<Mesh*> meshes;
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			meshes.push_back(App->meshes->importMesh(scene->mMeshes[i]));
-			meshes[i]->GenerateBuffer();
-			App->meshes->saveMesh(meshes[i]);
+			Mesh* mesh = App->meshes->importMesh(scene->mMeshes[i]);
+			if (mesh != nullptr)
+			{
+				meshes.push_back(mesh);
+				mesh->GenerateBuffer();
+				App->meshes->saveMesh(mesh);
+			}
 		}
 
 		//Import textures
@@ -86,10 +90,13 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		}
 
 		GameObject* rootGO = loadGO(scene, scene->mRootNode, meshes, textures);
-		std::string filename;
-		App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-		rootGO->name = filename;
-		App->scene_intro->GameObjects.push_back(rootGO);
+		if (rootGO != nullptr)
+		{
+			std::string filename;
+			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
+			rootGO->name = filename;
+			App->scene_intro->GameObjects.push_back(rootGO);
+		}
 
 		aiReleaseImport(scene);
 	}
@@ -121,37 +128,45 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
-			GameObject* child = GO;
-			if (node->mNumMeshes > 1)
+			if (node->mMeshes[i] < meshes.size()) // Check that current mesh is not out of vector range
 			{
-				child = new GameObject();
-				child->name = meshes[node->mMeshes[i]]->name;
-			}
+				GameObject* child = GO;
+				if (node->mNumMeshes > 1)
+				{
+					child = new GameObject();
+					child->name = meshes[node->mMeshes[i]]->name;
+				}
 
-			//Create transformation
-			ComponentTransformation*transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
-			transformation->position = pos;
-			transformation->scale = scale;
-			transformation->rotation = rot;
-			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+				//Create transformation
+				ComponentTransformation* transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
+				transformation->position = pos;
+				transformation->scale = scale;
+				transformation->rotation = rot;
+				transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
-			//Create mesh
-			ComponentMesh* mesh;
-			mesh = (ComponentMesh*)child->AddComponent(MESH);
-			mesh->mesh = meshes[node->mMeshes[i]];
+				//Create mesh
+				ComponentMesh* mesh;
+				mesh = (ComponentMesh*)child->AddComponent(MESH);
+				mesh->mesh = meshes[node->mMeshes[i]];
 
-			//Create material
-			ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-			material->Material = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
 
-			//Calculate BB
-			child->boundingBox.SetNegativeInfinity();
-			child->boundingBox.Enclose((float3*)scene->mMeshes[node->mMeshes[i]]->mVertices, meshes[node->mMeshes[i]]->num_vertices);
+				//Create material
+				if (scene->mMeshes[node->mMeshes[i]]->mMaterialIndex < textures.size()) //Check that material is not out of textures range
+				{
+					ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
+					material->Material = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+				}
 
-			if (node->mNumMeshes > 1 && i > 0)
-			{
-				GO->childs.push_back(child);
-				GO->boundingBox.Enclose(child->boundingBox);
+				//Calculate BB
+				child->boundingBox.SetNegativeInfinity();
+				child->boundingBox.Enclose((float3*)scene->mMeshes[node->mMeshes[i]]->mVertices, scene->mMeshes[node->mMeshes[i]]->mNumVertices);
+
+				if (node->mNumMeshes > 1 && i > 0)
+				{
+					child->parent = GO;
+					GO->childs.push_back(child);
+					GO->boundingBox.Enclose(child->boundingBox);
+				}
 			}
 		}
 	}
@@ -171,8 +186,12 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
 			GameObject* child = loadGO(scene, node->mChildren[i], meshes, textures);
-			GO->boundingBox.Enclose(child->boundingBox);
-			GO->childs.push_back(child);
+			if (child != nullptr)
+			{
+				child->parent = GO;
+				GO->boundingBox.Enclose(child->boundingBox);
+				GO->childs.push_back(child);
+			}
 		}
 	}
 
