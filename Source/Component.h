@@ -23,7 +23,10 @@ public:
 	Component(GameObject* gameobject,componentType type):gameObject(gameobject),type(type) { UID = GENERATE_UID(); }
 	virtual ~Component() {}
 
+	void DrawUI();
 	virtual void DrawInfo() {}
+	void DrawConfig();
+	virtual bool DrawExtraConfig();
 	virtual bool Update() { return true; }
 	
 	virtual void Enable() { active = true; }
@@ -39,6 +42,9 @@ public:
 
 	bool active = true;
 	uint UID = 0;
+
+	bool toDelete = false;
+	bool closeConfig = true;
 };
 
 #endif // !__COMPONENT_H__

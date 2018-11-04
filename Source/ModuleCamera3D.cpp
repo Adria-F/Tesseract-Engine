@@ -100,13 +100,13 @@ update_status ModuleCamera3D::Update(float dt)
 		
 		if (dx != 0)
 		{
-			float DeltaX = (float)dx * mouseSensitivity*mouseSensitivity;
+			float DeltaX = (float)dx * mouseSensitivity;
 
 			newPos += X*DeltaX;
 		}
 		if (dy != 0)
 		{
-			float DeltaY = (float)dy * mouseSensitivity*mouseSensitivity;
+			float DeltaY = (float)dy * mouseSensitivity;
 
 			newPos -= Y * DeltaY;
 		}

@@ -41,7 +41,7 @@ void PanelInspector::Draw()
 
 		for (std::list<Component*>::iterator it_c = go->components.begin(); it_c != go->components.end(); it_c++)
 		{
-			(*it_c)->DrawInfo();
+			(*it_c)->DrawUI();
 			ImGui::Separator();
 		}
 
