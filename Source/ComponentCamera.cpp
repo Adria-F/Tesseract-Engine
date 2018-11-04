@@ -12,10 +12,12 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	frustum.up = { 0.0f,1.0f,0.0f };
 
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 1000.0f;
+	frustum.farPlaneDistance = 100.0f;
 
 	frustum.verticalFov = DEGTORAD * 90.0f;
 	setAspectRatio(16.0f / 9.0f);
+
+	cameraBB = AABB({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
 
 }
 
@@ -27,9 +29,15 @@ bool ComponentCamera::Update()
 {
 	if (!active)
 		return false;
+
+	float3 corner[8];
+	frustum.GetCornerPoints(corner);
+	
+	cameraBB.SetNegativeInfinity();
+	cameraBB.Enclose(corner, 8);
 	
 	DrawFrustum();
-
+	CameraBB();
 	return true;
 }
 
@@ -206,4 +214,53 @@ void ComponentCamera::Load(JSON_Value * component)
 
 	frustum.verticalFov = component->getFloat("VFOV");
 	setAspectRatio(component->getFloat("Aspect Ratio"));
+}
+
+void ComponentCamera::CameraBB()
+{
+	glLineWidth(1.5f);
+	glColor3f(1, 0.5f, 1);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(cameraBB.CornerPoint(0).x, cameraBB.CornerPoint(0).y, cameraBB.CornerPoint(0).z);
+	glVertex3f(cameraBB.CornerPoint(1).x, cameraBB.CornerPoint(1).y, cameraBB.CornerPoint(1).z);
+
+	glVertex3f(cameraBB.CornerPoint(0).x, cameraBB.CornerPoint(0).y, cameraBB.CornerPoint(0).z);
+	glVertex3f(cameraBB.CornerPoint(2).x, cameraBB.CornerPoint(2).y, cameraBB.CornerPoint(2).z);
+
+	glVertex3f(cameraBB.CornerPoint(0).x, cameraBB.CornerPoint(0).y, cameraBB.CornerPoint(0).z);
+	glVertex3f(cameraBB.CornerPoint(4).x, cameraBB.CornerPoint(4).y, cameraBB.CornerPoint(4).z);
+
+	glVertex3f(cameraBB.CornerPoint(3).x, cameraBB.CornerPoint(3).y, cameraBB.CornerPoint(3).z);
+	glVertex3f(cameraBB.CornerPoint(1).x, cameraBB.CornerPoint(1).y, cameraBB.CornerPoint(1).z);
+
+	glVertex3f(cameraBB.CornerPoint(3).x, cameraBB.CornerPoint(3).y, cameraBB.CornerPoint(3).z);
+	glVertex3f(cameraBB.CornerPoint(2).x, cameraBB.CornerPoint(2).y, cameraBB.CornerPoint(2).z);
+
+	glVertex3f(cameraBB.CornerPoint(3).x, cameraBB.CornerPoint(3).y, cameraBB.CornerPoint(3).z);
+	glVertex3f(cameraBB.CornerPoint(7).x, cameraBB.CornerPoint(7).y, cameraBB.CornerPoint(7).z);
+
+	glVertex3f(cameraBB.CornerPoint(6).x, cameraBB.CornerPoint(6).y, cameraBB.CornerPoint(6).z);
+	glVertex3f(cameraBB.CornerPoint(2).x, cameraBB.CornerPoint(2).y, cameraBB.CornerPoint(2).z);
+
+	glVertex3f(cameraBB.CornerPoint(6).x, cameraBB.CornerPoint(6).y, cameraBB.CornerPoint(6).z);
+	glVertex3f(cameraBB.CornerPoint(4).x, cameraBB.CornerPoint(4).y, cameraBB.CornerPoint(4).z);
+
+	glVertex3f(cameraBB.CornerPoint(6).x, cameraBB.CornerPoint(6).y, cameraBB.CornerPoint(6).z);
+	glVertex3f(cameraBB.CornerPoint(7).x, cameraBB.CornerPoint(7).y, cameraBB.CornerPoint(7).z);
+
+	glVertex3f(cameraBB.CornerPoint(5).x, cameraBB.CornerPoint(5).y, cameraBB.CornerPoint(5).z);
+	glVertex3f(cameraBB.CornerPoint(1).x, cameraBB.CornerPoint(1).y, cameraBB.CornerPoint(1).z);
+
+	glVertex3f(cameraBB.CornerPoint(5).x, cameraBB.CornerPoint(5).y, cameraBB.CornerPoint(5).z);
+	glVertex3f(cameraBB.CornerPoint(4).x, cameraBB.CornerPoint(4).y, cameraBB.CornerPoint(4).z);
+
+	glVertex3f(cameraBB.CornerPoint(5).x, cameraBB.CornerPoint(5).y, cameraBB.CornerPoint(5).z);
+	glVertex3f(cameraBB.CornerPoint(7).x, cameraBB.CornerPoint(7).y, cameraBB.CornerPoint(7).z);
+
+	glEnd();
+
+	glColor3f(1, 1, 1);
+	glLineWidth(1.0f);
 }

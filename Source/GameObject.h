@@ -44,6 +44,7 @@ public:
 	bool active = true;
 	bool selected = false;
 	bool isStatic = false;
+	bool culling = false;
 	
 	std::string name = "";
 	

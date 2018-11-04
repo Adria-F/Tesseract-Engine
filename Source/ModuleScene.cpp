@@ -62,6 +62,11 @@ bool ModuleScene::Start()
 	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
 	GameObjects.push_back(test_3);
 
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		FillQuadtree(GameObjects[i]);
+	}
+
 	return ret;
 }
 
@@ -106,7 +111,6 @@ update_status ModuleScene::Update(float dt)
 		}
 	}
 
-
 	return ret;
 }
 
@@ -129,15 +133,54 @@ void ModuleScene::Draw()
 		(*it)->Render();
 	}
 
-	for (int i = 0; i < GameObjects.size(); i++)
+	cameraCulling->culling=true;
+
+	//Static objects-------------------------------------------------------------------
+	//Fill the vector of the objects inside the same quads of the camera's bb
+	quadTree->Intersect(ObjectsToDraw, auxCameraCulling->cameraBB);
+
+	//From the possible objects only draw the ones inside the frustum
+	for (int i = 0; i < ObjectsToDraw.size(); i++)
 	{	
-		if(auxCameraCulling->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA)==nullptr)
-			GameObjects[i]->Update();
-		
-		cameraCulling->Update();
+		if (auxCameraCulling->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
+		{
+			ObjectsToDraw[i]->culling = true;
+		}
+		else 
+		{
+			ObjectsToDraw[i]->culling = false;
+		}
 	}
 
+	//Non-Static objects-------------------------------------------------------------------
+
+	//From the possible objects only draw the ones inside the frustum
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		if (!GameObjects[i]->isStatic)
+		{
+			if (auxCameraCulling->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA) == nullptr)
+			{
+				GameObjects[i]->culling = true;
+			}
+			else
+			{
+				GameObjects[i]->culling = false;
+			}
+		}
+	}
+
+	for (int i = 0; i < GameObjects.size(); i++)
+	{
+		GameObjects[i]->Update();
+		GameObjects[i]->culling = false;
+	}
+
+
+
 	quadTree->DrawQT();
+
+	ObjectsToDraw.clear();
 }
 
 void ModuleScene::wantToSaveScene()

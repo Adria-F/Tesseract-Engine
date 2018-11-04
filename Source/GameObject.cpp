@@ -17,6 +17,7 @@ GameObject::GameObject()
 	UID = GENERATE_UID();
 	boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
 	isStatic = true;
+	culling = false;
 }
 
 
@@ -43,7 +44,7 @@ void GameObject::Update()
 {
 	//TODO:Use the render camera for the frustum culling 
 	
-	if (active)
+	if (active && culling)
 	{
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 		{

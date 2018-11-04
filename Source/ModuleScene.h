@@ -49,6 +49,7 @@ public:
 
 	list<Primitive*> ShapesToDraw;
 	vector<GameObject*> GameObjects;
+	vector<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
 	GameObject* cameraCulling = nullptr;
