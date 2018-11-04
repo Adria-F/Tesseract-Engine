@@ -2,6 +2,7 @@
 #define __MODULESCENELOADER_H__
 
 #include "Module.h"
+#include <vector>
 
 class GameObject;
 struct aiScene;
@@ -9,6 +10,7 @@ struct aiNode;
 struct aiMesh;
 
 struct Mesh;
+struct Texture;
 
 class ModuleSceneLoader : public Module
 {
@@ -22,10 +24,7 @@ public:
 
 	//bool loadSceneFromFile();
 	bool importFBXScene(const char* path);
-	bool importFSScene(const char* path);
-
-	Mesh* LoadGOMesh(aiMesh* currentMesh);
-	void LoadGameObjects(const aiScene* scene, aiNode* node, GameObject* parent);
+	GameObject* loadGO(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures);
 
 	bool saveScene(const char* scene_name);
 	bool loadScene(const char* scene_name);

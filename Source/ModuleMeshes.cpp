@@ -12,9 +12,80 @@ ModuleMeshes::ModuleMeshes(bool start_enabled): Module(start_enabled)
 {
 }
 
-Mesh* ModuleMeshes::importMesh(aiMesh mesh)
+Mesh* ModuleMeshes::importMesh(aiMesh* mesh)
 {
-	return nullptr;
+	Mesh* newMesh = new Mesh();
+	newMesh->name = (mesh->mName.length > 0) ? mesh->mName.C_Str() : "Unnamed";
+
+	if (mesh->mNumVertices > 0)
+	{
+		//Getting mesh information
+		newMesh->num_vertices = mesh->mNumVertices;
+
+		//Copying Vertices array
+		newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at least 3 vertices
+		memcpy(newMesh->vertices, mesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
+	}
+
+	//Copying Face Normals
+	if (mesh->HasNormals())
+	{
+		newMesh->num_normals = mesh->mNumVertices;
+		newMesh->normals = new float[newMesh->num_normals * 3];
+		memcpy(newMesh->normals, mesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
+	}
+
+	//Loging Info
+	LOG("New Mesh with %d vertices", newMesh->num_vertices);
+	LOG("New Mesh with %d normals", newMesh->num_normals);
+	LOG("New Mesh with %d faces", mesh->mNumFaces);
+
+	//Copying texture coords
+	if (mesh->HasFaces())
+	{
+		int t = 0;
+		if (mesh->HasTextureCoords(0))
+		{
+			newMesh->num_texCoords = mesh->mNumVertices;
+			newMesh->texCoords = new float[newMesh->num_texCoords * 2];
+			for (uint q = 0; q < newMesh->num_vertices * 2; q = q + 2)
+			{
+				newMesh->texCoords[q] = mesh->mTextureCoords[0][t].x;
+				newMesh->texCoords[q + 1] = mesh->mTextureCoords[0][t].y;
+				t++;
+			}
+		}
+		else
+		{
+			LOG("Current mesh has no Texture Coordinates, so will not draw any texture assigned");
+		}
+
+		//Copying indices
+		newMesh->num_indices = mesh->mNumFaces * 3;
+		newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
+
+		for (int j = 0; j < mesh->mNumFaces; ++j)
+		{
+			if (mesh->mFaces[j].mNumIndices != 3)
+			{
+				LOG("WARNING, geometry face with != 3 indices!");
+				LOG("WARNING, face normals couldn't be loaded");
+				newMesh = nullptr;
+				break;
+			}
+			else
+			{
+				memcpy(&newMesh->indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+	else
+	{
+		LOG("Current mesh has no faces, so will not be loaded");
+		newMesh = nullptr;
+	}
+
+	return newMesh;
 }
 
 Mesh* ModuleMeshes::loadMesh(const char* meshName)
