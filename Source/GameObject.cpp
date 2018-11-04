@@ -67,7 +67,10 @@ void GameObject::Update()
 
 		if (transform && transform->changed)
 		{
-			RecalculateBB();
+			GameObject* bigParent = this;
+			while (bigParent->parent != nullptr)
+				bigParent = bigParent->parent;
+			bigParent->RecalculateBB();
 		}
 
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
@@ -93,6 +96,17 @@ void GameObject::Update()
 			childs[i]->Update();
 		}		
 	}	
+
+	std::list<Component*>::iterator it_c = components.begin();
+	while( it_c != components.end())
+	{
+		if ((*it_c)->toDelete)
+		{
+			RemoveComponent((*it_c++));
+		}
+		else
+			it_c++;
+	}
 }
 
 void GameObject::Draw()
@@ -277,5 +291,4 @@ void GameObject::RecalculateBB()
 	{
 		boundingBox.TransformAsAABB(transform->globalMatrix);
 	}
-
 }

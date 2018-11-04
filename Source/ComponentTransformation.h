@@ -12,6 +12,7 @@ public:
 	~ComponentTransformation();
 
 	void DrawInfo();
+	bool DrawExtraConfig();
 	bool Update();
 
 	void RecalculateMatrix();
