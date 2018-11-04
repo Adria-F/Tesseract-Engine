@@ -16,6 +16,7 @@ GameObject::GameObject()
 {
 	UID = GENERATE_UID();
 	boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
+	isStatic = true;
 }
 
 
@@ -41,17 +42,6 @@ GameObject::~GameObject()
 void GameObject::Update()
 {
 	//TODO:Use the render camera for the frustum culling 
-	if (!GetComponent(CAMERA))
-	{
-		if (App->scene_intro->auxCameraCulling->ContainsAABB(boundingBox))
-		{
-			active = true;
-		}
-		else
-		{
-			active = false;
-		}
-	}
 	
 	if (active)
 	{
@@ -61,18 +51,23 @@ void GameObject::Update()
 				(*it_c)->Update();
 		}
 
+		ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
+
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 		{
 			if ((*it_c)->type == MESH)
 			{
-				ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
-
 				//comented to test the frustum culling
-				//glPushMatrix();
-				//glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
+				glPushMatrix();
+				glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
 				(*it_c)->Update();
-				//glPopMatrix();
+				glPopMatrix();
 			}
+		}
+
+		if (transform && transform->changed)
+		{
+			RecalculateBB();
 		}
 
 		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
@@ -254,4 +249,33 @@ Component* GameObject::GetComponent(componentType type)
 	}
 	
 	return ret;
+}
+
+void GameObject::RecalculateBB()
+{
+	//boundingBox = AABB({ 0.0f,0.0f,0.0f } , {0.0f, 0.0f, 0.0f});
+	boundingBox.SetNegativeInfinity();
+
+	ComponentMesh* auxMesh = (ComponentMesh*)GetComponent(MESH);
+	ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
+	
+	if (childs.size() > 0)
+	{
+		for (int i = 0; i < childs.size(); i++)
+		{
+			childs[i]->RecalculateBB();
+			boundingBox.Enclose(childs[i]->boundingBox);
+		}
+	}
+
+	if (auxMesh != nullptr )
+	{
+		boundingBox.Enclose((float3*)auxMesh->mesh->vertices, auxMesh->mesh->num_vertices);
+	}
+
+	if (childs.size() <= 0)
+	{
+		boundingBox.TransformAsAABB(transform->globalMatrix);
+	}
+
 }

@@ -1,5 +1,6 @@
 #include "ComponentTransformation.h"
 #include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "GameObject.h"
 
 ComponentTransformation::~ComponentTransformation()
@@ -10,7 +11,7 @@ void ComponentTransformation::DrawInfo()
 {
 	if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		bool changed = false;
+		changed = false;
 
 		ImGui::PushItemWidth(75);
 		ImGui::Text("Position:");
@@ -78,7 +79,6 @@ void ComponentTransformation::DrawInfo()
 		if (changed)
 		{
 			RecalculateMatrix();
-			//RecalculateBB() (based on childs + mesh) (recalculate also parent BB)
 		}
 	}
 }

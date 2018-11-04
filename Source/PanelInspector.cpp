@@ -35,6 +35,8 @@ void PanelInspector::Draw()
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 		ImGui::Checkbox("Active", &go->active);
+		ImGui::SameLine();
+		ImGui::Checkbox("Static", &go->isStatic);
 		ImGui::Separator();
 
 		for (std::list<Component*>::iterator it_c = go->components.begin(); it_c != go->components.end(); it_c++)

@@ -30,6 +30,10 @@ public:
 
 	Component* GetComponent(componentType type);
 
+	void RecalculateBB();
+
+
+
 public:
 
 	std::list<Component*> components;
@@ -39,6 +43,7 @@ public:
 
 	bool active = true;
 	bool selected = false;
+	bool isStatic = false;
 	
 	std::string name = "";
 	

@@ -131,7 +131,10 @@ void ModuleScene::Draw()
 
 	for (int i = 0; i < GameObjects.size(); i++)
 	{	
-		GameObjects[i]->Update();
+		if(auxCameraCulling->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA)==nullptr)
+			GameObjects[i]->Update();
+		
+		cameraCulling->Update();
 	}
 
 	quadTree->DrawQT();
@@ -182,7 +185,7 @@ void ModuleScene::newScene()
 
 void ModuleScene::FillQuadtree(GameObject* gameObject)
 {
-	if (gameObject != nullptr)
+	if (gameObject != nullptr && gameObject->isStatic)
 	{
 		quadTree->Insert(gameObject);
 

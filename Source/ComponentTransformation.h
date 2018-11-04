@@ -29,7 +29,8 @@ public:
 	float4x4 globalMatrix = float4x4::identity;
 
 	Quat rotation = { 1.0f,0.0f,0.0f,0.0f };
-	
+
+	bool changed = false;
 };
 
 #endif // !__COMPONENTTRANSFORM_H__
