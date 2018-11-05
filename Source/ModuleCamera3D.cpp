@@ -8,6 +8,7 @@
 #include "Component.h"
 #include "ComponentCamera.h"
 #include "GameObject.h"
+#include "ComponentMesh.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
@@ -20,6 +21,7 @@ ModuleCamera3D::~ModuleCamera3D()
 bool ModuleCamera3D::Init(JSON_File* document)
 {
 	camera = new ComponentCamera(nullptr, CAMERA);
+	camera->active = false;
 
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)
@@ -152,6 +154,11 @@ update_status ModuleCamera3D::Update(float dt)
 	Y = camera->frustum.up;
 	X = camera->frustum.WorldRight();
 
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		checkMousePick();
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -235,6 +242,82 @@ vec ModuleCamera3D::getMovementFactor()
 	}
 	
 	return -camera->frustum.front * newPosition.Length();
+}
+
+GameObject* ModuleCamera3D::checkMousePick()
+{
+	GameObject* ret = nullptr;
+
+	LineSegment ray = camera->frustum.UnProjectLineSegment(App->input->GetMouseX(), App->input->GetMouseY());
+	
+	std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit> gameObjects;
+	if (App->scene_intro->GameObjects.size() > 0)
+		fillHitGameObjects(App->scene_intro->GameObjects[0], gameObjects, ray);
+
+	for (int i = gameObjects.size(); i > 0; i++)
+	{
+		HitGameObject* current = gameObjects.top();
+		float distance = hitsTriangle(current->GO, ray);
+		gameObjects.pop();
+		if (distance > -1.0f) //It hits the mesh
+		{
+			if (gameObjects.top()->distance > distance)
+			{
+				//Hit object is current
+			}
+			else
+			{
+
+			}
+		}
+		RELEASE(current);
+	}
+
+	//Clean priority queue
+
+	return ret;
+}
+
+void ModuleCamera3D::fillHitGameObjects(GameObject* current, std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit>& gameObjects, LineSegment ray)
+{
+	float distance, exitDistance;
+	if (ray.Intersects(current->boundingBox, distance, exitDistance))
+	{
+		HitGameObject* hit = new HitGameObject(current, distance);
+		gameObjects.push(hit);
+	}
+
+	for (int i = 0; i < current->childs.size(); i++)
+	{
+		fillHitGameObjects(current->childs[i], gameObjects, ray);
+	}
+}
+
+float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
+{
+	float smallestDistance = -1.0f;
+
+	ComponentMesh* mesh = (ComponentMesh*)gameObject->GetComponent(MESH);
+	if (mesh != nullptr)
+	{		
+		for (int i = 0; i < mesh->mesh->num_indices; i+=3)
+		{
+			math::Triangle tri;
+			tri.a = { mesh->mesh->vertices[mesh->mesh->indices[i] * 3],mesh->mesh->vertices[mesh->mesh->indices[i] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i] * 3 + 2] };
+			tri.b = { mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3],mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3 + 2] };
+			tri.c = { mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3],mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3 + 2] };
+		
+			float distance;
+			float3 intPoint;
+			bool hit = ray.Intersects(tri, &distance, &intPoint);
+			if (distance < smallestDistance || smallestDistance == -1.0f)
+			{
+				smallestDistance = distance;
+			}
+		}		
+	}
+
+	return smallestDistance;
 }
 
 bool ModuleCamera3D::Save(JSON_File* document)const

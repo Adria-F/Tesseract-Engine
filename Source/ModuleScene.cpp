@@ -3,6 +3,7 @@
 #include "ModuleScene.h"
 #include "Primitive.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
 #include "ModuleInput.h"
 #include "ModuleSceneLoader.h"
 #include "ModuleGUI.h"
@@ -28,40 +29,6 @@ bool ModuleScene::Start()
 	//Load Baker House model
 	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	//App->scene_loader->loadScene("sceneTest");
-
-	//Shapes examples
-	/*ShapesToDraw.push_back(new MCube(20, 20, 20, { 25,10,-15 }));
-	ShapesToDraw.push_back(new MCylinder(5, 10, 10, 20, {0,0,30}));
-	ShapesToDraw.push_back(new MArrow(10, 10, 10, {0,0,0}));
-	ShapesToDraw.push_back(new MAxis(5, { 15,20,0 }));
-	ShapesToDraw.push_back(new MCapsule(5, 10, 10, 20, { 20,0,30 }));
-	ShapesToDraw.push_back(new MSphere(10, 6, 12, { 0.0f, 0.0f, -20.0f }));
-	ShapesToDraw.push_back(new MFrustum(10, 10, 5, 3, { -30.0f, 20.0f, 0.0f }));*/
-
-
-	//Camera test for the frustum culling
-
-	cameraCulling = new GameObject();
-	cameraCulling->name = "Camera";
-	auxCameraCulling =(ComponentCamera*)cameraCulling->AddComponent(CAMERA);
-	GameObjects.push_back(cameraCulling);
-
-
-	test_1 = new GameObject();
-	test_1->name = "1";
-	test_1->boundingBox = AABB({ -2,-2,-9.0f }, { -1,-1,-8 });
-	GameObjects.push_back(test_1);
-
-	test_2 = new GameObject();
-	test_2->name = "2";
-	test_2->boundingBox = AABB({ 2,2,9.0f }, { 1,1,8 });
-	GameObjects.push_back(test_2);
-
-	test_3 = new GameObject();
-	test_3->name = "3";
-	test_3->boundingBox = AABB({ 3,3,5.0f }, { 6,6,6 });
-	GameObjects.push_back(test_3);
-
 	
 	StartQuadTree();
 
@@ -78,22 +45,6 @@ bool ModuleScene::CleanUp()
 update_status ModuleScene::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
-
-	vec newPos(0, 0, 0);
-	float speed = 10.0f * dt;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed *= 2;
-	else if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		speed /= 2;
-
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) newPos += auxCameraCulling->frustum.front*speed;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) newPos -= auxCameraCulling->frustum.front*speed;
-
-
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) newPos -= auxCameraCulling->frustum.WorldRight()*speed;
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) newPos += auxCameraCulling->frustum.WorldRight()*speed;
-
-	auxCameraCulling->frustum.pos += newPos;
 
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
@@ -138,16 +89,15 @@ void ModuleScene::Draw()
 		(*it)->Render();
 	}
 
-	cameraCulling->culling=true;
-
 	//Static objects-------------------------------------------------------------------
 	//Fill the vector of the objects inside the same quads of the camera's bb
-	quadTree->Intersect(ObjectsToDraw, auxCameraCulling->frustum);
+	ComponentCamera* activeCamera = App->camera->camera;
+	quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
 
 	//From the possible objects only draw the ones inside the frustum
 	for (int i = 0; i < ObjectsToDraw.size(); i++)
 	{	
-		if (auxCameraCulling->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
+		if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
 		{
 			ObjectsToDraw[i]->culling = true;
 		}
@@ -164,7 +114,7 @@ void ModuleScene::Draw()
 	{
 		if (!GameObjects[i]->isStatic)
 		{
-			if (auxCameraCulling->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA) == nullptr)
+			if (activeCamera->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA) == nullptr)
 			{
 				GameObjects[i]->culling = true;
 			}
@@ -181,7 +131,8 @@ void ModuleScene::Draw()
 		GameObjects[i]->culling = false;
 	}
 
-	quadTree->DrawQT();
+	if (App->renderer3D->ShowQT)
+		quadTree->DrawQT();
 
 	ObjectsToDraw.clear();
 }

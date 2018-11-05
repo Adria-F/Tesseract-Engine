@@ -119,11 +119,32 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 	vec scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
+	std::string name = (node->mName.length > 0) ? node->mName.C_Str() : "Unnamed";
+	static const char* dummies[5] = {
+		"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
+		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
+
+	for (int i = 0; i < 5; ++i)
+	{
+		if (name.find(dummies[i]) != string::npos && node->mNumChildren == 1)
+		{
+			node = node->mChildren[0];
+
+			node->mTransformation.Decompose(scaling, rotation, translation);
+			// accumulate transform
+			pos += float3(translation.x, translation.y, translation.z);
+			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
+			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+			name = node->mName.C_Str();
+			i = -1;
+		}
+	}
+
 	GameObject* GO = nullptr;
 	if (node->mNumMeshes > 0)
 	{
 		GO = new GameObject();
-		std::string name = (node->mName.length > 0) ? node->mName.C_Str() : "Unnamed";
 		GO->name = name;
 
 		for (int i = 0; i < node->mNumMeshes; i++)
@@ -173,10 +194,11 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 
 	if (node->mNumChildren > 0)
 	{
-		if (GO == nullptr) //It is nullptr if it had no mesh but has childs (not so probable unless it is the root node)
+
+		if (GO == nullptr) //It is nullptr if it had no mesh but has childs (not so probable unless it is the root node or a dummy node)
 		{
 			GO = new GameObject();
-			GO->name = "Unnamed";
+			GO->name = name;
 			ComponentTransformation*transformation = (ComponentTransformation*)GO->AddComponent(TRANSFORMATION);
 			transformation->position = pos;
 			transformation->scale = scale;

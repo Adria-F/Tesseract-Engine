@@ -54,14 +54,7 @@ public:
 	vector<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
-	GameObject* cameraCulling = nullptr;
 
-	ComponentCamera* auxCameraCulling = nullptr;
 	Quadtree* quadTree=nullptr;
-
-	GameObject* test_1 = nullptr;
-	GameObject* test_2 = nullptr;
-	GameObject* test_3 = nullptr;
-
 };
 #endif // !__MODULESCENE_H__

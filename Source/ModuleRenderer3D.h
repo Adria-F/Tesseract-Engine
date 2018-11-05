@@ -100,6 +100,7 @@ public:
 	bool Normals = false;
 	bool Faces = false;
 	bool ShowBB = false;
+	bool ShowQT = false;
 	bool Frustum_Culling = true;
 
 	uint buff_id = 0;

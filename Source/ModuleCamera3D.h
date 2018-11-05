@@ -2,11 +2,29 @@
 #define __MODULE_CAMERA_3D_H__
 
 #include "Module.h"
+#include <queue>
 
 #define CAMERA_SPEED 10.0f
 
 class ComponentCamera;
 class GameObject;
+
+struct HitGameObject
+{
+	HitGameObject(GameObject* GO, float distance): GO(GO), distance(distance)
+	{}
+
+	GameObject* GO = nullptr;
+	float distance = 0.0f;
+};
+
+struct OrderCrit
+{
+	bool operator()(const HitGameObject* Obj_1, const HitGameObject* Obj_2)const
+	{
+		return Obj_1->distance > Obj_2->distance;
+	}
+};
 
 class ModuleCamera3D : public Module
 {
@@ -24,6 +42,10 @@ public:
 	void Move(const vec &Movement);
 	void FitCamera(const AABB &boundingBox);
 	vec getMovementFactor();
+
+	GameObject* checkMousePick();
+	void fillHitGameObjects(GameObject* current, std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit>& gameObjects, LineSegment ray);
+	float hitsTriangle(GameObject* gameObject, LineSegment ray);
 
 	bool Save(JSON_File* document)const;
 	bool Load(JSON_File* document);

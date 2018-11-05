@@ -227,7 +227,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw Scene  ---------------------------	
 
 	App->scene_intro->Draw();
-	App->camera->camera->DrawFrustum();
 	
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
