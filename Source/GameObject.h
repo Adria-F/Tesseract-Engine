@@ -23,7 +23,8 @@ public:
 
 	void Update();
 	void Draw();
-	void DrawBB(const AABB& BB, vec3 color) const;
+	void DrawBB(const AABB& BB, vec3 color) const; 
+	void DrawBB(const OBB& BB, vec3 color) const;
 
 	void Save(JSON_Value* gameobject);
 	void Load(JSON_Value* gameobject);
@@ -52,6 +53,7 @@ public:
 	uint UID = 0;
 
 	AABB boundingBox;
+	OBB localBB;
 };
 
 #endif // !__GAMEOBJECTS_H__

@@ -199,6 +199,55 @@ void GameObject::DrawBB(const AABB& BB, vec3 color) const
 	glLineWidth(1.0f);
 }
 
+void GameObject::DrawBB(const OBB& BB, vec3 color) const
+{
+	glLineWidth(1.5f);
+	glColor3f(color.x, color.y, color.z);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glEnd();
+
+	glColor3f(1, 1, 1);
+	glLineWidth(1.0f);
+}
+
 void GameObject::Save(JSON_Value* gameobject)
 {
 	JSON_Value* gameObject = gameobject->createValue();
@@ -268,28 +317,33 @@ Component* GameObject::GetComponent(componentType type)
 
 void GameObject::RecalculateBB()
 {
-	//boundingBox = AABB({ 0.0f,0.0f,0.0f } , {0.0f, 0.0f, 0.0f});
-	boundingBox.SetNegativeInfinity();
+	
 
 	ComponentMesh* auxMesh = (ComponentMesh*)GetComponent(MESH);
 	ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
-	
-	if (childs.size() > 0)
+	if (transform != nullptr)
 	{
-		for (int i = 0; i < childs.size(); i++)
+		boundingBox.SetNegativeInfinity();
+
+		if (childs.size() > 0)
 		{
-			childs[i]->RecalculateBB();
-			boundingBox.Enclose(childs[i]->boundingBox);
+			for (int i = 0; i < childs.size(); i++)
+			{
+				childs[i]->RecalculateBB();
+				if (childs[i]->boundingBox.IsFinite())
+					boundingBox.Enclose(childs[i]->boundingBox);
+			}
+		}
+
+		if (auxMesh != nullptr)
+		{
+			boundingBox.Enclose((float3*)auxMesh->mesh->vertices, auxMesh->mesh->num_vertices);
+		}
+
+		if (childs.size() <= 0)
+		{
+			boundingBox.TransformAsAABB(transform->globalMatrix);
 		}
 	}
 
-	if (auxMesh != nullptr )
-	{
-		boundingBox.Enclose((float3*)auxMesh->mesh->vertices, auxMesh->mesh->num_vertices);
-	}
-
-	if (childs.size() <= 0)
-	{
-		boundingBox.TransformAsAABB(transform->globalMatrix);
-	}
 }

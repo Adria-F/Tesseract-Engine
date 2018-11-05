@@ -99,6 +99,14 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		}
 
 		aiReleaseImport(scene);
+
+		if (App->scene_intro->GameObjects.size() > 0)
+		{
+			App->renderer3D->CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
+			App->scene_intro->GameObjects[0]->RecalculateBB();
+			App->scene_intro->StartQuadTree();
+		}
+
 	}
 	else
 		LOG("Error loading scene %s", path);
@@ -180,13 +188,16 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 
 				//Calculate BB
 				child->boundingBox.SetNegativeInfinity();
+				child->localBB.SetNegativeInfinity();
 				child->boundingBox.Enclose((float3*)scene->mMeshes[node->mMeshes[i]]->mVertices, scene->mMeshes[node->mMeshes[i]]->mNumVertices);
+				child->localBB.SetFrom(child->boundingBox);
 
 				if (node->mNumMeshes > 1 && i > 0)
 				{
 					child->parent = GO;
 					GO->childs.push_back(child);
 					GO->boundingBox.Enclose(child->boundingBox);
+					GO->localBB.SetFrom(GO->boundingBox);
 				}
 			}
 		}
@@ -212,6 +223,7 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 			{
 				child->parent = GO;
 				GO->boundingBox.Enclose(child->boundingBox);
+				GO->localBB.SetFrom(GO->boundingBox);
 				GO->childs.push_back(child);
 			}
 		}
