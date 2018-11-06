@@ -59,10 +59,10 @@ void GameObject::Update()
 			if ((*it_c)->type == MESH)
 			{
 				//comented to test the frustum culling
-				glPushMatrix();
-				glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
+				//glPushMatrix();
+				//glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
 				(*it_c)->Update();
-				glPopMatrix();
+				//glPopMatrix();
 			}
 		}
 

@@ -22,6 +22,10 @@ void PanelScene::Draw()
 
 	ImVec2 size = ImGui::GetWindowSize();
 	ImGui::SetCursorPos({ -(App->window->width - size.x) / 2,-(App->window->height - size.y) / 2 });
+	App->gui->sceneX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
+	App->gui->sceneY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
+	App->gui->sceneW = App->window->width;
+	App->gui->sceneH = App->window->height;
 
 	ImGui::Image((ImTextureID)App->renderer3D->renderedTexture, { (float)App->window->width, (float)App->window->height }, { 0,1 }, { 1,0 });
 	

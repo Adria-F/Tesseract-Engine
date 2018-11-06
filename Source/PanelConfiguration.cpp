@@ -215,6 +215,16 @@ void PanelConfiguration::Draw()
 	{
 		ImGui::Text("Mouse Position:");
 		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
+
+		ImGui::Text("Mouse Position in scene:");
+		float mouseX = App->input->GetMouseX() - App->gui->sceneX;
+		float mouseY = App->input->GetMouseY() - App->gui->sceneY;
+		//mouseX = (mouseX / (App->gui->sceneW / 2)) - 2;
+		//mouseY = (mouseY / (App->gui->sceneH / 2)) - 1;
+		ImGui::Text("X: %f | Y: %f", mouseX, mouseY);
+
+		ImGui::Text("Scene Size:");
+		ImGui::Text("W: %f | H: %f", (mouseX / (App->gui->sceneW / 2)) - 1, (mouseY / (App->gui->sceneH / 2)) - 1);
 	}
 
 	ImGui::End();

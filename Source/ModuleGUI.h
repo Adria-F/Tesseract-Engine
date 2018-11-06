@@ -67,6 +67,11 @@ public:
 	Texture* folder = nullptr;
 	Texture* file = nullptr;
 
+	float sceneX = 0.0f;
+	float sceneY = 0.0f;
+	float sceneW = 0.0f;
+	float sceneH = 0.0f;
+
 	bool hoveringScene = false;
 };
 

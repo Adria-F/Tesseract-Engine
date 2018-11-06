@@ -105,6 +105,9 @@ public:
 
 	uint buff_id = 0;
 
+	float3 clickA = float3::zero;
+	float3 clickB = float3::zero;
+
 	list<Mesh*> meshes;
 };
 

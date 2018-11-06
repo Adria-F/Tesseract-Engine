@@ -156,7 +156,14 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		checkMousePick();
+		GameObject* newGO = checkMousePick();
+		if (App->scene_intro->selected_GO != nullptr)
+			App->scene_intro->selected_GO->selected = false;
+		if (newGO != nullptr)
+		{			
+			App->scene_intro->selected_GO = newGO;
+			newGO->selected = true;
+		}
 	}
 
 	return UPDATE_CONTINUE;
@@ -248,32 +255,21 @@ GameObject* ModuleCamera3D::checkMousePick()
 {
 	GameObject* ret = nullptr;
 
-	LineSegment ray = camera->frustum.UnProjectLineSegment(App->input->GetMouseX(), App->input->GetMouseY());
-	
+	float mouseX = App->input->GetMouseX() - App->gui->sceneX;
+	float mouseY = App->input->GetMouseY() - App->gui->sceneY;
+	mouseX = (mouseX / (App->gui->sceneW / 2)) - 1;
+	mouseY = (mouseY / (App->gui->sceneH / 2)) - 1;
+	LineSegment ray = camera->frustum.UnProjectLineSegment(mouseX, -mouseY);
+	App->renderer3D->clickA = ray.a;
+	App->renderer3D->clickB = ray.b;
+
+	//Fill queue
 	std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit> gameObjects;
 	if (App->scene_intro->GameObjects.size() > 0)
 		fillHitGameObjects(App->scene_intro->GameObjects[0], gameObjects, ray);
 
-	for (int i = gameObjects.size(); i > 0; i++)
-	{
-		HitGameObject* current = gameObjects.top();
-		float distance = hitsTriangle(current->GO, ray);
-		gameObjects.pop();
-		if (distance > -1.0f) //It hits the mesh
-		{
-			if (gameObjects.top()->distance > distance)
-			{
-				//Hit object is current
-			}
-			else
-			{
-
-			}
-		}
-		RELEASE(current);
-	}
-
-	//Clean priority queue
+	if (gameObjects.size() > 0)
+		ret = checkCloserGameObjects(gameObjects, ray);
 
 	return ret;
 }
@@ -293,6 +289,29 @@ void ModuleCamera3D::fillHitGameObjects(GameObject* current, std::priority_queue
 	}
 }
 
+GameObject* ModuleCamera3D::checkCloserGameObjects(std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit>& queue, LineSegment ray, float distance)
+{
+	GameObject* ret = nullptr;
+
+	HitGameObject* curr = queue.top();
+	queue.pop();
+	float TriDistance = hitsTriangle(curr->GO, ray);
+	if (TriDistance != -1 && (TriDistance < distance || distance == -1))
+	{
+		distance = TriDistance;
+		ret = curr->GO;
+	}
+	if (queue.size() > 0 && (queue.top()->distance < distance || distance == -1))
+	{
+		GameObject* GO2 = checkCloserGameObjects(queue, ray, distance);
+		if (GO2 != nullptr)
+			ret = GO2;
+	}
+	RELEASE(curr);
+
+	return ret;
+}
+
 float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 {
 	float smallestDistance = -1.0f;
@@ -310,7 +329,7 @@ float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 			float distance;
 			float3 intPoint;
 			bool hit = ray.Intersects(tri, &distance, &intPoint);
-			if (distance < smallestDistance || smallestDistance == -1.0f)
+			if (distance > 0 && (distance < smallestDistance || smallestDistance == -1.0f))
 			{
 				smallestDistance = distance;
 			}

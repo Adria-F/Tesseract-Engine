@@ -45,6 +45,7 @@ public:
 
 	GameObject* checkMousePick();
 	void fillHitGameObjects(GameObject* current, std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit>& gameObjects, LineSegment ray);
+	GameObject* checkCloserGameObjects(std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit>& queue, LineSegment ray, float distance = -1);
 	float hitsTriangle(GameObject* gameObject, LineSegment ray);
 
 	bool Save(JSON_File* document)const;

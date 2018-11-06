@@ -232,6 +232,22 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	base_plane.axis = true;
 	base_plane.Render();
 
+
+	//Debug click ray
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	glVertex3f(clickA.x, clickA.y, clickA.z);
+	glVertex3f(clickB.x, clickB.y, clickB.z);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+	//---------------
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
 
