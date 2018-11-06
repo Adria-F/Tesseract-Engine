@@ -7,6 +7,7 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "glMath/glmath.h"
 #include "ImGui\imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 #include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
