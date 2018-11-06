@@ -17,6 +17,8 @@ public:
 
 	uint readFile(const char* path, char** buffer);
 	uint writeFile(const char* path, const void* buffer, uint size, bool overwrite = false);
+
+	bool copyFile(const char* src, const char* dest);
 	
 	//Check if the file exists and returns filename+(num_version)
 	//num_version is equivalent to the amounts of times that a file with given name exists -1

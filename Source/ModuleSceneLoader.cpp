@@ -66,7 +66,11 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 			Mesh* mesh = App->meshes->importMesh(scene->mMeshes[i]);
 			if (mesh != nullptr)
 			{
-				meshes.push_back(mesh);
+				aiColor3D color(0.f, 0.f, 0.f);
+				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+				mesh->color = { color.r, color.g, color.b }; //Set mesh color
+
+				meshes.push_back(mesh);				
 				mesh->GenerateBuffer();
 				App->meshes->saveMesh(mesh);
 			}
@@ -78,12 +82,15 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		{			
 			for (int i = 0; i < scene->mNumMaterials; i++)
 			{
-				aiString path;
-				aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
+				aiString texturePath;
+				aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texturePath);
 				if (textureError == aiReturn::aiReturn_SUCCESS)
 				{
-					App->textures->importTexture(path.C_Str());
-					textures.push_back(App->textures->loadTexture(path.C_Str()));
+					std::string full_path = path;
+					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
+					full_path += texturePath.C_Str();
+					if (App->textures->importTexture(full_path.c_str()))
+						textures.push_back(App->textures->loadTexture(texturePath.C_Str()));
 				}
 			}
 				

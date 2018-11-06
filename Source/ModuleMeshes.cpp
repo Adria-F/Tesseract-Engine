@@ -26,7 +26,7 @@ Mesh* ModuleMeshes::importMesh(aiMesh* mesh)
 		newMesh->vertices = new float[newMesh->num_vertices * 3]; //It is checked below that at least has 1 face, so at least 3 vertices
 		memcpy(newMesh->vertices, mesh->mVertices, sizeof(float)*newMesh->num_vertices * 3);
 	}
-
+	
 	//Copying Face Normals
 	if (mesh->HasNormals())
 	{
@@ -34,7 +34,7 @@ Mesh* ModuleMeshes::importMesh(aiMesh* mesh)
 		newMesh->normals = new float[newMesh->num_normals * 3];
 		memcpy(newMesh->normals, mesh->mNormals, sizeof(float)*newMesh->num_normals * 3);
 	}
-
+	
 	//Loging Info
 	LOG("New Mesh with %d vertices", newMesh->num_vertices);
 	LOG("New Mesh with %d normals", newMesh->num_normals);

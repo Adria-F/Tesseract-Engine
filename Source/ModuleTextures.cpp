@@ -63,10 +63,33 @@ bool ModuleTextures::importTexture(const char* path)
 	ilGenImages(1, &ilImage);
 	ilBindImage(ilImage);
 
-	char* buffer = nullptr;
-	std::string full_path = ASSETS_FOLDER;
+	std::string full_path = path;
+	std::string filename;
+	std::string extension;
+	App->fileSystem->splitPath(path, nullptr, &filename, &extension);
+	full_path = ASSETS_FOLDER;
 	full_path += "Textures/";
-	full_path += path;
+	full_path += filename + '.' + extension;
+
+	success = ilLoad(IL_TYPE_UNKNOWN, path);
+	if (!success) //If not found, search at Assets/Textures/
+	{
+		LOG("Texture not found at: %s", path);
+		LOG("Searching at Assets/Textures/");		
+		
+		if (!App->fileSystem->fileExists(full_path.c_str()))
+		{
+			LOG("Texture not found at: %s", full_path.c_str());
+			LOG("Could not import texture: %s", filename.c_str());
+			return false;
+		}
+	}
+	else //If found outside assets, copy it to Assets/Textures/
+	{
+		App->fileSystem->copyFile(path, full_path.c_str());
+	}
+
+	char* buffer = nullptr;
 	uint size = App->fileSystem->readFile(full_path.c_str(), &buffer);
 
 	success = ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
@@ -99,6 +122,27 @@ bool ModuleTextures::importTexture(const char* path)
 	}
 
 	ilDeleteImages(1, &ilImage);
+	return true;
+}
+
+bool ModuleTextures::saveTexture(const char* path, int type)
+{
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+
+	ILuint size;
+	ILubyte *data;
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
+	size = ilSaveL(type, NULL, 0); // Get the size of the data buffer
+	if (size > 0) {
+		data = new ILubyte[size]; // allocate data buffer
+		if (ilSaveL(type, data, size) > 0) // Save to buffer with the ilSaveIL function
+		{
+			App->fileSystem->writeFile(path, data, size, true); //Overwrite must be set to false when scenes save/load is completed
+		}
+		RELEASE_ARRAY(data);
+	}
+
 	return true;
 }
 
