@@ -9,6 +9,7 @@
 #include "ModuleGUI.h"
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "ComponentTransformation.h"
 
 #include "Quadtree.h"
 
@@ -131,6 +132,8 @@ void ModuleScene::Draw()
 		GameObjects[i]->culling = false;
 	}
 
+	DrawGuizmo();
+
 	if (App->renderer3D->ShowQT)
 		quadTree->DrawQT();
 
@@ -221,4 +224,23 @@ void ModuleScene::ResizeQuadTree(GameObject* gameObject)
 		}
 	}
 
+}
+
+void ModuleScene::DrawGuizmo()
+{
+	if (App->scene_intro->selected_GO != nullptr) 
+	{
+		float4x4 ViewMatrix, ProjectionMatrix;
+
+		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)ViewMatrix.v);
+		glGetFloatv(GL_PROJECTION_MATRIX, (float*)ProjectionMatrix.v);
+
+		ImGuiIO& io = ImGui::GetIO();
+		ImGuizmo::SetOrthographic(true);
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+		ComponentTransformation* transform = (ComponentTransformation*)App->scene_intro->selected_GO->GetComponent(TRANSFORMATION);
+
+		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, (float*)transform->globalMatrix.v);
+	}
 }

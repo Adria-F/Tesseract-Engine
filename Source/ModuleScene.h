@@ -44,6 +44,7 @@ public:
 	void StartQuadTree();
 	void FillQuadtree(GameObject* gameObject); 
 	void ResizeQuadTree(GameObject* gameObject);
+	void DrawGuizmo();
 
 public:
 
