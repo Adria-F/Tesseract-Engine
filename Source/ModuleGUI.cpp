@@ -3,6 +3,7 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
+#include "ImGuizmo\ImGuizmo.h"
 
 #include "Panel.h"
 #include "PanelConfiguration.h"
@@ -106,6 +107,7 @@ update_status ModuleGUI::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	ImGui::SetNextWindowPos({ 0,0 });
 	ImGui::SetNextWindowSize({(float)App->window->width, (float)App->window->height});

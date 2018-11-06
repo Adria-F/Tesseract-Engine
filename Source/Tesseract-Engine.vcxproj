@@ -81,6 +81,8 @@
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentTransformation.h" />
+    <ClInclude Include="ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="ImGuizmo\ImSequencer.h" />
     <ClInclude Include="JSONManager.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="GameObject.h" />
@@ -222,6 +224,8 @@
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="JSONManager.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="GameObject.cpp" />
