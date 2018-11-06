@@ -27,6 +27,7 @@ public:
 	bool CleanUp();
 
 	bool importTexture(const char* path);
+	bool saveTexture(const char* path, int type);
 	Texture* loadTexture(const char* path);
 
 	Texture* loadIcon(const char* path);

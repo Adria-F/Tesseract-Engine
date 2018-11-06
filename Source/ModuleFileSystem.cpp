@@ -4,6 +4,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
 #include "ModuleGUI.h"
+#include <fstream>
 
 #include "PhysFS\include\physfs.h"
 
@@ -112,6 +113,19 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 	return 0;
 }
 
+bool ModuleFileSystem::copyFile(const char* src, const char* dest)
+{
+	std::ifstream source(src, std::ios::binary);
+	if (!source.fail())
+	{
+		std::ofstream destination(dest, std::ios::binary);
+		destination << source.rdbuf();
+		return source && destination;
+	}
+	else
+		return false;
+}
+
 const char* ModuleFileSystem::getAvailablePath(const char* path)
 {
 	uint num_version = 1;
@@ -191,14 +205,15 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 {
 	//Import to the assets folder and convert+import to the library folder. Name will be: name+(num_version)
 
+	std::string filename = path;
 	std::string extension = path;
-	splitPath(path, nullptr, nullptr, &extension);
+	splitPath(path, nullptr, &filename, &extension);
 
 	if (extension == "fbx" || extension == "FBX")
 	{
 		App->scene_loader->importFBXScene(path);
 	}
-	else if (extension == "png" || extension == "dds")
+	else if (extension == "png" || extension == "dds" || extension == "tga")
 	{
 		std::string full_path = path;
 		if (PHYSFS_exists(path)) //It means that the path starts from /Game
@@ -206,6 +221,7 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 			full_path = PHYSFS_getRealDir(path);
 			full_path += path;
 		}
+		else
 		App->textures->importTexture(full_path.c_str());
 		App->textures->loadTexture(path);
 	}
