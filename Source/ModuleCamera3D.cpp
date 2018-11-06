@@ -9,6 +9,7 @@
 #include "ComponentCamera.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
+#include "ComponentTransformation.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
@@ -315,6 +316,10 @@ GameObject* ModuleCamera3D::checkCloserGameObjects(std::priority_queue<HitGameOb
 float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 {
 	float smallestDistance = -1.0f;
+
+	ComponentTransformation* transformation = (ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION);
+	if (transformation != nullptr)
+		ray.Transform(transformation->globalMatrix.Inverted());
 
 	ComponentMesh* mesh = (ComponentMesh*)gameObject->GetComponent(MESH);
 	if (mesh != nullptr)

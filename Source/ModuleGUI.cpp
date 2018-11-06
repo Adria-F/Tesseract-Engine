@@ -153,14 +153,16 @@ update_status ModuleGUI::Update(float dt)
 			ImGui::EndMenu();
 		}
 		
-		if (ImGui::BeginMenu("3D Tools"))
+		if (ImGui::BeginMenu("Tools"))
 		{
 			if (ImGui::MenuItem("Basic 3D Shapes", NULL, ShapeElements->isActive()))
 				ShapeElements->toggleActive();
-			if (ImGui::MenuItem("Mesh Properties", NULL, inspector->isActive()))
+			if (ImGui::MenuItem("Inspector", NULL, inspector->isActive()))
 				inspector->toggleActive();
-			if(ImGui::MenuItem("Game Objects",NULL,hierarchy->isActive()))
+			if(ImGui::MenuItem("Game Objects",NULL,hierarchy->isActive())) 
 				hierarchy->toggleActive();
+			if (ImGui::MenuItem("Assets", NULL, assets->isActive()))
+				assets->toggleActive();
 			ImGui::EndMenu();
 		}
 

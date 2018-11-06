@@ -102,6 +102,7 @@ public:
 	bool ShowBB = false;
 	bool ShowQT = false;
 	bool Frustum_Culling = true;
+	bool ShowClickRay = false;
 
 	uint buff_id = 0;
 
