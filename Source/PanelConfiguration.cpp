@@ -191,7 +191,8 @@ void PanelConfiguration::Draw()
 		ImGui::Checkbox("Face Normals", &App->renderer3D->Faces);
 		ImGui::Checkbox("Show All Bounding Boxes", &App->renderer3D->ShowBB);
 		ImGui::Checkbox("Show QuadTree", &App->renderer3D->ShowQT);
-		ImGui::Checkbox("Frustum Culling", &App->renderer3D->Frustum_Culling);		
+		ImGui::Checkbox("Frustum Culling", &App->renderer3D->Frustum_Culling);	
+		ImGui::Checkbox("Show Click Ray", &App->renderer3D->ShowClickRay);
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))
@@ -215,16 +216,6 @@ void PanelConfiguration::Draw()
 	{
 		ImGui::Text("Mouse Position:");
 		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
-
-		ImGui::Text("Mouse Position in scene:");
-		float mouseX = App->input->GetMouseX() - App->gui->sceneX;
-		float mouseY = App->input->GetMouseY() - App->gui->sceneY;
-		//mouseX = (mouseX / (App->gui->sceneW / 2)) - 2;
-		//mouseY = (mouseY / (App->gui->sceneH / 2)) - 1;
-		ImGui::Text("X: %f | Y: %f", mouseX, mouseY);
-
-		ImGui::Text("Scene Size:");
-		ImGui::Text("W: %f | H: %f", (mouseX / (App->gui->sceneW / 2)) - 1, (mouseY / (App->gui->sceneH / 2)) - 1);
 	}
 
 	ImGui::End();

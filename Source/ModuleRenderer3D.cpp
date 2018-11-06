@@ -105,7 +105,7 @@ bool ModuleRenderer3D::Init(JSON_File* document)
 		glClearDepth(1.0f);//Specifies the depth value used when the depth buffer is cleared.
 		
 		//Initialize clear color
-		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);//clear values for the color buffers. The initial values are all 0.
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);//clear values for the color buffers. The initial values are all 0.
 
 
 		//specify pixel arithmetic glBlendFunc(rgb source blending factors, rgb destination blending factors)
@@ -232,21 +232,21 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	base_plane.axis = true;
 	base_plane.Render();
 
+	if (ShowClickRay) //Debug click ray
+	{
+		glLineWidth(2.0f);
 
-	//Debug click ray
-	glLineWidth(2.0f);
+		glBegin(GL_LINES);
 
-	glBegin(GL_LINES);
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+		glVertex3f(clickA.x, clickA.y, clickA.z);
+		glVertex3f(clickB.x, clickB.y, clickB.z);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glVertex3f(clickA.x, clickA.y, clickA.z);
-	glVertex3f(clickB.x, clickB.y, clickB.z);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnd();
 
-	glEnd();
-
-	glLineWidth(1.0f);
-	//---------------
+		glLineWidth(1.0f);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
