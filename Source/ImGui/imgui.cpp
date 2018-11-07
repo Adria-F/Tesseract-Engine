@@ -9521,7 +9521,7 @@ bool ImGui::IsDragDropPayloadBeingAccepted()
     return g.DragDropActive && g.DragDropAcceptIdPrev != 0;
 }
 
-const ImGuiPayload* ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDropFlags flags)
+const ImGuiPayload* ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDropFlags flags, bool isLine, bool top)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -9552,7 +9552,14 @@ const ImGuiPayload* ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDrop
         r.Expand(3.5f);
         bool push_clip_rect = !window->ClipRect.Contains(r);
         if (push_clip_rect) window->DrawList->PushClipRect(r.Min-ImVec2(1,1), r.Max+ImVec2(1,1));
-        window->DrawList->AddRect(r.Min, r.Max, GetColorU32(ImGuiCol_DragDropTarget), 0.0f, ~0, 2.0f);
+		if (isLine)
+		{
+			ImVec2 a = { r.Min.x, (top)? r.Min.y : r.Max.y};
+			ImVec2 b = { r.Max.x, (top) ? r.Min.y : r.Max.y };
+			window->DrawList->AddLine(a, b, GetColorU32(ImGuiCol_DragDropTarget), 2.0f);
+		}
+		else
+			window->DrawList->AddRect(r.Min, r.Max, GetColorU32(ImGuiCol_DragDropTarget), 0.0f, ~0, 2.0f);
         if (push_clip_rect) window->DrawList->PopClipRect();
     }
 
@@ -9568,6 +9575,13 @@ const ImGuiPayload* ImGui::GetDragDropPayload()
 {
     ImGuiContext& g = *GImGui;
     return g.DragDropActive ? &g.DragDropPayload : NULL;
+}
+
+void ImGui::DrawLine(ImVec2 a, ImVec2 b)
+{
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* window = g.CurrentWindow;
+	window->DrawList->AddLine(a, b, GetColorU32(ImGuiCol_DragDropTarget), 2.0f);
 }
 
 // We don't really use/need this now, but added it for the sake of consistency and because we might need it later.

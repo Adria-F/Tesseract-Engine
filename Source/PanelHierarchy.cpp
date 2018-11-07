@@ -4,8 +4,6 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 
-
-
 PanelHierarchy::PanelHierarchy(const char* name): Panel(name)
 {
 	active = true;
@@ -63,6 +61,26 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	}
 
 	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("GAME_OBJECT", gameobject, sizeof(gameobject));
+		ImGui::Text(gameobject->name.c_str());
+		ImGui::EndDragDropSource();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_SourceAllowNullID))
+		{
+		}
+		ImGui::EndDragDropTarget();
+	}
+	else
+	{
+		/*ImVec2 a = { ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y };
+		ImVec2 b = { ImGui::GetItemRectMax().x, ImGui::GetItemRectMin().y };
+		ImGui::DrawLine(a, b);*/
+	}
+	
 	if (ImGui::IsItemClicked(0))
 	{
 		App->scene_intro->selectGameObject(gameobject);
