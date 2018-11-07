@@ -136,7 +136,6 @@ void ComponentCamera::DrawInfo()
 			frustum.verticalFov = VFOV*DEGTORAD;
 			setAspectRatio(AR);
 		}
-		ImGui::Text(std::to_string(frustum.horizontalFov*RADTODEG).c_str());
 		if (ImGui::InputFloat("Aspect Ratio", &AR, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			setAspectRatio(AR);

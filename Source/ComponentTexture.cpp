@@ -9,7 +9,7 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
-	if (!active)
+	if (!active || Material == nullptr)
 		return false;
 
 	if (Material != nullptr)
@@ -40,7 +40,9 @@ void ComponentTexture::DrawInfo()
 			ImGui::Image((ImTextureID)Material->GL_id, imageSize);
 		}
 		else
-			ImGui::Text("No texture");
+		{
+			ImGui::Text("No texture attached");
+		}
 	}
 }
 

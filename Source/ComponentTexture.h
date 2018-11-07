@@ -9,7 +9,7 @@ class ComponentTexture : public Component
 {
 public:
 	
-	ComponentTexture(GameObject* gameobject, componentType type) :Component(gameobject, type) {}
+	ComponentTexture(GameObject* gameobject, componentType type) :Component(gameobject, type) { Material = nullptr; }
 
 	~ComponentTexture();
 
@@ -21,7 +21,7 @@ public:
 
 public: 
 
-	Texture* Material;
+	Texture* Material = nullptr;
 
 };
 
