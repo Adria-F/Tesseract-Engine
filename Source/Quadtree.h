@@ -24,7 +24,7 @@ public:
 
 public:
 
-	AABB QT_Box;
+	AABB* QT_Box;
 
 private:
 
@@ -34,7 +34,7 @@ private:
 	int maxLevels = 0;
 	int level = 0;
 
-	vector<Quadtree*> children;
+	Quadtree* children[4];
 
 };
 

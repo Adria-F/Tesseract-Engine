@@ -155,7 +155,7 @@ update_status ModuleCamera3D::Update(float dt)
 	Y = camera->frustum.up;
 	X = camera->frustum.WorldRight();
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGuizmo::IsOver())
 	{
 		GameObject* newGO = checkMousePick();
 		if (App->scene_intro->selected_GO != nullptr)

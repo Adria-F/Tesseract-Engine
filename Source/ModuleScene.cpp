@@ -27,11 +27,12 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	quadTree = new Quadtree();
+	StartQuadTree();
+
 	//Load Baker House model
 	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	//App->scene_loader->loadScene("sceneTest");
 	
-	StartQuadTree();
 
 	return ret;
 }
@@ -132,7 +133,27 @@ void ModuleScene::Draw()
 		GameObjects[i]->culling = false;
 	}
 
-	DrawGuizmo();
+
+	if (App->scene_intro->selected_GO != nullptr )
+	{
+		if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::TRANSLATE;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::ROTATE;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::SCALE;
+			}
+		}
+
+		DrawGuizmo(guizmoOperation);
+	}
 
 	if (App->renderer3D->ShowQT)
 		quadTree->DrawQT();
@@ -186,6 +207,8 @@ void ModuleScene::newScene()
 void ModuleScene::StartQuadTree()
 {
 	quadTree->Clear();
+	quadTree->QT_Box = new AABB();
+	quadTree->QT_Box->SetNegativeInfinity();
 
 	for (int i = 0; i < GameObjects.size(); i++)
 	{
@@ -216,7 +239,7 @@ void ModuleScene::ResizeQuadTree(GameObject* gameObject)
 {
 	if (gameObject != nullptr && gameObject->isStatic)
 	{
-		quadTree->QT_Box.Enclose(gameObject->boundingBox);
+		quadTree->QT_Box->Enclose(gameObject->boundingBox);
 
 		for (int i = 0; i < gameObject->childs.size(); i++)
 		{
@@ -226,21 +249,43 @@ void ModuleScene::ResizeQuadTree(GameObject* gameObject)
 
 }
 
-void ModuleScene::DrawGuizmo()
+void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
-	if (App->scene_intro->selected_GO != nullptr) 
+	ComponentTransformation* transform = (ComponentTransformation*)App->scene_intro->selected_GO->GetComponent(TRANSFORMATION);
+
+	if (transform != nullptr)
 	{
+		ImGuizmo::Enable(true);
+
 		float4x4 ViewMatrix, ProjectionMatrix;
+		ImGuizmo::MODE mode;
+		float4x4* ObjectMat;
 
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)ViewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)ProjectionMatrix.v);
+		ObjectMat = &transform->localMatrix;
+		ObjectMat->Transpose();
 
+		/*float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+		ImGuizmo::DecomposeMatrixToComponents((float*)transform->globalMatrix.v, matrixTranslation, matrixRotation, matrixScale);
+		ImGui::InputFloat3("Tr", matrixTranslation, 3);
+		ImGui::InputFloat3("Rt", matrixRotation, 3);
+		ImGui::InputFloat3("Sc", matrixScale, 3);
+		ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, (float*)transform->globalMatrix.v);
+*/
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetOrthographic(true);
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-		ComponentTransformation* transform = (ComponentTransformation*)App->scene_intro->selected_GO->GetComponent(TRANSFORMATION);
+		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat,NULL,NULL);
+		ObjectMat->Transpose();
 
-		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, (float*)transform->globalMatrix.v);
+		if (ImGuizmo::IsUsing())
+		{
+			App->renderer3D->CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
+			GameObjects[0]->RecalculateBB();
+
+			StartQuadTree();
+		}
 	}
 }

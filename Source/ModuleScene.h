@@ -44,7 +44,7 @@ public:
 	void StartQuadTree();
 	void FillQuadtree(GameObject* gameObject); 
 	void ResizeQuadTree(GameObject* gameObject);
-	void DrawGuizmo();
+	void DrawGuizmo(ImGuizmo::OPERATION operation);
 
 public:
 
@@ -57,5 +57,7 @@ public:
 	GameObject* selected_GO = nullptr;
 
 	Quadtree* quadTree=nullptr;
+
+	ImGuizmo::OPERATION guizmoOperation;
 };
 #endif // !__MODULESCENE_H__

@@ -5,19 +5,30 @@
 
 Quadtree::Quadtree()
 {
-	QT_Box.SetNegativeInfinity();
+	QT_Box = new AABB();
+	QT_Box->SetNegativeInfinity();
 
 	maxElements = 1;
 	maxLevels = 3;
 	level = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		children[i] = nullptr;
+	}
 }
 
 Quadtree::Quadtree(AABB limits,int level)
 {
-	QT_Box = limits;
+	QT_Box = new AABB(limits);
 	maxElements = 1;
 	maxLevels = 3;
 	this->level = level;
+
+	for (int i = 0; i < 4; i++)
+	{
+		children[i] = nullptr;
+	}
 }
 
 
@@ -27,11 +38,11 @@ Quadtree::~Quadtree()
 
 void Quadtree::Insert(GameObject * gameObject)
 {
-	if (gameObject != nullptr && QT_Box.Intersects(gameObject->boundingBox))
+	if (gameObject != nullptr && QT_Box->Intersects(gameObject->boundingBox))
 	{
-		if (children.size() > 0)
+		if (children[0]!=nullptr)
 		{
-			for (int i = 0; i < children.size(); i++)
+			for (int i = 0; i < 4; i++)
 			{
 				children[i]->Insert(gameObject);
 			}
@@ -42,14 +53,14 @@ void Quadtree::Insert(GameObject * gameObject)
 			
 			if (level<maxLevels && container.size() > maxElements)
 			{
-				if (children.size() <= 0)
+				if (children[0] == nullptr)
 				{
 					Split();
 				}
 
 				for (int j = 0; j < container.size(); j++)
 				{
-					for (int i = 0; i < children.size(); i++)
+					for (int i = 0; i < 4; i++)
 					{
 						children[i]->Insert(container[j]);
 					}
@@ -79,29 +90,29 @@ void Quadtree::Split()
 
 	float x, y, z;
 
-	x = QT_Box.MaxX() - QT_Box.MinX();
-	y = QT_Box.MaxY() - QT_Box.MinY();
-	z = QT_Box.MaxZ() - QT_Box.MinZ();
+	x = QT_Box->MaxX() - QT_Box->MinX();
+	y = QT_Box->MaxY() - QT_Box->MinY();
+	z = QT_Box->MaxZ() - QT_Box->MinZ();
 
 	vec diagonal = { x / 2,y,z / 2 };
 
 	//first Child
-	AABB first({ QT_Box.minPoint }, { QT_Box.minPoint + diagonal });
-	children.push_back(new Quadtree(first,level+1));
+	AABB first({ QT_Box->minPoint }, { QT_Box->minPoint + diagonal });
+	children[0]=new Quadtree(first,level+1);
 
 	//second Child
-	vec secondMin = QT_Box.minPoint + vec(x / 2, 0.0f, 0.0f);
+	vec secondMin = QT_Box->minPoint + vec(x / 2, 0.0f, 0.0f);
 	AABB second( secondMin ,  secondMin + diagonal );
-	children.push_back(new Quadtree(second, level + 1));
+	children[1] = new Quadtree(second, level + 1);
 
 	//third Child
-	vec thirdMin = QT_Box.minPoint + vec(0.0f, 0.0f, z/2);
+	vec thirdMin = QT_Box->minPoint + vec(0.0f, 0.0f, z/2);
 	AABB third(thirdMin, thirdMin + diagonal);
-	children.push_back(new Quadtree(third, level + 1));
+	children[2] = new Quadtree(third, level + 1);
 
 	//fourth Child
-	AABB fourth(QT_Box.maxPoint-diagonal, QT_Box.maxPoint);
-	children.push_back(new Quadtree(fourth, level + 1));
+	AABB fourth(QT_Box->maxPoint-diagonal, QT_Box->maxPoint);
+	children[3] = new Quadtree(fourth, level + 1);
 
 }
 
@@ -111,9 +122,9 @@ void Quadtree::Remove(GameObject * gameObject)
 
 void Quadtree::Intersect(vector<GameObject*>& gameObjects, const AABB & boundingBox)
 {
-	if (QT_Box.Intersects(boundingBox))
+	if (QT_Box->Intersects(boundingBox))
 	{
-		if (children.size() <= 0)
+		if (children[0] == nullptr)
 		{
 			for (int i = 0; i < container.size(); i++)
 			{
@@ -136,7 +147,7 @@ void Quadtree::Intersect(vector<GameObject*>& gameObjects, const Frustum& frustu
 	float3 BBcorners[8];
 	int counter = 0;
 
-	QT_Box.GetCornerPoints(BBcorners);
+	QT_Box->GetCornerPoints(BBcorners);
 	frustum.GetPlanes(planes);
 
 	for (int i = 0; i < 6; i++)
@@ -160,7 +171,7 @@ void Quadtree::Intersect(vector<GameObject*>& gameObjects, const Frustum& frustu
 
 	if (counter == 6)
 	{
-		if (children.size() <= 0)
+		if (children[0] == nullptr)
 		{
 			for (int i = 0; i < container.size(); i++)
 			{
@@ -179,16 +190,15 @@ void Quadtree::Intersect(vector<GameObject*>& gameObjects, const Frustum& frustu
 
 void Quadtree::Clear()
 {
-	QT_Box.SetNegativeInfinity();
+	RELEASE(QT_Box);
 
-	if (children.size() > 0)
+	if (children[0] != nullptr)
 	{
-		for (int i = 0; i < children.size(); i++)
+		for (int i = 0; i < 4; i++)
 		{
 			children[i]->Clear();
+			RELEASE(children[i]);
 		}
-
-		children.clear();
 	}
 
 	for (int i = 0; i < container.size(); i++)
@@ -201,51 +211,54 @@ void Quadtree::Clear()
 
 void Quadtree::DrawQT()
 {
-	for (int i = 0; i < children.size(); i++)
+	if (children[0] != nullptr)
 	{
-		children[i]->DrawQT();
+		for (int i = 0; i < 4; i++)
+		{
+			children[i]->DrawQT();
+		}
 	}
-
+	
 	glLineWidth(2.5f);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
 	glBegin(GL_LINES);
 
-	glVertex3f(QT_Box.CornerPoint(0).x, QT_Box.CornerPoint(0).y, QT_Box.CornerPoint(0).z);
-	glVertex3f(QT_Box.CornerPoint(1).x, QT_Box.CornerPoint(1).y, QT_Box.CornerPoint(1).z);
+	glVertex3f(QT_Box->CornerPoint(0).x, QT_Box->CornerPoint(0).y, QT_Box->CornerPoint(0).z);
+	glVertex3f(QT_Box->CornerPoint(1).x, QT_Box->CornerPoint(1).y, QT_Box->CornerPoint(1).z);
 
-	glVertex3f(QT_Box.CornerPoint(0).x, QT_Box.CornerPoint(0).y, QT_Box.CornerPoint(0).z);
-	glVertex3f(QT_Box.CornerPoint(2).x, QT_Box.CornerPoint(2).y, QT_Box.CornerPoint(2).z);
+	glVertex3f(QT_Box->CornerPoint(0).x, QT_Box->CornerPoint(0).y, QT_Box->CornerPoint(0).z);
+	glVertex3f(QT_Box->CornerPoint(2).x, QT_Box->CornerPoint(2).y, QT_Box->CornerPoint(2).z);
 
-	glVertex3f(QT_Box.CornerPoint(0).x, QT_Box.CornerPoint(0).y, QT_Box.CornerPoint(0).z);
-	glVertex3f(QT_Box.CornerPoint(4).x, QT_Box.CornerPoint(4).y, QT_Box.CornerPoint(4).z);
+	glVertex3f(QT_Box->CornerPoint(0).x, QT_Box->CornerPoint(0).y, QT_Box->CornerPoint(0).z);
+	glVertex3f(QT_Box->CornerPoint(4).x, QT_Box->CornerPoint(4).y, QT_Box->CornerPoint(4).z);
 
-	glVertex3f(QT_Box.CornerPoint(3).x, QT_Box.CornerPoint(3).y, QT_Box.CornerPoint(3).z);
-	glVertex3f(QT_Box.CornerPoint(1).x, QT_Box.CornerPoint(1).y, QT_Box.CornerPoint(1).z);
+	glVertex3f(QT_Box->CornerPoint(3).x, QT_Box->CornerPoint(3).y, QT_Box->CornerPoint(3).z);
+	glVertex3f(QT_Box->CornerPoint(1).x, QT_Box->CornerPoint(1).y, QT_Box->CornerPoint(1).z);
 
-	glVertex3f(QT_Box.CornerPoint(3).x, QT_Box.CornerPoint(3).y, QT_Box.CornerPoint(3).z);
-	glVertex3f(QT_Box.CornerPoint(2).x, QT_Box.CornerPoint(2).y, QT_Box.CornerPoint(2).z);
+	glVertex3f(QT_Box->CornerPoint(3).x, QT_Box->CornerPoint(3).y, QT_Box->CornerPoint(3).z);
+	glVertex3f(QT_Box->CornerPoint(2).x, QT_Box->CornerPoint(2).y, QT_Box->CornerPoint(2).z);
 
-	glVertex3f(QT_Box.CornerPoint(3).x, QT_Box.CornerPoint(3).y, QT_Box.CornerPoint(3).z);
-	glVertex3f(QT_Box.CornerPoint(7).x, QT_Box.CornerPoint(7).y, QT_Box.CornerPoint(7).z);
+	glVertex3f(QT_Box->CornerPoint(3).x, QT_Box->CornerPoint(3).y, QT_Box->CornerPoint(3).z);
+	glVertex3f(QT_Box->CornerPoint(7).x, QT_Box->CornerPoint(7).y, QT_Box->CornerPoint(7).z);
 
-	glVertex3f(QT_Box.CornerPoint(6).x, QT_Box.CornerPoint(6).y, QT_Box.CornerPoint(6).z);
-	glVertex3f(QT_Box.CornerPoint(2).x, QT_Box.CornerPoint(2).y, QT_Box.CornerPoint(2).z);
+	glVertex3f(QT_Box->CornerPoint(6).x, QT_Box->CornerPoint(6).y, QT_Box->CornerPoint(6).z);
+	glVertex3f(QT_Box->CornerPoint(2).x, QT_Box->CornerPoint(2).y, QT_Box->CornerPoint(2).z);
 
-	glVertex3f(QT_Box.CornerPoint(6).x, QT_Box.CornerPoint(6).y, QT_Box.CornerPoint(6).z);
-	glVertex3f(QT_Box.CornerPoint(4).x, QT_Box.CornerPoint(4).y, QT_Box.CornerPoint(4).z);
+	glVertex3f(QT_Box->CornerPoint(6).x, QT_Box->CornerPoint(6).y, QT_Box->CornerPoint(6).z);
+	glVertex3f(QT_Box->CornerPoint(4).x, QT_Box->CornerPoint(4).y, QT_Box->CornerPoint(4).z);
 
-	glVertex3f(QT_Box.CornerPoint(6).x, QT_Box.CornerPoint(6).y, QT_Box.CornerPoint(6).z);
-	glVertex3f(QT_Box.CornerPoint(7).x, QT_Box.CornerPoint(7).y, QT_Box.CornerPoint(7).z);
+	glVertex3f(QT_Box->CornerPoint(6).x, QT_Box->CornerPoint(6).y, QT_Box->CornerPoint(6).z);
+	glVertex3f(QT_Box->CornerPoint(7).x, QT_Box->CornerPoint(7).y, QT_Box->CornerPoint(7).z);
 
-	glVertex3f(QT_Box.CornerPoint(5).x, QT_Box.CornerPoint(5).y, QT_Box.CornerPoint(5).z);
-	glVertex3f(QT_Box.CornerPoint(1).x, QT_Box.CornerPoint(1).y, QT_Box.CornerPoint(1).z);
+	glVertex3f(QT_Box->CornerPoint(5).x, QT_Box->CornerPoint(5).y, QT_Box->CornerPoint(5).z);
+	glVertex3f(QT_Box->CornerPoint(1).x, QT_Box->CornerPoint(1).y, QT_Box->CornerPoint(1).z);
 
-	glVertex3f(QT_Box.CornerPoint(5).x, QT_Box.CornerPoint(5).y, QT_Box.CornerPoint(5).z);
-	glVertex3f(QT_Box.CornerPoint(4).x, QT_Box.CornerPoint(4).y, QT_Box.CornerPoint(4).z);
+	glVertex3f(QT_Box->CornerPoint(5).x, QT_Box->CornerPoint(5).y, QT_Box->CornerPoint(5).z);
+	glVertex3f(QT_Box->CornerPoint(4).x, QT_Box->CornerPoint(4).y, QT_Box->CornerPoint(4).z);
 
-	glVertex3f(QT_Box.CornerPoint(5).x, QT_Box.CornerPoint(5).y, QT_Box.CornerPoint(5).z);
-	glVertex3f(QT_Box.CornerPoint(7).x, QT_Box.CornerPoint(7).y, QT_Box.CornerPoint(7).z);
+	glVertex3f(QT_Box->CornerPoint(5).x, QT_Box->CornerPoint(5).y, QT_Box->CornerPoint(5).z);
+	glVertex3f(QT_Box->CornerPoint(7).x, QT_Box->CornerPoint(7).y, QT_Box->CornerPoint(7).z);
 
 	glEnd();
 
