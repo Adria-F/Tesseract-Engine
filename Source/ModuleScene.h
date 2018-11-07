@@ -46,6 +46,8 @@ public:
 	void ResizeQuadTree(GameObject* gameObject);
 	void DrawGuizmo();
 
+	void selectGameObject(GameObject* gameObject);
+
 public:
 
 	std::string scene_name = "";

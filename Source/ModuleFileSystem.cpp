@@ -250,7 +250,7 @@ void ModuleFileSystem::importFilesAt(const char * path)
 	}
 }
 
-void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements, assetsElement * element)
+void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements)
 {
 	char** files = PHYSFS_enumerateFiles(path);
 
@@ -266,16 +266,10 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 			newElem->name += '.' + extension;
 
 		if (PHYSFS_isDirectory(currPath.c_str()))
-		{
-			currPath += '/';
-			getFilesAt(currPath.c_str(), elements, newElem);
-		}
+			newElem->type = assetsElement::elementType::FOLDER;
 		else
 			newElem->type = assetsElement::elementType::FILE;
 
-		if (element != nullptr)
-			element->pushElement(newElem);
-		else
-			elements.push_back(newElem);
+		elements.push_back(newElem);
 	}
 }

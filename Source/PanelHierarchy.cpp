@@ -57,13 +57,15 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
 
+	if (gameobject->child_selected)
+	{
+		ImGui::SetNextTreeNodeOpen(true);
+	}
+
 	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
 	if (ImGui::IsItemClicked(0))
 	{
-		if (App->scene_intro->selected_GO != nullptr)
-			App->scene_intro->selected_GO->selected = false;
-		App->scene_intro->selected_GO = gameobject;
-		gameobject->selected = true;
+		App->scene_intro->selectGameObject(gameobject);
 	}
 	if (opened)
 	{

@@ -33,7 +33,8 @@ public:
 
 	void RecalculateBB();
 
-
+	void setSelected(bool selected);
+	void setChildSelected(bool selected);
 
 public:
 
@@ -44,6 +45,7 @@ public:
 
 	bool active = true;
 	bool selected = false;
+	bool child_selected = false;
 	bool isStatic = false;
 	bool culling = false;
 	

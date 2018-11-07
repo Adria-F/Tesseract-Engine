@@ -347,3 +347,19 @@ void GameObject::RecalculateBB()
 	}
 
 }
+
+void GameObject::setSelected(bool selected)
+{
+	this->selected = selected;
+
+	if (parent != nullptr)
+		parent->setChildSelected(selected);
+}
+
+void GameObject::setChildSelected(bool selected)
+{
+	child_selected = selected;
+
+	if (parent != nullptr)
+		parent->setChildSelected(selected);
+}

@@ -32,7 +32,7 @@ public:
 
 	void importFilesAt(const char* path);
 	
-	void getFilesAt(const char* path, std::list<assetsElement*>& elements, assetsElement* element = nullptr);
+	void getFilesAt(const char* path, std::list<assetsElement*>& elements);
 };
 
 #endif // !__MODULEFILESYSTEM_H__
