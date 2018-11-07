@@ -21,8 +21,7 @@ public:
 
 	std::list<assetsElement*> elements;
 	assetsElement* currElement = nullptr;
-
-	std::stack<assetsElement*> elementsHistory;
+	std::string current_path = ASSETS_FOLDER;
 };
 
 #endif // !__PANELASSETS_H__

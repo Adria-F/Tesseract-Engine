@@ -289,3 +289,13 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		}
 	}
 }
+
+void ModuleScene::selectGameObject(GameObject* gameObject)
+{
+	if (selected_GO != nullptr)
+		selected_GO->setSelected(false);
+
+	selected_GO = gameObject;
+	if (gameObject != nullptr)
+		gameObject->setSelected(true);
+}

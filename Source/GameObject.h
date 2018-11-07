@@ -10,6 +10,10 @@ struct JSON_Value;
 class Component;
 class ComponentTransformation;
 
+class ComponentMesh;
+class ComponentTexture;
+class ComponentCamera;
+
 enum componentType;
 
 class GameObject
@@ -22,7 +26,7 @@ public:
 	void RemoveComponent(Component* component);
 
 	void Update();
-	void Draw();
+	void DrawComponentsUI();
 	void DrawBB(const AABB& BB, vec3 color) const; 
 	void DrawBB(const OBB& BB, vec3 color) const;
 
@@ -33,17 +37,18 @@ public:
 
 	void RecalculateBB();
 
-
+	void setSelected(bool selected);
+	void setChildSelected(bool selected);
 
 public:
 
-	std::list<Component*> components;
 	std::vector<GameObject*> childs;
 
 	GameObject* parent = nullptr;
 
 	bool active = true;
 	bool selected = false;
+	bool child_selected = false;
 	bool isStatic = false;
 	bool culling = false;
 	
@@ -54,6 +59,15 @@ public:
 
 	AABB boundingBox;
 	OBB localBB;
+
+private:
+
+	ComponentTransformation* transformation = nullptr;
+	ComponentMesh* mesh = nullptr;
+	ComponentTexture* texture = nullptr;
+	ComponentCamera* camera = nullptr;
+
+	std::list<Component*> components;
 };
 
 #endif // !__GAMEOBJECTS_H__

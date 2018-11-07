@@ -31,7 +31,6 @@ public:
 
 	Frustum frustum;
 	AABB cameraBB;
-	
 };
 
 #endif

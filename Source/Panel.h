@@ -9,15 +9,6 @@
 
 struct assetsElement
 {
-	~assetsElement()
-	{
-		for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
-		{
-			RELEASE(*it_e);
-		}
-		elements.clear();
-	}
-
 	enum elementType
 	{
 		FOLDER = 0,
@@ -25,12 +16,6 @@ struct assetsElement
 	}type;
 
 	std::string name;
-	std::list<assetsElement*> elements;
-
-	void pushElement(assetsElement* element)
-	{
-		elements.push_back(element);
-	}
 };
 
 class Panel

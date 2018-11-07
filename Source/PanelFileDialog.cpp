@@ -25,12 +25,9 @@ void PanelFileDialog::Draw()
 	char text[120];
 	strcpy_s(text, 120, App->scene_intro->scene_name.c_str());
 
-	std::list<assetsElement*> usingList = elements;
-	if (currElement != nullptr)
-		usingList = currElement->elements;
-	for (std::list<assetsElement*>::iterator it_e = usingList.begin(); it_e != usingList.end(); it_e++)
+	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
 	{
-		if (ImGui::Selectable((*it_e)->name.c_str()))
+		if (ImGui::Selectable((*it_e)->name.c_str())) //Need to check if it is a folder
 			App->scene_intro->scene_name = (*it_e)->name;
 	}
 

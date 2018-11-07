@@ -8,6 +8,7 @@ PanelAssets::PanelAssets(const char* name) : Panel(name)
 {
 	active = true;
 
+	current_path = ASSETS_FOLDER;
 	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
 }
 
@@ -22,27 +23,27 @@ void PanelAssets::Draw()
 
 	float folderWidth = (float)App->gui->folder->width;
 
+	//Buttons
 	ImGui::BeginMenuBar();
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.9f,0.45f,0.0f,0.7f });
-	if (ImGui::Button("Back"))
+	if (ImGui::ArrowButton("back", ImGuiDir_Left))
 	{
-		if (elementsHistory.size() > 0)
-		{
-			currElement = elementsHistory.top();
-			elementsHistory.pop();
-		}
-		else
-			currElement = nullptr;
+		clearElements();
+		App->fileSystem->splitPath(current_path.c_str(), &current_path, nullptr, nullptr);
+		App->fileSystem->getFilesAt(current_path.c_str(), elements);
 	}
+	ImGui::Text(current_path.c_str());
 	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 40);
 	if (ImGui::Button("Reload"))
 	{
 		clearElements();
+		current_path = ASSETS_FOLDER;
 		App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
 	}
 	ImGui::PopStyleColor();
 	ImGui::EndMenuBar();
 
+	//Files
 	ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f,0.37f,0.0f,0.7f });
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.95f,0.5f,0.0f,0.7f });
@@ -50,16 +51,13 @@ void PanelAssets::Draw()
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, { 0.0f,0.0f,0.0f,0.0f });
 	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, { 0.0f,0.0f,0.0f,0.0f });
 
-	std::list<assetsElement*> usingList = elements;
-	if (currElement != nullptr)
-		usingList = currElement->elements;
-
 	int i = 0;
 	int rowCount = 1;
 	float leftMargin = ImGui::GetCursorPosX();
 	float currLine = ImGui::GetCursorPosY();
-	for (std::list<assetsElement*>::iterator it_e = usingList.begin(); it_e != usingList.end(); it_e++)
+	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
 	{
+		//Set proper cursor position
 		if (rowCount == 1)
 			currLine = ImGui::GetCursorPosY();
 		else
@@ -80,11 +78,20 @@ void PanelAssets::Draw()
 		{
 			if ((*it_e)->type == assetsElement::FOLDER)
 			{
-				if (currElement != nullptr)
-					elementsHistory.push(currElement);
-				currElement = (*it_e);
+				if (current_path.size() > 0 && current_path.back() != '/')
+					current_path += '/';
+				current_path += (*it_e)->name;
+				clearElements();
+				App->fileSystem->getFilesAt(current_path.c_str(), elements);
+				ImGui::PopID();
+				break;
+			}
+			else
+			{
+				//Load file
 			}
 		}
+		//Draw name
 		ImGui::PopID();
 		if (rowCount > 1 && ImGui::GetWindowContentRegionMax().x >= 70 * rowCount)
 		{

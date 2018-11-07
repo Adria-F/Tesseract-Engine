@@ -46,39 +46,30 @@ void GameObject::Update()
 	
 	if (active && (culling || !App->renderer3D->Frustum_Culling))
 	{
-		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+		if (texture != nullptr)
+			texture->Update();
+
+		if (mesh != nullptr)
 		{
-			if ((*it_c)->type == MATERIAL)
-				(*it_c)->Update();
+			//comented to test the frustum culling
+			glPushMatrix();
+			glMultMatrixf((float*)transformation->globalMatrix.Transposed().v);
+			mesh->Update();
+			glPopMatrix();
+
 		}
 
-		ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
-
-		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
-		{
-			if ((*it_c)->type == MESH)
-			{
-				//comented to test the frustum culling
-				glPushMatrix();
-				glMultMatrixf((float*)transform->globalMatrix.Transposed().v);
-				(*it_c)->Update();
-				glPopMatrix();
-			}
-		}
-
-		if (transform && transform->changed)
+		if (transformation != nullptr && transformation->changed)
 		{
 			GameObject* bigParent = this;
 			while (bigParent->parent != nullptr)
 				bigParent = bigParent->parent;
 			bigParent->RecalculateBB();
+			transformation->changed = false;
 		}
 
-		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
-		{
-			if ((*it_c)->type == CAMERA)
-				(*it_c)->Update();
-		}
+		if (camera != nullptr)
+			camera->Update();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -110,43 +101,74 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Draw()
+void GameObject::DrawComponentsUI()
 {
-	
-	
+	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	{
+		(*it_c)->DrawUI();
+		ImGui::Separator();
+	}
 }
 
 Component* GameObject::AddComponent(componentType type)
 {
-	Component* ret;
+	Component* ret = nullptr;
 
 	switch (type)
 	{
 	case TRANSFORMATION:
-		ret = new ComponentTransformation(this,type);
-		components.push_back(ret);
+		if (transformation == nullptr)
+		{
+			ret = transformation = new ComponentTransformation(this, type);
+		}
 		break;
 	case MESH:
-		ret=new ComponentMesh(this, type);
-		components.push_back(ret);
+		if (mesh == nullptr)
+		{
+			ret = mesh = new ComponentMesh(this, type);
+		}
 		break;
 	case MATERIAL:
-		ret = new ComponentTexture(this, type);
-		components.push_back(ret);
+		if (texture == nullptr)
+		{
+			ret = texture = new ComponentTexture(this, type);
+		}
 		break;
 	case CAMERA:
-		ret = new ComponentCamera(this, type);
-		components.push_back(ret);
+		if (camera == nullptr)
+		{
+			ret = camera = new ComponentCamera(this, type);
+		}
 		break;
 	}
+
+	if (ret != nullptr)
+		components.push_back(ret);
 
 	return ret;
 }
 
 void GameObject::RemoveComponent(Component* component)
 {
-	components.remove(component);
+	switch (component->type)
+	{
+	case TRANSFORMATION:
+		transformation = nullptr;
+		break;
+	case MESH:
+		mesh = nullptr;
+		if (transformation)
+			transformation->changed = true;
+		break;
+	case MATERIAL:
+		texture = nullptr;
+		break;
+	case CAMERA:
+		camera = nullptr;
+		break;
+	}
 
+	components.remove(component);
 	RELEASE(component);
 }
 
@@ -258,6 +280,7 @@ void GameObject::Save(JSON_Value* gameobject)
 
 	JSON_Value* Components = gameobject->createValue();
 	Components->convertToArray();
+
 	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 	{
 		(*it_c)->Save(Components);
@@ -290,19 +313,18 @@ void GameObject::Load(JSON_Value* gameobject)
 		}
 	}
 
-	for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+	if (mesh)
 	{
-		if ((*it_c)->type == MESH)
-		{
-			boundingBox.SetNegativeInfinity();
-			boundingBox.Enclose((float3*)((ComponentMesh*)(*it_c))->mesh->vertices, ((ComponentMesh*)(*it_c))->mesh->num_vertices);
-		}
+		boundingBox.SetNegativeInfinity();
+		boundingBox.Enclose((float3*)mesh->mesh->vertices, mesh->mesh->num_vertices);
+
 	}
 }
 
 Component* GameObject::GetComponent(componentType type)
 {
 	Component* ret = nullptr;
+	
 	for (list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
 	{
 		if ((*it_c)->type == type)
@@ -317,11 +339,7 @@ Component* GameObject::GetComponent(componentType type)
 
 void GameObject::RecalculateBB()
 {
-	
-
-	ComponentMesh* auxMesh = (ComponentMesh*)GetComponent(MESH);
-	ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
-	if (transform != nullptr)
+	if (transformation != nullptr)
 	{
 		boundingBox.SetNegativeInfinity();
 
@@ -335,15 +353,30 @@ void GameObject::RecalculateBB()
 			}
 		}
 
-		if (auxMesh != nullptr)
+		if (mesh != nullptr)
 		{
-			boundingBox.Enclose((float3*)auxMesh->mesh->vertices, auxMesh->mesh->num_vertices);
+			boundingBox.Enclose((float3*)mesh->mesh->vertices, mesh->mesh->num_vertices);
 		}
 
 		if (childs.size() <= 0)
 		{
-			boundingBox.TransformAsAABB(transform->globalMatrix);
+			boundingBox.TransformAsAABB(transformation->globalMatrix);
 		}
 	}
+}
 
+void GameObject::setSelected(bool selected)
+{
+	this->selected = selected;
+
+	if (parent != nullptr)
+		parent->setChildSelected(selected);
+}
+
+void GameObject::setChildSelected(bool selected)
+{
+	child_selected = selected;
+
+	if (parent != nullptr)
+		parent->setChildSelected(selected);
 }

@@ -14,8 +14,6 @@ void ComponentTransformation::DrawInfo()
 		if (gameObject->isStatic && ImGui::IsItemHovered())
 			ImGui::SetTooltip("Object is static");
 
-		changed = false;
-
 		ImGuiInputTextFlags flags = ImGuiInputTextFlags_EnterReturnsTrue;
 
 		if (gameObject->isStatic)

@@ -135,13 +135,13 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
 	std::string name = (node->mName.length > 0) ? node->mName.C_Str() : "Unnamed";
-	static const char* dummies[5] = {
+	static const char* transformNodes[5] = {
 		"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
 		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
 
 	for (int i = 0; i < 5; ++i)
 	{
-		if (name.find(dummies[i]) != string::npos && node->mNumChildren == 1)
+		if (name.find(transformNodes[i]) != string::npos && node->mNumChildren == 1)
 		{
 			node = node->mChildren[0];
 

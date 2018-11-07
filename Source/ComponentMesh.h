@@ -22,7 +22,7 @@ public:
 
 public:
 
-	Mesh* mesh;
+	Mesh* mesh = nullptr;
 
 	//bool wire;
 

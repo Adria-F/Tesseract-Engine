@@ -74,11 +74,6 @@ public:
 
 	void CalculateGlobalMatrix(GameObject* gameOject);
 
-	ComponentMesh* CreateComponentMesh();
-	ComponentTexture* CreateComponentTexture();
-
-
-
 public:
 
 	GLuint FramebufferName = 0;
@@ -87,8 +82,6 @@ public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 	bool vsync = false;
 	bool Depth_Test = false;
@@ -104,8 +97,11 @@ public:
 	bool Frustum_Culling = true;
 	bool ShowClickRay = false;
 
+	bool changedFOV = false;
+
 	uint buff_id = 0;
 
+	//Clicking ray debug
 	float3 clickA = float3::zero;
 	float3 clickB = float3::zero;
 

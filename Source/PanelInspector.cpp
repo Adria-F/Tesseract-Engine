@@ -42,14 +42,30 @@ void PanelInspector::Draw()
 		}
 		ImGui::Separator();
 
-		for (std::list<Component*>::iterator it_c = go->components.begin(); it_c != go->components.end(); it_c++)
-		{
-			(*it_c)->DrawUI();
-			ImGui::Separator();
-		}
+		go->DrawComponentsUI();
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 300) / 2);
 		ImGui::Button("Add Component", { 300, 25.0f });
+
+		if (addComponent)
+		{
+			if (ImGui::BeginPopupContextItem("Add Component", 0))
+			{
+				if (go->GetComponent(MESH) == nullptr)
+					if (ImGui::Selectable("Mesh Component"))
+						go->AddComponent(MESH);
+				if (go->GetComponent(MATERIAL) == nullptr)
+					if (ImGui::Selectable("Material Component"))
+						go->AddComponent(MATERIAL);
+				if (go->GetComponent(CAMERA) == nullptr)
+					if (ImGui::Selectable("Camera Component"))
+						go->AddComponent(CAMERA);
+
+				ImGui::EndPopup();
+			}
+		}
+		else
+			addComponent = true;
 	}
 
 	ImGui::End();

@@ -5,9 +5,9 @@
 #include "GameObject.h"
 #include "ModuleMeshes.h"
 
-
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
 {
+	mesh = nullptr;
 }
 
 ComponentMesh::~ComponentMesh()
@@ -16,7 +16,7 @@ ComponentMesh::~ComponentMesh()
 
 bool ComponentMesh::Update()
 {
-	if (!active)
+	if (!active || mesh == nullptr)
 		return false;
 
 	//Assign Vertices
@@ -84,12 +84,19 @@ void ComponentMesh::DrawInfo()
 	ImGui::Checkbox("", &active);
 	ImGui::PopID();
 	ImGui::SameLine();
-
+	
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
-		ImGui::Text("Vertices Count: %d", mesh->num_vertices);
-		ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
+		if (mesh != nullptr)
+		{
+			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
+			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
+			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
+		}
+		else
+		{
+			ImGui::Text("No mesh attached");
+		}
 	}
 }
 

@@ -10,6 +10,10 @@ public:
 	~PanelInspector();
 
 	void Draw();
+
+public:
+
+	bool addComponent = false;
 };
 
 #endif // !__PANELINSPECTOR_H__
