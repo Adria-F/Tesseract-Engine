@@ -7,6 +7,7 @@
 #include "PanelConfiguration.h"
 #include "ModuleInput.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "ComponentCamera.h"
 
 #include "mmgr/mmgr.h"
 
@@ -204,6 +205,25 @@ void PanelConfiguration::Draw()
 		ImGui::Text(std::to_string(App->camera->Position.y).c_str());
 		ImGui::Text("Z: "); ImGui::SameLine();
 		ImGui::Text(std::to_string(App->camera->Position.z).c_str());
+		
+		ImGui::InputFloat("Near Plane", &App->camera->camera->frustum.nearPlaneDistance);
+		ImGui::InputFloat("Far Plane", &App->camera->camera->frustum.farPlaneDistance);
+		ImGui::NewLine();
+
+		float AR = App->camera->camera->frustum.AspectRatio();
+		float VFOV = App->camera->camera->frustum.verticalFov*RADTODEG;
+		if (ImGui::SliderFloat("FOV", &VFOV, 30, 135))
+		{
+			App->camera->camera->frustum.verticalFov = VFOV * DEGTORAD;
+			App->camera->camera->setAspectRatio(AR);
+			App->renderer3D->changedFOV = true;
+		}
+		if (ImGui::InputFloat("Aspect Ratio", &AR, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			App->camera->camera->setAspectRatio(AR);
+			App->renderer3D->changedFOV = true;
+		}
+		ImGui::NewLine();
 
 		ImGui::PushItemWidth(100.0f);
 		ImGui::InputFloat("Camera Speed", &App->camera->cameraSpeed);

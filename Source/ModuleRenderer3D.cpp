@@ -190,19 +190,24 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 	glViewport(0, 0, App->window->width, App->window->height);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	if (changedFOV)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(App->camera->camera->getProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		changedFOV = false;
+	}
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->camera->getViewMatrix());
-	//glLoadMatrixf(App->camera->GetViewMatrix());
-
 
 	// light 0 on cam pos
 	//lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -318,10 +323,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
 	glLoadMatrixf(App->camera->camera->getProjectionMatrix());
-	//glLoadMatrixf(&ProjectionMatrix);
-
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

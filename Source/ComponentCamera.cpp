@@ -131,7 +131,7 @@ void ComponentCamera::DrawInfo()
 
 		float AR = frustum.AspectRatio();
 		float VFOV = frustum.verticalFov*RADTODEG;
-		if (ImGui::SliderFloat("FOV", &VFOV, 10, 179))
+		if (ImGui::SliderFloat("FOV", &VFOV, 30, 135))
 		{
 			frustum.verticalFov = VFOV*DEGTORAD;
 			setAspectRatio(AR);
