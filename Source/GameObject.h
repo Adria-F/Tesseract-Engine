@@ -40,9 +40,11 @@ public:
 	void setSelected(bool selected);
 	void setChildSelected(bool selected);
 
+	void changeParent(GameObject* newParent);
+
 public:
 
-	std::vector<GameObject*> childs;
+	std::list<GameObject*> childs;
 
 	GameObject* parent = nullptr;
 

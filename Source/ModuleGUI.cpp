@@ -286,5 +286,5 @@ bool ModuleGUI::isMouseOnGUI() const
 
 bool ModuleGUI::GUIKeppsKeyboard() const
 {
-	return ImGui::GetIO().WantCaptureKeyboard;
+	return ImGui::GetIO().WantTextInput;
 }

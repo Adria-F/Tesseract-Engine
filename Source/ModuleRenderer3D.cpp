@@ -347,25 +347,25 @@ bool ModuleRenderer3D::Load(JSON_File* document) {
 	return true;
 }
 
-void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameOject)
+void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 {
-	ComponentTransformation* transform = (ComponentTransformation*)gameOject->GetComponent(TRANSFORMATION);
+	ComponentTransformation* transform = (ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION);
 
 	if (transform != nullptr)
 	{
-		if (gameOject->parent == nullptr)
+		if (gameObject->parent == nullptr)
 		{
 			transform->globalMatrix = transform->localMatrix;
 		}
 		else
 		{
-			transform->globalMatrix = ((ComponentTransformation*)gameOject->parent->GetComponent(TRANSFORMATION))->globalMatrix*transform->localMatrix;
+			transform->globalMatrix = ((ComponentTransformation*)gameObject->parent->GetComponent(TRANSFORMATION))->globalMatrix*transform->localMatrix;
 		}
 
 
-		for (int i = 0; i < gameOject->childs.size(); i++)
+		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
 		{
-			CalculateGlobalMatrix(gameOject->childs[i]);
+			CalculateGlobalMatrix((*it_c));
 		}
 	}
 }

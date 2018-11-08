@@ -23,19 +23,21 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	std::list<Component*>::iterator it_c;
-	it_c = components.begin();
-	while (it_c != components.end())
+	std::list<Component*>::iterator it_cp;
+	it_cp = components.begin();
+	while (it_cp != components.end())
 	{
-		RELEASE((*it_c));
-		it_c++;
+		RELEASE((*it_cp));
+		it_cp++;
 	}
 	components.clear();
 
-	int size = childs.size();
-	for (int i = 0; i < size; i++)
+	std::list<GameObject*>::iterator it_c;
+	it_c = childs.begin();
+	while(it_c != childs.end())
 	{
-		RELEASE(childs[i]);
+		RELEASE((*it_c));
+		it_c++;
 	}
 	childs.clear();
 }
@@ -85,9 +87,9 @@ void GameObject::Update()
 			DrawBB(App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
 		}
 
-		for (int i = 0; i < childs.size(); i++)
+		for (std::list<GameObject*>::iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
 		{
-			childs[i]->Update();
+			(*it_c)->Update();
 		}		
 	}	
 
@@ -292,9 +294,9 @@ void GameObject::Save(JSON_Value* gameobject)
 
 	gameobject->addValue("", gameObject);
 
-	for (int i = 0; i < childs.size(); i++)
+	for (std::list<GameObject*>::iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
 	{
-		childs[i]->Save(gameobject);
+		(*it_c)->Save(gameobject);
 	}
 }
 
@@ -347,11 +349,11 @@ void GameObject::RecalculateBB()
 
 		if (childs.size() > 0)
 		{
-			for (int i = 0; i < childs.size(); i++)
+			for (std::list<GameObject*>::iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
 			{
-				childs[i]->RecalculateBB();
-				if (childs[i]->boundingBox.IsFinite())
-					boundingBox.Enclose(childs[i]->boundingBox);
+				(*it_c)->RecalculateBB();
+				if ((*it_c)->boundingBox.IsFinite())
+					boundingBox.Enclose((*it_c)->boundingBox);
 			}
 		}
 
@@ -381,4 +383,13 @@ void GameObject::setChildSelected(bool selected)
 
 	if (parent != nullptr)
 		parent->setChildSelected(selected);
+}
+
+void GameObject::changeParent(GameObject * newParent)
+{
+	if (parent != nullptr)
+		parent->childs.remove(this);
+
+	parent = newParent;
+	parent->childs.push_back(this);
 }

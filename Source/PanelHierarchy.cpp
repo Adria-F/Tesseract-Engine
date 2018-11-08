@@ -63,14 +63,16 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
 	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("GAME_OBJECT", gameobject, sizeof(gameobject));
+		ImGui::SetDragDropPayload("GAME_OBJECT", gameobject, sizeof(&gameobject));
 		ImGui::Text(gameobject->name.c_str());
 		ImGui::EndDragDropSource();
 	}
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_SourceAllowNullID))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_SourceAllowNullID))
 		{
+			GameObject* draggedGameobject = (GameObject*)payload->Data;
+			//draggedGameobject->changeParent(gameobject);
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -89,9 +91,9 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	{
 		if (gameobject->childs.size() > 0)
 		{
-			for (int i = 0; i < gameobject->childs.size(); i++)
+			for (std::list<GameObject*>::iterator it_c = gameobject->childs.begin(); it_c != gameobject->childs.end(); it_c++)
 			{
-				FillTree(gameobject->childs[i]);
+				FillTree((*it_c));
 			}
 		}		
 		ImGui::TreePop();
