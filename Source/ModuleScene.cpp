@@ -26,6 +26,10 @@ bool ModuleScene::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	root = new GameObject();
+	root->name = "root";
+	root->AddComponent(TRANSFORMATION);
+
 	quadTree = new Quadtree();
 	StartQuadTree();
 
@@ -105,25 +109,25 @@ void ModuleScene::Draw()
 	//Non-Static objects-------------------------------------------------------------------
 
 	//From the possible objects only draw the ones inside the frustum
-	for (int i = 0; i < GameObjects.size(); i++)
+	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
 	{
-		if (!GameObjects[i]->isStatic)
+		if (!(*it_ch)->isStatic)
 		{
-			if (activeCamera->ContainsAABB(GameObjects[i]->boundingBox) && GameObjects[i]->GetComponent(CAMERA) == nullptr)
+			if (activeCamera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
 			{
-				GameObjects[i]->culling = true;
+				(*it_ch)->culling = true;
 			}
 			else
 			{
-				GameObjects[i]->culling = false;
+				(*it_ch)->culling = false;
 			}
 		}
 	}
 
-	for (int i = 0; i < GameObjects.size(); i++)
+	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
 	{
-		GameObjects[i]->Update();
-		GameObjects[i]->culling = false;
+		(*it_ch)->Update();
+		(*it_ch)->culling = false;
 	}
 
 
@@ -187,12 +191,16 @@ void ModuleScene::newScene()
 	}
 	App->renderer3D->meshes.clear();
 
-	int size = GameObjects.size();
-	for (int i = 0; i < size; i++)
+	gameObjects.clear(); //Just stores pointers, the gameObjects will be deleted bellow
+
+	std::list<GameObject*>::iterator it_ch;
+	it_ch = root->childs.begin();
+	while (it_ch != root->childs.end())
 	{
-		RELEASE(GameObjects[i]);
+		RELEASE((*it_ch));
+		it_ch++;
 	}
-	GameObjects.clear();
+	root->childs.clear();
 }
 
 void ModuleScene::StartQuadTree()
@@ -201,14 +209,14 @@ void ModuleScene::StartQuadTree()
 	quadTree->QT_Box = new AABB();
 	quadTree->QT_Box->SetNegativeInfinity();
 
-	for (int i = 0; i < GameObjects.size(); i++)
+	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
 	{
-		ResizeQuadTree(GameObjects[i]);
+		ResizeQuadTree((*it_ch));
 	}
 
-	for (int i = 0; i < GameObjects.size(); i++)
+	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
 	{
-		FillQuadtree(GameObjects[i]);
+		FillQuadtree((*it_ch));
 	}
 }
 
@@ -269,12 +277,38 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		if (ImGuizmo::IsUsing())
 		{
-			App->renderer3D->CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
-			GameObjects[0]->RecalculateBB();
+			App->renderer3D->CalculateGlobalMatrix(root);
+			root->RecalculateBB();
 
 			StartQuadTree();
 		}
 	}
+}
+
+void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent)
+{
+	if (parent != nullptr)
+	{
+		parent->childs.push_back(gameObject);
+		gameObject->parent = parent;
+	}
+	else
+	{
+		root->childs.push_back(gameObject);
+		gameObject->parent = root;
+	}
+
+	gameObjects[gameObject->UID] = gameObject;
+}
+
+void ModuleScene::deleteGameObject(GameObject* GO)
+{
+	if (GO->parent != nullptr)
+		GO->parent->childs.remove(GO);
+
+	gameObjects.erase(GO->UID);
+
+	RELEASE(GO);
 }
 
 void ModuleScene::selectGameObject(GameObject* gameObject)
@@ -285,4 +319,9 @@ void ModuleScene::selectGameObject(GameObject* gameObject)
 	selected_GO = gameObject;
 	if (gameObject != nullptr)
 		gameObject->setSelected(true);
+}
+
+GameObject* ModuleScene::getGameObject(uint UID)
+{
+	return gameObjects[UID];
 }

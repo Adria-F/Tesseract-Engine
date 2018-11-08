@@ -17,22 +17,15 @@ void PanelHierarchy::Draw()
 {
 	ImGui::Begin("Game Objects");
 
-	if (App->scene_intro->GameObjects.size() > 0)
+	for (std::list<GameObject*>::iterator it_ch = App->scene_intro->root->childs.begin(); it_ch != App->scene_intro->root->childs.end(); it_ch++)
 	{
-		for (int i = 0; i < App->scene_intro->GameObjects.size(); i++)
-		{
-			GameObject* gameobject = App->scene_intro->GameObjects[i];
-			if (gameobject->parent == nullptr)
-			{
-				FillTree(gameobject);
-			}
-		}
+		FillTree((*it_ch));
 	}
 
 	ImGui::End();
 }
 
-void PanelHierarchy::FillTree(GameObject * gameobject)
+void PanelHierarchy::FillTree(GameObject* gameobject)
 {
 	uint flags;
 
@@ -63,7 +56,7 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	bool opened = ImGui::TreeNodeEx(gameobject->name.c_str(), flags);
 	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("GAME_OBJECT", gameobject, sizeof(&gameobject));
+		ImGui::SetDragDropPayload("GAME_OBJECT", &gameobject->UID, sizeof(uint));
 		ImGui::Text(gameobject->name.c_str());
 		ImGui::EndDragDropSource();
 	}
@@ -71,8 +64,9 @@ void PanelHierarchy::FillTree(GameObject * gameobject)
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_SourceAllowNullID))
 		{
-			GameObject* draggedGameobject = (GameObject*)payload->Data;
-			//draggedGameobject->changeParent(gameobject);
+			GameObject* draggedGameobject = App->scene_intro->getGameObject(*(uint*)payload->Data);
+			if (draggedGameobject != nullptr)
+				draggedGameobject->changeParent(gameobject);
 		}
 		ImGui::EndDragDropTarget();
 	}

@@ -215,8 +215,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	if(App->scene_intro->GameObjects.size()>0)
-		CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
+	CalculateGlobalMatrix(App->scene_intro->root);
 
 	return UPDATE_CONTINUE;
 }

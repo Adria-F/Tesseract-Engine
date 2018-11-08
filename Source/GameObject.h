@@ -40,7 +40,7 @@ public:
 	void setSelected(bool selected);
 	void setChildSelected(bool selected);
 
-	void changeParent(GameObject* newParent);
+	void changeParent(GameObject* newParent, bool recalculateTransformation = true);
 
 public:
 

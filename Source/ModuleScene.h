@@ -7,6 +7,7 @@
 
 #include <list>
 #include <vector>
+#include <map>
 
 #define ROAD_HEIGHT 9
 #define ROAD_WIDTH 15
@@ -46,14 +47,19 @@ public:
 	void ResizeQuadTree(GameObject* gameObject);
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 
+	void addGameObject(GameObject* gameObject, GameObject* parent = nullptr);
+	void deleteGameObject(GameObject* GO);
 	void selectGameObject(GameObject* gameObject);
+	GameObject* getGameObject(uint UID);
 
 public:
 
 	std::string scene_name = "";
 
 	list<Primitive*> ShapesToDraw;
-	vector<GameObject*> GameObjects;
+
+	GameObject* root = nullptr;
+
 	vector<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
@@ -61,5 +67,9 @@ public:
 	Quadtree* quadTree=nullptr;
 
 	ImGuizmo::OPERATION guizmoOperation;
+
+private:
+
+	map<uint, GameObject*> gameObjects;
 };
 #endif // !__MODULESCENE_H__

@@ -1,8 +1,8 @@
 {
     "Game Objects": [
         {
-            "UID": 753776655,
-            "ParentUID": 0,
+            "UID": 1793058343,
+            "ParentUID": 1169846855,
             "Name": "BakerHouse",
             "Components": [
                 {
@@ -45,8 +45,8 @@
             ]
         },
         {
-            "UID": 287876662,
-            "ParentUID": 753776655,
+            "UID": 360565164,
+            "ParentUID": 1793058343,
             "Name": "Chimney",
             "Components": [
                 {
@@ -97,8 +97,8 @@
             ]
         },
         {
-            "UID": 1180076939,
-            "ParentUID": 753776655,
+            "UID": 3972774044,
+            "ParentUID": 1793058343,
             "Name": "Baker_house",
             "Components": [
                 {

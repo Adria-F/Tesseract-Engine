@@ -117,36 +117,45 @@ void GameObject::DrawComponentsUI()
 Component* GameObject::AddComponent(componentType type)
 {
 	Component* ret = nullptr;
+	bool itsNew = false;
 
 	switch (type)
 	{
 	case TRANSFORMATION:
 		if (transformation == nullptr)
 		{
-			ret = transformation = new ComponentTransformation(this, type);
+			transformation = new ComponentTransformation(this, type);
+			itsNew = true;
 		}
+		ret = transformation;
 		break;
 	case MESH:
 		if (mesh == nullptr)
 		{
-			ret = mesh = new ComponentMesh(this, type);
+			mesh = new ComponentMesh(this, type);
+			itsNew = true;
 		}
+		ret = mesh;
 		break;
 	case MATERIAL:
 		if (texture == nullptr)
 		{
-			ret = texture = new ComponentTexture(this, type);
+			texture = new ComponentTexture(this, type);
+			itsNew = true;
 		}
+		ret = texture;
 		break;
 	case CAMERA:
 		if (camera == nullptr)
 		{
-			ret = camera = new ComponentCamera(this, type);
+			camera = new ComponentCamera(this, type);
+			itsNew = true;
 		}
+		ret = camera;
 		break;
 	}
 
-	if (ret != nullptr)
+	if (itsNew)
 		components.push_back(ret);
 
 	return ret;
@@ -279,7 +288,7 @@ void GameObject::Save(JSON_Value* gameobject)
 	JSON_Value* gameObject = gameobject->createValue();
 
 	gameObject->addUint("UID", UID);
-	gameObject->addUint("ParentUID", (parent != nullptr) ? parent->UID : 0);
+	gameObject->addUint("ParentUID", (parent == App->scene_intro->root) ? 0 : parent->UID);
 	gameObject->addString("Name", name.c_str());
 
 	JSON_Value* Components = gameobject->createValue();
@@ -385,11 +394,36 @@ void GameObject::setChildSelected(bool selected)
 		parent->setChildSelected(selected);
 }
 
-void GameObject::changeParent(GameObject * newParent)
+void GameObject::changeParent(GameObject* newParent, bool recalculateTransformation)
 {
-	if (parent != nullptr)
-		parent->childs.remove(this);
+	if (newParent != parent && newParent != nullptr)
+	{
+		bool isChild = false;
+		GameObject* curr = newParent;
+		while (curr->parent != nullptr)
+		{
+			if (curr->parent == this)
+				return; //If we are trying to insert a parent object inside one of its childs, ignore it
+			curr = curr->parent;
+		}
 
-	parent = newParent;
-	parent->childs.push_back(this);
+		if (parent != nullptr)
+		{
+			parent->childs.remove(this);
+			parent->child_selected = false;
+		}
+
+		parent = newParent;
+		parent->childs.push_back(this);
+		parent->child_selected = true;
+
+		if (recalculateTransformation)
+		{
+			//Update the transformation
+			ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
+			transform->localMatrix = transform->globalMatrix*((ComponentTransformation*)parent->GetComponent(TRANSFORMATION))->globalMatrix.Inverted();
+			transform->localMatrix.Decompose(transform->position, transform->rotation, transform->scale);
+			transform->changed = true;
+		}
+	}
 }

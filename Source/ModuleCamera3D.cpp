@@ -260,8 +260,7 @@ GameObject* ModuleCamera3D::checkMousePick()
 
 	//Fill queue
 	std::priority_queue<HitGameObject*, std::vector<HitGameObject*>, OrderCrit> gameObjects;
-	if (App->scene_intro->GameObjects.size() > 0)
-		fillHitGameObjects(App->scene_intro->GameObjects[0], gameObjects, ray);
+	fillHitGameObjects(App->scene_intro->root, gameObjects, ray);
 
 	if (gameObjects.size() > 0)
 		ret = checkCloserGameObjects(gameObjects, ray);

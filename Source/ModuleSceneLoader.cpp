@@ -70,7 +70,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				mesh->color = { color.r, color.g, color.b }; //Set mesh color
 
-				meshes.push_back(mesh);				
+				meshes.push_back(mesh);
 				mesh->GenerateBuffer();
 				App->meshes->saveMesh(mesh);
 			}
@@ -79,7 +79,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		//Import textures
 		vector<Texture*> textures;
 		if (scene->HasMaterials()) //Need to check embeded textures
-		{			
+		{
 			for (int i = 0; i < scene->mNumMaterials; i++)
 			{
 				aiString texturePath;
@@ -93,7 +93,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 						textures.push_back(App->textures->loadTexture(texturePath.C_Str()));
 				}
 			}
-				
+
 		}
 
 		GameObject* rootGO = loadGO(scene, scene->mRootNode, meshes, textures);
@@ -102,17 +102,15 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 			std::string filename;
 			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
 			rootGO->name = filename;
-			App->scene_intro->GameObjects.push_back(rootGO);
+			App->scene_intro->addGameObject(rootGO);
 		}
 
 		aiReleaseImport(scene);
 
-		if (App->scene_intro->GameObjects.size() > 0)
-		{
-			App->renderer3D->CalculateGlobalMatrix(App->scene_intro->GameObjects[0]);
-			App->scene_intro->GameObjects[0]->RecalculateBB();
-			App->scene_intro->StartQuadTree();
-		}
+
+		App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
+		App->scene_intro->root->RecalculateBB();
+		App->scene_intro->StartQuadTree();
 
 	}
 	else
@@ -205,8 +203,7 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 
 				if (node->mNumMeshes > 1 && i > 0)
 				{
-					child->parent = GO;
-					GO->childs.push_back(child);
+					App->scene_intro->addGameObject(child, GO);
 					GO->boundingBox.Enclose(child->boundingBox);
 					GO->localBB.SetFrom(GO->boundingBox);
 				}
@@ -232,10 +229,9 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 			GameObject* child = loadGO(scene, node->mChildren[i], meshes, textures);
 			if (child != nullptr)
 			{
-				child->parent = GO;
+				App->scene_intro->addGameObject(child, GO);
 				GO->boundingBox.Enclose(child->boundingBox);
 				GO->localBB.SetFrom(GO->boundingBox);
-				GO->childs.push_back(child);
 			}
 		}
 	}
@@ -250,9 +246,9 @@ bool ModuleSceneLoader::saveScene(const char* scene_name)
 	JSON_Value* gameObjects = scene->createValue();
 	gameObjects->convertToArray();
 
-	for (int i = 0; i < App->scene_intro->GameObjects.size(); i++)
+	for (std::list<GameObject*>::iterator it_ch = App->scene_intro->root->childs.begin(); it_ch != App->scene_intro->root->childs.end(); it_ch++)
 	{
-		App->scene_intro->GameObjects[i]->Save(gameObjects);
+		(*it_ch)->Save(gameObjects);
 	}
 
 	scene->addValue("Game Objects", gameObjects);
@@ -280,20 +276,21 @@ bool ModuleSceneLoader::loadScene(const char* scene_name)
 		{
 			GameObject* GO = new GameObject();
 			GO->Load(gameObjects->getValueFromArray(i));
+			App->scene_intro->addGameObject(GO);
 			gameobjects.insert(std::pair<uint, GameObject*>(GO->UID, GO));
 			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
 
 		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
 		{
-			if ((*it_go).second->parentUID == 0) //If it has no parent, add it to the scene list
-				App->scene_intro->GameObjects.push_back((*it_go).second);
-			else
+			if ((*it_go).second->parentUID != 0) //If it has a parent
 			{
 				GameObject* parent = gameobjects[(*it_go).second->parentUID];
-				(*it_go).second->parent = parent;
-				parent->childs.push_back((*it_go).second);
-				parent->boundingBox.Enclose((*it_go).second->boundingBox);
+				if (parent != nullptr)
+				{
+					(*it_go).second->changeParent(parent, false);
+					parent->boundingBox.Enclose((*it_go).second->boundingBox);
+				}
 			}
 		}
 	}
