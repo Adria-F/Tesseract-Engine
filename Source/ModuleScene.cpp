@@ -266,16 +266,11 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		ObjectMat = &transform->localMatrix;
 		ObjectMat->Transpose();
 
-		/*float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-		ImGuizmo::DecomposeMatrixToComponents((float*)transform->globalMatrix.v, matrixTranslation, matrixRotation, matrixScale);
-		ImGui::InputFloat3("Tr", matrixTranslation, 3);
-		ImGui::InputFloat3("Rt", matrixRotation, 3);
-		ImGui::InputFloat3("Sc", matrixScale, 3);
-		ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, (float*)transform->globalMatrix.v);
-*/
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuizmo::SetOrthographic(true);
-		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		ImGuizmo::SetOrthographic(false);
+
+		ImVec2 cursorPos = { App->gui->sceneX,App->gui->sceneY };
+		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
+		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
 
 		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat,NULL,NULL);
 		ObjectMat->Transpose();
