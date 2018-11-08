@@ -144,8 +144,6 @@ void ModuleScene::Draw()
 				guizmoOperation = ImGuizmo::SCALE;
 			}
 		}
-
-		DrawGuizmo(guizmoOperation);
 	}
 
 	if (App->renderer3D->ShowQT)
@@ -249,6 +247,9 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 	if (transform != nullptr)
 	{
 		ImGuizmo::Enable(true);
+		ImVec2 cursorPos = { App->gui->sceneX,App->gui->sceneY };
+		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
+		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
 
 		float4x4 ViewMatrix, ProjectionMatrix;
 		ImGuizmo::MODE mode;
@@ -261,9 +262,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		ImGuizmo::SetOrthographic(false);
 
-		ImVec2 cursorPos = { App->gui->sceneX,App->gui->sceneY };
-		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
-		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
+		
 
 		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat,NULL,NULL);
 		ObjectMat->Transpose();

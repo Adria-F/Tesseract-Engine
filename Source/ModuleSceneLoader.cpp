@@ -130,9 +130,13 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 
 	node->mTransformation.Decompose(scaling, rotation, translation);
 
-	vec pos(translation.x, translation.y, translation.z);
-	vec scale(scaling.x, scaling.y, scaling.z);
-	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+	vec pos = float3::zero;
+	vec scale = float3::one;
+	Quat rot=Quat::identity;
+
+	pos += float3(translation.x, translation.y, translation.z);
+	scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
+	rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 	std::string name = (node->mName.length > 0) ? node->mName.C_Str() : "Unnamed";
 	static const char* transformNodes[5] = {
@@ -167,7 +171,7 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 			if (node->mMeshes[i] < meshes.size()) // Check that current mesh is not out of vector range
 			{
 				GameObject* child = GO;
-				if (node->mNumMeshes > 1)
+				if (i > 0)
 				{
 					child = new GameObject();
 					child->name = meshes[node->mMeshes[i]]->name;

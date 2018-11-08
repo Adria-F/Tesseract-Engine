@@ -2,6 +2,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 #include "ModuleGUI.h"
+#include "ModuleScene.h"
 #include "PanelScene.h"
 #include "ModuleInput.h"
 
@@ -31,6 +32,11 @@ void PanelScene::Draw()
 	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_MIDDLE) != KEY_REPEAT)
 		App->gui->hoveringScene = ImGui::IsMouseHoveringWindow();
+
+	ImGuizmo::SetDrawlist();
+
+	if (App->scene_intro->selected_GO)
+		App->scene_intro->DrawGuizmo(App->scene_intro->guizmoOperation);
 
 	ImGui::End();
 }
