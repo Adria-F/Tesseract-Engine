@@ -278,9 +278,9 @@ void ModuleCamera3D::fillHitGameObjects(GameObject* current, std::priority_queue
 		gameObjects.push(hit);
 	}
 
-	for (int i = 0; i < current->childs.size(); i++)
+	for (std::list<GameObject*>::iterator it_c = current->childs.begin(); it_c != current->childs.end(); it_c++)
 	{
-		fillHitGameObjects(current->childs[i], gameObjects, ray);
+		fillHitGameObjects((*it_c), gameObjects, ray);
 	}
 }
 

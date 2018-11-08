@@ -72,7 +72,7 @@ public:
 	bool Save(JSON_File* document)const;
 	bool Load(JSON_File* document);
 
-	void CalculateGlobalMatrix(GameObject* gameOject);
+	void CalculateGlobalMatrix(GameObject* gameObject);
 
 public:
 

@@ -218,9 +218,9 @@ void ModuleScene::FillQuadtree(GameObject* gameObject)
 	{
 		quadTree->Insert(gameObject);
 
-		for (int i = 0; i < gameObject->childs.size(); i++)
+		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
 		{
-			FillQuadtree(gameObject->childs[i]);
+			FillQuadtree((*it_c));
 		}
 	}
 		
@@ -232,9 +232,9 @@ void ModuleScene::ResizeQuadTree(GameObject* gameObject)
 	{
 		quadTree->QT_Box->Enclose(gameObject->boundingBox);
 
-		for (int i = 0; i < gameObject->childs.size(); i++)
+		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
 		{
-			ResizeQuadTree(gameObject->childs[i]);
+			ResizeQuadTree((*it_c));
 		}
 	}
 
