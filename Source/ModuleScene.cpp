@@ -56,17 +56,7 @@ update_status ModuleScene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 	{
-		quadTree->Clear();
-
-		for (int i = 0; i < GameObjects.size(); i++)
-		{
-			ResizeQuadTree(GameObjects[i]);
-		}
-
-		for (int i = 0; i < GameObjects.size(); i++)
-		{
-			FillQuadtree(GameObjects[i]);
-		}
+		StartQuadTree();
 	}
 
 	return ret;
@@ -91,21 +81,24 @@ void ModuleScene::Draw()
 		(*it)->Render();
 	}
 
-	//Static objects-------------------------------------------------------------------
-	//Fill the vector of the objects inside the same quads of the camera's bb
 	ComponentCamera* activeCamera = App->camera->camera;
-	quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
+	//Static objects-------------------------------------------------------------------
+	if (quadTree->QT_Box != nullptr)
+	{
+		//Fill the vector of the objects inside the same quads of the camera's bb		
+		quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
 
-	//From the possible objects only draw the ones inside the frustum
-	for (int i = 0; i < ObjectsToDraw.size(); i++)
-	{	
-		if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
+		//From the possible objects only draw the ones inside the frustum
+		for (int i = 0; i < ObjectsToDraw.size(); i++)
 		{
-			ObjectsToDraw[i]->culling = true;
-		}
-		else 
-		{
-			ObjectsToDraw[i]->culling = false;
+			if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
+			{
+				ObjectsToDraw[i]->culling = true;
+			}
+			else
+			{
+				ObjectsToDraw[i]->culling = false;
+			}
 		}
 	}
 

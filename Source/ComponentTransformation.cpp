@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
+#include "ModuleScene.h"
 
 ComponentTransformation::~ComponentTransformation()
 {
@@ -107,7 +108,7 @@ bool ComponentTransformation::DrawExtraConfig()
 		rotation = rotation.FromEulerXYZ(0.0f,0.0f,0.0f);
 		scale = { 1.0f,1.0f,1.0f };
 
-		RecalculateMatrix();
+		RecalculateMatrix();		
 		closeConfig = false;
 	}
 

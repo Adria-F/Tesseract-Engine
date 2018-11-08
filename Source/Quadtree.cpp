@@ -211,6 +211,9 @@ void Quadtree::Clear()
 
 void Quadtree::DrawQT()
 {
+	if (QT_Box == nullptr)
+		return;
+
 	if (children[0] != nullptr)
 	{
 		for (int i = 0; i < 4; i++)

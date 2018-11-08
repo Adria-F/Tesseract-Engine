@@ -194,6 +194,14 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
+KEY_STATE ModuleInput::GetKey(int id) const
+{
+	if (App->gui->GUIKeppsKeyboard())
+		return KEY_IDLE;
+	else
+		return keyboard[id];
+}
+
 KEY_STATE ModuleInput::GetMouseButton(int id) const
 {
 	if (App->gui->isMouseOnGUI())

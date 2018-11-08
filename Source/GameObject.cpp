@@ -65,6 +65,8 @@ void GameObject::Update()
 			while (bigParent->parent != nullptr)
 				bigParent = bigParent->parent;
 			bigParent->RecalculateBB();
+
+			App->scene_intro->StartQuadTree();
 			transformation->changed = false;
 		}
 
