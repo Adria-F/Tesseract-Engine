@@ -214,6 +214,7 @@
     <ClInclude Include="rapidjson\stream.h" />
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\writer.h" />
+    <ClInclude Include="ResourceManeger.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +292,7 @@
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="ResourceManeger.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>

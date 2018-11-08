@@ -46,6 +46,9 @@
     <Filter Include="Sources\Tools\ImGuizmo">
       <UniqueIdentifier>{0a6208e6-ea77-4625-a97f-38788f97b12e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Resources">
+      <UniqueIdentifier>{e02d6dff-4b07-43bd-a71d-4d5595ce6534}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -471,6 +474,9 @@
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceManeger.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -700,6 +706,9 @@
     </ClCompile>
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManeger.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
