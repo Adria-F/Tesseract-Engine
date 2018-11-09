@@ -31,8 +31,8 @@ bool ModuleWindow::Init(JSON_File* document)
 		resizable = configWindow->getBool("resizable");
 		borderless = configWindow->getBool("borderless");
 		fullscreen_desktop = configWindow->getBool("fullscreen_desktop");
-		screen_margin_w = configWindow->getVector("screen_margin", 2)[0];
-		screen_margin_h = configWindow->getVector("screen_margin", 2)[1];
+		screen_margin_w = configWindow->getVector2("screen_margin").x;
+		screen_margin_h = configWindow->getVector2("screen_margin").y;
 	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)

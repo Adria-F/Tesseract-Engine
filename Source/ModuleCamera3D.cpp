@@ -27,12 +27,12 @@ bool ModuleCamera3D::Init(JSON_File* document)
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)
 	{
-		X = vec(cameraConf->getVector("X", 3)[0], cameraConf->getVector("X", 3)[1], cameraConf->getVector("X", 3)[2]);
-		Y = vec(cameraConf->getVector("Y", 3)[0], cameraConf->getVector("Y", 3)[1], cameraConf->getVector("Y", 3)[2]);
-		Z = vec(cameraConf->getVector("Z", 3)[0], cameraConf->getVector("Z", 3)[1], cameraConf->getVector("Z", 3)[2]);
+		X = cameraConf->getVector3("X");
+		Y = cameraConf->getVector3("Y");
+		Z = cameraConf->getVector3("Z");
 
-		Position = vec(cameraConf->getVector("position", 3)[0], cameraConf->getVector("position", 3)[1], cameraConf->getVector("position", 3)[2]);
-		Reference = vec(cameraConf->getVector("reference", 3)[0], cameraConf->getVector("reference", 3)[1], cameraConf->getVector("reference", 3)[2]);
+		Position = cameraConf->getVector3("position");
+		Reference = cameraConf->getVector3("reference");
 		LookAt(Reference);
 
 		cameraSpeed = cameraConf->getFloat("cameraSpeed");

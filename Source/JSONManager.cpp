@@ -59,6 +59,13 @@ JSON_File::JSON_File(rapidjson::FileReadStream* is, FILE* fp): is(is), fp(fp)
 
 JSON_File::~JSON_File()
 {
+	int size = allocatedValues.size();
+	for (int i = 0; i < size; i++)
+	{
+		RELEASE(allocatedValues[i]);
+	}
+	allocatedValues.clear();
+
 	RELEASE(document);
 
 	RELEASE(is);
@@ -81,7 +88,9 @@ bool JSON_File::Write()
 
 JSON_Value* JSON_File::createValue()
 {
-	return new JSON_Value(allocator);
+	JSON_Value* ret = new JSON_Value(allocator);
+	allocatedValues.push_back(ret);
+	return ret;
 }
 
 void JSON_File::addValue(const char * name, JSON_Value* value)
@@ -97,6 +106,7 @@ JSON_Value* JSON_File::getValue(const char* name)
 	{
 		rapidjson::Value& value = document->operator[](name);
 		JSON_Value* ret = new JSON_Value(allocator);
+		allocatedValues.push_back(ret);
 		ret->getRapidJSONValue()->CopyFrom(value, *allocator, false);
 
 		return ret;
@@ -107,6 +117,13 @@ JSON_Value* JSON_File::getValue(const char* name)
 
 JSON_Value::~JSON_Value()
 {
+	int size = allocatedValues.size();
+	for (int i = 0; i < size; i++)
+	{
+		RELEASE(allocatedValues[i]);
+	}
+	allocatedValues.clear();
+
 	RELEASE(value);
 }
 
@@ -153,16 +170,14 @@ void JSON_Value::addBool(const char * name, bool value)
 	this->value->AddMember(index, value, *allocator);
 }
 
-void JSON_Value::addVector(const char * name, float * vec, int vector_size)
+void JSON_Value::addVector2(const char* name, float2 vec)
 {
 	std::string str = name;
 	rapidjson::Value index(str.c_str(), str.size(), *allocator);
 
 	rapidjson::Value a(rapidjson::kArrayType);
-	for (int i = 0; i < vector_size; i++)
-	{
-		a.PushBack(vec[i], *allocator);
-	}
+	a.PushBack(vec.x, *allocator);
+	a.PushBack(vec.y, *allocator);
 
 	this->value->AddMember(index, a, *allocator);
 }
@@ -251,24 +266,22 @@ bool JSON_Value::getBool(const char * name)
 		return false;
 }
 
-float* JSON_Value::getVector(const char * name, int vector_size)
+float2 JSON_Value::getVector2(const char * name)
 {
 	if (value->HasMember(name))
 	{
 		rapidjson::Value& a = value->operator[](name);
-		if (a.IsArray() && a.Size() >= vector_size)
+		if (a.IsArray() && a.Size() >= 2)
 		{
-			float* ret = new float[vector_size]; //MEMLEAK
-			for (int i = 0; i < vector_size; i++)
-			{
-				ret[i] = a[i].GetFloat();
-			}
+			float2 ret;
+			ret.x = a[0].GetFloat();
+			ret.y = a[1].GetFloat();
 
 			return ret;
 		}
 	}
 
-	return nullptr;
+	return float2();
 }
 
 float3 JSON_Value::getVector3(const char * name)
@@ -337,7 +350,9 @@ float4x4 JSON_Value::getTransform(const char * name)
 
 JSON_Value * JSON_Value::createValue()
 {
-	return new JSON_Value(allocator);
+	JSON_Value* ret = new JSON_Value(allocator);
+	allocatedValues.push_back(ret);
+	return ret;
 }
 
 void JSON_Value::addValue(const char * name, JSON_Value * value)
@@ -360,6 +375,7 @@ JSON_Value* JSON_Value::getValue(const char* name)
 	{
 		rapidjson::Value& trueValue = value->operator[](name);
 		JSON_Value* ret = new JSON_Value(allocator);
+		allocatedValues.push_back(ret);
 		ret->getRapidJSONValue()->CopyFrom(trueValue, *allocator, false);
 
 		return ret;
@@ -374,6 +390,7 @@ JSON_Value* JSON_Value::getValueFromArray(int index)
 	{
 		rapidjson::Value& trueValue = value->operator[](index);
 		JSON_Value* ret = new JSON_Value(allocator);
+		allocatedValues.push_back(ret);
 		ret->getRapidJSONValue()->CopyFrom(trueValue, *allocator, false);
 
 		return ret;
@@ -384,9 +401,7 @@ JSON_Value* JSON_Value::getValueFromArray(int index)
 
 void JSON_Value::setValue(rapidjson::Value * value)
 {
-	RELEASE(this->value);
-
-	this->value = value;
+	*this->value = *value;
 }
 
 rapidjson::Value* JSON_Value::getRapidJSONValue()

@@ -9,6 +9,8 @@
 #include "Globals.h"
 #include "MathGeoLib\MathGeoLib.h"
 
+#include <vector>
+
 struct JSON_Value
 {
 public:
@@ -26,7 +28,7 @@ public:
 	void addFloat(const char* name, float value);
 	void addString(const char* name, const char* value);
 	void addBool(const char* name, bool value);
-	void addVector(const char* name, float* vec, int vector_size);
+	void addVector2(const char* name, float2 vec);
 	void addVector3(const char* name, float3 vec);
 	void addQuat(const char* name, Quat quat);
 	void addTransform(const char* name, float4x4 mat);
@@ -36,7 +38,7 @@ public:
 	float getFloat(const char* name);
 	const char* getString(const char* name);
 	bool getBool(const char* name);
-	float* getVector(const char* name, int vector_size);
+	float2 getVector2(const char* name);
 	float3 getVector3(const char* name);
 	Quat getQuat(const char* name);
 	float4x4 getTransform(const char* name);
@@ -53,6 +55,7 @@ private:
 
 	rapidjson::Value* value = nullptr;
 	rapidjson::Document::AllocatorType* allocator = nullptr;
+	std::vector<JSON_Value*> allocatedValues;
 };
 
 struct JSON_File
@@ -80,6 +83,7 @@ private:
 	rapidjson::FileReadStream* is = nullptr;
 
 	rapidjson::Document::AllocatorType* allocator = nullptr;
+	std::vector<JSON_Value*> allocatedValues;
 };
 
 class JSONManager
