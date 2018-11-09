@@ -252,9 +252,10 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
 	ComponentTransformation* transform = (ComponentTransformation*)App->scene_intro->selected_GO->GetComponent(TRANSFORMATION);
 
+	
 	if (transform != nullptr)
 	{
-		ImGuizmo::Enable(true);
+		ImGuizmo::Enable(!selected_GO->isStatic);
 		ImVec2 cursorPos = { App->gui->sceneX,App->gui->sceneY };
 		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
 		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
@@ -270,8 +271,6 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		ImGuizmo::SetOrthographic(false);
 
-		
-
 		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat,NULL,NULL);
 		ObjectMat->Transpose();
 
@@ -279,7 +278,6 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		{
 			App->renderer3D->CalculateGlobalMatrix(root);
 			root->RecalculateBB();
-
 			StartQuadTree();
 		}
 	}
