@@ -17,6 +17,7 @@
 //#include "mmgr/mmgr.h"
 
 #include "Assimp/include/cimport.h"
+
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
@@ -69,11 +70,11 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				mesh->color = { color.r, color.g, color.b }; //Set mesh color
-
-				meshes.push_back(mesh);
+				
 				mesh->GenerateBuffer();
 				App->meshes->saveMesh(mesh);
 			}
+			meshes.push_back(mesh); //Even if it is nullptr, add it to the vector to keep correct indices order
 		}
 
 		//Import textures
@@ -89,14 +90,16 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 					std::string full_path = path;
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
-					if (App->textures->importTexture(full_path.c_str()))
-						textures.push_back(App->textures->loadTexture(texturePath.C_Str()));
+					App->textures->importTexture(full_path.c_str());
+					textures.push_back(App->textures->loadTexture(texturePath.C_Str())); //Even if it is nullptr, add it to the vector to keep correct indices order
 				}
+				else
+					textures.push_back(nullptr);
 			}
 
 		}
 
-		GameObject* rootGO = loadGO(scene, scene->mRootNode, meshes, textures);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, meshes, textures);
 		if (rootGO != nullptr)
 		{
 			std::string filename;
@@ -119,38 +122,33 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 	return false;
 }
 
-GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures)
 {
-	//Get pos, scale and rotation of the node
 	aiVector3D translation;
 	aiVector3D scaling;
 	aiQuaternion rotation;
 
 	node->mTransformation.Decompose(scaling, rotation, translation);
 
-	vec pos = float3::zero;
-	vec scale = float3::one;
-	Quat rot=Quat::identity;
+	float3 pos = { translation.x, translation.y, translation.z };
+	float3 scale = { scaling.x, scaling.y, scaling.z };
+	Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	pos += float3(translation.x, translation.y, translation.z);
-	scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
-	rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-	std::string name = (node->mName.length > 0) ? node->mName.C_Str() : "Unnamed";
+	std::string name = node->mName.C_Str();
 	static const char* transformNodes[5] = {
 		"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
 		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 5; i++)
 	{
-		if (name.find(transformNodes[i]) != string::npos && node->mNumChildren == 1)
+		if (name.find(transformNodes[i]) != string::npos && node->mNumChildren > 0)
 		{
 			node = node->mChildren[0];
 
 			node->mTransformation.Decompose(scaling, rotation, translation);
-			// accumulate transform
-			pos += float3(translation.x, translation.y, translation.z);
-			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
+
+			pos += { translation.x, translation.y, translation.z };
+			scale = { scale.x*scaling.x, scale.y*scaling.y, scale.z*scaling.z };
 			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 			name = node->mName.C_Str();
@@ -164,61 +162,51 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 		GO = new GameObject();
 		GO->name = name;
 
+		int fail_count = 0;
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
-			if (node->mMeshes[i] < meshes.size()) // Check that current mesh is not out of vector range
+			if (meshes[node->mMeshes[i]] == nullptr) //If the laoded mesh is nullptr, skip it
 			{
-				GameObject* child = GO;
-				if (i > 0)
-				{
-					child = new GameObject();
-					child->name = meshes[node->mMeshes[i]]->name;
-				}
+				fail_count++;
+				continue;
+			}
 
-				//Create transformation
-				ComponentTransformation* transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
-				transformation->position = pos;
-				transformation->scale = scale;
-				transformation->rotation = rot;
-				transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+			GameObject* child = GO;
+			if (i > fail_count)
+			{
+				child = new GameObject();
+				child->name = meshes[node->mMeshes[i]]->name;
+			}
 
-				//Create mesh
-				ComponentMesh* mesh;
-				mesh = (ComponentMesh*)child->AddComponent(MESH);
-				mesh->mesh = meshes[node->mMeshes[i]];
+			ComponentTransformation* transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
+			transformation->position = pos;
+			transformation->scale = scale;
+			transformation->rotation = rot;
+			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
+			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(MESH);
+			mesh->mesh = meshes[node->mMeshes[i]];
 
-				//Create material
-				if (scene->mMeshes[node->mMeshes[i]]->mMaterialIndex < textures.size()) //Check that material is not out of textures range
-				{
-					ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-					material->Material = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
-				}
+			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
+			{
+				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
+				material->Material = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+			}
 
-				//Calculate BB
-				child->boundingBox.SetNegativeInfinity();
-				child->localBB.SetNegativeInfinity();
-				child->boundingBox.Enclose((float3*)scene->mMeshes[node->mMeshes[i]]->mVertices, scene->mMeshes[node->mMeshes[i]]->mNumVertices);
-				child->localBB.SetFrom(child->boundingBox);
-
-				if (node->mNumMeshes > 1 && i > 0)
-				{
-					App->scene_intro->addGameObject(child, GO);
-					GO->boundingBox.Enclose(child->boundingBox);
-					GO->localBB.SetFrom(GO->boundingBox);
-				}
+			if (i > fail_count)
+			{
+				App->scene_intro->addGameObject(child, GO);
+				//CalculateBB
 			}
 		}
 	}
-
 	if (node->mNumChildren > 0)
 	{
-
-		if (GO == nullptr) //It is nullptr if it had no mesh but has childs (not so probable unless it is the root node or a dummy node)
+		if (GO == nullptr)
 		{
 			GO = new GameObject();
 			GO->name = name;
-			ComponentTransformation*transformation = (ComponentTransformation*)GO->AddComponent(TRANSFORMATION);
+			ComponentTransformation* transformation = (ComponentTransformation*)GO->AddComponent(TRANSFORMATION);
 			transformation->position = pos;
 			transformation->scale = scale;
 			transformation->rotation = rot;
@@ -226,12 +214,10 @@ GameObject* ModuleSceneLoader::loadGO(const aiScene* scene, aiNode* node, std::v
 		}
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* child = loadGO(scene, node->mChildren[i], meshes, textures);
+			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, textures);
 			if (child != nullptr)
 			{
 				App->scene_intro->addGameObject(child, GO);
-				GO->boundingBox.Enclose(child->boundingBox);
-				GO->localBB.SetFrom(GO->boundingBox);
 			}
 		}
 	}
