@@ -28,6 +28,9 @@ public:
 	void DrawConfig();
 	virtual bool DrawExtraConfig();
 	virtual bool Update() { return true; }
+
+	//Draw a gray button with given string, thought  to be a droppable space for resources inside the components
+	void beginDroppableSpace(const char* string, bool empty = false, float2 size = { 250, 20 });
 	
 	virtual void Enable() { active = true; }
 	virtual void Disable() { active = false; }

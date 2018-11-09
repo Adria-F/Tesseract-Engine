@@ -29,6 +29,16 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
+		beginDroppableSpace((Material == nullptr) ? "No Texture" : Material->name.c_str(), Material==nullptr);
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
+			{
+
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		if (Material != nullptr)
 		{
 			ImGui::Text("Texture Size:\n Width: %d | Height: %d", Material->width, Material->height);
