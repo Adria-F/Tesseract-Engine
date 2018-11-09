@@ -18,8 +18,7 @@ public:
 
 	void SetTitle(const char* title);
 
-	bool Save(JSON_File* document)const;
-	bool Load(JSON_File* document);
+	bool SaveDefaultConfig(JSON_File* document)const;
 
 	void OnResize(int width, int height);
 

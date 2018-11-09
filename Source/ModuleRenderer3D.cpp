@@ -43,6 +43,9 @@ bool ModuleRenderer3D::Init(JSON_File* document)
 		Normals = rendererConfig->getBool("Normals");
 		Faces = rendererConfig->getBool("Faces");
 		ShowBB = rendererConfig->getBool("ShowBB");
+		ShowQT = rendererConfig->getBool("ShowQT");
+		Frustum_Culling = rendererConfig->getBool("Frustum_Culling");
+		ShowClickRay = rendererConfig->getBool("ShowClickRay");
 	}
 
 	LOG("Creating 3D Renderer context");
@@ -333,16 +336,26 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 
-bool ModuleRenderer3D::Save(JSON_File* document)const
+bool ModuleRenderer3D::SaveDefaultConfig(JSON_File* document)const
 {
 	JSON_Value* renderer = document->createValue();
-	renderer->addString("name", "render");
+	
+	renderer->addBool("Vsync", false);
+	renderer->addBool("Depth_Test", true);
+	renderer->addBool("Cull_Face", true);
+	renderer->addBool("Lighting", true);
+	renderer->addBool("Color_Material", true);
+	renderer->addBool("Texture_2D", true);
+	renderer->addBool("Wireframe", false);
+	renderer->addBool("Normals", false);
+	renderer->addBool("Faces", false);
+	renderer->addBool("ShowBB", false);
+	renderer->addBool("ShowQT", false);
+	renderer->addBool("Frustum_Culling", true);
+	renderer->addBool("ShowClickRay", false);
+
 	document->addValue("renderer", renderer);
 
-	return true;
-}
-
-bool ModuleRenderer3D::Load(JSON_File* document) {
 	return true;
 }
 

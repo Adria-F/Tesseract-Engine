@@ -25,6 +25,7 @@
 #include "ModuleTextures.h"
 
 #include "ModuleSceneLoader.h"
+#include "ModuleFileSystem.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
@@ -36,10 +37,10 @@ ModuleGUI::~ModuleGUI()
 
 bool ModuleGUI::Init(JSON_File* document)
 {
-
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.IniFilename = "Settings/imgui.ini";
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
@@ -63,6 +64,9 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(hierarchy = new PanelHierarchy("Hierarchy"));
 
 	panels.push_back(fileDialog = new PanelFileDialog("Files"));
+
+	if (!App->fileSystem->fileExists("imgui.ini", SETTINGS_FOLDER))
+		//saveDefaultImgui();
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -154,6 +158,8 @@ update_status ModuleGUI::Update(float dt)
 
 			ImGui::EndMenu();
 		}
+
+		
 		
 		if (ImGui::BeginMenu("Tools"))
 		{
@@ -195,8 +201,7 @@ update_status ModuleGUI::Update(float dt)
 }
 
 update_status ModuleGUI::PostUpdate(float dt)
-{
-	
+{	
 
 	return update_status(UPDATE_CONTINUE);
 }
@@ -251,16 +256,47 @@ void ModuleGUI::LoadDialogAt(const char * path)
 	fileDialog->LoadAt(path);
 }
 
-bool ModuleGUI::Save(JSON_File* document)const
+void ModuleGUI::saveDefaultImgui()
 {
-	JSON_Value* gui = document->createValue();
-	gui->addString("name", "gui");
-	document->addValue("gui", gui);
+	ImGui::SetWindowPos("Hardware Info", { 0,526 });
+	ImGui::SetWindowSize("Hardware Info", { 851, 114 });
 
-	return true;
-}
-bool ModuleGUI::Load(JSON_File* document) {
-	return true;
+	ImGui::SetWindowPos("Console", { 0,646 });
+	ImGui::SetWindowSize("Console", { 1083, 118 });
+
+	ImGui::SetWindowPos("Configuration", { 1085,19 });
+	ImGui::SetWindowSize("Configuration", { 351, 349 });
+
+	ImGui::SetWindowPos("About", { 0,828 });
+	ImGui::SetWindowSize("About", { 1521, 152 });
+
+	ImGui::SetWindowPos("3D Elements", { 0,19 });
+	ImGui::SetWindowSize("3D Elements", { 214, 313 });
+
+	ImGui::SetWindowPos("DockSpace", { 0,0 });
+	ImGui::SetWindowSize("DockSpace", { 1436, 764 });
+
+	ImGui::SetWindowPos("Scene", { 216,19 });
+	ImGui::SetWindowSize("Scene", { 867, 625 });
+
+	ImGui::SetWindowPos("Assets", { 0,334 });
+	ImGui::SetWindowSize("Assets", { 214, 310 });
+
+	ImGui::SetWindowPos("Game Objects", { 1085,370 });
+	ImGui::SetWindowSize("Game Objects", { 351, 394 });
+
+	ImGui::SetWindowPos("Inspector", { 1085,19 });
+	ImGui::SetWindowSize("Inspector", { 351, 349 });
+
+	ImGui::SetWindowPos("Save", { 314,121 });
+	ImGui::SetWindowSize("Save", { 564, 356 });
+
+	ImGui::SetWindowPos("Load", { 314,121 });
+	ImGui::SetWindowSize("Load", { 564, 356 });
+
+	std::string path = SETTINGS_FOLDER;
+	path += "imgui.ini";
+	ImGui::SaveIniSettingsToDisk(path.c_str());
 }
 
 void ModuleGUI::Draw()

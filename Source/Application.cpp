@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleResource.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
@@ -20,7 +21,10 @@ Application::Application()
 	
 	window = new ModuleWindow();
 	input = new ModuleInput();
+
+	resources = new ModuleResource();
 	scene_intro = new ModuleScene();
+
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
 	gui = new ModuleGUI();	
@@ -43,6 +47,7 @@ Application::Application()
 	AddModule(meshes);
 
 	// Scenes
+	AddModule(resources);
 	AddModule(scene_intro);
 	
 	// Gui
@@ -64,7 +69,15 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	JSON_File* document = JSON_manager->openReadFile("config.json");
+	std::string path = SETTINGS_FOLDER;
+	path += "config.json";
+	JSON_File* document = JSON_manager->openReadFile(path.c_str());
+
+	if (document == nullptr)
+	{
+		SaveDefaultConfig(path.c_str());
+		document = JSON_manager->openReadFile(path.c_str());
+	}
 
 	if (document != nullptr)
 	{
@@ -199,33 +212,20 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-bool Application::LoadConfig()
-{
-	bool ret=false;
-
-	JSON_File* document = JSON_manager->openReadFile("load.json");
-	if (document == nullptr)
-		return false;
-
-	for (list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++)
-	{
-		ret = (*item)->Load(document);
-	}
-
-	JSON_manager->closeFile(document);
-
-	return ret;
-}
-
-bool Application::SaveConfig()const
+bool Application::SaveDefaultConfig(const char* path)const
 {
 	bool ret = true;
 
-	JSON_File* document = JSON_manager->openWriteFile("save.json");
+	JSON_File* document = JSON_manager->openWriteFile(path);
+
+	JSON_Value* app = document->createValue();
+	app->addString("title", "Tesseract-Engine");
+	app->addInt("frameCap", 60);
+	document->addValue("App", app);
 
 	for (list<Module*>::const_iterator item = list_modules.begin(); item != list_modules.end() && ret == true; item++)
 	{
-		ret = (*item)->Save(document);
+		ret = (*item)->SaveDefaultConfig(document);
 	}
 
 	document->Write();

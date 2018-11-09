@@ -30,6 +30,7 @@ class ModuleMeshes;
 class ModuleTextures;
 class ModuleFileSystem;
 class ModuleSceneLoader;
+class ModuleResource;
 
 class Application
 {
@@ -38,6 +39,7 @@ public:
 	
 	ModuleWindow* window=nullptr;
 	ModuleInput* input=nullptr;
+	ModuleResource* resources = nullptr;
 	ModuleScene* scene_intro=nullptr;
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
@@ -77,8 +79,7 @@ public:
 
 	void RequestBrowser(const char * url) const;
 
-	bool LoadConfig();
-	bool SaveConfig() const;
+	bool SaveDefaultConfig(const char* path) const;
 
 	void Load();
 	void Save();

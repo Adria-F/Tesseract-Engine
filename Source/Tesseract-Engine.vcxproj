@@ -161,6 +161,7 @@
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleSceneLoader.h" />
     <ClInclude Include="ModuleTextures.h" />
@@ -214,7 +215,10 @@
     <ClInclude Include="rapidjson\stream.h" />
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\writer.h" />
-    <ClInclude Include="ResourceManeger.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceMesh.h" />
+    <ClInclude Include="ResourceScene.h" />
+    <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +280,7 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleMeshes.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
+    <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleSceneLoader.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
@@ -292,7 +297,10 @@
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Quadtree.cpp" />
-    <ClCompile Include="ResourceManeger.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceMesh.cpp" />
+    <ClCompile Include="ResourceScene.cpp" />
+    <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>

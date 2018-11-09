@@ -262,21 +262,24 @@ bool ModuleSceneLoader::loadScene(const char* scene_name)
 		{
 			GameObject* GO = new GameObject();
 			GO->Load(gameObjects->getValueFromArray(i));
-			App->scene_intro->addGameObject(GO);
 			gameobjects.insert(std::pair<uint, GameObject*>(GO->UID, GO));
 			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
 
-		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
+		for (std::map<uint, GameObject*>::reverse_iterator it_go = gameobjects.rbegin(); it_go != gameobjects.rend(); it_go++) //Reversed to keep the same order as the original
 		{
 			if ((*it_go).second->parentUID != 0) //If it has a parent
 			{
 				GameObject* parent = gameobjects[(*it_go).second->parentUID];
 				if (parent != nullptr)
 				{
-					(*it_go).second->changeParent(parent, false);
+					App->scene_intro->addGameObject((*it_go).second, parent);
 					parent->boundingBox.Enclose((*it_go).second->boundingBox);
 				}
+			}
+			else
+			{
+				App->scene_intro->addGameObject((*it_go).second);
 			}
 		}
 	}

@@ -42,8 +42,7 @@ public:
 	void SaveDialogAt(const char* path);
 	void LoadDialogAt(const char* path);
 
-	bool Save(JSON_File* document)const;
-	bool Load(JSON_File* document);
+	void saveDefaultImgui();
 
 	void Draw();
 

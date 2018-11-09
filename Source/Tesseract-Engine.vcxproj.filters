@@ -474,7 +474,19 @@
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManeger.h">
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResource.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceScene.h">
       <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -707,7 +719,19 @@
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManeger.cpp">
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResource.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScene.cpp">
       <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
   </ItemGroup>
