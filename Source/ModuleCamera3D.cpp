@@ -337,15 +337,21 @@ float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 	return smallestDistance;
 }
 
-bool ModuleCamera3D::Save(JSON_File* document)const
+bool ModuleCamera3D::SaveDefaultConfig(JSON_File* document)const
 {
 	JSON_Value* camera = document->createValue();
-	camera->addString("name", "camera");
+	
+	camera->addVector3("position", { 0.0f,30.0f,80.0f });
+	camera->addVector3("reference", float3::zero);
+	camera->addVector3("X", float3::unitX);
+	camera->addVector3("Y", float3::unitY);
+	camera->addVector3("Z", float3::unitZ);
+	camera->addFloat("cameraSpeed", 10.0f);
+	camera->addFloat("mouseSensitivity", 0.007);
+	camera->addFloat("wheelSensitivity", 10.0f);
+	camera->addFloat("zoomDistance", 20.0f);
+
 	document->addValue("camera", camera);
 
-	return true;
-}
-bool ModuleCamera3D::Load(JSON_File* document)
-{
 	return true;
 }

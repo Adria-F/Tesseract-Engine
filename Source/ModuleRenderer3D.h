@@ -69,8 +69,7 @@ public:
 	void OnResize(int width, int height);
 
 
-	bool Save(JSON_File* document)const;
-	bool Load(JSON_File* document);
+	bool SaveDefaultConfig(JSON_File* document)const;
 
 	void CalculateGlobalMatrix(GameObject* gameObject);
 

@@ -77,8 +77,7 @@ public:
 
 	void RequestBrowser(const char * url) const;
 
-	bool LoadConfig();
-	bool SaveConfig() const;
+	bool SaveDefaultConfig(const char* path) const;
 
 	void Load();
 	void Save();

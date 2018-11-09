@@ -48,18 +48,10 @@ public:
 		return true; 
 	}
 
-	virtual bool Save(JSON_File* document)const
+	virtual bool SaveDefaultConfig(JSON_File* document)const
 	{
 		return true;
 	}
-
-	virtual bool Load(JSON_File* document)
-	{
-		return true;
-	}
-
-	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}*/
 };
 
 #endif // !__MODULE_H__

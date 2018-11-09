@@ -123,32 +123,21 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-bool ModuleWindow::Save(JSON_File* document) const
+bool ModuleWindow::SaveDefaultConfig(JSON_File* document) const
 {
 	JSON_Value* window = document->createValue();
-	window->addInt("window Info", 2);
-	window->convertToArray();
-	JSON_Value* transform = window->createValue();
-	JSON_Value* rotation = window->createValue();
-	JSON_Value* scale = window->createValue();
-	transform->addInt("TransX", 1);
-	transform->addInt("TransY", 2);
-	transform->addInt("TransZ", 3);
-	rotation->addInt("RotX", 4);
-	rotation->addInt("RotY", 5);
-	rotation->addInt("RotZ", 6);
-	scale->addInt("ScaleX", 7);
-	scale->addInt("ScaleY", 8);
-	scale->addInt("ScaleZ", 9);
+	
+	window->addInt("width", 1024);
+	window->addInt("height", 640);
+	window->addInt("screen_size", 1);
+	window->addBool("fulscreen", false);
+	window->addBool("resizable", true);
+	window->addBool("borderless", false);
+	window->addBool("fulscreen_desktop", false);
+	window->addVector2("screen_margin", { 100,100 });
 
-	window->addValue("",transform);
-	window->addValue("",rotation);
-	window->addValue("",scale);
 	document->addValue("window", window);
 
-	return true;
-}
-bool ModuleWindow::Load(JSON_File* document) {
 	return true;
 }
 
