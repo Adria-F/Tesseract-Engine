@@ -5,6 +5,7 @@
 
 class Mesh;
 class GameObject;
+class ResourceMesh;
 
 class ComponentMesh : public Component
 {
@@ -23,6 +24,7 @@ public:
 public:
 
 	Mesh* mesh = nullptr;
+	ResourceMesh* rMesh = nullptr;
 
 	//bool wire;
 

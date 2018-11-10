@@ -12,6 +12,10 @@ public:
 	ResourceMesh(uint UID, ResType type);
 	~ResourceMesh();
 
+	void Draw();
+	void calculateNormals();
+	void GenerateBuffer();
+
 public:
 
 	std::string name;

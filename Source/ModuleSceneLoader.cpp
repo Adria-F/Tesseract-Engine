@@ -66,28 +66,28 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		//Import all meshes
-		vector<Mesh*> meshes;
+		vector<ResourceMesh*> rMeshes;
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			Mesh* mesh = App->meshes->importMesh(scene->mMeshes[i]);
-			
-			if (mesh != nullptr)
+			//Create Resource Mesh
+
+			ResourceMesh* meshResource = App->meshes->importRMesh(scene->mMeshes[i]);
+
+			if (meshResource != nullptr)
 			{
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-				mesh->color = { color.r, color.g, color.b }; //Set mesh color
+				meshResource->color = { color.r, color.g, color.b };
 				
 				string newPath;
 
-				mesh->GenerateBuffer();
-				App->meshes->saveMesh(mesh, newPath);
+				meshResource->GenerateBuffer();
+				App->meshes->saveMesh(meshResource, newPath);
 
-				//Create Resource Mesh
-				Resource* resource = App->resources->AddResource(R_MESH);
-				resource->file = path;
-				resource->exported_file = newPath;
+				meshResource->file = path;
+				meshResource->exported_file = newPath;
 			}
-			meshes.push_back(mesh); //Even if it is nullptr, add it to the vector to keep correct indices order
+			rMeshes.push_back(meshResource);
 		}
 
 		//Import textures
@@ -117,7 +117,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 
 		}
 
-		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, meshes, textures);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, textures);
 		if (rootGO != nullptr)
 		{
 			std::string filename;
@@ -143,7 +143,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 	return true;
 }
 
-GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<Texture*> textures)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -206,7 +206,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
-			mesh->mesh = meshes[node->mMeshes[i]];
+			mesh->rMesh = meshes[node->mMeshes[i]];
 
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{

@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentTransformation.h"
+#include "ResourceMesh.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
@@ -317,12 +318,12 @@ float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 	ComponentMesh* mesh = (ComponentMesh*)gameObject->GetComponent(MESH);
 	if (mesh != nullptr)
 	{		
-		for (int i = 0; i < mesh->mesh->num_indices; i+=3)
+		for (int i = 0; i < mesh->rMesh->num_indices; i+=3)
 		{
 			math::Triangle tri;
-			tri.a = { mesh->mesh->vertices[mesh->mesh->indices[i] * 3],mesh->mesh->vertices[mesh->mesh->indices[i] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i] * 3 + 2] };
-			tri.b = { mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3],mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i + 1] * 3 + 2] };
-			tri.c = { mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3],mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3 + 1],mesh->mesh->vertices[mesh->mesh->indices[i + 2] * 3 + 2] };
+			tri.a = { mesh->rMesh->vertices[mesh->rMesh->indices[i] * 3],mesh->rMesh->vertices[mesh->rMesh->indices[i] * 3 + 1],mesh->rMesh->vertices[mesh->rMesh->indices[i] * 3 + 2] };
+			tri.b = { mesh->rMesh->vertices[mesh->rMesh->indices[i + 1] * 3],mesh->rMesh->vertices[mesh->rMesh->indices[i + 1] * 3 + 1],mesh->rMesh->vertices[mesh->rMesh->indices[i + 1] * 3 + 2] };
+			tri.c = { mesh->rMesh->vertices[mesh->rMesh->indices[i + 2] * 3],mesh->rMesh->vertices[mesh->rMesh->indices[i + 2] * 3 + 1],mesh->rMesh->vertices[mesh->rMesh->indices[i + 2] * 3 + 2] };
 		
 			float distance;
 			float3 intPoint;

@@ -31,6 +31,9 @@ update_status ModuleResource::Update(float dt)
 bool ModuleResource::CleanUp()
 {
 	bool ret = true;
+
+	resources.clear();
+
 	return true;
 }
 

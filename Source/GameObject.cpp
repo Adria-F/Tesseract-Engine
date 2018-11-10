@@ -10,6 +10,7 @@
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
+#include "ResourceMesh.h"
 
 
 GameObject::GameObject()
@@ -368,7 +369,7 @@ void GameObject::RecalculateBB()
 
 		if (mesh != nullptr)
 		{
-			boundingBox.Enclose((float3*)mesh->mesh->vertices, mesh->mesh->num_vertices);
+			boundingBox.Enclose((float3*)mesh->rMesh->vertices, mesh->rMesh->num_vertices);
 		}
 
 		if (childs.size() <= 0)

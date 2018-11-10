@@ -5,9 +5,13 @@
 #include "GameObject.h"
 #include "ModuleMeshes.h"
 
+#include "Resource.h"
+#include "ResourceMesh.h"
+
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
 {
 	mesh = nullptr;
+	rMesh = nullptr;
 }
 
 ComponentMesh::~ComponentMesh()
@@ -16,21 +20,21 @@ ComponentMesh::~ComponentMesh()
 
 bool ComponentMesh::Update()
 {
-	if (!active || mesh == nullptr)
+	if (!active || rMesh == nullptr)
 		return false;
 
 	//Assign Vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->id_indices);
+	glVertexPointer(3, GL_FLOAT, 0, &rMesh->vertices[0]);
 
 	//Assign texture
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	if (mesh->texCoords != nullptr)
-		glTexCoordPointer(2, GL_FLOAT, 0, &mesh->texCoords[0]);
+	if (rMesh->texCoords != nullptr)
+		glTexCoordPointer(2, GL_FLOAT, 0, &rMesh->texCoords[0]);
 
 	//Draw
-	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, rMesh->num_indices, GL_UNSIGNED_INT, NULL);
 
 	//Disable
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -38,16 +42,16 @@ bool ComponentMesh::Update()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	if (App->renderer3D->Normals && mesh->normals != nullptr)
+	if (App->renderer3D->Normals && rMesh->normals != nullptr)
 	{
 		glLineWidth(2.0f);
 		glColor3f(0, 0.5f, 1);
 
 		glBegin(GL_LINES);
-		for (int i = 0; i < mesh->num_vertices * 3; i = i + 3)
+		for (int i = 0; i < rMesh->num_vertices * 3; i = i + 3)
 		{
-			glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-			glVertex3f(-mesh->normals[i] * 3 + mesh->vertices[i], -mesh->normals[i + 1] * 3 + mesh->vertices[i + 1], -mesh->normals[i + 2] * 3 + mesh->vertices[i + 2]);
+			glVertex3f(rMesh->vertices[i], rMesh->vertices[i + 1], rMesh->vertices[i + 2]);
+			glVertex3f(-rMesh->normals[i] * 3 + rMesh->vertices[i], -rMesh->normals[i + 1] * 3 + rMesh->vertices[i + 1], -rMesh->normals[i + 2] * 3 + rMesh->vertices[i + 2]);
 		}
 		glEnd();
 
@@ -55,7 +59,7 @@ bool ComponentMesh::Update()
 		glLineWidth(1.0f);
 	}
 
-	if (App->renderer3D->Faces && mesh->faceNormals.size() > 0)
+	if (App->renderer3D->Faces && rMesh->faceNormals.size() > 0)
 	{
 		int vert_normal = 0;
 
@@ -63,10 +67,10 @@ bool ComponentMesh::Update()
 		glColor3f(0, 0.5f, 1);
 
 		glBegin(GL_LINES);
-		for (int i = 0; i < mesh->faceNormals.size(); i = i + 6)
+		for (int i = 0; i < rMesh->faceNormals.size(); i = i + 6)
 		{
-			glVertex3f(mesh->faceNormals[i], mesh->faceNormals[i + 1], mesh->faceNormals[i + 2]);
-			glVertex3f(mesh->faceNormals[i + 3] + mesh->faceNormals[i], mesh->faceNormals[i + 4] + mesh->faceNormals[i + 1], mesh->faceNormals[i + 5] + mesh->faceNormals[i + 2]);
+			glVertex3f(rMesh->faceNormals[i], rMesh->faceNormals[i + 1], rMesh->faceNormals[i + 2]);
+			glVertex3f(rMesh->faceNormals[i + 3] + rMesh->faceNormals[i], rMesh->faceNormals[i + 4] + rMesh->faceNormals[i + 1], rMesh->faceNormals[i + 5] + rMesh->faceNormals[i + 2]);
 			vert_normal += 9;
 		}
 		glEnd();
@@ -87,11 +91,11 @@ void ComponentMesh::DrawInfo()
 	
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		if (mesh != nullptr)
+		if (rMesh != nullptr)
 		{
-			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
-			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
-			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
+			ImGui::Text("Triangles Count: %d", rMesh->num_indices / 3);
+			ImGui::Text("Vertices Count: %d", rMesh->num_vertices);
+			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", rMesh->boundingBox.Size().x, rMesh->boundingBox.Size().y, rMesh->boundingBox.Size().z);
 		}
 		else
 		{
@@ -105,7 +109,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 	JSON_Value* mesh = component->createValue();
 
 	mesh->addInt("Type", type);
-	mesh->addString("mesh", this->mesh->name.c_str());
+	mesh->addString("mesh", this->rMesh->name.c_str());
 
 	component->addValue("", mesh);
 }
