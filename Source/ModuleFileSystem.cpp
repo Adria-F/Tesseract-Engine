@@ -204,6 +204,7 @@ std::string ModuleFileSystem::getFullPath(const char * path, const char * atDire
 void ModuleFileSystem::manageDroppedFiles(const char* path)
 {
 	//Import to the assets folder and convert+import to the library folder. Name will be: name+(num_version)
+	//TODO 1: call resource importer.
 
 	std::string filename = path;
 	std::string extension = path;

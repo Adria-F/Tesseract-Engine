@@ -10,7 +10,6 @@ enum ResType {
 	MESH,
 	TEXTURE,
 	SCENE
-
 };
 
 class Resource

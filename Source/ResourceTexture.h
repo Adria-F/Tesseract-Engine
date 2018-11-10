@@ -7,8 +7,19 @@ class ResourceTexture :
 	public Resource
 {
 public:
+
 	ResourceTexture(uint UID, ResType type);
 	~ResourceTexture();
+
+public:
+
+	std::string name = "";
+
+	uint width = 0;
+	uint height = 0;
+
+	uint GL_id = 0;
+
 };
 
 #endif // !__RESOURCETEXTURE_H__

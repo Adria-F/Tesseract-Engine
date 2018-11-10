@@ -47,10 +47,10 @@ uint ModuleResource::ImportFile(const char * file, ResType type)
 	switch (type)
 	{
 	case TEXTURE:
-		App->textures->loadTexture(file);
+		App->textures->importTexture(file);
 		break;
 	case SCENE:
-		App->scene_loader->loadScene(file);
+		App->scene_loader->importFBXScene(file);
 		break;
 	}
 
