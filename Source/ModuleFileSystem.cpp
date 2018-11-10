@@ -1,9 +1,11 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
+#include "ModuleResource.h"
 #include "ModuleSceneLoader.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
 #include "ModuleGUI.h"
+#include "Resource.h"
 #include <fstream>
 
 #include "PhysFS\include\physfs.h"
@@ -212,7 +214,9 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 
 	if (extension == "fbx" || extension == "FBX")
 	{
-		App->scene_loader->importFBXScene(path);
+		//App->scene_loader->importFBXScene(path);
+		App->resources->ImportFile(path, R_SCENE);
+		
 	}
 	else if (extension == "png" || extension == "dds" || extension == "tga")
 	{
@@ -223,7 +227,8 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 			full_path += path;
 		}
 		else
-		App->textures->importTexture(full_path.c_str());
+		//App->textures->importTexture(full_path.c_str());
+		App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
 		App->textures->loadTexture(path);
 	}
 	else

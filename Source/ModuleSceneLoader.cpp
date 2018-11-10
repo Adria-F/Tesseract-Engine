@@ -7,11 +7,16 @@
 #include "ModuleMeshes.h"
 #include "GameObject.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResource.h"
 
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
+
+#include "Resource.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 #include <map>
 //#include "mmgr/mmgr.h"
@@ -65,14 +70,22 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			Mesh* mesh = App->meshes->importMesh(scene->mMeshes[i]);
+			
 			if (mesh != nullptr)
 			{
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				mesh->color = { color.r, color.g, color.b }; //Set mesh color
 				
+				string newPath;
+
 				mesh->GenerateBuffer();
-				App->meshes->saveMesh(mesh);
+				App->meshes->saveMesh(mesh, newPath);
+
+				//Create Resource Mesh
+				Resource* resource = App->resources->AddResource(R_MESH);
+				resource->file = path;
+				resource->exported_file = newPath;
 			}
 			meshes.push_back(mesh); //Even if it is nullptr, add it to the vector to keep correct indices order
 		}
@@ -88,10 +101,15 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 				if (textureError == aiReturn::aiReturn_SUCCESS)
 				{
 					std::string full_path = path;
+					std::string newPath;	//Useful with resources
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
-					App->textures->importTexture(full_path.c_str());
+					App->textures->importTexture(full_path.c_str(), newPath);
 					textures.push_back(App->textures->loadTexture(texturePath.C_Str())); //Even if it is nullptr, add it to the vector to keep correct indices order
+
+					Resource* resource = App->resources->AddResource(R_TEXTURE);
+					resource->file = path;
+					resource->exported_file = newPath;
 				}
 				else
 					textures.push_back(nullptr);
@@ -117,9 +135,12 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 
 	}
 	else
+	{
 		LOG("Error loading scene %s", path);
-
-	return false;
+		return false;
+	}
+		
+	return true;
 }
 
 GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<Mesh*> meshes, std::vector<Texture*> textures)
@@ -184,7 +205,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			transformation->rotation = rot;
 			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
-			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(MESH);
+			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
 			mesh->mesh = meshes[node->mMeshes[i]];
 
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly

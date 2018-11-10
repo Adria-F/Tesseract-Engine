@@ -43,22 +43,27 @@ uint ModuleResource::ImportFile(const char * file, ResType type)
 {
 	uint ret = 0;
 	std::string written_file;
+	bool loaded = false;
 
 	switch (type)
 	{
-	case TEXTURE:
-		App->textures->importTexture(file);
+	case R_TEXTURE:
+		loaded=App->textures->importTexture(file,written_file);
 		break;
-	case SCENE:
-		App->scene_loader->importFBXScene(file);
+	case R_SCENE:
+		loaded=App->scene_loader->importFBXScene(file);
 		break;
 	}
 
-	Resource* newRes = AddResource(type);
-	newRes->file = file;
-	newRes->exported_file = written_file;
-	ret = newRes->UID;
-
+	if (loaded)
+	{
+		Resource* newRes = AddResource(type);
+		newRes->file = file;
+		newRes->exported_file = written_file;
+		ret = newRes->UID;
+		LOG("Source Created");
+	}
+	
 	return ret;
 }
 
@@ -86,14 +91,14 @@ Resource * ModuleResource::AddResource(ResType type, uint forced_uid)
 	case NO_TYPE:
 		ret = new Resource(forced_uid,NO_TYPE);
 		break;
-	case MESH:
-		ret = (Resource*)new ResourceMesh(forced_uid, MESH);
+	case R_MESH:
+		ret = (Resource*)new ResourceMesh(forced_uid, R_MESH);
 		break;
-	case TEXTURE:
-		ret = (Resource*)new ResourceTexture(forced_uid, TEXTURE);
+	case R_TEXTURE:
+		ret = (Resource*)new ResourceTexture(forced_uid, R_TEXTURE);
 		break;
-	case SCENE:
-		ret = (Resource*)new ResourceScene(forced_uid, SCENE);
+	case R_SCENE:
+		ret = (Resource*)new ResourceScene(forced_uid, R_SCENE);
 		break;
 	}
 	

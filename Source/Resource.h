@@ -7,14 +7,15 @@
 enum ResType {
 
 	NO_TYPE,
-	MESH,
-	TEXTURE,
-	SCENE
+	R_MESH,
+	R_TEXTURE,
+	R_SCENE
 };
 
 class Resource
 {
 	friend class ModuleResource;
+	friend class ModuleSceneLoader;
 
 public:
 

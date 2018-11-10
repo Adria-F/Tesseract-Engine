@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+
 struct Mesh;
 struct aiMesh;
 
@@ -14,7 +15,7 @@ public:
 
 	Mesh* importMesh(aiMesh* mesh);
 	Mesh* loadMesh(const char* meshName);
-	bool saveMesh(Mesh* mesh);
+	bool saveMesh(Mesh* mesh, std::string& newpath);
 	
 };
 

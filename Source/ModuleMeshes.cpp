@@ -177,7 +177,7 @@ Mesh* ModuleMeshes::loadMesh(const char* meshName)
 	return ret;
 }
 
-bool ModuleMeshes::saveMesh(Mesh* mesh)
+bool ModuleMeshes::saveMesh(Mesh* mesh, std::string& newpath)
 {
 	bool ret = true;
 
@@ -233,6 +233,7 @@ bool ModuleMeshes::saveMesh(Mesh* mesh)
 	memcpy(cursor, rotation, bytes);*/
 
 	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
+	newpath = MESHES_FOLDER + mesh->name + MESH_EXTENSION;
 
 	return ret;
 }

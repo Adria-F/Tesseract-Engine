@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include <list>
+#include <string>
 
 struct Texture
 {
@@ -26,7 +27,7 @@ public:
 
 	bool CleanUp();
 
-	bool importTexture(const char* path);
+	bool importTexture(const char* path, std::string& newpath);
 	bool saveTexture(const char* path, int type);
 	Texture* loadTexture(const char* path);
 
