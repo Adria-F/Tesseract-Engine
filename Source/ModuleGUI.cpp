@@ -65,9 +65,6 @@ bool ModuleGUI::Init(JSON_File* document)
 
 	panels.push_back(fileDialog = new PanelFileDialog("Files"));
 
-	if (!App->fileSystem->fileExists("imgui.ini", SETTINGS_FOLDER))
-		//saveDefaultImgui();
-
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
@@ -157,10 +154,8 @@ update_status ModuleGUI::Update(float dt)
 			}
 
 			ImGui::EndMenu();
-		}
+		}		
 
-		
-		
 		if (ImGui::BeginMenu("Tools"))
 		{
 			if (ImGui::MenuItem("Basic 3D Shapes", NULL, ShapeElements->isActive()))
@@ -258,8 +253,17 @@ void ModuleGUI::LoadDialogAt(const char * path)
 
 void ModuleGUI::saveDefaultImgui()
 {
-	ImGui::SetWindowPos("Hardware Info", { 0,526 });
-	ImGui::SetWindowSize("Hardware Info", { 851, 114 });
+	LOG("imgui.ini file is missing, so there is no information about the UI layout");
+	LOG("All windows have been moved to the default position and size, please consider docking them and setting them as desired");
+
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
+	{
+		ImGui::SetNextWindowSizeConstraints({ 10,10 }, { (float)App->window->width, (float)App->window->height });
+		(*it_p)->Draw(); //Draw every panel, so it detects it and change its position
+	}
+
+	ImGui::SetWindowPos("Hardware Info", { 0,646 });
+	ImGui::SetWindowSize("Hardware Info", { 1083, 118 });
 
 	ImGui::SetWindowPos("Console", { 0,646 });
 	ImGui::SetWindowSize("Console", { 1083, 118 });
@@ -267,8 +271,8 @@ void ModuleGUI::saveDefaultImgui()
 	ImGui::SetWindowPos("Configuration", { 1085,19 });
 	ImGui::SetWindowSize("Configuration", { 351, 349 });
 
-	ImGui::SetWindowPos("About", { 0,828 });
-	ImGui::SetWindowSize("About", { 1521, 152 });
+	ImGui::SetWindowPos("About", { 0,646 });
+	ImGui::SetWindowSize("About", { 1083, 118 });
 
 	ImGui::SetWindowPos("3D Elements", { 0,19 });
 	ImGui::SetWindowSize("3D Elements", { 214, 313 });
@@ -301,6 +305,9 @@ void ModuleGUI::saveDefaultImgui()
 
 void ModuleGUI::Draw()
 {
+	if (!App->fileSystem->fileExists("imgui.ini"))
+		saveDefaultImgui();
+
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
 	{
 		if ((*it_p)->isActive())
