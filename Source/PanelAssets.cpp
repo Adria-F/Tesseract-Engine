@@ -68,7 +68,7 @@ void PanelAssets::Draw()
 			}
 			else
 			{
-				rowCount == 1;
+				rowCount = 1;
 				currLine = ImGui::GetCursorPosY();
 			}
 		}
