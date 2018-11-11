@@ -16,7 +16,8 @@ public:
 
 	void Draw();
 	void calculateNormals();
-	void GenerateBuffer();
+
+	bool LoadInMemory();
 
 public:
 

@@ -81,7 +81,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, JSON_Value* importSetti
 				
 				string newPath;
 
-				meshResource->GenerateBuffer();
+				meshResource->LoadtoMemory();
 				App->meshes->saveMesh(meshResource, newPath);
 
 				meshResource->file = path;
@@ -105,14 +105,12 @@ bool ModuleSceneLoader::importFBXScene(const char* path, JSON_Value* importSetti
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
 					//App->textures->importTexture(full_path.c_str(), newPath);
+					
 					ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->resources->ImportFile(full_path.c_str(), R_TEXTURE));
-				
-					/*ResourceTexture* resource = App->textures->LoadResourceTexture(texturePath.C_Str()); //Even if it is nullptr, add it to the vector to keep correct indices order
+
 					if(resource!=nullptr)
-					{
-						resource->file = path;
-						resource->exported_file = newPath;						
-					}*/
+						resource->LoadInMemory();
+			
 					rtextures.push_back(resource);
 				}
 				else
@@ -212,12 +210,12 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
-			mesh->rMesh = meshes[node->mMeshes[i]];
+			mesh->UID = meshes[node->mMeshes[i]]->GetUID();
 
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-				material->resource = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+				material->UID= textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID();
 			}
 
 			if (i > fail_count)

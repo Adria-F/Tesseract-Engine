@@ -30,9 +30,18 @@ bool Resource::IsLoaded() const
 	return (loaded>0);
 }
 
-bool Resource::Load() const
+bool Resource::LoadtoMemory()
 {
-	return false;
+	bool ret = false;
+
+	if (loaded == 0)
+	{
+		ret = LoadInMemory();
+	}
+
+	loaded++;
+
+	return ret;
 }
 
 uint Resource::GetTimesLoaded() const

@@ -31,7 +31,7 @@ public:
 
 	bool importTexture(const char* path, std::string& newpath, JSON_Value* importSettings);
 	Texture* loadTexture(const char* path);
-	ResourceTexture* LoadResourceTexture(const char* path);
+	bool LoadResourceTexture(const char* path, ResourceTexture* resource);
 
 	Texture* loadIcon(const char* path);
 

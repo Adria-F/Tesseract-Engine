@@ -100,6 +100,8 @@ uint ModuleResource::GenerateNewUID()
 
 Resource * ModuleResource::GetResource(uint uid)
 {
+	std::map <uint, Resource* >::iterator it = resources.find(uid);
+	
 	if (resources.find(uid) != resources.end())
 	{
 		return resources[uid];

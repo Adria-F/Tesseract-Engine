@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleTextures.h"
 #include "ResourceTexture.h"
 
 
@@ -15,4 +16,13 @@ ResourceTexture::~ResourceTexture()
 
 void ResourceTexture::setImportDefaults(JSON_Value & importSettings)
 {
+}
+
+bool ResourceTexture::LoadInMemory()
+{
+	bool ret = true;
+
+	App->textures->LoadResourceTexture(file.c_str(),this);
+
+	return ret;
 }

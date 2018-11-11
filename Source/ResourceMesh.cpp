@@ -26,12 +26,14 @@ void ResourceMesh::setImportDefaults(JSON_Value & importSettings)
 {
 }
 
-void ResourceMesh::GenerateBuffer()
+bool ResourceMesh::LoadInMemory()
 {
 	glGenBuffers(1, (GLuint*)&(id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, &indices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return true;
 }
 
 void ResourceMesh::calculateNormals()

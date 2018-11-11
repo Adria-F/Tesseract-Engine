@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ComponentTexture.h"
 #include "ModuleTextures.h"
+#include "ModuleResource.h"
 #include "Resource.h"
 #include "ResourceTexture.h"
 
@@ -11,11 +12,12 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
-	if (!active || resource == nullptr)
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+	if (!active || tex == nullptr)
 		return false;
 
-	if (resource != nullptr)
-		glBindTexture(GL_TEXTURE_2D, resource->GL_id);
+	if (tex != nullptr)
+		glBindTexture(GL_TEXTURE_2D, tex->GL_id);
 	else
 		glColor3f(1, 1, 1);
 
@@ -24,6 +26,8 @@ bool ComponentTexture::Update()
 
 void ComponentTexture::DrawInfo()
 {
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+
 	ImGui::PushID("toggleTexture");
 	ImGui::Checkbox("", &active);
 	ImGui::PopID();
@@ -31,7 +35,7 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		beginDroppableSpace((resource == nullptr) ? "No Texture" : resource->GetFile(), resource ==nullptr);
+		beginDroppableSpace((tex == nullptr) ? "No Texture" : tex->GetFile(), tex ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
@@ -41,15 +45,15 @@ void ComponentTexture::DrawInfo()
 			ImGui::EndDragDropTarget();
 		}
 
-		if (resource != nullptr)
+		if (tex != nullptr)
 		{
-			ImGui::Text("Texture Size:\n Width: %d | Height: %d", resource->width, resource->height);
+			ImGui::Text("Texture Size:\n Width: %d | Height: %d", tex->width, tex->height);
 			float panelWidth = ImGui::GetWindowContentRegionWidth();
 			if (panelWidth > 250)
 				panelWidth = 250;
-			float conversionFactor = panelWidth / resource->width;
-			ImVec2 imageSize = { resource->height *conversionFactor, panelWidth };
-			ImGui::Image((ImTextureID)resource->GL_id, imageSize);
+			float conversionFactor = panelWidth / tex->width;
+			ImVec2 imageSize = { tex->height *conversionFactor, panelWidth };
+			ImGui::Image((ImTextureID)tex->GL_id, imageSize);
 		}
 		else
 		{
@@ -60,10 +64,12 @@ void ComponentTexture::DrawInfo()
 
 void ComponentTexture::Save(JSON_Value * component) const
 {
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+
 	JSON_Value* texture = component->createValue();
 
 	texture->addInt("Type", type);
-	texture->addString("texture", resource->GetFile());
+	texture->addString("texture", tex->GetExportedFile());
 
 	component->addValue("", texture);
 }
@@ -71,5 +77,5 @@ void ComponentTexture::Save(JSON_Value * component) const
 void ComponentTexture::Load(JSON_Value* component)
 {
 	//TODO with resources
-	Material = App->textures->loadTexture(component->getString("texture"));
+	/*Material = App->textures->loadTexture(component->getString("texture"));*/
 }

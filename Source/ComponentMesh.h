@@ -21,11 +21,6 @@ public:
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 
-public:
-
-	Mesh* mesh = nullptr;
-	ResourceMesh* rMesh = nullptr;
-
 	//bool wire;
 
 };

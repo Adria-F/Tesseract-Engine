@@ -10,7 +10,7 @@ class ComponentTexture : public Component
 {
 public:
 	
-	ComponentTexture(GameObject* gameobject, componentType type) :Component(gameobject, type) { Material = nullptr; }
+	ComponentTexture(GameObject* gameobject, componentType type) :Component(gameobject, type) { }
 
 	~ComponentTexture();
 
@@ -19,11 +19,6 @@ public:
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
-
-public: 
-
-	Texture* Material = nullptr;
-	ResourceTexture* resource = nullptr;
 
 };
 

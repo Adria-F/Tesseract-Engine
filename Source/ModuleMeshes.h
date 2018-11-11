@@ -14,10 +14,8 @@ public:
 	ModuleMeshes(bool start_enabled = true);
 	~ModuleMeshes() {}
 
-	Mesh* importMesh(aiMesh* mesh);
 	ResourceMesh* importRMesh(aiMesh* mesh);
 	Mesh* loadMesh(const char* meshName);
-	bool saveMesh(Mesh* mesh, std::string& newpath);
 	bool saveMesh(ResourceMesh* mesh, std::string& newpath);
 	
 };

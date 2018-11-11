@@ -28,7 +28,7 @@ public:
 	const char* GetFile()const;
 	const char* GetExportedFile()const;
 	bool IsLoaded()const;
-	bool Load()const;
+	bool LoadtoMemory();
 	uint GetTimesLoaded() const;
 
 	virtual void Save()const {};

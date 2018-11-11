@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Globals.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleResource.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera3D.h"
 #include "ModuleScene.h"
@@ -329,8 +330,9 @@ void GameObject::Load(JSON_Value* gameobject)
 
 	if (mesh)
 	{
+		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
 		boundingBox.SetNegativeInfinity();
-		boundingBox.Enclose((float3*)mesh->mesh->vertices, mesh->mesh->num_vertices);
+		boundingBox.Enclose((float3*)rMesh->vertices, rMesh->num_vertices);
 
 	}
 }
@@ -367,9 +369,10 @@ void GameObject::RecalculateBB()
 			}
 		}
 
-		if (mesh != nullptr)
+		if (mesh!=nullptr)
 		{
-			boundingBox.Enclose((float3*)mesh->rMesh->vertices, mesh->rMesh->num_vertices);
+			ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+			boundingBox.Enclose((float3*)rMesh->vertices, rMesh->num_vertices);
 		}
 
 		if (childs.size() <= 0)
