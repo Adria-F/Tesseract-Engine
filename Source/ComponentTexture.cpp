@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ComponentTexture.h"
 #include "ModuleTextures.h"
+#include "Resource.h"
+#include "ResourceTexture.h"
 
 
 ComponentTexture::~ComponentTexture()
@@ -9,11 +11,11 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
-	if (!active || Material == nullptr)
+	if (!active || resource == nullptr)
 		return false;
 
-	if (Material != nullptr)
-		glBindTexture(GL_TEXTURE_2D, Material->GL_id);
+	if (resource != nullptr)
+		glBindTexture(GL_TEXTURE_2D, resource->GL_id);
 	else
 		glColor3f(1, 1, 1);
 
@@ -29,7 +31,7 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		beginDroppableSpace((Material == nullptr) ? "No Texture" : Material->name.c_str(), Material==nullptr);
+		beginDroppableSpace((resource == nullptr) ? "No Texture" : resource->name.c_str(), resource ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
@@ -39,15 +41,15 @@ void ComponentTexture::DrawInfo()
 			ImGui::EndDragDropTarget();
 		}
 
-		if (Material != nullptr)
+		if (resource != nullptr)
 		{
-			ImGui::Text("Texture Size:\n Width: %d | Height: %d", Material->width, Material->height);
+			ImGui::Text("Texture Size:\n Width: %d | Height: %d", resource->width, resource->height);
 			float panelWidth = ImGui::GetWindowContentRegionWidth();
 			if (panelWidth > 250)
 				panelWidth = 250;
-			float conversionFactor = panelWidth / Material->width;
-			ImVec2 imageSize = { Material->height *conversionFactor, panelWidth };
-			ImGui::Image((ImTextureID)Material->GL_id, imageSize);
+			float conversionFactor = panelWidth / resource->width;
+			ImVec2 imageSize = { resource->height *conversionFactor, panelWidth };
+			ImGui::Image((ImTextureID)resource->GL_id, imageSize);
 		}
 		else
 		{
@@ -61,12 +63,13 @@ void ComponentTexture::Save(JSON_Value * component) const
 	JSON_Value* texture = component->createValue();
 
 	texture->addInt("Type", type);
-	texture->addString("texture", Material->name.c_str());
+	texture->addString("texture", resource->name.c_str());
 
 	component->addValue("", texture);
 }
 
 void ComponentTexture::Load(JSON_Value * component)
 {
+	//TODO with resources
 	Material = App->textures->loadTexture(component->getString("texture"));
 }

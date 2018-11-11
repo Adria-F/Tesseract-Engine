@@ -5,6 +5,8 @@
 #include <list>
 #include <string>
 
+class ResourceTexture;
+
 struct Texture
 {
 	~Texture();
@@ -30,12 +32,14 @@ public:
 	bool importTexture(const char* path, std::string& newpath);
 	bool saveTexture(const char* path, int type);
 	Texture* loadTexture(const char* path);
+	ResourceTexture* LoadResourceTexture(const char* path);
 
 	Texture* loadIcon(const char* path);
 
 public:
 
 	std::list<Texture*> textures;
+	std::list<ResourceTexture*> resourcetextures;
 	std::list<Texture*> icons;
 };
 

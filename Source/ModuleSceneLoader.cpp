@@ -91,7 +91,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 		}
 
 		//Import textures
-		vector<Texture*> textures;
+		vector<ResourceTexture*> rtextures;
 		if (scene->HasMaterials()) //Need to check embeded textures
 		{
 			for (int i = 0; i < scene->mNumMaterials; i++)
@@ -105,19 +105,24 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
 					App->textures->importTexture(full_path.c_str(), newPath);
-					textures.push_back(App->textures->loadTexture(texturePath.C_Str())); //Even if it is nullptr, add it to the vector to keep correct indices order
-
-					Resource* resource = App->resources->AddResource(R_TEXTURE);
-					resource->file = path;
-					resource->exported_file = newPath;
+				
+					ResourceTexture* resource = App->textures->LoadResourceTexture(texturePath.C_Str()); //Even if it is nullptr, add it to the vector to keep correct indices order
+					if(resource!=nullptr)
+					{
+						resource->file = path;
+						resource->exported_file = newPath;
+						rtextures.push_back(resource);
+					}
 				}
 				else
-					textures.push_back(nullptr);
+				{
+					rtextures.push_back(nullptr);
+				}
 			}
 
 		}
 
-		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, textures);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures);
 		if (rootGO != nullptr)
 		{
 			std::string filename;
@@ -143,7 +148,7 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 	return true;
 }
 
-GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<Texture*> textures)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -211,7 +216,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-				material->Material = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+				material->resource = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
 			}
 
 			if (i > fail_count)

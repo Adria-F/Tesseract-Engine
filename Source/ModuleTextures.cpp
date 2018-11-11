@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "Globals.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResource.h"
+
+#include "ResourceTexture.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
@@ -39,6 +42,15 @@ bool ModuleTextures::CleanUp()
 		it_t++;
 	}
 	textures.clear();
+
+	std::list<ResourceTexture*>::iterator it_rt;
+	it_rt = resourcetextures.begin();
+	while (it_rt != resourcetextures.end())
+	{
+		RELEASE((*it_rt));
+		it_rt++;
+	}
+	resourcetextures.clear();
 
 	std::list<Texture*>::iterator it_i;
 	it_i = icons.begin();
@@ -189,11 +201,62 @@ Texture* ModuleTextures::loadTexture(const char* path)
 	else
 	{
 		LOG("Error loading texture: %s", path);
-		return 0;
+		return nullptr;
 	}
 
 	LOG("Texture creation successful.");
 	textures.push_back(ret);
+
+	return ret;
+}
+
+ResourceTexture * ModuleTextures::LoadResourceTexture(const char * path)
+{
+	ResourceTexture* ret = (ResourceTexture*)App->resources->AddResource(R_TEXTURE);
+
+	char* buffer = nullptr;
+	std::string full_path = path;
+	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
+	ret->name = full_path;
+	uint size = App->fileSystem->readFile(App->fileSystem->getFullPath(full_path.c_str(), TEXTURES_FOLDER, TEXTURES_EXTENSION).c_str(), &buffer);
+
+	if (buffer != nullptr && size > 0)
+	{
+		ILuint ilImage;
+		ilGenImages(1, &ilImage);
+		ilBindImage(ilImage);
+
+		if (ilLoadL(IL_DDS, (const void*)buffer, size));
+		{
+			ILinfo ImageInfo;
+			iluGetImageInfo(&ImageInfo);
+
+			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+				iluFlipImage();
+
+			glGenTextures(1, &ret->GL_id);
+			glBindTexture(GL_TEXTURE_2D, ret->GL_id);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+			ret->width = ImageInfo.Width;
+			ret->height = ImageInfo.Height;
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		ilDeleteImages(1, &ilImage);
+	}
+	else
+	{
+		LOG("Error loading texture: %s", path);
+		//return 0;
+	}
+
+	LOG("Texture creation successful.");
+	resourcetextures.push_back(ret);
 
 	return ret;
 }

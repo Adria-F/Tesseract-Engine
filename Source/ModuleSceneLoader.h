@@ -6,6 +6,7 @@
 
 class GameObject;
 class ResourceMesh;
+class ResourceTexture;
 
 struct aiScene;
 struct aiNode; 
@@ -25,7 +26,7 @@ public:
 	bool CleanUp();
 
 	bool importFBXScene(const char* path);
-	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<Texture*> textures);
+	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures);
 
 	bool saveScene(const char* scene_name);
 	bool loadScene(const char* scene_name);

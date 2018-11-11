@@ -170,6 +170,8 @@ ResourceMesh* ModuleMeshes::importRMesh(aiMesh* mesh)
 
 Mesh* ModuleMeshes::loadMesh(const char* meshName)
 {
+	//TODO with resources
+
 	Mesh* ret = new Mesh();
 	ret->name = meshName;
 	std::string path = MESHES_FOLDER;

@@ -4,6 +4,7 @@
 #include "Component.h"
 
 class Texture;
+class ResourceTexture;
 
 class ComponentTexture : public Component
 {
@@ -22,6 +23,7 @@ public:
 public: 
 
 	Texture* Material = nullptr;
+	ResourceTexture* resource = nullptr;
 
 };
 
