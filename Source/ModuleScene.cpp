@@ -162,12 +162,12 @@ void ModuleScene::Draw()
 
 void ModuleScene::wantToSaveScene()
 {
-	App->gui->SaveDialogAt(SCENES_FOLDER);
+	App->gui->SaveDialogAt(SCENES_FOLDER, "tesseractScene");
 }
 
 void ModuleScene::wantToLoadScene()
 {
-	App->gui->LoadDialogAt(SCENES_FOLDER);
+	App->gui->LoadDialogAt(SCENES_FOLDER, "tesseractScene");
 }
 
 void ModuleScene::newScene()

@@ -289,21 +289,25 @@ void ModuleFileSystem::importFilesAt(const char * path)
 	}
 }
 
-void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements)
+void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements, const char* exclusiveExtension, const char* ignoreExtension)
 {
 	char** files = PHYSFS_enumerateFiles(path);
 
 	for (char **i = files; *i != NULL; i++)
 	{
-		assetsElement* newElem = new assetsElement();
-		
 		std::string currPath = path;
 		currPath += *i;
-		std::string extension = "";
-		splitPath(currPath.c_str(), nullptr, &newElem->name, &extension);
+		std::string filename;
+		std::string extension;
+		splitPath(currPath.c_str(), nullptr, &filename, &extension);
 		if (extension.length() > 0)
-			newElem->name += '.' + extension;
+			filename += '.' + extension;
 
+		if (!PHYSFS_isDirectory(currPath.c_str()) && ((exclusiveExtension != nullptr && extension != exclusiveExtension) || (ignoreExtension != nullptr && extension == ignoreExtension)))
+			continue;
+
+		assetsElement* newElem = new assetsElement();
+		newElem->name = filename;
 		if (PHYSFS_isDirectory(currPath.c_str()))
 			newElem->type = assetsElement::elementType::FOLDER;
 		else

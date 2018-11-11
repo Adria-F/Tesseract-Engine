@@ -34,7 +34,7 @@ public:
 
 	void importFilesAt(const char* path);
 	
-	void getFilesAt(const char* path, std::list<assetsElement*>& elements);
+	void getFilesAt(const char* path, std::list<assetsElement*>& elements, const char* exclusiveExtension = nullptr, const char* ignoreExtension = nullptr);
 
 	int getLastTimeChanged(const char* path);
 	//Path: path of the asset file (not the .meta)

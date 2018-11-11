@@ -9,7 +9,7 @@ PanelAssets::PanelAssets(const char* name) : Panel(name)
 	active = true;
 
 	current_path = ASSETS_FOLDER;
-	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
+	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements, nullptr, "meta");
 }
 
 PanelAssets::~PanelAssets()
@@ -30,7 +30,7 @@ void PanelAssets::Draw()
 	{
 		clearElements();
 		App->fileSystem->splitPath(current_path.c_str(), &current_path, nullptr, nullptr);
-		App->fileSystem->getFilesAt(current_path.c_str(), elements);
+		App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
 	}
 	ImGui::Text(current_path.c_str());
 	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 40);
@@ -38,7 +38,7 @@ void PanelAssets::Draw()
 	{
 		clearElements();
 		current_path = ASSETS_FOLDER;
-		App->fileSystem->getFilesAt(ASSETS_FOLDER, elements);
+		App->fileSystem->getFilesAt(ASSETS_FOLDER, elements, nullptr, "meta");
 	}
 	ImGui::PopStyleColor();
 	ImGui::EndMenuBar();
@@ -82,7 +82,7 @@ void PanelAssets::Draw()
 					current_path += '/';
 				current_path += (*it_e)->name;
 				clearElements();
-				App->fileSystem->getFilesAt(current_path.c_str(), elements);
+				App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
 				ImGui::PopID();
 				break;
 			}

@@ -241,14 +241,14 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-void ModuleGUI::SaveDialogAt(const char * path)
+void ModuleGUI::SaveDialogAt(const char * path, const char* exclusiveExtension)
 {
-	fileDialog->SaveAt(path);
+	fileDialog->SaveAt(path, exclusiveExtension);
 }
 
-void ModuleGUI::LoadDialogAt(const char * path)
+void ModuleGUI::LoadDialogAt(const char * path, const char* exclusiveExtension)
 {
-	fileDialog->LoadAt(path);
+	fileDialog->LoadAt(path, exclusiveExtension);
 }
 
 void ModuleGUI::saveDefaultImgui()

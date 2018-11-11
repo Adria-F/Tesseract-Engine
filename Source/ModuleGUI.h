@@ -39,8 +39,8 @@ public:
 	void AddLog(const char* log);
 	void handleInput(SDL_Event* event);
 
-	void SaveDialogAt(const char* path);
-	void LoadDialogAt(const char* path);
+	void SaveDialogAt(const char* path, const char* exclusiveExtension = nullptr);
+	void LoadDialogAt(const char* path, const char* exclusiveExtension = nullptr);
 
 	void saveDefaultImgui();
 
