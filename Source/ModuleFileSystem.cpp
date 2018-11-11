@@ -7,8 +7,6 @@
 #include "ModuleGUI.h"
 #include "Resource.h"
 #include <fstream>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include "PhysFS\include\physfs.h"
 
@@ -18,7 +16,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 {
 	//Init PHYSFS before Init to allow other modules to use it
 	char* base_path = SDL_GetBasePath();
-	PHYSFS_init(base_path);
+	PHYSFS_init(normalizePath(base_path).c_str());
 	SDL_free(base_path);
 
 	if (PHYSFS_setWriteDir(".") == 0)
@@ -280,7 +278,7 @@ void ModuleFileSystem::importFilesAt(const char * path)
 					//Need to delete also the imported file at Library
 				}
 			}
-			else
+			else if (extension != "tesseractScene") //Ignore scene files
 			{
 				int lastChange = getLastTimeChanged(currPath.c_str());
 				LOG("Last change: %d", lastChange);
@@ -317,11 +315,10 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 
 int ModuleFileSystem::getLastTimeChanged(const char* path)
 {
-	struct _stat result;
-	static int last_time = 0;
-	if (_stat(path, &result) == 0)
+	PHYSFS_Stat stat;
+	if (PHYSFS_stat(path, &stat) != 0)
 	{
-		return result.st_mtime;
+		return stat.modtime;
 	}
 
 	return 0;
@@ -335,10 +332,9 @@ int ModuleFileSystem::getMetaLastChange(const char * path)
 	if (meta != nullptr)
 	{
 		int lastChange = meta->getValue("meta")->getInt("last_change");
-		LOG("meta change: %d", lastChange);
+		App->JSON_manager->closeFile(meta);
 		return lastChange;
 	}
 
-	LOG("meta change: 0");
 	return 0;
 }
