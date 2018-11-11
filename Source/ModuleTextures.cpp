@@ -190,7 +190,7 @@ Texture* ModuleTextures::loadTexture(const char* path)
 	return ret;
 }
 
-ResourceTexture * ModuleTextures::LoadResourceTexture(const char * path)
+ResourceTexture* ModuleTextures::LoadResourceTexture(const char * path)
 {
 	ResourceTexture* ret = (ResourceTexture*)App->resources->AddResource(R_TEXTURE);
 

@@ -67,6 +67,10 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 		meta = createMeta(path.c_str(), type);
 		newMeta = true;
 	}
+	else //If a .meta exists
+	{
+
+	}
 
 	switch (type)
 	{
@@ -153,6 +157,7 @@ JSON_File* ModuleResource::createMeta(const char* path, ResType type) const
 
 	JSON_Value* meta = ret->createValue();
 	meta->addUint("UID", GENERATE_UID());
+	meta->addInt("last_change", App->fileSystem->getLastTimeChanged(path));
 	
 	JSON_Value* importSettings = meta->createValue();
 	switch (type)

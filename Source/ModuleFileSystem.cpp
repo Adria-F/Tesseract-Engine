@@ -7,6 +7,8 @@
 #include "ModuleGUI.h"
 #include "Resource.h"
 #include <fstream>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "PhysFS\include\physfs.h"
 
@@ -35,6 +37,9 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 		addPath(mainPaths[i]);
 	}
+
+	import_delay = 1000.0f;
+	first_import = true;
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -42,11 +47,16 @@ ModuleFileSystem::~ModuleFileSystem()
 	PHYSFS_deinit();
 }
 
-bool ModuleFileSystem::Start()
+update_status ModuleFileSystem::Update(float dt)
 {
-	//importFilesAt(ASSETS_FOLDER);
+	if (first_import || import_timer.ReadTime() >= import_delay)
+	{
+		importFilesAt(ASSETS_FOLDER);
+		import_timer.Start();
+		first_import = false;
+	}
 
-	return true;
+	return UPDATE_CONTINUE;
 }
 
 bool ModuleFileSystem::addPath(const char * path)
@@ -126,6 +136,11 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest)
 	}
 	else
 		return false;
+}
+
+bool ModuleFileSystem::deleteFile(const char * path)
+{
+	return PHYSFS_delete(path) != 0;
 }
 
 const char* ModuleFileSystem::getAvailablePath(const char* path)
@@ -252,7 +267,27 @@ void ModuleFileSystem::importFilesAt(const char * path)
 			importFilesAt(currPath.c_str());
 		}
 		else
-			manageDroppedFiles(currPath.c_str());
+		{
+			std::string dir_path;
+			std::string filename;
+			std::string extension;
+			splitPath(currPath.c_str(), &dir_path, &filename, &extension);
+			if (extension == "meta") //If it is a meta file
+			{ 
+				if (!fileExists((dir_path + filename).c_str())) //If the corresponding file does not exist
+				{
+					deleteFile(currPath.c_str()); //Delete the .meta file
+					//Need to delete also the imported file at Library
+				}
+			}
+			else
+			{
+				int lastChange = getLastTimeChanged(currPath.c_str());
+				LOG("Last change: %d", lastChange);
+				if (lastChange > getMetaLastChange(currPath.c_str())) //If file updated or .meta file does not exist as getMetaLastChange returns 0
+					manageDroppedFiles(currPath.c_str()); //Import it
+			}			
+		}
 	}
 }
 
@@ -278,4 +313,32 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 
 		elements.push_back(newElem);
 	}
+}
+
+int ModuleFileSystem::getLastTimeChanged(const char* path)
+{
+	struct _stat result;
+	static int last_time = 0;
+	if (_stat(path, &result) == 0)
+	{
+		return result.st_mtime;
+	}
+
+	return 0;
+}
+
+int ModuleFileSystem::getMetaLastChange(const char * path)
+{
+	std::string metaPath = path;
+	metaPath += META_EXTENSION;
+	JSON_File* meta = App->JSON_manager->openReadFile(metaPath.c_str());
+	if (meta != nullptr)
+	{
+		int lastChange = meta->getValue("meta")->getInt("last_change");
+		LOG("meta change: %d", lastChange);
+		return lastChange;
+	}
+
+	LOG("meta change: 0");
+	return 0;
 }

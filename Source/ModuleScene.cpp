@@ -12,6 +12,7 @@
 #include "ComponentTransformation.h"
 #include "ModuleResource.h"
 #include "Resource.h"
+#include "ModuleFileSystem.h"
 
 #include "Quadtree.h"
 
