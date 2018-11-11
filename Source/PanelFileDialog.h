@@ -11,8 +11,8 @@ public:
 
 	void Draw();
 
-	void SaveAt(const char* path);
-	void LoadAt(const char* path);
+	void SaveAt(const char* path, const char* exclusiveExtension = nullptr);
+	void LoadAt(const char* path, const char* exclusiveExtension = nullptr);
 	
 	void clearElements();
 

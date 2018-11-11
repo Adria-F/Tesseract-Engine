@@ -66,24 +66,24 @@ void PanelFileDialog::Draw()
 	ImGui::End();
 }
 
-void PanelFileDialog::SaveAt(const char * path)
+void PanelFileDialog::SaveAt(const char * path, const char* exclusiveExtension)
 {
 	name = "Save";
 	
 	this->path = path;
 	clearElements();
-	App->fileSystem->getFilesAt(path, elements);
+	App->fileSystem->getFilesAt(path, elements, exclusiveExtension);
 
 	active = true;
 }
 
-void PanelFileDialog::LoadAt(const char * path)
+void PanelFileDialog::LoadAt(const char * path, const char* exclusiveExtension)
 {
 	name = "Load";
 
 	this->path = path;
 	clearElements();
-	App->fileSystem->getFilesAt(path, elements);
+	App->fileSystem->getFilesAt(path, elements, exclusiveExtension);
 
 	active = true;
 }

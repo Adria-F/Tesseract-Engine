@@ -49,6 +49,9 @@
     <Filter Include="Sources\Modules\Resources">
       <UniqueIdentifier>{e02d6dff-4b07-43bd-a71d-4d5595ce6534}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Physfs">
+      <UniqueIdentifier>{85481d5a-daf4-407a-bc48-4dcb3968d2e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -489,6 +492,24 @@
     <ClInclude Include="ResourceScene.h">
       <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs_casefolding.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs_internal.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs_lzmasdk.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs_miniz.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs_platforms.h">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -734,6 +755,72 @@
     <ClCompile Include="ResourceScene.cpp">
       <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_7z.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_dir.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_grp.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_hog.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_iso9660.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_mvl.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_qpak.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_slb.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_unpacked.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_vdf.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_wad.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_archiver_zip.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_byteorder.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_haiku.cpp">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_os2.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_posix.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_qnx.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_unix.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_windows.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_platform_winrt.cpp">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysFS\include\physfs_unicode.c">
+      <Filter>Sources\Tools\Physfs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
@@ -762,6 +849,9 @@
     </None>
     <None Include="..\Game\save.json">
       <Filter>Sources\Tools\Files</Filter>
+    </None>
+    <None Include="PhysFS\include\physfs_platform_apple.m">
+      <Filter>Sources\Tools\Physfs</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 {
 	//Init PHYSFS before Init to allow other modules to use it
 	char* base_path = SDL_GetBasePath();
-	PHYSFS_init(base_path);
+	PHYSFS_init(normalizePath(base_path).c_str());
 	SDL_free(base_path);
 
 	if (PHYSFS_setWriteDir(".") == 0)
@@ -35,6 +35,9 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 		addPath(mainPaths[i]);
 	}
+
+	import_delay = 1000.0f;
+	first_import = true;
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -42,11 +45,16 @@ ModuleFileSystem::~ModuleFileSystem()
 	PHYSFS_deinit();
 }
 
-bool ModuleFileSystem::Start()
+update_status ModuleFileSystem::Update(float dt)
 {
-	//importFilesAt(ASSETS_FOLDER);
+	if (first_import || import_timer.ReadTime() >= import_delay)
+	{
+		importFilesAt(ASSETS_FOLDER);
+		import_timer.Start();
+		first_import = false;
+	}
 
-	return true;
+	return UPDATE_CONTINUE;
 }
 
 bool ModuleFileSystem::addPath(const char * path)
@@ -126,6 +134,11 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest)
 	}
 	else
 		return false;
+}
+
+bool ModuleFileSystem::deleteFile(const char * path)
+{
+	return PHYSFS_delete(path) != 0;
 }
 
 const char* ModuleFileSystem::getAvailablePath(const char* path)
@@ -252,25 +265,49 @@ void ModuleFileSystem::importFilesAt(const char * path)
 			importFilesAt(currPath.c_str());
 		}
 		else
-			manageDroppedFiles(currPath.c_str());
+		{
+			std::string dir_path;
+			std::string filename;
+			std::string extension;
+			splitPath(currPath.c_str(), &dir_path, &filename, &extension);
+			if (extension == "meta") //If it is a meta file
+			{ 
+				if (!fileExists((dir_path + filename).c_str())) //If the corresponding file does not exist
+				{
+					deleteFile(currPath.c_str()); //Delete the .meta file
+					//Need to delete also the imported file at Library
+				}
+			}
+			else if (extension != "tesseractScene") //Ignore scene files
+			{
+				int lastChange = getLastTimeChanged(currPath.c_str());
+				LOG("Last change: %d", lastChange);
+				if (lastChange > getMetaLastChange(currPath.c_str())) //If file updated or .meta file does not exist as getMetaLastChange returns 0
+					manageDroppedFiles(currPath.c_str()); //Import it
+			}			
+		}
 	}
 }
 
-void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements)
+void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements, const char* exclusiveExtension, const char* ignoreExtension)
 {
 	char** files = PHYSFS_enumerateFiles(path);
 
 	for (char **i = files; *i != NULL; i++)
 	{
-		assetsElement* newElem = new assetsElement();
-		
 		std::string currPath = path;
 		currPath += *i;
-		std::string extension = "";
-		splitPath(currPath.c_str(), nullptr, &newElem->name, &extension);
+		std::string filename;
+		std::string extension;
+		splitPath(currPath.c_str(), nullptr, &filename, &extension);
 		if (extension.length() > 0)
-			newElem->name += '.' + extension;
+			filename += '.' + extension;
 
+		if (!PHYSFS_isDirectory(currPath.c_str()) && ((exclusiveExtension != nullptr && extension != exclusiveExtension) || (ignoreExtension != nullptr && extension == ignoreExtension)))
+			continue;
+
+		assetsElement* newElem = new assetsElement();
+		newElem->name = filename;
 		if (PHYSFS_isDirectory(currPath.c_str()))
 			newElem->type = assetsElement::elementType::FOLDER;
 		else
@@ -278,4 +315,30 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 
 		elements.push_back(newElem);
 	}
+}
+
+int ModuleFileSystem::getLastTimeChanged(const char* path)
+{
+	PHYSFS_Stat stat;
+	if (PHYSFS_stat(path, &stat) != 0)
+	{
+		return stat.modtime;
+	}
+
+	return 0;
+}
+
+int ModuleFileSystem::getMetaLastChange(const char * path)
+{
+	std::string metaPath = path;
+	metaPath += META_EXTENSION;
+	JSON_File* meta = App->JSON_manager->openReadFile(metaPath.c_str());
+	if (meta != nullptr)
+	{
+		int lastChange = meta->getValue("meta")->getInt("last_change");
+		App->JSON_manager->closeFile(meta);
+		return lastChange;
+	}
+
+	return 0;
 }
