@@ -2,6 +2,7 @@
 #define __RESOURCE_H__
 
 #include "Globals.h"
+#include "JSONManager.h"
 #include <string>
 
 enum ResType {

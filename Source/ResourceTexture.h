@@ -11,9 +11,11 @@ public:
 	ResourceTexture(uint UID, ResType type);
 	~ResourceTexture();
 
+	static void setImportDefaults(JSON_Value& importSettings);
+
 public:
 
-	std::string name = "";
+	//std::string name = "";
 
 	uint width = 0;
 	uint height = 0;

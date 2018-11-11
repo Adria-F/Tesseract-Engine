@@ -66,7 +66,7 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-bool ModuleTextures::importTexture(const char* path, std::string& newpath)
+bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_Value* importSettings)
 {
 	ILuint ilImage;
 	bool success;
@@ -138,27 +138,7 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath)
 	return true;
 }
 
-bool ModuleTextures::saveTexture(const char* path, int type)
-{
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-
-	ILuint size;
-	ILubyte *data;
-	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
-	size = ilSaveL(type, NULL, 0); // Get the size of the data buffer
-	if (size > 0) {
-		data = new ILubyte[size]; // allocate data buffer
-		if (ilSaveL(type, data, size) > 0) // Save to buffer with the ilSaveIL function
-		{
-			App->fileSystem->writeFile(path, data, size, true); //Overwrite must be set to false when scenes save/load is completed
-		}
-		RELEASE_ARRAY(data);
-	}
-
-	return true;
-}
-
+//TO DELETE
 Texture* ModuleTextures::loadTexture(const char* path)
 {
 	Texture* ret = new Texture();
@@ -217,7 +197,7 @@ ResourceTexture * ModuleTextures::LoadResourceTexture(const char * path)
 	char* buffer = nullptr;
 	std::string full_path = path;
 	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-	ret->name = full_path;
+	//ret->name = full_path;
 	uint size = App->fileSystem->readFile(App->fileSystem->getFullPath(full_path.c_str(), TEXTURES_FOLDER, TEXTURES_EXTENSION).c_str(), &buffer);
 
 	if (buffer != nullptr && size > 0)

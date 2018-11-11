@@ -45,7 +45,7 @@ float getRandom();
 #define GET_RANDOM_BETWEEN(min, max) getRandomBetween(min, max);
 int getRandomBetween(int min, int max);
 
-#define GENERATE_UID() generateUID();
+#define GENERATE_UID() generateUID()
 uint generateUID();
 
 #define CAP(n) ((n <= 0.0f) ? n=0.0f : (n >= 1.0f) ? n=1.0f : n=n)
@@ -86,5 +86,6 @@ enum update_status
 #define MESH_EXTENSION ".tesseractMesh"
 #define TEXTURES_EXTENSION ".dds"
 #define SCENES_EXTENSION ".tesseractScene"
+#define META_EXTENSION ".meta"
 
 #endif // !__GLOBALS_H__

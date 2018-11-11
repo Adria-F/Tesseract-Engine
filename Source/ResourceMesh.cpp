@@ -22,6 +22,10 @@ ResourceMesh::~ResourceMesh()
 
 }
 
+void ResourceMesh::setImportDefaults(JSON_Value & importSettings)
+{
+}
+
 void ResourceMesh::GenerateBuffer()
 {
 	glGenBuffers(1, (GLuint*)&(id_indices));

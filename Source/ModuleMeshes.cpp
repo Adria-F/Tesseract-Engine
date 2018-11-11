@@ -150,7 +150,7 @@ ResourceMesh* ModuleMeshes::importRMesh(aiMesh* mesh)
 			{
 				LOG("WARNING, geometry face with != 3 indices!");
 				LOG("WARNING, face normals couldn't be loaded");
-				newMesh = nullptr;
+				newMesh = nullptr; //MEMLEAK: It should delete the resource
 				break;
 			}
 			else
@@ -162,7 +162,7 @@ ResourceMesh* ModuleMeshes::importRMesh(aiMesh* mesh)
 	else
 	{
 		LOG("Current mesh has no faces, so will not be loaded");
-		newMesh = nullptr;
+		newMesh = nullptr; //MEMLEAK: It should delete the resource
 	}
 
 	return newMesh;

@@ -23,6 +23,9 @@ public:
 	Resource* GetResource(uint uid);
 	Resource* AddResource(ResType type, uint forced_uid = 0);
 
+	JSON_File* getMeta(const char* path) const;
+	JSON_File* createMeta(const char* path, ResType type) const;
+
 private:
 
 	uint last_UID = 1;

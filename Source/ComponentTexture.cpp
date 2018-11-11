@@ -31,7 +31,7 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		beginDroppableSpace((resource == nullptr) ? "No Texture" : resource->name.c_str(), resource ==nullptr);
+		beginDroppableSpace((resource == nullptr) ? "No Texture" : resource->GetFile(), resource ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
@@ -63,12 +63,12 @@ void ComponentTexture::Save(JSON_Value * component) const
 	JSON_Value* texture = component->createValue();
 
 	texture->addInt("Type", type);
-	texture->addString("texture", resource->name.c_str());
+	texture->addString("texture", resource->GetFile());
 
 	component->addValue("", texture);
 }
 
-void ComponentTexture::Load(JSON_Value * component)
+void ComponentTexture::Load(JSON_Value* component)
 {
 	//TODO with resources
 	Material = App->textures->loadTexture(component->getString("texture"));

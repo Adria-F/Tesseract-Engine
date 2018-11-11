@@ -56,7 +56,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char * path)
+bool ModuleSceneLoader::importFBXScene(const char* path, JSON_Value* importSettings)
 {
 	App->scene_intro->newScene();
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
@@ -104,15 +104,16 @@ bool ModuleSceneLoader::importFBXScene(const char * path)
 					std::string newPath;	//Useful with resources
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
-					App->textures->importTexture(full_path.c_str(), newPath);
+					//App->textures->importTexture(full_path.c_str(), newPath);
+					ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->resources->ImportFile(full_path.c_str(), R_TEXTURE));
 				
-					ResourceTexture* resource = App->textures->LoadResourceTexture(texturePath.C_Str()); //Even if it is nullptr, add it to the vector to keep correct indices order
+					/*ResourceTexture* resource = App->textures->LoadResourceTexture(texturePath.C_Str()); //Even if it is nullptr, add it to the vector to keep correct indices order
 					if(resource!=nullptr)
 					{
 						resource->file = path;
-						resource->exported_file = newPath;
-						rtextures.push_back(resource);
-					}
+						resource->exported_file = newPath;						
+					}*/
+					rtextures.push_back(resource);
 				}
 				else
 				{
@@ -311,6 +312,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name)
 	}
 
 	App->camera->FitCamera(App->camera->BBtoLook);
+	App->scene_intro->StartQuadTree();
 	App->JSON_manager->closeFile(scene);
 	return true;
 }

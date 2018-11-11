@@ -12,6 +12,8 @@ public:
 	ResourceMesh(uint UID, ResType type);
 	~ResourceMesh();
 
+	static void setImportDefaults(JSON_Value& importSettings);
+
 	void Draw();
 	void calculateNormals();
 	void GenerateBuffer();

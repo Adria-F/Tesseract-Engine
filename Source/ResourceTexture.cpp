@@ -12,3 +12,7 @@ ResourceTexture::~ResourceTexture()
 {
 	glDeleteTextures(1, &GL_id);
 }
+
+void ResourceTexture::setImportDefaults(JSON_Value & importSettings)
+{
+}

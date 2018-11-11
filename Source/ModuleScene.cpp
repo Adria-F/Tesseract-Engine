@@ -10,6 +10,8 @@
 #include "Component.h"
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
+#include "ModuleResource.h"
+#include "Resource.h"
 
 #include "Quadtree.h"
 
@@ -34,7 +36,8 @@ bool ModuleScene::Start()
 	StartQuadTree();
 
 	//Load Baker House model
-	App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
+	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
+	App->resources->ImportFile("Assets/Models/BakerHouse.fbx", R_SCENE);
 	//App->scene_loader->loadScene("sceneTest");
 	
 
