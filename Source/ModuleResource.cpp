@@ -67,24 +67,21 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 		meta = createMeta(path.c_str(), type);
 		newMeta = true;
 	}
-	else //If a .meta exists
-	{
-
-	}
+	uint UID = meta->getValue("meta")->getUint("UID");
 
 	switch (type)
 	{
 	case R_TEXTURE:
-		loaded=App->textures->importTexture(file,written_file, meta->getValue("ImportSettings"));
+		loaded=App->textures->importTexture(file,written_file, meta->getValue("meta")->getValue("ImportSettings"));
 		break;
 	case R_SCENE:
-		loaded=App->scene_loader->importFBXScene(file,written_file, meta->getValue("ImportSettings"));
+		loaded=App->scene_loader->importFBXScene(file,written_file, meta->getValue("meta")->getValue("ImportSettings"));
 		break;
 	}
 
 	if (loaded)
 	{
-		Resource* newRes = AddResource(type);
+		Resource* newRes = AddResource(type, UID);
 		newRes->file = path.c_str();
 		newRes->exported_file = written_file;
 		ret = newRes->UID;

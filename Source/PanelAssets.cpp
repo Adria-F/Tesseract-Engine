@@ -5,6 +5,8 @@
 #include "ModuleFileSystem.h"
 #include "ModuleSceneLoader.h"
 
+#include "ImGui\imgui_internal.h"
+
 PanelAssets::PanelAssets(const char* name) : Panel(name)
 {
 	active = true;
@@ -89,28 +91,33 @@ void PanelAssets::Draw()
 			}
 			else
 			{
-				std::string extension;
-				std::string filename;
-				App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
-
-				if (extension == "fbx" || extension == "FBX")
-				{
-					App->scene_loader->loadScene(filename.c_str(), true);
-				}
-				else if (extension == "png")
-				{
-					
-				}
+				//Show import setting on inspector
 			}
 		}
-		if (ImGui::BeginDragDropSource())
+		ImGui::PopID();
+		if ((*it_e)->type == assetsElement::FILE && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
 		{
-			ImGui::SetDragDropPayload("TEXTURE", &(*it_e)->type, sizeof(uint));
+			std::string extension;
+			std::string filename;
+			App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
+
+			if (extension == "fbx" || extension == "FBX")
+			{
+				App->scene_loader->loadScene(filename.c_str(), true);
+			}
+		}
+		if (ImGui::BeginDragDropSource()) //Drag source for resources
+		{
+			std::string path = current_path;
+			if (path.size() > 0 && path.back() != '/')
+				path += '/';
+			path += (*it_e)->name;			
+			ImGui::SetDragDropPayload("TEXTURE", path.c_str(), sizeof(char)*path.size());
 			ImGui::Text((*it_e)->name.c_str());
 			ImGui::EndDragDropSource();
 		}
+
 		//Draw name
-		ImGui::PopID();
 		if (rowCount > 1 && ImGui::GetWindowContentRegionMax().x >= 70 * rowCount)
 		{
 			ImGui::SetCursorPosX((float)leftMargin + (50 + 30)*(rowCount - 1));

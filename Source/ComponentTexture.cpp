@@ -44,7 +44,9 @@ void ComponentTexture::DrawInfo()
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))
 			{
-				UID = (uint)payload->Data;
+				std::string path = (const char*)payload->Data;
+				path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
+				UID = App->resources->getMeta(path.c_str())->getValue("meta")->getUint("UID");
 			}
 			ImGui::EndDragDropTarget();
 		}

@@ -281,7 +281,6 @@ void ModuleFileSystem::importFilesAt(const char * path)
 			else if (extension != "tesseractScene") //Ignore scene files
 			{
 				int lastChange = getLastTimeChanged(currPath.c_str());
-				LOG("Last change: %d", lastChange);
 				if (lastChange > getMetaLastChange(currPath.c_str())) //If file updated or .meta file does not exist as getMetaLastChange returns 0
 					manageDroppedFiles(currPath.c_str()); //Import it
 			}			
