@@ -32,8 +32,8 @@ public:
 	bool UnloadMemory();
 	uint GetTimesLoaded() const;
 
-	virtual void Save()const {};
-	virtual void Load() {};
+	virtual void Save(JSON_Value* component) const {}
+	virtual void Load(JSON_Value* component) {}
 	virtual bool LoadInMemory() { return false; }
 	virtual bool UnloadFromMemory() { return false; }
 

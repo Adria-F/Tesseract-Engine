@@ -41,6 +41,21 @@ bool ResourceMesh::UnloadFromMemory()
 	return true;
 }
 
+void ResourceMesh::Save(JSON_Value * component)
+{
+	JSON_Value* resourcemesh = component->createValue();
+
+	resourcemesh->addInt("Type", type);
+	resourcemesh->addUint("UID", UID);
+	resourcemesh->addString("resource mesh", name.c_str());
+
+	component->addValue("", resourcemesh);
+}
+
+void ResourceMesh::Load(JSON_Value * component)
+{
+}
+
 void ResourceMesh::calculateNormals()
 {
 	for (int i = 0; i < num_indices; i += 3)

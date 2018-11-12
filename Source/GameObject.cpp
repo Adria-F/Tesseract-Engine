@@ -12,6 +12,7 @@
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 
 GameObject::GameObject()
@@ -25,6 +26,21 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	//TO TEST
+	/*
+	if(mesh!=nullptr)
+	{
+		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+		rMesh->UnloadMemory();
+	}
+	
+	if(texture!=nullptr)
+	{
+		ResourceTexture* rTexture = (ResourceTexture*)App->resources->GetResource(texture->UID);
+		rTexture->UnloadMemory();
+	}
+	*/
+
 	std::list<Component*>::iterator it_cp;
 	it_cp = components.begin();
 	while (it_cp != components.end())

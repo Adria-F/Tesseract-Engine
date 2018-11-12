@@ -62,11 +62,12 @@ public:
 	AABB boundingBox;
 	OBB localBB;
 
+	ComponentMesh* mesh = nullptr;
+	ComponentTexture* texture = nullptr;
+
 private:
 
 	ComponentTransformation* transformation = nullptr;
-	ComponentMesh* mesh = nullptr;
-	ComponentTexture* texture = nullptr;
 	ComponentCamera* camera = nullptr;
 
 	std::list<Component*> components;
