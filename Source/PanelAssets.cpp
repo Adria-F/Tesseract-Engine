@@ -3,6 +3,7 @@
 #include "ModuleGUI.h"
 #include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
+#include "ModuleSceneLoader.h"
 
 PanelAssets::PanelAssets(const char* name) : Panel(name)
 {
@@ -88,7 +89,14 @@ void PanelAssets::Draw()
 			}
 			else
 			{
-				//Load file
+				std::string extension;
+				std::string filename;
+				App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
+
+				if (extension == "fbx" || extension == "FBX")
+				{
+					App->scene_loader->loadScene(filename.c_str(), true);
+				}
 			}
 		}
 		//Draw name

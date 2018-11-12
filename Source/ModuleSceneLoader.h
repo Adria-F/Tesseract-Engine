@@ -25,11 +25,11 @@ public:
 
 	bool CleanUp();
 
-	bool importFBXScene(const char* path, JSON_Value* importSettings);
+	bool importFBXScene(const char* path,std::string& newPath,JSON_Value* importSettings);
 	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures);
 
-	bool saveScene(const char* scene_name);
-	bool loadScene(const char* scene_name);
+	bool saveScene(const char* scene_name,bool isFBX=false);
+	bool loadScene(const char* scene_name, bool isFBX = false);
 
 public:
 

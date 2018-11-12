@@ -26,7 +26,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, SCENES_FOLDER, SETTINGS_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SCENES_FOLDER, SETTINGS_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -296,6 +296,8 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 	for (char **i = files; *i != NULL; i++)
 	{
 		std::string currPath = path;
+		if (currPath.size() > 0 && currPath.back() != '/')
+			currPath += '/';
 		currPath += *i;
 		std::string filename;
 		std::string extension;
