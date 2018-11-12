@@ -73,6 +73,7 @@ void ComponentTexture::Save(JSON_Value * component) const
 	JSON_Value* texture = component->createValue();
 
 	texture->addInt("Type", type);
+	texture->addUint("UID", UID);
 	texture->addString("texture", tex->GetExportedFile());
 
 	component->addValue("", texture);

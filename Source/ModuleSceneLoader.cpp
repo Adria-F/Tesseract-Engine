@@ -56,7 +56,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, JSON_Value* importSettings)
+bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, JSON_Value* importSettings)
 {
 	App->scene_intro->newScene();
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
@@ -128,10 +128,15 @@ bool ModuleSceneLoader::importFBXScene(const char* path, JSON_Value* importSetti
 			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
 			rootGO->name = filename;
 			App->scene_intro->addGameObject(rootGO);
+
+			saveScene(filename.c_str(), true);
+
+			newPath=FBX_FOLDER + filename+SCENES_EXTENSION;
+
+			App->scene_intro->newScene();
 		}
 
 		aiReleaseImport(scene);
-
 
 		App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 		App->scene_intro->root->RecalculateBB();
@@ -250,9 +255,10 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	return GO;
 }
 
-bool ModuleSceneLoader::saveScene(const char* scene_name)
+bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 {
-	JSON_File* scene = App->JSON_manager->openWriteFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
+	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:SCENES_FOLDER, SCENES_EXTENSION);
+	JSON_File* scene = App->JSON_manager->openWriteFile(path.c_str());
 
 	JSON_Value* gameObjects = scene->createValue();
 	gameObjects->convertToArray();
@@ -269,13 +275,14 @@ bool ModuleSceneLoader::saveScene(const char* scene_name)
 	return true;
 }
 
-bool ModuleSceneLoader::loadScene(const char* scene_name)
+bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 {
 	App->scene_intro->newScene();
 	LOG("Loading scene: %s", scene_name);
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
-	JSON_File* scene = App->JSON_manager->openReadFile(App->fileSystem->getFullPath(scene_name, SCENES_FOLDER, SCENES_EXTENSION).c_str());
+	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : SCENES_FOLDER, SCENES_EXTENSION);
+	JSON_File* scene = App->JSON_manager->openReadFile(path.c_str());
 	if (scene == nullptr)
 		return false;
 

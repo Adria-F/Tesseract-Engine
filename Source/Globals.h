@@ -74,11 +74,12 @@ enum update_status
 #define TITLE "3D Engine"
 
 // Files PATHS
-#define PATHS_AMOUNT 6
+#define PATHS_AMOUNT 7
 #define ASSETS_FOLDER "Assets/"
 #define LIBRARY_FOLDER "Library/"
 #define MESHES_FOLDER "Library/Meshes/"
 #define TEXTURES_FOLDER "Library/Textures/"
+#define FBX_FOLDER "Library/Scenes/"
 #define SCENES_FOLDER "Assets/Scenes/"
 #define SETTINGS_FOLDER "Settings/"
 

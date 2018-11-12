@@ -22,7 +22,7 @@ bool ComponentMesh::Update()
 {
 	ResourceMesh* mesh =(ResourceMesh*) App->resources->GetResource(UID);
 
-	if (!active || mesh == nullptr)
+	if (!active || mesh == nullptr )
 		return false;
 
 	//Assign Vertices
@@ -115,6 +115,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 	JSON_Value* mesh = component->createValue();
 
 	mesh->addInt("Type", type);
+	mesh->addUint("UID",UID);
 	mesh->addString("mesh", rMesh->name.c_str());
 
 	component->addValue("", mesh);

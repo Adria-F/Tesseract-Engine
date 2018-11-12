@@ -78,7 +78,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 		loaded=App->textures->importTexture(file,written_file, meta->getValue("ImportSettings"));
 		break;
 	case R_SCENE:
-		loaded=App->scene_loader->importFBXScene(file, meta->getValue("ImportSettings"));
+		loaded=App->scene_loader->importFBXScene(file,written_file, meta->getValue("ImportSettings"));
 		break;
 	}
 
