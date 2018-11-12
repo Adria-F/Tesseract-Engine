@@ -18,6 +18,8 @@ public:
 	void calculateNormals();
 
 	bool LoadInMemory();
+	bool UnloadFromMemory();
+
 
 public:
 

@@ -29,11 +29,13 @@ public:
 	const char* GetExportedFile()const;
 	bool IsLoaded()const;
 	bool LoadtoMemory();
+	bool UnloadMemory();
 	uint GetTimesLoaded() const;
 
 	virtual void Save()const {};
 	virtual void Load() {};
 	virtual bool LoadInMemory() { return false; }
+	virtual bool UnloadFromMemory() { return false; }
 
 protected:
 

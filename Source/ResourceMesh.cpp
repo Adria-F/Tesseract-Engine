@@ -15,10 +15,8 @@ ResourceMesh::~ResourceMesh()
 
 	RELEASE_ARRAY(texCoords);
 
-	glDeleteBuffers(1, &id_indices);
+	UnloadFromMemory();
 	RELEASE_ARRAY(indices);
-
-	//RELEASE(App->camera->BBtoLook);
 
 }
 
@@ -32,6 +30,13 @@ bool ResourceMesh::LoadInMemory()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, &indices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+bool ResourceMesh::UnloadFromMemory()
+{
+	glDeleteBuffers(1, &id_indices);
 
 	return true;
 }

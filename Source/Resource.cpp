@@ -44,6 +44,16 @@ bool Resource::LoadtoMemory()
 	return ret;
 }
 
+bool Resource::UnloadMemory()
+{
+	if(loaded>0)
+		loaded -= 1;
+	if (loaded == 0)
+		UnloadFromMemory();
+
+	return false;
+}
+
 uint Resource::GetTimesLoaded() const
 {
 	return loaded;

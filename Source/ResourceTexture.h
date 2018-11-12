@@ -14,6 +14,7 @@ public:
 	static void setImportDefaults(JSON_Value& importSettings);
 
 	bool LoadInMemory();
+	bool UnloadFromMemory();
 
 public:
 
