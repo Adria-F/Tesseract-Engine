@@ -333,9 +333,8 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Game\config.json" />
-    <None Include="..\Game\load.json" />
-    <None Include="..\Game\save.json" />
+    <None Include="..\Game\Settings\config.json" />
+    <None Include="..\Game\Settings\imgui.ini" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

@@ -265,31 +265,31 @@ void ModuleGUI::saveDefaultImgui()
 	ImGui::SetWindowPos("Hardware Info", { 0,646 });
 	ImGui::SetWindowSize("Hardware Info", { 1083, 118 });
 
-	ImGui::SetWindowPos("Console", { 0,646 });
-	ImGui::SetWindowSize("Console", { 1083, 118 });
+	ImGui::SetWindowPos("Console", { 0,810 });
+	ImGui::SetWindowSize("Console", { 1292, 140 });
 
-	ImGui::SetWindowPos("Configuration", { 1085,19 });
-	ImGui::SetWindowSize("Configuration", { 351, 349 });
+	ImGui::SetWindowPos("Configuration", { 1291,19 });
+	ImGui::SetWindowSize("Configuration", { 290, 468 });
 
-	ImGui::SetWindowPos("About", { 0,646 });
-	ImGui::SetWindowSize("About", { 1083, 118 });
+	ImGui::SetWindowPos("About", { 0,810 });
+	ImGui::SetWindowSize("About", { 1292, 140 });
 
 	ImGui::SetWindowPos("3D Elements", { 0,19 });
-	ImGui::SetWindowSize("3D Elements", { 214, 313 });
+	ImGui::SetWindowSize("3D Elements", { 214, 419 });
 
 	ImGui::SetWindowPos("DockSpace", { 0,0 });
-	ImGui::SetWindowSize("DockSpace", { 1436, 764 });
+	ImGui::SetWindowSize("DockSpace", { 1580, 950 });
 
-	ImGui::SetWindowPos("Scene", { 216,19 });
-	ImGui::SetWindowSize("Scene", { 867, 625 });
+	ImGui::SetWindowPos("Scene", { 214,19 });
+	ImGui::SetWindowSize("Scene", { 1079, 790 });
 
-	ImGui::SetWindowPos("Assets", { 0,334 });
-	ImGui::SetWindowSize("Assets", { 214, 310 });
+	ImGui::SetWindowPos("Assets", { 0,438 });
+	ImGui::SetWindowSize("Assets", { 214, 373 });
 
-	ImGui::SetWindowPos("Game Objects", { 1085,370 });
-	ImGui::SetWindowSize("Game Objects", { 351, 394 });
+	ImGui::SetWindowPos("Game Objects", { 1292,448 });
+	ImGui::SetWindowSize("Game Objects", { 286, 463 });
 
-	ImGui::SetWindowPos("Inspector", { 1085,19 });
+	ImGui::SetWindowPos("Inspector", { 995,72 });
 	ImGui::SetWindowSize("Inspector", { 351, 349 });
 
 	ImGui::SetWindowPos("Save", { 314,121 });
