@@ -42,7 +42,7 @@ void ComponentTexture::DrawInfo()
 		beginDroppableSpace((tex == nullptr) ? "No Texture" : (filename+'.'+extension).c_str(), tex ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))
 			{
 				UID = (uint)payload->Data;
 			}

@@ -97,7 +97,17 @@ void PanelAssets::Draw()
 				{
 					App->scene_loader->loadScene(filename.c_str(), true);
 				}
+				else if (extension == "png")
+				{
+					
+				}
 			}
+		}
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("TEXTURE", &(*it_e)->type, sizeof(uint));
+			ImGui::Text((*it_e)->name.c_str());
+			ImGui::EndDragDropSource();
 		}
 		//Draw name
 		ImGui::PopID();

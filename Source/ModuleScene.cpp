@@ -228,14 +228,12 @@ void ModuleScene::FillQuadtree(GameObject* gameObject)
 {
 	if (gameObject != nullptr && gameObject->isStatic)
 	{
-		quadTree->Insert(gameObject);
-
-		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
-		{
-			FillQuadtree((*it_c));
-		}
+		quadTree->Insert(gameObject);	
 	}
-		
+	for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
+	{
+		FillQuadtree((*it_c));
+	}		
 }
 
 void ModuleScene::ResizeQuadTree(GameObject* gameObject)
@@ -243,13 +241,11 @@ void ModuleScene::ResizeQuadTree(GameObject* gameObject)
 	if (gameObject != nullptr && gameObject->isStatic)
 	{
 		quadTree->QT_Box->Enclose(gameObject->boundingBox);
-
-		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
-		{
-			ResizeQuadTree((*it_c));
-		}
 	}
-
+	for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
+	{
+		ResizeQuadTree((*it_c));
+	}
 }
 
 void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)

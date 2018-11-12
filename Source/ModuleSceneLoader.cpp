@@ -129,11 +129,11 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 			rootGO->name = filename;
 			App->scene_intro->addGameObject(rootGO);
 
-			saveScene(filename.c_str(), true);
+			//saveScene(filename.c_str(), true);
 
 			newPath=FBX_FOLDER + filename+SCENES_EXTENSION;
 
-			App->scene_intro->newScene();
+			//App->scene_intro->newScene();
 		}
 
 		aiReleaseImport(scene);
