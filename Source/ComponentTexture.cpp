@@ -4,7 +4,7 @@
 #include "ModuleResource.h"
 #include "Resource.h"
 #include "ResourceTexture.h"
-
+#include "ModuleFileSystem.h"
 
 ComponentTexture::~ComponentTexture()
 {
@@ -35,12 +35,16 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		beginDroppableSpace((tex == nullptr) ? "No Texture" : tex->GetFile(), tex ==nullptr);
+		std::string filename;
+		std::string extension;
+		if (tex != nullptr)
+			App->fileSystem->splitPath(tex->GetFile(), nullptr, &filename, &extension);
+		beginDroppableSpace((tex == nullptr) ? "No Texture" : (filename+'.'+extension).c_str(), tex ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE", ImGuiDragDropFlags_AcceptBeforeDelivery))
 			{
-
+				UID = (uint)payload->Data;
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -57,7 +61,7 @@ void ComponentTexture::DrawInfo()
 		}
 		else
 		{
-			ImGui::Text("No texture attached");
+			
 		}
 	}
 }

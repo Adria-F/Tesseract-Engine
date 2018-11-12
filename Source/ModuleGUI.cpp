@@ -286,7 +286,7 @@ void ModuleGUI::saveDefaultImgui()
 	ImGui::SetWindowPos("Assets", { 0,438 });
 	ImGui::SetWindowSize("Assets", { 214, 373 });
 
-	ImGui::SetWindowPos("Game Objects", { 1292,448 });
+	ImGui::SetWindowPos("Game Objects", { 1292,487 });
 	ImGui::SetWindowSize("Game Objects", { 286, 463 });
 
 	ImGui::SetWindowPos("Inspector", { 995,72 });

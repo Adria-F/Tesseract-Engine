@@ -78,7 +78,7 @@ void PanelConfiguration::Draw()
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		ImGui::PushItemWidth(200.0f);
-		if (!fullscreen && (ImGui::InputInt("Width", &App->window->width, 50, 100, ImGuiInputTextFlags_ReadOnly) || ImGui::InputInt("Height", &App->window->height, 50, 100, ImGuiInputTextFlags_ReadOnly)))
+		if (!fullscreen && (ImGui::InputInt("Width", &App->window->width, 50, 100, ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputInt("Height", &App->window->height, 50, 100, ImGuiInputTextFlags_EnterReturnsTrue)))
 		{			
 			SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
 			App->renderer3D->OnResize(App->window->width, App->window->height);
