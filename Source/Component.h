@@ -45,6 +45,7 @@ public:
 
 	bool active = true;
 	uint UID = 0;
+	uint RUID = 0;
 
 	bool toDelete = false;
 	bool closeConfig = true;

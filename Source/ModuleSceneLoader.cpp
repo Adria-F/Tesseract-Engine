@@ -215,12 +215,12 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
-			mesh->UID = meshes[node->mMeshes[i]]->GetUID();
+			mesh->RUID = meshes[node->mMeshes[i]]->GetUID();
 
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-				material->UID= textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID();
+				material->RUID = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID();
 			}
 
 			if (i > fail_count)

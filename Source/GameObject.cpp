@@ -346,7 +346,7 @@ void GameObject::Load(JSON_Value* gameobject)
 
 	if (mesh)
 	{
-		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
 		boundingBox.SetNegativeInfinity();
 		boundingBox.Enclose((float3*)rMesh->vertices, rMesh->num_vertices);
 
@@ -387,7 +387,7 @@ void GameObject::RecalculateBB()
 
 		if (mesh!=nullptr)
 		{
-			ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+			ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
 			boundingBox.Enclose((float3*)rMesh->vertices, rMesh->num_vertices);
 		}
 

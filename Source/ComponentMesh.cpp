@@ -20,7 +20,7 @@ ComponentMesh::~ComponentMesh()
 
 bool ComponentMesh::Update()
 {
-	ResourceMesh* mesh =(ResourceMesh*) App->resources->GetResource(UID);
+	ResourceMesh* mesh =(ResourceMesh*) App->resources->GetResource(RUID);
 
 	if (!active || mesh == nullptr )
 		return false;
@@ -86,7 +86,7 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::DrawInfo()
 {
-	ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(UID);
+	ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(RUID);
 
 	ImGui::PushID("toggleMesh");
 	ImGui::Checkbox("", &active);
@@ -110,7 +110,7 @@ void ComponentMesh::DrawInfo()
 
 void ComponentMesh::Save(JSON_Value * component) const
 {
-	ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(UID);
+	ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(RUID);
 
 	JSON_Value* mesh = component->createValue();
 

@@ -321,7 +321,7 @@ float ModuleCamera3D::hitsTriangle(GameObject* gameObject, LineSegment ray)
 
 	if (mesh != nullptr)
 	{		
-		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
 
 		for (int i = 0; i < rMesh->num_indices; i+=3)
 		{

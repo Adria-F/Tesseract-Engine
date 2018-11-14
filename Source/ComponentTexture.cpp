@@ -12,7 +12,7 @@ ComponentTexture::~ComponentTexture()
 
 bool ComponentTexture::Update()
 {
-	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);
 	if (!active || tex == nullptr)
 		return false;
 
@@ -26,7 +26,7 @@ bool ComponentTexture::Update()
 
 void ComponentTexture::DrawInfo()
 {
-	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);
 
 	ImGui::PushID("toggleTexture");
 	ImGui::Checkbox("", &active);
@@ -70,7 +70,7 @@ void ComponentTexture::DrawInfo()
 
 void ComponentTexture::Save(JSON_Value * component) const
 {
-	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(UID);
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);
 
 	JSON_Value* texture = component->createValue();
 
