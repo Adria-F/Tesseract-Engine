@@ -16,11 +16,12 @@ public:
 	void pushElement(assetsElement* element);
 
 	void clearElements();
+	void selectElement(assetsElement* element);
 
 public:
 
 	std::list<assetsElement*> elements;
-	assetsElement* currElement = nullptr;
+	assetsElement* selected_element = nullptr;
 	std::string current_path = ASSETS_FOLDER;
 };
 

@@ -141,6 +141,21 @@ bool ModuleFileSystem::deleteFile(const char * path)
 	return PHYSFS_delete(path) != 0;
 }
 
+bool ModuleFileSystem::renameFile(const char* path, const char* name)
+{
+	std::string newPath;
+	std::string extension;
+	splitPath(path, &newPath, nullptr, &extension);
+	newPath += name;
+	if (extension.size() > 0)
+		newPath += '.' + extension;
+
+	std::string full_path = PHYSFS_getRealDir(path);
+	full_path += path;
+	
+	return copyFile(full_path.c_str(), newPath.c_str());
+}
+
 const char* ModuleFileSystem::getAvailablePath(const char* path)
 {
 	uint num_version = 1;

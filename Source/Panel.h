@@ -16,6 +16,8 @@ struct assetsElement
 	}type;
 
 	std::string name;
+	bool selected = false;
+	bool renaming = false;
 };
 
 class Panel

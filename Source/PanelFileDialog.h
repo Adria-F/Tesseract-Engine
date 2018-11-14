@@ -15,13 +15,14 @@ public:
 	void LoadAt(const char* path, const char* exclusiveExtension = nullptr);
 	
 	void clearElements();
+	void selectElement(assetsElement* element);
 
 public:
 
 	std::string path = "";
 
 	std::list<assetsElement*> elements;
-	assetsElement* currElement = nullptr;
+	assetsElement* selected_element = nullptr;
 };
 
 #endif // !__PANELFILE_DIALOG_H__

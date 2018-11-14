@@ -95,6 +95,13 @@ void PanelFileDialog::clearElements()
 		RELEASE(*it_e);
 	}
 	elements.clear();
+}
 
-	currElement = nullptr;
+void PanelFileDialog::selectElement(assetsElement* element)
+{
+	if (selected_element != nullptr)
+		selected_element->selected = false;
+
+	selected_element = element;
+	selected_element->selected = true;
 }

@@ -60,6 +60,11 @@ void PanelAssets::Draw()
 	float currLine = ImGui::GetCursorPosY();
 	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
 	{
+		if ((*it_e)->selected)
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.95f,0.5f,0.0f,0.7f });
+		else
+			ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
+
 		//Set proper cursor position
 		if (rowCount == 1)
 			currLine = ImGui::GetCursorPosY();
@@ -79,6 +84,15 @@ void PanelAssets::Draw()
 		ImGui::PushID(i);
 		if (ImGui::ImageButton((ImTextureID)(((*it_e)->type == assetsElement::FOLDER) ? App->gui->folder->GL_id : App->gui->file->GL_id), { 50, 50 }))
 		{
+			selectElement((*it_e));
+			if ((*it_e)->type == assetsElement::FILE)
+			{
+				//Show import setting on inspector
+			}
+		}
+		ImGui::PopID();
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
+		{
 			if ((*it_e)->type == assetsElement::FOLDER)
 			{
 				if (current_path.size() > 0 && current_path.back() != '/')
@@ -86,24 +100,19 @@ void PanelAssets::Draw()
 				current_path += (*it_e)->name;
 				clearElements();
 				App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
-				ImGui::PopID();
+				ImGui::PopStyleColor();
 				break;
 			}
 			else
 			{
-				//Show import setting on inspector
-			}
-		}
-		ImGui::PopID();
-		if ((*it_e)->type == assetsElement::FILE && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
-		{
-			std::string extension;
-			std::string filename;
-			App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
+				std::string extension;
+				std::string filename;
+				App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
 
-			if (extension == "fbx" || extension == "FBX")
-			{
-				App->scene_loader->loadScene(filename.c_str(), true);
+				if (extension == "fbx" || extension == "FBX")
+				{
+					App->scene_loader->loadScene(filename.c_str(), true);
+				}
 			}
 		}
 		if (ImGui::BeginDragDropSource()) //Drag source for resources
@@ -122,9 +131,36 @@ void PanelAssets::Draw()
 		{
 			ImGui::SetCursorPosX((float)leftMargin + (50 + 30)*(rowCount - 1));
 		}
-		ImGui::Selectable((*it_e)->name.c_str(), false, 0, { 60, 13 });
+		if ((*it_e)->renaming)
+		{
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, { 1.0f,1.0f,1.0f,0.9f });
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f,0.0f,0.0f,1.0f });
+			ImGui::PushItemWidth(60);
+			char text[120];
+			strcpy_s(text, 120, (*it_e)->name.c_str());		
+			if (ImGui::InputText("", text, 120, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				(*it_e)->name = text;
+				App->fileSystem->renameFile(path.c_str(), text);
+				(*it_e)->renaming = false;
+			}
+			ImGui::PopItemWidth();
+			ImGui::PopStyleColor(2);
+		}
+		else
+			ImGui::Selectable((*it_e)->name.c_str(), false, 0, { 60, 13 });
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
+		{
+			(*it_e)->renaming = true;
+		}
 		rowCount++;
 		i++;
+
+		ImGui::PopStyleColor();
 	}
 
 	ImGui::PopStyleColor(6);
@@ -144,6 +180,13 @@ void PanelAssets::clearElements()
 		RELEASE(*it_e);
 	}
 	elements.clear();
+}
 
-	currElement = nullptr;
+void PanelAssets::selectElement(assetsElement* element)
+{
+	if (selected_element != nullptr)
+		selected_element->selected = false;
+
+	selected_element = element;
+	selected_element->selected = true;
 }

@@ -48,10 +48,10 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(hardwareInfo = new PanelHardwareInfo("Hardware Info"));
 	
 	panels.push_back(console = new PanelConsole("Console"));
-	
-	panels.push_back(inspector = new PanelInspector("Inspector"));
 
 	panels.push_back(configuration = new PanelConfiguration("Configuration"));
+
+	panels.push_back(inspector = new PanelInspector("Inspector"));
 	
 	panels.push_back(about = new PanelAbout("About"));
 
@@ -262,41 +262,46 @@ void ModuleGUI::saveDefaultImgui()
 		(*it_p)->Draw(); //Draw every panel, so it detects it and change its position
 	}
 
-	ImGui::SetWindowPos("Hardware Info", { 0,646 });
-	ImGui::SetWindowSize("Hardware Info", { 1083, 118 });
+	float horizontalFactor = (float)App->window->width / SCREEN_WIDTH;
+	float verticalFactor = (float)App->window->height / SCREEN_HEIGHT;
 
-	ImGui::SetWindowPos("Console", { 0,810 });
-	ImGui::SetWindowSize("Console", { 1292, 140 });
+	ImGui::GetStyle().WindowMinSize = { 125* horizontalFactor, 100* verticalFactor };
 
-	ImGui::SetWindowPos("Configuration", { 1291,19 });
-	ImGui::SetWindowSize("Configuration", { 290, 468 });
+	ImGui::SetWindowPos("Hardware Info", { 0* horizontalFactor,646* verticalFactor });
+	ImGui::SetWindowSize("Hardware Info", { 1083* horizontalFactor, 118 * verticalFactor });
 
-	ImGui::SetWindowPos("About", { 0,810 });
-	ImGui::SetWindowSize("About", { 1292, 140 });
+	ImGui::SetWindowPos("Console", { 0* horizontalFactor,810 * verticalFactor });
+	ImGui::SetWindowSize("Console", { 1292* horizontalFactor, 140 * verticalFactor });
 
-	ImGui::SetWindowPos("3D Elements", { 0,19 });
-	ImGui::SetWindowSize("3D Elements", { 214, 419 });
+	ImGui::SetWindowPos("Configuration", { 1291* horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("Configuration", { 290* horizontalFactor, 468 * verticalFactor });
 
-	ImGui::SetWindowPos("DockSpace", { 0,0 });
-	ImGui::SetWindowSize("DockSpace", { 1580, 950 });
+	ImGui::SetWindowPos("About", { 0* horizontalFactor,810 * verticalFactor });
+	ImGui::SetWindowSize("About", { 1292* horizontalFactor, 140 * verticalFactor });
 
-	ImGui::SetWindowPos("Scene", { 214,19 });
-	ImGui::SetWindowSize("Scene", { 1079, 790 });
+	ImGui::SetWindowPos("3D Elements", { 0* horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("3D Elements", { 214* horizontalFactor, 419 * verticalFactor });
 
-	ImGui::SetWindowPos("Assets", { 0,438 });
-	ImGui::SetWindowSize("Assets", { 214, 373 });
+	ImGui::SetWindowPos("DockSpace", { 0* horizontalFactor,0 * verticalFactor });
+	ImGui::SetWindowSize("DockSpace", { 1580 * horizontalFactor, 950 * verticalFactor });
 
-	ImGui::SetWindowPos("Game Objects", { 1292,487 });
-	ImGui::SetWindowSize("Game Objects", { 286, 463 });
+	ImGui::SetWindowPos("Scene", { 214* horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("Scene", { 1079 * horizontalFactor, 790 * verticalFactor });
 
-	ImGui::SetWindowPos("Inspector", { 995,72 });
-	ImGui::SetWindowSize("Inspector", { 351, 349 });
+	ImGui::SetWindowPos("Assets", { 0* horizontalFactor,438 * verticalFactor });
+	ImGui::SetWindowSize("Assets", { 214* horizontalFactor, 373 * verticalFactor });
 
-	ImGui::SetWindowPos("Save", { 314,121 });
-	ImGui::SetWindowSize("Save", { 564, 356 });
+	ImGui::SetWindowPos("Game Objects", { 1292* horizontalFactor,487 * verticalFactor });
+	ImGui::SetWindowSize("Game Objects", { 286* horizontalFactor, 463 * verticalFactor });
 
-	ImGui::SetWindowPos("Load", { 314,121 });
-	ImGui::SetWindowSize("Load", { 564, 356 });
+	ImGui::SetWindowPos("Inspector", { 1291 * horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("Inspector", { 290 * horizontalFactor, 468 * verticalFactor });
+
+	ImGui::SetWindowPos("Save", { 314 * horizontalFactor,121 * verticalFactor });
+	ImGui::SetWindowSize("Save", { 564 * horizontalFactor, 356 * verticalFactor });
+
+	ImGui::SetWindowPos("Load", { 314 * horizontalFactor,121 * verticalFactor });
+	ImGui::SetWindowSize("Load", { 564 * horizontalFactor, 356 * verticalFactor });
 
 	std::string path = SETTINGS_FOLDER;
 	path += "imgui.ini";
