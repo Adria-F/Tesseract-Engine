@@ -79,15 +79,13 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	std::string filename;
 	std::string extension;
 	App->fileSystem->splitPath(path, nullptr, &filename, &extension);
-	full_path = ASSETS_FOLDER;
-	full_path += "Textures/";
-	full_path += filename + '.' + extension;
+	full_path = filename + '.' + extension;
 
 	success = ilLoad(IL_TYPE_UNKNOWN, path);
 	if (!success) //If not found, search at Assets/Textures/
 	{
 		LOG("Texture not found at: %s", path);
-		LOG("Searching at Assets/Textures/");		
+		LOG("Searching at Assets");		
 		
 		if (!App->fileSystem->fileExists(full_path.c_str()))
 		{
@@ -98,7 +96,7 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	}
 	else //If found outside assets, copy it to Assets/Textures/
 	{
-		App->fileSystem->copyFile(path, full_path.c_str());
+		App->fileSystem->copyFile(path, full_path.c_str()); //BUG - Now it's loading baker_house.png two times (from .fbx and from assets directly)
 	}
 
 	char* buffer = nullptr;

@@ -14,18 +14,23 @@ public:
 	update_status Update(float dt);
 
 	bool addPath(const char* path);
+	bool removePath(const char* path);
+	void addPathOfFilesAt(const char* path);
+
 	bool fileExists(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
 	uint readFile(const char* path, char** buffer);
 	uint writeFile(const char* path, const void* buffer, uint size, bool overwrite = false);
 
-	bool copyFile(const char* src, const char* dest);
+	bool copyFile(const char* src, const char* dest, bool deleteSource = false);
+	bool createDirectory(const char* path);
 	bool deleteFile(const char* path);
 	bool renameFile(const char* path, const char* name);
 	
-	//Check if the file exists and returns filename+(num_version)
+	//Check if the file exists and returns num_version
 	//num_version is equivalent to the amounts of times that a file with given name exists -1
-	const char* getAvailablePath(const char* path);
+	//Modify string to: path(num_version)
+	uint getAvailablePath(const char* originalPath, std::string& path);
 
 	void splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
 	std::string normalizePath(const char* path);

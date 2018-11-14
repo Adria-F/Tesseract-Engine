@@ -23,6 +23,8 @@ public:
 	std::list<assetsElement*> elements;
 	assetsElement* selected_element = nullptr;
 	std::string current_path = ASSETS_FOLDER;
+
+	bool creating = false;
 };
 
 #endif // !__PANELASSETS_H__

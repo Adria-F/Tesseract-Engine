@@ -43,7 +43,6 @@ bool ModuleScene::Start()
 
 	ImGuizmo::Enable(false);
 	
-
 	return ret;
 }
 
@@ -168,12 +167,12 @@ void ModuleScene::Draw()
 
 void ModuleScene::wantToSaveScene()
 {
-	App->gui->SaveDialogAt(SCENES_FOLDER, "tesseractScene");
+	App->gui->SaveDialogAt(ASSETS_FOLDER, "tesseractScene");
 }
 
 void ModuleScene::wantToLoadScene()
 {
-	App->gui->LoadDialogAt(SCENES_FOLDER, "tesseractScene");
+	App->gui->LoadDialogAt(ASSETS_FOLDER, "tesseractScene");
 }
 
 void ModuleScene::newScene()

@@ -6,7 +6,6 @@
 #include "ModuleTextures.h"
 #include "ModuleGUI.h"
 #include "Resource.h"
-#include <fstream>
 
 #include "PhysFS\include\physfs.h"
 
@@ -26,7 +25,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SCENES_FOLDER, SETTINGS_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SETTINGS_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -36,8 +35,11 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 		addPath(mainPaths[i]);
 	}
 
+	//Add all extra files inside assets to the search path
+	addPathOfFilesAt(ASSETS_FOLDER);
+
 	import_delay = 1000.0f;
-	first_import = true;
+	first_import = true;	
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -59,15 +61,42 @@ update_status ModuleFileSystem::Update(float dt)
 
 bool ModuleFileSystem::addPath(const char * path)
 {
-	bool ret = true;
-
-	if (PHYSFS_mount(path, nullptr, 1) == 0)
+	if (PHYSFS_mount(path, nullptr, 1) != 0)
 	{
-		LOG("PHYSFS - Error while adding path: %s", PHYSFS_getLastError());
-		ret = false;
+		LOG("Added path: %s", path);
+		return true;
 	}
+	LOG("PHYSFS - Error while adding path: %s", PHYSFS_getLastError());
+	return false;
+}
 
-	return ret;
+bool ModuleFileSystem::removePath(const char * path)
+{
+	if (PHYSFS_unmount(path) != 0)
+	{
+		LOG("Removed path: %s", path);
+		return true;
+	}
+	LOG("PHYSFS - Error while removing path: %s", PHYSFS_getLastError());
+	return false;
+}
+
+void ModuleFileSystem::addPathOfFilesAt(const char* path)
+{
+	std::list<assetsElement*> elements;
+	getFilesAt(path, elements);
+	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
+	{
+		if ((*it_e)->type == assetsElement::FOLDER)
+		{
+			std::string currPath = path;
+			if (currPath.size() > 0 && currPath.back() != '/')
+				currPath += '/';
+			currPath += (*it_e)->name;
+			addPath(currPath.c_str());
+			addPathOfFilesAt(currPath.c_str());
+		}
+	}
 }
 
 bool ModuleFileSystem::fileExists(const char* path, const char* atDirectory, const char* withExtension)
@@ -101,8 +130,9 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 {
 	if (!overwrite)
 	{
-		path = getAvailablePath(path);
-		LOG("File with same name already exists - Saved as: %s", path);
+		std::string full_path;
+		getAvailablePath(path, full_path);
+		LOG("File with same name already exists - Saved as: %s", full_path);
 	}
 
 	PHYSFS_file* file = PHYSFS_openWrite(path);
@@ -123,56 +153,118 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 	return 0;
 }
 
-bool ModuleFileSystem::copyFile(const char* src, const char* dest)
+bool ModuleFileSystem::copyFile(const char* src, const char* dest, bool deleteSource)
 {
-	std::ifstream source(src, std::ios::binary);
-	if (!source.fail())
+	bool ret = false;
+
+	std::string filename;
+	std::string extension;
+	App->fileSystem->splitPath(src, nullptr, &filename, &extension);
+
+	std::string destination = dest;
+	if (destination.size() > 0 && destination.back() != '/')
+		destination += '/';
+	destination += filename;
+	if (extension.size() > 0)
+		destination += '.' + extension;
+
+	if (PHYSFS_isDirectory(src))
 	{
-		std::ofstream destination(dest, std::ios::binary);
-		destination << source.rdbuf();
-		return source && destination;
+		createDirectory(destination.c_str());
+		//Copy content
+		ret = true;
 	}
 	else
-		return false;
+	{
+		char* buffer = nullptr;
+		uint size = readFile(src, &buffer);
+		if (size > 0)
+		{
+			writeFile(destination.c_str(), buffer, size, true);
+			ret = true;
+		}
+		if (extension != "meta")
+		{
+			std::string metaPath = src;
+			metaPath += META_EXTENSION;
+			copyFile(metaPath.c_str(), dest, deleteSource);
+		}
+	}
+	if (deleteSource)
+		deleteFile(src);
+	return ret;
 }
 
-bool ModuleFileSystem::deleteFile(const char * path)
+bool ModuleFileSystem::createDirectory(const char* path)
 {
-	return PHYSFS_delete(path) != 0;
+	std::string newPath;
+	getAvailablePath(path, newPath);
+
+	if (PHYSFS_mkdir(newPath.c_str()) != 0)
+	{
+		addPath(newPath.c_str());
+		return true;
+	}
+	LOG("PHYSFS - Error while creating directory: %s", PHYSFS_getLastError());
+	return false;
+}
+
+bool ModuleFileSystem::deleteFile(const char* path)
+{
+	bool wasDirectory = PHYSFS_isDirectory(path);
+	if (PHYSFS_delete(path) != 0)
+	{
+		if (wasDirectory)
+			removePath(path);
+		return true;
+	}
+	LOG("PHYSFS - Error while deleting file: %s", PHYSFS_getLastError());
+	return false;
 }
 
 bool ModuleFileSystem::renameFile(const char* path, const char* name)
 {
+	std::string full_path = path;
+
 	std::string newPath;
 	std::string extension;
-	splitPath(path, &newPath, nullptr, &extension);
+	splitPath(full_path.c_str(), &newPath, nullptr, &extension);
 	newPath += name;
 	if (extension.size() > 0)
 		newPath += '.' + extension;
-
-	std::string full_path = PHYSFS_getRealDir(path);
-	full_path += path;
 	
-	return copyFile(full_path.c_str(), newPath.c_str());
+	if (PHYSFS_isDirectory(full_path.c_str()))
+	{
+		createDirectory(newPath.c_str());
+	}
+	else
+	{
+		char* buffer = nullptr;
+		uint size = readFile(full_path.c_str(), &buffer);
+		writeFile(newPath.c_str(), buffer, size, true);
+		//Rename .meta
+	}
+	deleteFile(full_path.c_str());
+	return true;
 }
 
-const char* ModuleFileSystem::getAvailablePath(const char* path)
+uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string& path)
 {
-	uint num_version = 1;
+	uint num_version = 0;
 
 	std::string directory;
 	std::string filename;
 	std::string extension;
-	App->fileSystem->splitPath(path, &directory, &filename, &extension);
+	App->fileSystem->splitPath(originalPath, &directory, &filename, &extension);
 
-	std::string full_path = path;
-	while (fileExists(full_path.c_str()))
+	path = originalPath;
+	while (fileExists(path.c_str()))
 	{
 		num_version++;
-		full_path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
+		path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
 	}
 
-	return full_path.c_str();
+	return num_version;
 }
 
 void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
@@ -249,13 +341,7 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 	else if (extension == "png" || extension == "dds" || extension == "tga")
 	{
 		std::string full_path = path;
-		if (PHYSFS_exists(path)) //It means that the path starts from /Game
-		{
-			full_path = PHYSFS_getRealDir(path);
-			full_path += path;
-		}
-		else
-		//App->textures->importTexture(full_path.c_str());
+
 		App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
 		App->textures->loadTexture(path);
 	}

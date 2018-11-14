@@ -37,12 +37,36 @@ void PanelAssets::Draw()
 	}
 	ImGui::Text(current_path.c_str());
 	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 40);
-	if (ImGui::Button("Reload"))
+	ImGui::Button("Create");
+	if (creating)
 	{
-		clearElements();
-		current_path = ASSETS_FOLDER;
-		App->fileSystem->getFilesAt(ASSETS_FOLDER, elements, nullptr, "meta");
+		if (ImGui::BeginPopupContextItem("create", 0))
+		{
+			if (ImGui::Button("Folder"))
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += "Unnamed";
+				uint num_version = App->fileSystem->getAvailablePath(path.c_str(), path);
+				App->fileSystem->createDirectory(path.c_str());
+
+				assetsElement* newFolder = new assetsElement();
+				newFolder->type == assetsElement::FOLDER;
+				newFolder->renaming = true;
+				newFolder->name = "Unnamed";
+				if (num_version > 0)
+					newFolder->name += '(' + std::to_string(num_version) + ')';
+				elements.push_back(newFolder);
+
+				creating = false;
+			}
+			ImGui::EndPopup();
+		}
 	}
+	else
+		creating = true;
+
 	ImGui::PopStyleColor();
 	ImGui::EndMenuBar();
 
@@ -80,7 +104,7 @@ void PanelAssets::Draw()
 				currLine = ImGui::GetCursorPosY();
 			}
 		}
-		
+
 		ImGui::PushID(i);
 		if (ImGui::ImageButton((ImTextureID)(((*it_e)->type == assetsElement::FOLDER) ? App->gui->folder->GL_id : App->gui->file->GL_id), { 50, 50 }))
 		{
@@ -115,15 +139,63 @@ void PanelAssets::Draw()
 				}
 			}
 		}
-		if (ImGui::BeginDragDropSource()) //Drag source for resources
+		if (ImGui::BeginPopupContextItem(((*it_e)->name + "rightClick").c_str(), 1))
 		{
-			std::string path = current_path;
-			if (path.size() > 0 && path.back() != '/')
-				path += '/';
-			path += (*it_e)->name;			
-			ImGui::SetDragDropPayload("TEXTURE", path.c_str(), sizeof(char)*path.size());
-			ImGui::Text((*it_e)->name.c_str());
-			ImGui::EndDragDropSource();
+			if (ImGui::Button("Delete"))
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				App->fileSystem->deleteFile(path.c_str());
+				
+				assetsElement* element = (*it_e);
+				it_e--;
+				elements.remove(element);
+				RELEASE(element);
+			}
+			ImGui::EndPopup();
+		}
+		if ((*it_e)->type == assetsElement::FILE)
+		{
+			if (ImGui::BeginDragDropSource()) //Drag source for resources
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				ImGui::SetDragDropPayload("TEXTURE", path.c_str(), sizeof(char)*path.size());
+				ImGui::Text((*it_e)->name.c_str());
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropSource()) //Drag source for moving files between folders
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				ImGui::SetDragDropPayload("FILE", path.c_str(), sizeof(char)*path.size());
+				ImGui::Text((*it_e)->name.c_str());
+				ImGui::EndDragDropSource();
+			}
+		}
+		else
+		{
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE"))
+				{
+					std::string path = (const char*)payload->Data;
+					path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
+					std::string curr_path = current_path;
+					if (curr_path.size() > 0 && curr_path.back() != '/')
+						curr_path += '/';
+					curr_path += (*it_e)->name;
+					App->fileSystem->copyFile(path.c_str(), curr_path.c_str(), true);
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 
 		//Draw name
@@ -137,26 +209,42 @@ void PanelAssets::Draw()
 			ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f,0.0f,0.0f,1.0f });
 			ImGui::PushItemWidth(60);
 			char text[120];
-			strcpy_s(text, 120, (*it_e)->name.c_str());		
-			if (ImGui::InputText("", text, 120, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			strcpy_s(text, 120, (*it_e)->name.c_str());
+			ImGui::PushID(-i);
+			if (ImGui::InputText("", text, 120, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) || (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)))
 			{
-				std::string path = current_path;
-				if (path.size() > 0 && path.back() != '/')
-					path += '/';
-				path += (*it_e)->name;
-				(*it_e)->name = text;
-				App->fileSystem->renameFile(path.c_str(), text);
+				if ((*it_e)->name != text)
+				{
+					std::string path = current_path;
+					if (path.size() > 0 && path.back() != '/')
+						path += '/';
+					path += (*it_e)->name;
+					std::string extension;
+					App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, nullptr, &extension);
+					(*it_e)->name = text;
+					if ((*it_e)->name.size() == 0)
+						(*it_e)->name = "Unnamed";
+					if (extension.size() > 0)
+						(*it_e)->name += '.' + extension;
+					App->fileSystem->getAvailablePath((*it_e)->name.c_str(), (*it_e)->name);
+					App->fileSystem->renameFile(path.c_str(), text);
+				}
 				(*it_e)->renaming = false;
 			}
+			if (!ImGui::IsItemFocused())
+				ImGui::SetKeyboardFocusHere(0);
+			ImGui::PopID();
 			ImGui::PopItemWidth();
 			ImGui::PopStyleColor(2);
 		}
 		else
 			ImGui::Selectable((*it_e)->name.c_str(), false, 0, { 60, 13 });
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
-		{
+
+		/*if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+		{			
 			(*it_e)->renaming = true;
-		}
+		}*/
+
 		rowCount++;
 		i++;
 
