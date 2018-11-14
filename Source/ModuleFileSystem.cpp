@@ -143,17 +143,20 @@ bool ModuleFileSystem::deleteFile(const char * path)
 
 bool ModuleFileSystem::renameFile(const char* path, const char* name)
 {
+	std::string full_path = path;
+
 	std::string newPath;
 	std::string extension;
-	splitPath(path, &newPath, nullptr, &extension);
+	splitPath(full_path.c_str(), &newPath, nullptr, &extension);
 	newPath += name;
 	if (extension.size() > 0)
 		newPath += '.' + extension;
-
-	std::string full_path = PHYSFS_getRealDir(path);
-	full_path += path;
 	
-	return copyFile(full_path.c_str(), newPath.c_str());
+	char* buffer = nullptr;
+	uint size = readFile(full_path.c_str(), &buffer);
+	writeFile(newPath.c_str(), buffer, size, true);
+	deleteFile(full_path.c_str());
+	return true;
 }
 
 const char* ModuleFileSystem::getAvailablePath(const char* path)
@@ -255,6 +258,7 @@ void ModuleFileSystem::manageDroppedFiles(const char* path)
 			full_path += path;
 		}
 		else
+		{ }
 		//App->textures->importTexture(full_path.c_str());
 		App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
 		App->textures->loadTexture(path);

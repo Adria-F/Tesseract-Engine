@@ -131,32 +131,35 @@ void PanelAssets::Draw()
 		{
 			ImGui::SetCursorPosX((float)leftMargin + (50 + 30)*(rowCount - 1));
 		}
-		if ((*it_e)->renaming)
+		/*if ((*it_e)->renaming)  FILE RENAMING - WIP
 		{
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, { 1.0f,1.0f,1.0f,0.9f });
 			ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f,0.0f,0.0f,1.0f });
 			ImGui::PushItemWidth(60);
 			char text[120];
-			strcpy_s(text, 120, (*it_e)->name.c_str());		
+			strcpy_s(text, 120, (*it_e)->name.c_str());	
+			ImGui::PushID(-i);
 			if (ImGui::InputText("", text, 120, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				std::string path = current_path;
 				if (path.size() > 0 && path.back() != '/')
 					path += '/';
 				path += (*it_e)->name;
+				std::string extension;
+				App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, nullptr, &extension);
 				(*it_e)->name = text;
+				if (extension.size() > 0)
+					(*it_e)->name += '.' + extension;
 				App->fileSystem->renameFile(path.c_str(), text);
 				(*it_e)->renaming = false;
 			}
+			ImGui::PopID();
 			ImGui::PopItemWidth();
 			ImGui::PopStyleColor(2);
 		}
-		else
+		else*/
 			ImGui::Selectable((*it_e)->name.c_str(), false, 0, { 60, 13 });
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) //Import asset if double clicked
-		{
-			(*it_e)->renaming = true;
-		}
+
 		rowCount++;
 		i++;
 
