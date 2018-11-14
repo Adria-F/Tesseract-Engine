@@ -26,7 +26,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SCENES_FOLDER, SETTINGS_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SETTINGS_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -37,7 +37,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 	}
 
 	import_delay = 1000.0f;
-	first_import = true;
+	first_import = true;	
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -101,8 +101,9 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 {
 	if (!overwrite)
 	{
-		path = getAvailablePath(path);
-		LOG("File with same name already exists - Saved as: %s", path);
+		std::string full_path;
+		getAvailablePath(path, full_path);
+		LOG("File with same name already exists - Saved as: %s", full_path);
 	}
 
 	PHYSFS_file* file = PHYSFS_openWrite(path);
@@ -136,6 +137,14 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest)
 		return false;
 }
 
+bool ModuleFileSystem::createDirectory(const char* path)
+{
+	std::string newPath;
+	getAvailablePath(path, newPath);
+
+	return PHYSFS_mkdir(newPath.c_str());
+}
+
 bool ModuleFileSystem::deleteFile(const char * path)
 {
 	return PHYSFS_delete(path) != 0;
@@ -152,30 +161,37 @@ bool ModuleFileSystem::renameFile(const char* path, const char* name)
 	if (extension.size() > 0)
 		newPath += '.' + extension;
 	
-	char* buffer = nullptr;
-	uint size = readFile(full_path.c_str(), &buffer);
-	writeFile(newPath.c_str(), buffer, size, true);
+	if (PHYSFS_isDirectory(full_path.c_str()))
+	{
+		createDirectory(newPath.c_str());
+	}
+	else
+	{
+		char* buffer = nullptr;
+		uint size = readFile(full_path.c_str(), &buffer);
+		writeFile(newPath.c_str(), buffer, size, true);
+	}
 	deleteFile(full_path.c_str());
 	return true;
 }
 
-const char* ModuleFileSystem::getAvailablePath(const char* path)
+uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string& path)
 {
-	uint num_version = 1;
+	uint num_version = 0;
 
 	std::string directory;
 	std::string filename;
 	std::string extension;
-	App->fileSystem->splitPath(path, &directory, &filename, &extension);
+	App->fileSystem->splitPath(originalPath, &directory, &filename, &extension);
 
-	std::string full_path = path;
-	while (fileExists(full_path.c_str()))
+	path = originalPath;
+	while (fileExists(path.c_str()))
 	{
 		num_version++;
-		full_path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
+		path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
 	}
 
-	return full_path.c_str();
+	return num_version;
 }
 
 void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
