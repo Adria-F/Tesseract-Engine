@@ -18,6 +18,7 @@ class PanelScene;
 class PanelAssets;
 class PanelHierarchy;
 class PanelFileDialog;
+class PanelTimeManager;
 
 class Texture;
 
@@ -63,6 +64,7 @@ public:
 	PanelAssets* assets = nullptr;
 	PanelHierarchy* hierarchy = nullptr;
 	PanelFileDialog* fileDialog = nullptr;
+	PanelTimeManager* timeManager = nullptr;
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;
