@@ -40,6 +40,8 @@ bool ModuleScene::Start()
 	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	App->resources->ImportFile("Assets/Models/BakerHouse.fbx", R_SCENE);
 	//App->scene_loader->loadScene("sceneTest");
+
+	ImGuizmo::Enable(false);
 	
 
 	return ret;
@@ -260,6 +262,12 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 	if (transform != nullptr)
 	{
 		ImGuizmo::Enable(!selected_GO->isStatic);
+
+		if (operation == ImGuizmo::NO_OPERATION)
+		{
+			ImGuizmo::Enable(false);
+		}
+
 		ImVec2 cursorPos = { App->gui->sceneX,App->gui->sceneY };
 		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
 		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);

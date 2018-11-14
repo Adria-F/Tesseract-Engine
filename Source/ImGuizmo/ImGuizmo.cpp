@@ -774,6 +774,11 @@ namespace ImGuizmo
       }
    }
 
+   bool IsEnabled()
+   {
+	   return gContext.mbEnable;
+   }
+
    static float GetUniform(const vec_t& position, const matrix_t& mat)
    {
       vec_t trf = makeVect(position.x, position.y, position.z, 1.f);
