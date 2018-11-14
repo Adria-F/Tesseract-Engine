@@ -14,12 +14,15 @@ public:
 	update_status Update(float dt);
 
 	bool addPath(const char* path);
+	bool removePath(const char* path);
+	void addPathOfFilesAt(const char* path);
+
 	bool fileExists(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
 	uint readFile(const char* path, char** buffer);
 	uint writeFile(const char* path, const void* buffer, uint size, bool overwrite = false);
 
-	bool copyFile(const char* src, const char* dest);
+	bool copyFile(const char* src, const char* dest, bool deleteSource = false);
 	bool createDirectory(const char* path);
 	bool deleteFile(const char* path);
 	bool renameFile(const char* path, const char* name);

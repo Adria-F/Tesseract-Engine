@@ -156,15 +156,46 @@ void PanelAssets::Draw()
 			}
 			ImGui::EndPopup();
 		}
-		if (ImGui::BeginDragDropSource()) //Drag source for resources
+		if ((*it_e)->type == assetsElement::FILE)
 		{
-			std::string path = current_path;
-			if (path.size() > 0 && path.back() != '/')
-				path += '/';
-			path += (*it_e)->name;
-			ImGui::SetDragDropPayload("TEXTURE", path.c_str(), sizeof(char)*path.size());
-			ImGui::Text((*it_e)->name.c_str());
-			ImGui::EndDragDropSource();
+			if (ImGui::BeginDragDropSource()) //Drag source for resources
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				ImGui::SetDragDropPayload("TEXTURE", path.c_str(), sizeof(char)*path.size());
+				ImGui::Text((*it_e)->name.c_str());
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropSource()) //Drag source for moving files between folders
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += (*it_e)->name;
+				ImGui::SetDragDropPayload("FILE", path.c_str(), sizeof(char)*path.size());
+				ImGui::Text((*it_e)->name.c_str());
+				ImGui::EndDragDropSource();
+			}
+		}
+		else
+		{
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE"))
+				{
+					std::string path = (const char*)payload->Data;
+					path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
+					std::string curr_path = current_path;
+					if (curr_path.size() > 0 && curr_path.back() != '/')
+						curr_path += '/';
+					curr_path += (*it_e)->name;
+					App->fileSystem->copyFile(path.c_str(), curr_path.c_str(), true);
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 
 		//Draw name
@@ -209,7 +240,7 @@ void PanelAssets::Draw()
 		else
 			ImGui::Selectable((*it_e)->name.c_str(), false, 0, { 60, 13 });
 
-		/*if ((*it_e)->type == assetsElement::FOLDER && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+		/*if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 		{			
 			(*it_e)->renaming = true;
 		}*/

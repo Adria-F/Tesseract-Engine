@@ -49,22 +49,11 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 	std::string written_file;
 	bool loaded = false;
 
-	std::string path = file;
-	if (type == R_TEXTURE)
-	{
-		std::string filename;
-		std::string extension;
-		App->fileSystem->splitPath(file, nullptr, &filename, &extension);
-		path = ASSETS_FOLDER;
-		path += "Textures/";
-		path += filename + '.' + extension;
-	}
-
 	bool newMeta = false;
-	JSON_File* meta = getMeta(path.c_str());
+	JSON_File* meta = getMeta(file);
 	if (meta == nullptr)
 	{	
-		meta = createMeta(path.c_str(), type);
+		meta = createMeta(file, type);
 		newMeta = true;
 	}
 	uint UID = meta->getValue("meta")->getUint("UID");
@@ -82,13 +71,13 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 	if (loaded)
 	{
 		Resource* newRes = AddResource(type, UID);
-		newRes->file = path.c_str();
+		newRes->file = file;
 		newRes->exported_file = written_file;
 		ret = newRes->UID;
 		LOG("Source Created");
-		if (newMeta)
-			meta->Write();
 	}
+	if (newMeta)
+		meta->Write();
 
 	App->JSON_manager->closeFile(meta);	
 	return ret;
