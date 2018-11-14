@@ -129,7 +129,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 			rootGO->name = filename;
 			App->scene_intro->addGameObject(rootGO);
 
-			//saveScene(filename.c_str(), true);
+			saveScene(filename.c_str(), true);
 
 			newPath=FBX_FOLDER + filename+SCENES_EXTENSION;
 
@@ -269,11 +269,13 @@ bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 	}
 
 	scene->addValue("Game Objects", gameObjects);
+
 	scene->Write();
 	App->JSON_manager->closeFile(scene);
 
 	return true;
 }
+
 
 bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 {

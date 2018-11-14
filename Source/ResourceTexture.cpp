@@ -32,18 +32,3 @@ bool ResourceTexture::UnloadFromMemory()
 	glDeleteTextures(1, &GL_id);
 	return false;
 }
-
-void ResourceTexture::Save(JSON_Value * component)
-{
-	JSON_Value* resourcetexture = component->createValue();
-
-	resourcetexture->addInt("Type", type);
-	resourcetexture->addUint("UID", UID);
-	resourcetexture->addString("resource texture", GetExportedFile());
-
-	component->addValue("", resourcetexture);
-}
-
-void ResourceTexture::Load(JSON_Value * component)
-{
-}

@@ -16,9 +16,6 @@ public:
 	bool LoadInMemory();
 	bool UnloadFromMemory();
 
-	void Save(JSON_Value* component);
-	void Load(JSON_Value* component);
-
 public:
 
 	//std::string name = "";

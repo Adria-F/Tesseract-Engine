@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Resource.h"
 #include "ResourceMesh.h"
 
 
@@ -41,7 +42,7 @@ bool ResourceMesh::UnloadFromMemory()
 	return true;
 }
 
-void ResourceMesh::Save(JSON_Value * component)
+void ResourceMesh::Save(JSON_Value * component)const
 {
 	JSON_Value* resourcemesh = component->createValue();
 

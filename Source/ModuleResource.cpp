@@ -139,6 +139,22 @@ Resource * ModuleResource::AddResource(ResType type, uint forced_uid)
 	return ret;
 }
 
+uint ModuleResource::GetResourceByFile(const char* file)
+{
+	uint ret = 0;
+
+	for (std::map<uint, Resource*>::iterator it_rs = resources.begin(); it_rs != resources.end(); it_rs++)
+	{
+		if ((*it_rs).second->file == file)
+		{
+			ret = (*it_rs).second->UID;
+			(*it_rs).second->LoadInMemory();
+		}
+	}
+
+	return ret;
+}
+
 JSON_File* ModuleResource::getMeta(const char* path) const
 {
 	std::string metaPath = path;

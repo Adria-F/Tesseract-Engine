@@ -22,11 +22,12 @@ public:
 	uint GenerateNewUID();
 	Resource* GetResource(uint uid);
 	Resource* AddResource(ResType type, uint forced_uid = 0);
+	uint GetResourceByFile(const char* file);
 
 	JSON_File* getMeta(const char* path) const;
 	JSON_File* createMeta(const char* path, ResType type) const;
 
-private:
+public:
 
 	uint last_UID = 1;
 	std::map <uint, Resource* > resources;
