@@ -57,9 +57,9 @@ void PanelInspector::Draw()
 				if (go->GetComponent(MATERIAL) == nullptr)
 					if (ImGui::Selectable("Material Component"))
 						go->AddComponent(MATERIAL);
-				if (go->GetComponent(CAMERA) == nullptr)
+				/*if (go->GetComponent(CAMERA) == nullptr)
 					if (ImGui::Selectable("Camera Component"))
-						go->AddComponent(CAMERA);
+						go->AddComponent(CAMERA);*/
 
 				ImGui::EndPopup();
 			}

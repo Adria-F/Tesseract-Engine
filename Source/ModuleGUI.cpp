@@ -16,7 +16,6 @@
 #include "PanelAssets.h"
 #include "PanelHierarchy.h"
 #include "PanelFileDialog.h"
-#include "PanelTimeManager.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -65,8 +64,6 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(hierarchy = new PanelHierarchy("Hierarchy"));
 
 	panels.push_back(fileDialog = new PanelFileDialog("Files"));
-
-	panels.push_back(timeManager = new PanelTimeManager("Time Manager"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -169,8 +166,6 @@ update_status ModuleGUI::Update(float dt)
 				hierarchy->toggleActive();
 			if (ImGui::MenuItem("Assets", NULL, assets->isActive()))
 				assets->toggleActive();
-			if (ImGui::MenuItem("Time Manager", NULL, timeManager->isActive()))
-				timeManager->toggleActive();
 			ImGui::EndMenu();
 		}
 

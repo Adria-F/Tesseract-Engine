@@ -131,7 +131,7 @@ uint ModuleFileSystem::writeFile(const char * path, const void * buffer, uint si
 	if (!overwrite)
 	{
 		std::string full_path;
-		getAvailablePath(path, full_path);
+		getAvailablePath(path, &full_path);
 		LOG("File with same name already exists - Saved as: %s", full_path);
 	}
 
@@ -198,7 +198,7 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest, bool deleteSo
 bool ModuleFileSystem::createDirectory(const char* path)
 {
 	std::string newPath;
-	getAvailablePath(path, newPath);
+	getAvailablePath(path, &newPath);
 
 	if (PHYSFS_mkdir(newPath.c_str()) != 0)
 	{
@@ -248,7 +248,7 @@ bool ModuleFileSystem::renameFile(const char* path, const char* name)
 	return true;
 }
 
-uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string& path)
+uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string* path)
 {
 	uint num_version = 0;
 
@@ -257,13 +257,15 @@ uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string& p
 	std::string extension;
 	App->fileSystem->splitPath(originalPath, &directory, &filename, &extension);
 
-	path = originalPath;
-	while (fileExists(path.c_str()))
+	std::string newPath = originalPath;
+	while (fileExists(newPath.c_str()))
 	{
 		num_version++;
-		path = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
+		newPath = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
 	}
 
+	if (path != nullptr)
+		*path = newPath;
 	return num_version;
 }
 

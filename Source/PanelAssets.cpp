@@ -48,7 +48,7 @@ void PanelAssets::Draw()
 				if (path.size() > 0 && path.back() != '/')
 					path += '/';
 				path += "Unnamed";
-				uint num_version = App->fileSystem->getAvailablePath(path.c_str(), path);
+				uint num_version = App->fileSystem->getAvailablePath(path.c_str(), &path);
 				App->fileSystem->createDirectory(path.c_str());
 
 				assetsElement* newFolder = new assetsElement();
@@ -150,7 +150,7 @@ void PanelAssets::Draw()
 				App->fileSystem->deleteFile(path.c_str());
 				
 				assetsElement* element = (*it_e);
-				it_e--;
+				it_e--; //What if is the only file
 				elements.remove(element);
 				RELEASE(element);
 			}
@@ -219,6 +219,7 @@ void PanelAssets::Draw()
 					if (path.size() > 0 && path.back() != '/')
 						path += '/';
 					path += (*it_e)->name;
+
 					std::string extension;
 					App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, nullptr, &extension);
 					(*it_e)->name = text;
@@ -226,7 +227,11 @@ void PanelAssets::Draw()
 						(*it_e)->name = "Unnamed";
 					if (extension.size() > 0)
 						(*it_e)->name += '.' + extension;
-					App->fileSystem->getAvailablePath((*it_e)->name.c_str(), (*it_e)->name);
+					std::string filePath;
+					App->fileSystem->splitPath(path.c_str(), &filePath, nullptr, nullptr);
+					uint num_version = App->fileSystem->getAvailablePath((filePath+(*it_e)->name).c_str(), nullptr);
+					if (num_version > 0)
+						(*it_e)->name += '(' + std::to_string(num_version) + ')';
 					App->fileSystem->renameFile(path.c_str(), text);
 				}
 				(*it_e)->renaming = false;

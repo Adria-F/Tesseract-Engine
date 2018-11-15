@@ -510,9 +510,6 @@
     <ClInclude Include="PhysFS\include\physfs_platforms.h">
       <Filter>Sources\Tools\Physfs</Filter>
     </ClInclude>
-    <ClInclude Include="PanelTimeManager.h">
-      <Filter>Sources\Modules\Panels</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -823,9 +820,6 @@
     </ClCompile>
     <ClCompile Include="PhysFS\include\physfs_unicode.c">
       <Filter>Sources\Tools\Physfs</Filter>
-    </ClCompile>
-    <ClCompile Include="PanelTimeManager.cpp">
-      <Filter>Sources\Modules\Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -177,7 +177,6 @@
     <ClInclude Include="PanelHierarchy.h" />
     <ClInclude Include="PanelInspector.h" />
     <ClInclude Include="PanelScene.h" />
-    <ClInclude Include="PanelTimeManager.h" />
     <ClInclude Include="PhysFS\include\physfs.h" />
     <ClInclude Include="PhysFS\include\physfs_casefolding.h" />
     <ClInclude Include="PhysFS\include\physfs_internal.h" />
@@ -302,7 +301,6 @@
     <ClCompile Include="PanelHierarchy.cpp" />
     <ClCompile Include="PanelInspector.cpp" />
     <ClCompile Include="PanelScene.cpp" />
-    <ClCompile Include="PanelTimeManager.cpp" />
     <ClCompile Include="PhysFS\include\physfs.c" />
     <ClCompile Include="PhysFS\include\physfs_archiver_7z.c" />
     <ClCompile Include="PhysFS\include\physfs_archiver_dir.c" />

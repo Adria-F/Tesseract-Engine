@@ -19,7 +19,7 @@ PanelScene::~PanelScene()
 
 void PanelScene::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
 
 	ImVec2 size = ImGui::GetWindowSize();
 	ImGui::SetCursorPos({ -(App->window->width - size.x) / 2,-(App->window->height - size.y) / 2 });
@@ -37,8 +37,24 @@ void PanelScene::Draw()
 
 	if (App->scene_intro->selected_GO)
 		App->scene_intro->DrawGuizmo(App->scene_intro->guizmoOperation);
-	
-	
+
+	ImGui::BeginMenuBar();
+	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
+	if (ImGui::ArrowButton("play", ImGuiDir_Right))
+	{
+		//App->scene_loader->saveScene();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("||", {23,19}))
+	{
+		//dt=0;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("[]", { 23,19 }))
+	{
+		//App->scene_loader->loadScene();
+	}
+	ImGui::EndMenuBar();
 
 	ImGui::End();
 }
