@@ -188,6 +188,8 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest, bool deleteSo
 			std::string metaPath = src;
 			metaPath += META_EXTENSION;
 			copyFile(metaPath.c_str(), dest, deleteSource);
+
+			App->resources->updateMetaLastChange(destination.c_str());
 		}
 	}
 	if (deleteSource)

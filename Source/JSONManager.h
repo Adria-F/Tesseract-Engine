@@ -33,6 +33,8 @@ public:
 	void addQuat(const char* name, Quat quat);
 	void addTransform(const char* name, float4x4 mat);
 
+	void setUint(const char* name, uint value);
+
 	int getInt(const char* name);
 	uint getUint(const char* name);
 	float getFloat(const char* name);

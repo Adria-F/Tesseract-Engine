@@ -182,3 +182,24 @@ JSON_File* ModuleResource::createMeta(const char* path, ResType type) const
 
 	return ret;
 }
+
+bool ModuleResource::updateMetaLastChange(const char* path)
+{
+	bool ret = false;
+	std::string metaPath = path;
+	metaPath += META_EXTENSION;
+	JSON_File* readFile = App->JSON_manager->openReadFile(metaPath.c_str());
+	if (readFile != nullptr)
+	{
+		JSON_File* writeFile = App->JSON_manager->openWriteFile(metaPath.c_str());
+		JSON_Value* meta = readFile->getValue("meta");
+		meta->setUint("last_change", App->fileSystem->getLastTimeChanged(path));
+		writeFile->addValue("meta", meta);
+
+		writeFile->Write();
+		App->JSON_manager->closeFile(writeFile);
+		ret = true;
+	}
+	App->JSON_manager->closeFile(readFile);
+	return ret;
+}

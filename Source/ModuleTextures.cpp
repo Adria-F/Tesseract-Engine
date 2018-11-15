@@ -96,7 +96,7 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	}
 	else //If found outside assets, copy it to Assets/Textures/
 	{
-		App->fileSystem->copyFile(path, full_path.c_str()); //BUG - Now it's loading baker_house.png two times (from .fbx and from assets directly)
+		//App->fileSystem->copyFile(path, full_path.c_str()); //BUG - Now it's loading baker_house.png two times (from .fbx and from assets directly)
 	}
 
 	char* buffer = nullptr;

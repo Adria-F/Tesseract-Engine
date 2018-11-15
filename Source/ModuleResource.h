@@ -26,6 +26,7 @@ public:
 
 	JSON_File* getMeta(const char* path) const;
 	JSON_File* createMeta(const char* path, ResType type) const;
+	bool updateMetaLastChange(const char* path);
 
 public:
 
