@@ -46,7 +46,9 @@ void ComponentTexture::DrawInfo()
 			{
 				std::string path = (const char*)payload->Data;
 				path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
-				UID = App->resources->getMeta(path.c_str())->getValue("meta")->getUint("UID");
+				JSON_File* meta = App->resources->getMeta(path.c_str());
+				UID = meta->getValue("meta")->getUint("UID");
+				App->JSON_manager->closeFile(meta);
 			}
 			ImGui::EndDragDropTarget();
 		}

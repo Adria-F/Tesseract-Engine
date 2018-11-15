@@ -25,7 +25,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER, SETTINGS_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -449,6 +449,7 @@ int ModuleFileSystem::getLastTimeChanged(const char* path) const
 
 int ModuleFileSystem::getMetaLastChange(const char* path) const
 {
+	int ret = 0;
 	std::string metaPath = path;
 	metaPath += META_EXTENSION;
 	JSON_File* meta = App->JSON_manager->openReadFile(metaPath.c_str());
@@ -456,11 +457,11 @@ int ModuleFileSystem::getMetaLastChange(const char* path) const
 	{
 		JSON_Value* metaValue = meta->getValue("meta");
 		if (metaValue != nullptr)
-			return metaValue->getInt("last_change");
+			ret = metaValue->getInt("last_change");
 	}
 
 	App->JSON_manager->closeFile(meta);
-	return 0;
+	return ret;
 }
 
 bool ModuleFileSystem::isFileModified(const char* path) const

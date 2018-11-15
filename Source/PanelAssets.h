@@ -2,6 +2,7 @@
 #define __PANELASSETS_H__
 
 #include "Panel.h"
+#include "Timer.h"
 #include <list>
 #include <stack>
 
@@ -25,6 +26,11 @@ public:
 	std::string current_path = ASSETS_FOLDER;
 
 	bool creating = false;
+	bool renaming = false;
+
+	Timer update_timer;
+	float update_delay = 1000;
+	bool force_update = false;
 };
 
 #endif // !__PANELASSETS_H__

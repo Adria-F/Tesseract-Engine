@@ -82,6 +82,8 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 			}
 			if (newMeta)
 				meta->Write();
+			else //If meta is not new, means that the file has been modified, so update meta
+				updateMetaLastChange(file);
 		} //If the file is already loaded into resources and not been modified, just return the UID, matching the .meta UID
 		else
 			LOG("File was already imported");
@@ -228,5 +230,6 @@ uint ModuleResource::getResourceUIDFromMeta(const char * path, const char * mesh
 			return meta->getValue("meshes")->getUint(meshName);
 	}
 
+	App->JSON_manager->closeFile(file);
 	return 0;
 }

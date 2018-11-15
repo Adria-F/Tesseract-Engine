@@ -13,6 +13,7 @@ PanelAssets::PanelAssets(const char* name) : Panel(name)
 
 	current_path = ASSETS_FOLDER;
 	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements, nullptr, "meta");
+	update_delay = 1000;
 }
 
 PanelAssets::~PanelAssets()
@@ -23,6 +24,13 @@ PanelAssets::~PanelAssets()
 void PanelAssets::Draw()
 {
 	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_MenuBar);
+
+	if (force_update || (!renaming && update_timer.ReadTime() >= update_delay))
+	{
+		clearElements(); //BUG: Possible crash? NOTIFY
+		App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
+		update_timer.Start();
+	}
 
 	float folderWidth = (float)App->gui->folder->width;
 
@@ -60,6 +68,7 @@ void PanelAssets::Draw()
 				elements.push_back(newFolder);
 
 				creating = false;
+				renaming = true;
 			}
 			ImGui::EndPopup();
 		}
@@ -193,6 +202,7 @@ void PanelAssets::Draw()
 						curr_path += '/';
 					curr_path += (*it_e)->name;
 					App->fileSystem->copyFile(path.c_str(), curr_path.c_str(), true);
+					force_update = true;
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -235,6 +245,7 @@ void PanelAssets::Draw()
 					App->fileSystem->renameFile(path.c_str(), text);
 				}
 				(*it_e)->renaming = false;
+				renaming = false;
 			}
 			if (!ImGui::IsItemFocused())
 				ImGui::SetKeyboardFocusHere(0);
