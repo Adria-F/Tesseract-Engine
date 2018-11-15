@@ -127,6 +127,11 @@ void ModuleScene::Draw()
 			{
 				(*it_ch)->culling = false;
 			}
+
+			if ((*it_ch)->GetComponent(CAMERA) != nullptr)
+			{
+				(*it_ch)->culling = true;
+			}
 		}
 	}
 

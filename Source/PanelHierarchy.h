@@ -14,6 +14,11 @@ public:
 
 	void Draw();
 	void FillTree(GameObject* gameobject);
+
+public: 
+
+	bool creating = false;
+
 };
 
 #endif //__PANELHIERARCHY_H__
