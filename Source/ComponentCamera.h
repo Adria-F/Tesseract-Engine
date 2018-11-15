@@ -31,6 +31,7 @@ public:
 
 	Frustum frustum;
 	AABB cameraBB;
+	bool IsCulling =false;
 };
 
 #endif

@@ -18,6 +18,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	setAspectRatio(16.0f / 9.0f);
 
 	cameraBB = AABB({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
+	IsCulling = false;
 
 }
 
@@ -140,6 +141,7 @@ void ComponentCamera::DrawInfo()
 		{
 			setAspectRatio(AR);
 		}
+		ImGui::Checkbox("Culling", &IsCulling);
 	}
 }
 

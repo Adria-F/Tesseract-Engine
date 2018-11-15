@@ -37,6 +37,8 @@ void PanelScene::Draw()
 
 	if (App->scene_intro->selected_GO)
 		App->scene_intro->DrawGuizmo(App->scene_intro->guizmoOperation);
+	
+	
 
 	ImGui::End();
 }

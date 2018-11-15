@@ -25,6 +25,7 @@ bool ModuleCamera3D::Init(JSON_File* document)
 {
 	camera = new ComponentCamera(nullptr, CAMERA);
 	camera->active = false;
+	camera->IsCulling = true;
 
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)

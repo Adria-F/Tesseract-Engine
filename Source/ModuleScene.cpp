@@ -91,6 +91,7 @@ void ModuleScene::Draw()
 	}
 
 	ComponentCamera* activeCamera = App->camera->camera;
+
 	//Static objects-------------------------------------------------------------------
 	if (quadTree->QT_Box != nullptr)
 	{
@@ -100,7 +101,7 @@ void ModuleScene::Draw()
 		//From the possible objects only draw the ones inside the frustum
 		for (int i = 0; i < ObjectsToDraw.size(); i++)
 		{
-			if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox) && ObjectsToDraw[i]->GetComponent(CAMERA) == nullptr)
+			if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox))
 			{
 				ObjectsToDraw[i]->culling = true;
 			}
@@ -257,7 +258,6 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
 	ComponentTransformation* transform = (ComponentTransformation*)App->scene_intro->selected_GO->GetComponent(TRANSFORMATION);
 
-	
 	if (transform != nullptr)
 	{
 		ImGuizmo::Enable(!selected_GO->isStatic);

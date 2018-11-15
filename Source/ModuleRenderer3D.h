@@ -18,6 +18,7 @@ class MSphere;
 class Component;
 class ComponentMesh;
 class ComponentTexture;
+class ComponentCamera;
 class GameObject;
 
 struct Mesh
@@ -103,6 +104,8 @@ public:
 	//Clicking ray debug
 	float3 clickA = float3::zero;
 	float3 clickB = float3::zero;
+
+	vector<ComponentCamera*> cameras;
 
 	list<Mesh*> meshes;
 };
