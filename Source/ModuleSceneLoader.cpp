@@ -71,21 +71,18 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 		{
 			//Create Resource Mesh
 
-			ResourceMesh* meshResource = App->meshes->importRMesh(scene->mMeshes[i]);
+			ResourceMesh* meshResource = (ResourceMesh*)App->resources->AddResource(R_MESH, 0);
 
 			if (meshResource != nullptr)
 			{
+				App->meshes->importRMesh(scene->mMeshes[i], meshResource->UID, meshResource->exported_file);
+				meshResource->file = path;
+
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				meshResource->color = { color.r, color.g, color.b };
 				
-				string newPath;
-
 				meshResource->LoadtoMemory();
-				App->meshes->saveMesh(meshResource, newPath);
-
-				meshResource->file = path;
-				meshResource->exported_file = newPath;
 			}
 			rMeshes.push_back(meshResource);
 		}

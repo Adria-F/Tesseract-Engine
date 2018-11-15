@@ -92,9 +92,15 @@ ModuleMeshes::ModuleMeshes(bool start_enabled): Module(start_enabled)
 //	return newMesh;
 //}
 
-ResourceMesh* ModuleMeshes::importRMesh(aiMesh* mesh)
+bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 {
-	ResourceMesh* newMesh = (ResourceMesh*)App->resources->AddResource(R_MESH);
+	//TODO: Create a resource but not call the add method
+	//then call the save method. the importRMesh will recieve a string reference
+	//this string will be used in the saveMesh to save the path.
+
+	bool ret = false;
+	
+	ResourceMesh* newMesh = new ResourceMesh(0,R_MESH);//Create the resource but not call the add method
 	newMesh->name = (mesh->mName.length > 0) ? mesh->mName.C_Str() : "Unnamed";
 
 	if (mesh->mNumVertices > 0)
@@ -158,19 +164,27 @@ ResourceMesh* ModuleMeshes::importRMesh(aiMesh* mesh)
 				memcpy(&newMesh->indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 			}
 		}
+
+		ret = true;
 	}
 	else
 	{
 		LOG("Current mesh has no faces, so will not be loaded");
-		newMesh = nullptr; //MEMLEAK: It should delete the resource
+		ret = false;
 	}
 
-	return newMesh;
+	saveMesh(newMesh,UID,path);
+
+	RELEASE(newMesh);
+	
+	return ret;
 }
 
 Mesh* ModuleMeshes::loadMesh(const char* meshName)
 {
 	//TODO with resources
+	//call this function from the loadinmesh
+	//then call generate buffer.
 
 	Mesh* ret = new Mesh();
 	ret->name = meshName;
@@ -233,6 +247,7 @@ Mesh* ModuleMeshes::loadMesh(const char* meshName)
 	ret->boundingBox.SetNegativeInfinity();
 	ret->boundingBox.Enclose((float3*)ret->vertices, ret->num_vertices);
 
+	
 	ret->GenerateBuffer();
 	App->renderer3D->meshes.push_back(ret);
 
@@ -240,7 +255,7 @@ Mesh* ModuleMeshes::loadMesh(const char* meshName)
 }
 
 
-bool ModuleMeshes::saveMesh(ResourceMesh* mesh, std::string& newpath)
+bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 {
 	bool ret = true;
 
@@ -278,8 +293,10 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, std::string& newpath)
 	memcpy(cursor, mesh->texCoords, bytes);
 	cursor += bytes;
 
-	App->fileSystem->writeFile((MESHES_FOLDER + mesh->name + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
-	newpath = MESHES_FOLDER + mesh->name + MESH_EXTENSION;
+	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
+
+	//TODO: the name should be the UID of the resource
+	newpath = MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION;
 
 	return ret;
 }

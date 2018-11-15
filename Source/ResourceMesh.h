@@ -14,10 +14,10 @@ public:
 
 	static void setImportDefaults(JSON_Value& importSettings);
 
-	void Draw();
 	void calculateNormals();
 
 	bool LoadInMemory();
+	bool LoadMesh();
 	bool UnloadFromMemory();
 
 	void Save(JSON_Value* component)const;

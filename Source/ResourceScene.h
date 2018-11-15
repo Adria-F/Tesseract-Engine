@@ -9,6 +9,11 @@ public:
 	~ResourceScene();
 
 	static void setImportDefaults(JSON_Value& importSettings);
+
+public:
+
+	JSON_File* scene;
+
 };
 
 #endif // !__RESOURCESCENE_H__

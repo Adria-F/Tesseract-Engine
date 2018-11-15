@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include <string>
+
 struct Mesh;
 struct aiMesh;
 class ResourceMesh;
@@ -14,9 +16,9 @@ public:
 	ModuleMeshes(bool start_enabled = true);
 	~ModuleMeshes() {}
 
-	ResourceMesh* importRMesh(aiMesh* mesh);
+	bool importRMesh(aiMesh* mesh, uint UID, std::string& path);
 	Mesh* loadMesh(const char* meshName);
-	bool saveMesh(ResourceMesh* mesh, std::string& newpath);
+	bool saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath);
 	
 };
 
