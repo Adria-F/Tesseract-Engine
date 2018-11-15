@@ -2,6 +2,9 @@
 #include "Panel.h"
 #include "PanelHierarchy.h"
 #include "ModuleScene.h"
+#include "Component.h"
+#include "ComponentTransformation.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 
 PanelHierarchy::PanelHierarchy(const char* name): Panel(name)
@@ -15,7 +18,65 @@ PanelHierarchy::~PanelHierarchy()
 
 void PanelHierarchy::Draw()
 {
-	ImGui::Begin("Game Objects");
+	creating = false;
+
+	ImGui::Begin("Game Objects",&active, ImGuiWindowFlags_MenuBar);
+
+	ImGui::BeginMenuBar();
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.9f,0.45f,0.0f,0.7f });
+
+	ImGui::Button("Create");
+	
+	if (ImGui::BeginPopupContextItem("create", 0))
+	{
+		if (ImGui::Button("Camera"))
+		{
+			GameObject* newGameObject = new GameObject();
+			App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+			newGameObject->name="Camera";
+
+			ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+
+			float3 pos = float3::zero;
+			float3 scale = float3::one;
+			Quat rot = Quat::identity;
+
+			GOTransform->position = pos;
+			GOTransform->scale = scale;
+			GOTransform->rotation = rot;
+			GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
+			newGameObject->camera = (ComponentCamera*)newGameObject->AddComponent(CAMERA);
+
+			newGameObject->boundingBox = newGameObject->camera->cameraBB;
+
+			creating = true;
+		}
+
+		if (ImGui::Button("Empty Object"))
+		{
+			GameObject* newGameObject = new GameObject();
+			App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+			newGameObject->name = "Empty Object";
+
+			ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+
+			float3 pos = float3::zero;
+			float3 scale = float3::one;
+			Quat rot = Quat::identity;
+
+			GOTransform->position = pos;
+			GOTransform->scale = scale;
+			GOTransform->rotation = rot;
+			GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
+			creating = true;
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::PopStyleColor();
+	ImGui::EndMenuBar();
 
 	for (std::list<GameObject*>::iterator it_ch = App->scene_intro->root->childs.begin(); it_ch != App->scene_intro->root->childs.end(); it_ch++)
 	{
@@ -23,6 +84,11 @@ void PanelHierarchy::Draw()
 	}
 
 	ImGui::End();
+
+	if (creating)
+	{
+		App->scene_intro->StartQuadTree();
+	}
 }
 
 void PanelHierarchy::FillTree(GameObject* gameobject)

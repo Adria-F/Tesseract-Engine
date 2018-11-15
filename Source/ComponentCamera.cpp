@@ -1,9 +1,10 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ComponentCamera.h"
+#include "ComponentTransformation.h"
 
 
-ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Component(gameObject, type)
+ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Component(gameobject, type)
 {
 	frustum.type = math::FrustumType::PerspectiveFrustum;
 
@@ -17,9 +18,13 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	frustum.verticalFov = DEGTORAD * 90.0f;
 	setAspectRatio(16.0f / 9.0f);
 
-	cameraBB = AABB({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f });
-	IsCulling = false;
+	float3 corner[8];
+	frustum.GetCornerPoints(corner);
 
+	cameraBB.SetNegativeInfinity();
+	cameraBB.Enclose(corner, 8);
+
+	IsCulling = false;
 }
 
 ComponentCamera::~ComponentCamera()
@@ -31,14 +36,13 @@ bool ComponentCamera::Update()
 	if (!active)
 		return false;
 
-	float3 corner[8];
-	frustum.GetCornerPoints(corner);
-	
-	cameraBB.SetNegativeInfinity();
-	cameraBB.Enclose(corner, 8);
-	
 	DrawFrustum();
 	CameraBB();
+	
+	if (gameObject != nullptr)
+	{
+		frustum.SetWorldMatrix(gameObject->transformation->localMatrix.Float3x4Part());
+	}
 	return true;
 }
 

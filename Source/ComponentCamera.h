@@ -32,6 +32,7 @@ public:
 	Frustum frustum;
 	AABB cameraBB;
 	bool IsCulling =false;
+	float4x4 currentTransform;
 };
 
 #endif

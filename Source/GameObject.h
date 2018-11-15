@@ -64,12 +64,13 @@ public:
 
 	ComponentMesh* mesh = nullptr;
 	ComponentTexture* texture = nullptr;
+	ComponentCamera* camera = nullptr;
+	ComponentTransformation* transformation = nullptr;
 
 private:
 
-	ComponentTransformation* transformation = nullptr;
-	ComponentCamera* camera = nullptr;
-
+	
+	
 	std::list<Component*> components;
 };
 
