@@ -45,7 +45,6 @@ uint ModuleResource::Find(const char * file) const
 
 uint ModuleResource::ImportFile(const char* file, ResType type)
 {
-	uint ret = 0;
 	std::string written_file;
 	bool loaded = false;
 
@@ -56,31 +55,40 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 		meta = createMeta(file, type);
 		newMeta = true;
 	}
-	uint UID = meta->getValue("meta")->getUint("UID");
-
-	switch (type)
+	JSON_Value* metaValue = meta->getValue("meta");
+	uint UID = 0;
+	if (metaValue != nullptr)
 	{
-	case R_TEXTURE:
-		loaded=App->textures->importTexture(file,written_file, meta->getValue("meta")->getValue("ImportSettings"));
-		break;
-	case R_SCENE:
-		loaded=App->scene_loader->importFBXScene(file,written_file, meta->getValue("meta")->getValue("ImportSettings"));
-		break;
-	}
+		UID = metaValue->getUint("UID");
 
-	if (loaded)
-	{
-		Resource* newRes = AddResource(type, UID);
-		newRes->file = file;
-		newRes->exported_file = written_file;
-		ret = newRes->UID;
-		LOG("Source Created");
+		if (newMeta || App->fileSystem->isFileModified(file) || GetResource(UID) == nullptr) //Return 0 if there is no resource loaded with such UID
+		{
+			switch (type)
+			{
+			case R_TEXTURE:
+				loaded = App->textures->importTexture(file, written_file, metaValue->getValue("ImportSettings"));
+				break;
+			case R_SCENE:
+				loaded = App->scene_loader->importFBXScene(file, written_file, metaValue->getValue("ImportSettings"));
+				break;
+			}
+
+			if (loaded)
+			{
+				Resource* newRes = AddResource(type, UID);
+				newRes->file = file;
+				newRes->exported_file = written_file;
+				LOG("Source Created");
+			}
+			if (newMeta)
+				meta->Write();
+		} //If the file is already loaded into resources and not been modified, just return the UID, matching the .meta UID
+		else
+			LOG("File was already imported");
 	}
-	if (newMeta)
-		meta->Write();
 
 	App->JSON_manager->closeFile(meta);	
-	return ret;
+	return UID;
 }
 
 uint ModuleResource::GenerateNewUID()
@@ -100,12 +108,12 @@ Resource * ModuleResource::GetResource(uint uid)
 	return nullptr;
 }
 
-Resource * ModuleResource::AddResource(ResType type, uint forced_uid)
+Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 {
 	Resource* ret =nullptr;
 
-	//TEMP
-	forced_uid = GENERATE_UID();
+	if (forced_uid == 0)
+		forced_uid = GENERATE_UID();
 
 	switch (type)
 	{
@@ -193,13 +201,32 @@ bool ModuleResource::updateMetaLastChange(const char* path)
 	{
 		JSON_File* writeFile = App->JSON_manager->openWriteFile(metaPath.c_str());
 		JSON_Value* meta = readFile->getValue("meta");
-		meta->setUint("last_change", App->fileSystem->getLastTimeChanged(path));
-		writeFile->addValue("meta", meta);
+		if (meta != nullptr)
+		{
+			meta->setUint("last_change", App->fileSystem->getLastTimeChanged(path));
+			writeFile->addValue("meta", meta);
 
-		writeFile->Write();
+			writeFile->Write();
+		}
 		App->JSON_manager->closeFile(writeFile);
 		ret = true;
 	}
 	App->JSON_manager->closeFile(readFile);
 	return ret;
+}
+uint ModuleResource::getResourceUIDFromMeta(const char * path, const char * meshName)
+{
+	std::string metaPath = path;
+	metaPath += META_EXTENSION;
+	JSON_File* file = App->JSON_manager->openReadFile(metaPath.c_str());
+	if (file != nullptr)
+	{
+		JSON_Value* meta = file->getValue("meta");
+		if (meshName == nullptr)
+			return meta->getUint("UID");
+		else
+			return meta->getValue("meshes")->getUint(meshName);
+	}
+
+	return 0;
 }

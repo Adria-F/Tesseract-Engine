@@ -75,32 +75,8 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	ilGenImages(1, &ilImage);
 	ilBindImage(ilImage);
 
-	std::string full_path = path;
-	std::string filename;
-	std::string extension;
-	App->fileSystem->splitPath(path, nullptr, &filename, &extension);
-	full_path = filename + '.' + extension;
-
-	success = ilLoad(IL_TYPE_UNKNOWN, path);
-	if (!success) //If not found, search at Assets/Textures/
-	{
-		LOG("Texture not found at: %s", path);
-		LOG("Searching at Assets");		
-		
-		if (!App->fileSystem->fileExists(full_path.c_str()))
-		{
-			LOG("Texture not found at: %s", full_path.c_str());
-			LOG("Could not import texture: %s", filename.c_str());
-			return false;
-		}
-	}
-	else //If found outside assets, copy it to Assets/Textures/
-	{
-		//App->fileSystem->copyFile(path, full_path.c_str()); //BUG - Now it's loading baker_house.png two times (from .fbx and from assets directly)
-	}
-
 	char* buffer = nullptr;
-	uint size = App->fileSystem->readFile(full_path.c_str(), &buffer);
+	uint size = App->fileSystem->readFile(path, &buffer);
 
 	success = ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
 
@@ -134,58 +110,6 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 
 	ilDeleteImages(1, &ilImage);
 	return true;
-}
-
-//TO DELETE
-Texture* ModuleTextures::loadTexture(const char* path)
-{
-	Texture* ret = new Texture();
-
-	char* buffer = nullptr;
-	std::string full_path = path;
-	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-	ret->name = full_path;
-	uint size = App->fileSystem->readFile(App->fileSystem->getFullPath(full_path.c_str(), TEXTURES_FOLDER, TEXTURES_EXTENSION).c_str(), &buffer);
-
-	if (buffer != nullptr && size > 0)
-	{
-		ILuint ilImage;
-		ilGenImages(1, &ilImage);
-		ilBindImage(ilImage);
-
-		if (ilLoadL(IL_DDS, (const void*)buffer, size));
-		{
-			ILinfo ImageInfo;
-			iluGetImageInfo(&ImageInfo);
-
-			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-				iluFlipImage();
-
-			glGenTextures(1, &ret->GL_id);
-			glBindTexture(GL_TEXTURE_2D, ret->GL_id);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
-			ret->width = ImageInfo.Width;
-			ret->height = ImageInfo.Height;
-
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		ilDeleteImages(1, &ilImage);
-	}
-	else
-	{
-		LOG("Error loading texture: %s", path);
-		return nullptr;
-	}
-
-	LOG("Texture creation successful.");
-	textures.push_back(ret);
-
-	return ret;
 }
 
 bool ModuleTextures::LoadResourceTexture(const char * path, ResourceTexture* resource)
