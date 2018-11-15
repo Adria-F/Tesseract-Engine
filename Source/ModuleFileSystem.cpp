@@ -327,32 +327,45 @@ std::string ModuleFileSystem::getFullPath(const char * path, const char * atDire
 	return full_path.c_str();
 }
 
-void ModuleFileSystem::manageDroppedFiles(const char* path)
+uint ModuleFileSystem::manageDroppedFiles(const char* path)
 {
-	//Import to the assets folder and convert+import to the library folder. Name will be: name+(num_version)
-	//TODO 1: call resource importer.
+	uint ret = 0;
 
 	std::string filename = path;
 	std::string extension = path;
 	splitPath(path, nullptr, &filename, &extension);
+	filename = filename.c_str();
+	if (extension.size() > 0)
+		filename += '.' + extension;
+
+	std::string full_path = path;
+	if (!fileExists(filename.c_str())) //If it does not exist within the search path, we will make a copy of it into ASSETS_FOLDER
+	{
+		copyFile(path, ASSETS_FOLDER);
+		full_path = ASSETS_FOLDER + filename;
+	}
+	else //If it does, just get the directory inside search path to use it in other functions
+	{
+		full_path = PHYSFS_getRealDir(filename.c_str());
+		if (full_path.size() > 0 && full_path.back() != '/')
+			full_path += '/';
+		full_path += filename;
+	}
 
 	if (extension == "fbx" || extension == "FBX")
 	{
-		//App->scene_loader->importFBXScene(path);
-		App->resources->ImportFile(path, R_SCENE);
-		
+		ret = App->resources->ImportFile(full_path.c_str(), R_SCENE);
 	}
 	else if (extension == "png" || extension == "dds" || extension == "tga")
 	{
-		std::string full_path = path;
-
-		App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
-		App->textures->loadTexture(path);
+		ret = App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
 	}
 	else
 	{
 		LOG("Unsupported file format");
 	}
+
+	return ret;
 }
 
 void ModuleFileSystem::importFilesAt(const char * path)
@@ -423,7 +436,7 @@ void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& 
 	}
 }
 
-int ModuleFileSystem::getLastTimeChanged(const char* path)
+int ModuleFileSystem::getLastTimeChanged(const char* path) const
 {
 	PHYSFS_Stat stat;
 	if (PHYSFS_stat(path, &stat) != 0)
@@ -434,17 +447,23 @@ int ModuleFileSystem::getLastTimeChanged(const char* path)
 	return 0;
 }
 
-int ModuleFileSystem::getMetaLastChange(const char * path)
+int ModuleFileSystem::getMetaLastChange(const char* path) const
 {
 	std::string metaPath = path;
 	metaPath += META_EXTENSION;
 	JSON_File* meta = App->JSON_manager->openReadFile(metaPath.c_str());
 	if (meta != nullptr)
 	{
-		int lastChange = meta->getValue("meta")->getInt("last_change");
-		App->JSON_manager->closeFile(meta);
-		return lastChange;
+		JSON_Value* metaValue = meta->getValue("meta");
+		if (metaValue != nullptr)
+			return metaValue->getInt("last_change");
 	}
 
+	App->JSON_manager->closeFile(meta);
 	return 0;
+}
+
+bool ModuleFileSystem::isFileModified(const char* path) const
+{
+	return (getLastTimeChanged(path) > getMetaLastChange(path));
 }

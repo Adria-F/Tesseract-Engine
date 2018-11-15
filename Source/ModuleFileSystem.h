@@ -36,15 +36,18 @@ public:
 	std::string normalizePath(const char* path);
 	std::string getFullPath(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
 
-	void manageDroppedFiles(const char* path);
+	//Returns the UID of the resource if some has been created, 0 if not
+	uint manageDroppedFiles(const char* path);
 
 	void importFilesAt(const char* path);
 	
 	void getFilesAt(const char* path, std::list<assetsElement*>& elements, const char* exclusiveExtension = nullptr, const char* ignoreExtension = nullptr);
 
-	int getLastTimeChanged(const char* path);
+	int getLastTimeChanged(const char* path) const;
 	//Path: path of the asset file (not the .meta)
-	int getMetaLastChange(const char* path);
+	int getMetaLastChange(const char* path) const;
+	//Returns true if the file has been modified, according to .meta or if there is no .meta
+	bool isFileModified(const char* path) const;
 
 private:
 

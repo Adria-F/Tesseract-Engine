@@ -33,7 +33,8 @@ JSON_File* JSONManager::openWriteFile(const char * path)
 
 void JSONManager::closeFile(JSON_File* file)
 {
-	file->closeFile();
+	if (file != nullptr)
+		file->closeFile();
 
 	RELEASE(file);
 	file = nullptr;
@@ -102,7 +103,7 @@ void JSON_File::addValue(const char * name, JSON_Value* value)
 
 JSON_Value* JSON_File::getValue(const char* name)
 {
-	if (document->HasMember(name))
+	if (document->IsObject() && document->HasMember(name))
 	{
 		rapidjson::Value& value = document->operator[](name);
 		JSON_Value* ret = new JSON_Value(allocator);
@@ -379,7 +380,7 @@ void JSON_Value::addValue(const char * name, JSON_Value * value)
 
 JSON_Value* JSON_Value::getValue(const char* name)
 {
-	if (value->HasMember(name))
+	if (value->IsObject() && value->HasMember(name))
 	{
 		rapidjson::Value& trueValue = value->operator[](name);
 		JSON_Value* ret = new JSON_Value(allocator);

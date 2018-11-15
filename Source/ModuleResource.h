@@ -27,6 +27,8 @@ public:
 	JSON_File* getMeta(const char* path) const;
 	JSON_File* createMeta(const char* path, ResType type) const;
 	bool updateMetaLastChange(const char* path);
+	//To get the UID of a mesh, enter the .fbx path + the mesh name
+	uint getResourceUIDFromMeta(const char* path, const char* meshName = nullptr);
 
 public:
 
