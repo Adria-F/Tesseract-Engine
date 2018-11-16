@@ -21,38 +21,6 @@ class ComponentTexture;
 class ComponentCamera;
 class GameObject;
 
-struct Mesh
-{
-	~Mesh();
-
-	std::string name;
-
-	uint num_vertices = 0;
-	float* vertices = nullptr;
-
-	uint id_indices = 0;
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	uint num_normals = 0;
-	float* normals = nullptr;
-
-	vec3 color = { 0,0,0 };
-
-	uint num_texCoords = 0;
-	float* texCoords=nullptr;
-
-	vector<float> faceNormals;
-
-	AABB boundingBox;
-
-	void Draw();
-	void calculateNormals();
-	void GenerateBuffer();
-
-
-};
-
 class ModuleRenderer3D : public Module
 {
 public:
@@ -64,8 +32,6 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-
-	void pushMesh(Mesh* mesh);
 
 	void OnResize(int width, int height);
 
@@ -107,7 +73,7 @@ public:
 
 	vector<ComponentCamera*> cameras;
 
-	list<Mesh*> meshes;
+	/*list<Mesh*> meshes;*/
 };
 
 #endif // !__MODULERENDERER3D_H__

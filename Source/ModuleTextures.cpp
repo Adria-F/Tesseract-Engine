@@ -112,55 +112,6 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	return true;
 }
 
-bool ModuleTextures::LoadResourceTexture(const char * path, ResourceTexture* resource)
-{
-	bool ret = false;
-	char* buffer = nullptr;
-	std::string full_path = path;
-	App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
-
-	uint size = App->fileSystem->readFile(App->fileSystem->getFullPath(full_path.c_str(), TEXTURES_FOLDER, TEXTURES_EXTENSION).c_str(), &buffer);
-
-	if (buffer != nullptr && size > 0)
-	{
-		ILuint ilImage;
-		ilGenImages(1, &ilImage);
-		ilBindImage(ilImage);
-
-		if (ilLoadL(IL_DDS, (const void*)buffer, size));
-		{
-			ILinfo ImageInfo;
-			iluGetImageInfo(&ImageInfo);
-
-			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-				iluFlipImage();
-
-			glGenTextures(1, &resource->GL_id);
-			glBindTexture(GL_TEXTURE_2D, resource->GL_id);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
-			resource->width = ImageInfo.Width;
-			resource->height = ImageInfo.Height;
-
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		ilDeleteImages(1, &ilImage);
-		ret = true;
-		LOG("Texture creation successful.");
-	}
-	else
-	{
-		LOG("Error loading texture: %s", path);
-		ret = false;
-	}
-
-	return ret;
-}
-
 Texture * ModuleTextures::loadIcon(const char * path)
 {
 	Texture* ret = new Texture();

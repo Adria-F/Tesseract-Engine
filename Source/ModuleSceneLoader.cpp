@@ -73,14 +73,15 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			//Create Resource Mesh
-
 			//TODO Here should read if a .fbx.meta exists, and read the UID for the mesh name, then force this UID
 			std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
 			App->fileSystem->getAvailableNameFromArray(meshesNames, meshName); //Get the available name for the mesh
 			
 			ResourceMesh* meshResource = nullptr;
 
-			uint UID = GENERATE_UID(); //Or the forced UID
+			//uint UID = GENERATE_UID(); //Or the forced UID
+			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
+
 			std::string exportedFile;
 			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile); //Import the mesh
 			if (success)
@@ -341,7 +342,10 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 		}
 	}
 
-	App->camera->FitCamera(App->camera->BBtoLook);
+	App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
+	App->scene_intro->root->RecalculateBB();
+
+	App->camera->FitCamera(App->scene_intro->root->boundingBox);
 	App->scene_intro->StartQuadTree();
 	App->JSON_manager->closeFile(scene);
 	return true;
