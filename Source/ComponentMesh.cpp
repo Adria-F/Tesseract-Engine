@@ -98,11 +98,7 @@ void ComponentMesh::DrawInfo()
 	
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		std::string filename;
-		std::string extension;
-		if (mesh != nullptr)
-			App->fileSystem->splitPath(mesh->GetFile(), nullptr, &filename, &extension);
-		beginDroppableSpace((mesh == nullptr) ? "No Mesh" : (filename + '.' + extension).c_str(), mesh == nullptr);
+		beginDroppableSpace((mesh == nullptr) ? "No Mesh" : mesh->GetName(), mesh == nullptr);
 		if (mesh != nullptr)
 		{
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);

@@ -35,11 +35,7 @@ void ComponentTexture::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		std::string filename;
-		std::string extension;
-		if (tex != nullptr)
-			App->fileSystem->splitPath(tex->GetFile(), nullptr, &filename, &extension);
-		beginDroppableSpace((tex == nullptr) ? "No Texture" : (filename+'.'+extension).c_str(), tex ==nullptr);
+		beginDroppableSpace((tex == nullptr) ? "No Texture" : tex->GetName(), tex ==nullptr);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))
