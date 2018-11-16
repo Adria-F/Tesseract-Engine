@@ -31,6 +31,7 @@ public:
 	//num_version is equivalent to the amounts of times that a file with given name exists -1
 	//Modify string to: path(num_version)
 	uint getAvailablePath(const char* originalPath, std::string* path);
+	uint getAvailableNameFromArray(std::vector<std::string*> names, std::string& name);
 
 	void splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
 	std::string normalizePath(const char* path);

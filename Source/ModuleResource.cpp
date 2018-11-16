@@ -66,10 +66,10 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 			switch (type)
 			{
 			case R_TEXTURE:
-				loaded = App->textures->importTexture(file, written_file, metaValue->getValue("ImportSettings"));
+				loaded = App->textures->importTexture(file, written_file, metaValue);
 				break;
 			case R_SCENE:
-				loaded = App->scene_loader->importFBXScene(file, written_file, metaValue->getValue("ImportSettings"));
+				loaded = App->scene_loader->importFBXScene(file, written_file, metaValue, newMeta);
 				break;
 			}
 
@@ -168,7 +168,7 @@ JSON_File* ModuleResource::createMeta(const char* path, ResType type) const
 	std::string metaPath = path;
 	metaPath += META_EXTENSION;
 	JSON_File* ret = App->JSON_manager->openWriteFile(metaPath.c_str());
-
+	
 	JSON_Value* meta = ret->createValue();
 	meta->addUint("UID", GENERATE_UID());
 	meta->addInt("last_change", App->fileSystem->getLastTimeChanged(path));
@@ -211,6 +211,47 @@ bool ModuleResource::updateMetaLastChange(const char* path)
 			writeFile->Write();
 		}
 		App->JSON_manager->closeFile(writeFile);
+		ret = true;
+	}
+	App->JSON_manager->closeFile(readFile);
+	return ret;
+}
+bool ModuleResource::updateMeshesUIDs(const char* path, std::map<std::string*, uint> meshesUIDs, JSON_Value* existingMeta)
+{
+	bool ret = false;
+	std::string metaPath = path;
+	metaPath += META_EXTENSION;
+	JSON_File* readFile = App->JSON_manager->openReadFile(metaPath.c_str());
+	if (readFile != nullptr)
+	{
+		JSON_File* writeFile = nullptr;
+		JSON_Value* meta = nullptr;
+		if (existingMeta != nullptr)
+			meta = existingMeta;
+		else
+		{
+			writeFile = App->JSON_manager->openWriteFile(metaPath.c_str());
+			meta = readFile->getValue("meta");
+		}
+		if (meta != nullptr)
+		{
+			JSON_Value* meshes = meta->getValue("meshes");
+			if (meshes == nullptr)
+				meshes = meta->createValue();
+
+			for (std::map<std::string*, uint>::iterator it_m = meshesUIDs.begin(); it_m != meshesUIDs.end(); it_m++)
+			{
+				meshes->setUint((*it_m).first->c_str(), (*it_m).second);
+			}
+			meta->setValue("meshes", meshes);
+			if (writeFile != nullptr)
+			{
+				writeFile->addValue("meta", meta);
+				writeFile->Write();
+			}
+		}
+		if (writeFile != nullptr)
+			App->JSON_manager->closeFile(writeFile);
 		ret = true;
 	}
 	App->JSON_manager->closeFile(readFile);

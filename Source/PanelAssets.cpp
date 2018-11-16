@@ -12,6 +12,7 @@ PanelAssets::PanelAssets(const char* name) : Panel(name)
 	active = true;
 
 	current_path = ASSETS_FOLDER;
+	current_path.pop_back();
 	App->fileSystem->getFilesAt(ASSETS_FOLDER, elements, nullptr, "meta");
 	update_delay = 1000;
 }
@@ -41,6 +42,10 @@ void PanelAssets::Draw()
 	{
 		clearElements();
 		App->fileSystem->splitPath(current_path.c_str(), &current_path, nullptr, nullptr);
+		if (current_path.size() == 0)
+			current_path = ASSETS_FOLDER;
+		if (current_path.back() == '/')
+			current_path.pop_back();
 		App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
 	}
 	ImGui::Text(current_path.c_str());

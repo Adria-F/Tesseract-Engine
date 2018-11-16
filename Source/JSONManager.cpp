@@ -227,12 +227,14 @@ void JSON_Value::addTransform(const char * name, float4x4 mat)
 	this->value->AddMember(index, a, *allocator);
 }
 
-void JSON_Value::setUint(const char * name, uint value)
+void JSON_Value::setUint(const char* name, uint value)
 {
 	rapidjson::Value newValue(value);
 
-	if (this->value->HasMember(name))
+	if (this->value->HasMember(name)) //If it exists modify it
 		this->value->operator[](name) = newValue;
+	else
+		this->addUint(name, value); //if not, set a new one
 }
 
 int JSON_Value::getInt(const char* name)
@@ -406,6 +408,14 @@ JSON_Value* JSON_Value::getValueFromArray(int index)
 	}
 
 	return nullptr;
+}
+
+void JSON_Value::setValue(const char* name, JSON_Value* value)
+{
+	if (this->value->HasMember(name))
+		this->value->operator[](name) = *value->getRapidJSONValue(); //If it exists modify it
+	else
+		this->addValue(name, value); //if not, set a new one
 }
 
 void JSON_Value::setValue(rapidjson::Value * value)

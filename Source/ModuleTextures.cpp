@@ -66,7 +66,7 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_Value* importSettings)
+bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_Value* meta)
 {
 	ILuint ilImage;
 	bool success;
@@ -95,7 +95,7 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 			{
 				std::string filename = path;
 				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);			
-				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size, true); //Overwrite must be set to false when scenes save/load is completed
+				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size, true);
 				newpath = TEXTURES_FOLDER + filename + TEXTURES_EXTENSION;
 			}
 			RELEASE_ARRAY(data);

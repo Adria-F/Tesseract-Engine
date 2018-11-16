@@ -29,7 +29,7 @@ public:
 
 	bool CleanUp();
 
-	bool importTexture(const char* path, std::string& newpath, JSON_Value* importSettings);
+	bool importTexture(const char* path, std::string& newpath, JSON_Value* meta);
 	Texture* loadTexture(const char* path);
 	bool LoadResourceTexture(const char* path, ResourceTexture* resource);
 

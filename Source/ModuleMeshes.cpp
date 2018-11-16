@@ -173,7 +173,8 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 		ret = false;
 	}
 
-	saveMesh(newMesh,UID,path);
+	if (ret) //Just if successfully imported mesh
+		saveMesh(newMesh,UID,path);
 
 	RELEASE(newMesh);
 	
@@ -293,7 +294,7 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 	memcpy(cursor, mesh->texCoords, bytes);
 	cursor += bytes;
 
-	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true); //Overwrite must be set to false when scenes save/load is completed
+	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true);
 
 	//TODO: the name should be the UID of the resource
 	newpath = MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION;

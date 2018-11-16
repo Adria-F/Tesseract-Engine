@@ -271,6 +271,24 @@ uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string* p
 	return num_version;
 }
 
+uint ModuleFileSystem::getAvailableNameFromArray(std::vector<std::string*> names, std::string& name)
+{
+	uint num_version = 0;
+
+	std::string final_name = name;
+	for (int i = 0; i < names.size(); i++)
+	{
+		if (names[i]->c_str() == final_name)
+		{
+			num_version++;
+			final_name = name + '(' + std::to_string(num_version) + ')';
+		}
+	}
+	name = final_name;
+
+	return num_version;
+}
+
 void ModuleFileSystem::splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension)
 {
 	std::string str = normalizePath(full_path);

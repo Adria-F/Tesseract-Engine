@@ -56,8 +56,9 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, JSON_Value* importSettings)
+bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
+	//TODO deactivate this two lines after finished with the function
 	App->scene_intro->newScene();
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
@@ -67,25 +68,50 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 	{
 		//Import all meshes
 		vector<ResourceMesh*> rMeshes;
+		vector<std::string*> meshesNames;
+		std::map<std::string*, uint> meshesUIDs;
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			//Create Resource Mesh
 
-			ResourceMesh* meshResource = (ResourceMesh*)App->resources->AddResource(R_MESH, 0);
+			//TODO Here should read if a .fbx.meta exists, and read the UID for the mesh name, then force this UID
+			std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
+			App->fileSystem->getAvailableNameFromArray(meshesNames, meshName); //Get the available name for the mesh
+			
+			ResourceMesh* meshResource = nullptr;
 
-			if (meshResource != nullptr)
+			uint UID = GENERATE_UID(); //Or the forced UID
+			std::string exportedFile;
+			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile); //Import the mesh
+			if (success)
 			{
-				App->meshes->importRMesh(scene->mMeshes[i], meshResource->UID, meshResource->exported_file);
-				meshResource->file = path;
+				std::string* nameAlloc = new std::string(meshName);
+				meshesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
+				meshesUIDs[nameAlloc] = UID;
 
+				meshResource = (ResourceMesh*)App->resources->AddResource(R_MESH, UID);
+				meshResource->name = meshName;
+				meshResource->file = path;
+				meshResource->exported_file = exportedFile;
+
+				//TODO move this into resource material
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				meshResource->color = { color.r, color.g, color.b };
-				
+
 				meshResource->LoadtoMemory();
 			}
-			rMeshes.push_back(meshResource);
+			rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
 		}
+		if(newMeta)
+			App->resources->updateMeshesUIDs(path, meshesUIDs, meta);
+		else
+			App->resources->updateMeshesUIDs(path, meshesUIDs);
+		int size = meshesNames.size();
+		for (int i = 0; i < size; i++) //Clean the vector of names
+			RELEASE(meshesNames[i]);
+		meshesNames.clear();
+		meshesUIDs.clear(); //The allocated names are cleaned with the vector
 
 		//Import textures
 		vector<ResourceTexture*> rtextures;
@@ -112,7 +138,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 				}
 				else
 				{
-					rtextures.push_back(nullptr);
+					rtextures.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
 				}
 			}
 
