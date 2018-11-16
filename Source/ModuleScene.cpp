@@ -42,6 +42,8 @@ bool ModuleScene::Start()
 	//App->scene_loader->loadScene("sceneTest");
 
 	ImGuizmo::Enable(false);
+
+	GameMode = false;
 	
 	return ret;
 }
