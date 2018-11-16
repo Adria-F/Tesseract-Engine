@@ -75,9 +75,20 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 
 			if (loaded)
 			{
+				Resource* old = GetResource(UID);
+				uint timesLoaded = 0;
+				if (old != nullptr)
+				{
+					timesLoaded = old->GetTimesLoaded();
+					deleteResource(UID);
+				}			
 				Resource* newRes = AddResource(type, UID);
 				newRes->file = file;
 				newRes->exported_file = written_file;
+				for (int i = 0; i < timesLoaded; i++)
+				{
+					newRes->LoadtoMemory(); //Load it for each time the existing resource was loaded
+				}
 				LOG("Source Created");
 			}
 			if (newMeta)
@@ -136,6 +147,19 @@ Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 	resources.insert(std::pair<uint,Resource*>(forced_uid,ret));
 
 	return ret;
+}
+
+bool ModuleResource::deleteResource(uint uid)
+{
+	if (resources.find(uid) != resources.end())
+	{
+		Resource* res = resources[uid];
+		resources.erase(uid);
+		RELEASE(res); //TODO This should unload the resource and clean any allocated memory
+
+		return true;
+	}
+	return false;
 }
 
 uint ModuleResource::GetResourceByFile(const char* file)

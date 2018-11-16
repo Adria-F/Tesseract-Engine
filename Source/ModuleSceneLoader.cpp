@@ -131,8 +131,8 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 					
 					ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
 
-					if(resource!=nullptr)
-						resource->LoadInMemory();
+					if (resource != nullptr)
+						resource->LoadtoMemory();
 			
 					rtextures.push_back(resource);
 				}

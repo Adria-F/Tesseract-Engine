@@ -22,6 +22,7 @@ public:
 	uint GenerateNewUID();
 	Resource* GetResource(uint uid);
 	Resource* AddResource(ResType type, uint forced_uid = 0);
+	bool deleteResource(uint uid);
 	uint GetResourceByFile(const char* file);
 
 	JSON_File* getMeta(const char* path) const;

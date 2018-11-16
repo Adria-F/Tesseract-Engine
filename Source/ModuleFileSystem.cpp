@@ -410,8 +410,16 @@ void ModuleFileSystem::importFilesAt(const char * path)
 			{ 
 				if (!fileExists((dir_path + filename).c_str())) //If the corresponding file does not exist
 				{
-					deleteFile(currPath.c_str()); //Delete the .meta file
 					//Need to delete also the imported file at Library
+					std::string extension;
+					JSON_File* metaFile = App->resources->getMeta((dir_path + filename).c_str());
+					uint UID = metaFile->getValue("meta")->getUint("UID");
+					deleteFile(App->resources->GetResource(UID)->GetExportedFile());
+					App->resources->deleteResource(UID);		
+					//TODO if it's an fbx, need to delete all meshes
+
+					App->JSON_manager->closeFile(metaFile);
+					deleteFile(currPath.c_str()); //Delete the .meta file	
 				}
 			}
 			else if (extension != "tesseractScene") //Ignore scene files
