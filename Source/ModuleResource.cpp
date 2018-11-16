@@ -46,6 +46,7 @@ uint ModuleResource::Find(const char * file) const
 uint ModuleResource::ImportFile(const char* file, ResType type)
 {
 	std::string written_file;
+	std::vector<uint> meshesUID;
 	bool loaded = false;
 
 	bool newMeta = false;
@@ -69,7 +70,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				loaded = App->textures->importTexture(file, written_file, metaValue);
 				break;
 			case R_SCENE:
-				loaded = App->scene_loader->importFBXScene(file, written_file, metaValue, newMeta);
+				loaded = App->scene_loader->importFBXScene(file, meshesUID, written_file, metaValue, newMeta);
 				break;
 			}
 
@@ -88,6 +89,12 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				newRes->name = filename;
 				newRes->file = file;
 				newRes->exported_file = written_file;
+
+				if (type == R_SCENE)
+				{
+					((ResourceScene*)newRes)->meshesUID = meshesUID;
+				}
+
 				for (int i = 0; i < timesLoaded; i++)
 				{
 					newRes->LoadtoMemory(); //Load it for each time the existing resource was loaded

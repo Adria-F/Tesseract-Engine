@@ -12,3 +12,12 @@ ResourceScene::~ResourceScene()
 void ResourceScene::setImportDefaults(JSON_Value & importSettings)
 {
 }
+
+void ResourceScene::Save(JSON_Value* component)const
+{
+
+}
+void ResourceScene::Load(JSON_Value* component)
+{
+
+}

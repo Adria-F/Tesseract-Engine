@@ -17,6 +17,7 @@
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
+#include "ResourceScene.h"
 
 #include <map>
 //#include "mmgr/mmgr.h"
@@ -56,7 +57,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, JSON_Value* meta, bool newMeta)
+bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
 	//TODO deactivate this two lines after finished with the function
 	App->scene_intro->newScene();
@@ -81,6 +82,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::string& newPath, J
 
 			//uint UID = GENERATE_UID(); //Or the forced UID
 			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
+			UIDs.push_back(UID);
 
 			std::string exportedFile;
 			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile); //Import the mesh
