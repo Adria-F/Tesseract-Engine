@@ -27,19 +27,17 @@ GameObject::GameObject()
 GameObject::~GameObject()
 {
 	//TO TEST
-	/*
 	if(mesh!=nullptr)
 	{
-		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->UID);
+		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
 		rMesh->UnloadMemory();
 	}
 	
 	if(texture!=nullptr)
 	{
-		ResourceTexture* rTexture = (ResourceTexture*)App->resources->GetResource(texture->UID);
+		ResourceTexture* rTexture = (ResourceTexture*)App->resources->GetResource(texture->RUID);
 		rTexture->UnloadMemory();
 	}
-	*/
 
 	std::list<Component*>::iterator it_cp;
 	it_cp = components.begin();
@@ -341,16 +339,6 @@ void GameObject::Load(JSON_Value* gameobject)
 			JSON_Value* componentData = Components->getValueFromArray(i); //Get the component data
 			Component* component = AddComponent((componentType)componentData->getInt("Type")); //Create the component type
 			component->Load(componentData); //Load its info
-		}
-	}
-
-	if (mesh)
-	{
-		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
-		if (rMesh != nullptr)
-		{
-			boundingBox.SetNegativeInfinity();
-			boundingBox.Enclose((float3*)rMesh->vertices, rMesh->num_vertices);
 		}
 	}
 }

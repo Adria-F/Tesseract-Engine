@@ -197,15 +197,6 @@ void ModuleScene::newScene()
 	}
 	ShapesToDraw.clear();
 
-	std::list<Mesh*>::iterator it_m;
-	it_m = App->renderer3D->meshes.begin();
-	while (it_m != App->renderer3D->meshes.end())
-	{
-		RELEASE((*it_m));
-		it_m++;
-	}
-	App->renderer3D->meshes.clear();
-
 	gameObjects.clear(); //Just stores pointers, the gameObjects will be deleted bellow
 
 	std::list<GameObject*>::iterator it_ch;

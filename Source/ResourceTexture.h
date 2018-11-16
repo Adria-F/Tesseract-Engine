@@ -16,6 +16,8 @@ public:
 	bool LoadInMemory();
 	bool UnloadFromMemory();
 
+	bool LoadResourceTexture();
+
 public:
 
 	//std::string name = "";

@@ -131,6 +131,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 
 	mesh->addInt("Type", type);
 	mesh->addUint("UID",UID);
+	mesh->addString("FBX", rMesh->GetFile());
 	mesh->addString("mesh", rMesh->GetName());
 
 	component->addValue("", mesh);
@@ -138,5 +139,9 @@ void ComponentMesh::Save(JSON_Value * component) const
 
 void ComponentMesh::Load(JSON_Value* component)
 {
-	/*mesh = App->meshes->loadMesh(component->getString("mesh"));*/
+	UID = component->getUint("UID");
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"),component->getString("mesh"));
+
+	App->resources->GetResource(RUID)->LoadtoMemory();
+
 }

@@ -74,13 +74,15 @@ void ComponentTexture::Save(JSON_Value * component) const
 
 	texture->addInt("Type", type);
 	texture->addUint("UID", UID);
-	texture->addString("texture", tex->GetExportedFile());
+	texture->addString("texture", tex->GetFile());
 
 	component->addValue("", texture);
 }
 
 void ComponentTexture::Load(JSON_Value* component)
 {
-	//TODO with resources
-	/*Material = App->textures->loadTexture(component->getString("texture"));*/
+	UID = component->getUint("UID");
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("texture"));
+
+	App->resources->GetResource(RUID)->LoadtoMemory();
 }
