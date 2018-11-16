@@ -19,7 +19,10 @@ public:
 
 public:
 
-	std::string path = "";
+	std::string current_path = "";
+	std::string exclusive_extension = "";
+
+	bool completed = false;
 
 	std::list<assetsElement*> elements;
 	assetsElement* selected_element = nullptr;

@@ -280,7 +280,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 
 bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 {
-	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:ASSETS_FOLDER, SCENES_EXTENSION);
+	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openWriteFile(path.c_str());
 
 	JSON_Value* gameObjects = scene->createValue();
@@ -306,7 +306,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 	LOG("Loading scene: %s", scene_name);
 	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
-	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : ASSETS_FOLDER, SCENES_EXTENSION);
+	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openReadFile(path.c_str());
 	if (scene == nullptr)
 		return false;

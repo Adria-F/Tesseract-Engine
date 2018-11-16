@@ -99,6 +99,7 @@ bool ModuleGUI::Start()
 
 	folder = App->textures->loadIcon("Icons/folder.png");
 	file = App->textures->loadIcon("Icons/file.png");
+	small_folder = App->textures->loadIcon("Icons/small_folder.png");
 
 	return true;
 }

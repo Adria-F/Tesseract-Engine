@@ -33,7 +33,7 @@ public:
 
 public:
 
-	std::string next_loadedScene_name = "";
+	std::string next_scene_path = "";
 
 private:
 

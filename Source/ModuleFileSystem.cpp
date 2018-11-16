@@ -334,11 +334,14 @@ std::string ModuleFileSystem::normalizePath(const char * path)
 std::string ModuleFileSystem::getFullPath(const char * path, const char * atDirectory, const char * withExtension)
 {
 	std::string full_path = path;
+	std::string directory;
 	if (atDirectory != nullptr || withExtension != nullptr)
-		App->fileSystem->splitPath(path, nullptr, &full_path, nullptr);
+		App->fileSystem->splitPath(path, &directory, &full_path, nullptr);
 
 	if (atDirectory != nullptr)
 		full_path = atDirectory + full_path;
+	else
+		full_path = directory + full_path;
 	if (withExtension != nullptr)
 		full_path += withExtension;
 

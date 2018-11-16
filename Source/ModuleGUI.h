@@ -66,6 +66,7 @@ public:
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;
+	Texture* small_folder = nullptr;
 
 	float sceneX = 0.0f;
 	float sceneY = 0.0f;

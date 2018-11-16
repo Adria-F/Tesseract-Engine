@@ -27,53 +27,58 @@ void PanelHierarchy::Draw()
 
 	ImGui::Button("Create");
 	
-	if (ImGui::BeginPopupContextItem("create", 0))
+	if (creating)
 	{
-		if (ImGui::Button("Camera"))
+		if (ImGui::BeginPopupContextItem("create", 0))
 		{
-			GameObject* newGameObject = new GameObject();
-			App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
-			newGameObject->name="Camera";
+			if (ImGui::Button("Camera"))
+			{
+				GameObject* newGameObject = new GameObject();
+				App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+				newGameObject->name = "Camera";
 
-			ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+				ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
 
-			float3 pos = float3::zero;
-			float3 scale = float3::one;
-			Quat rot = Quat::identity;
+				float3 pos = float3::zero;
+				float3 scale = float3::one;
+				Quat rot = Quat::identity;
 
-			GOTransform->position = pos;
-			GOTransform->scale = scale;
-			GOTransform->rotation = rot;
-			GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+				GOTransform->position = pos;
+				GOTransform->scale = scale;
+				GOTransform->rotation = rot;
+				GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
-			newGameObject->camera = (ComponentCamera*)newGameObject->AddComponent(CAMERA);
+				newGameObject->camera = (ComponentCamera*)newGameObject->AddComponent(CAMERA);
 
-			newGameObject->boundingBox = newGameObject->camera->cameraBB;
+				newGameObject->boundingBox = newGameObject->camera->cameraBB;
 
-			creating = true;
+				creating = false;
+			}
+
+			if (ImGui::Button("Empty Object"))
+			{
+				GameObject* newGameObject = new GameObject();
+				App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+				newGameObject->name = "Empty Object";
+
+				ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+
+				float3 pos = float3::zero;
+				float3 scale = float3::one;
+				Quat rot = Quat::identity;
+
+				GOTransform->position = pos;
+				GOTransform->scale = scale;
+				GOTransform->rotation = rot;
+				GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
+				creating = false;
+			}
+			ImGui::EndPopup();
 		}
-
-		if (ImGui::Button("Empty Object"))
-		{
-			GameObject* newGameObject = new GameObject();
-			App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
-			newGameObject->name = "Empty Object";
-
-			ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
-
-			float3 pos = float3::zero;
-			float3 scale = float3::one;
-			Quat rot = Quat::identity;
-
-			GOTransform->position = pos;
-			GOTransform->scale = scale;
-			GOTransform->rotation = rot;
-			GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
-
-			creating = true;
-		}
-		ImGui::EndPopup();
 	}
+	else
+		creating = true;
 
 	ImGui::PopStyleColor();
 	ImGui::EndMenuBar();

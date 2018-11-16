@@ -131,12 +131,12 @@ void Application::FinishUpdate()
 
 	if (doSave)
 	{
-		scene_loader->saveScene(scene_intro->scene_name.c_str());
+		scene_loader->saveScene(scene_loader->next_scene_path.c_str());
 		doSave = false;
 	}
 	if (doLoad)
 	{
-		scene_loader->loadScene(scene_loader->next_loadedScene_name.c_str());
+		scene_loader->loadScene(scene_loader->next_scene_path.c_str());
 		doLoad = false;
 	}
 }
