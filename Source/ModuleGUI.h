@@ -18,8 +18,12 @@ class PanelScene;
 class PanelAssets;
 class PanelHierarchy;
 class PanelFileDialog;
+class PanelResourcesList;
 
 class Texture;
+
+enum ResType;
+class Component;
 
 class ModuleGUI : public Module
 {
@@ -42,6 +46,8 @@ public:
 	void SaveDialogAt(const char* path, const char* exclusiveExtension = nullptr);
 	void LoadDialogAt(const char* path, const char* exclusiveExtension = nullptr);
 
+	void startResourceList(ResType type, int x, int y, Component* callback);
+
 	void saveDefaultImgui();
 
 	void Draw();
@@ -63,6 +69,7 @@ public:
 	PanelAssets* assets = nullptr;
 	PanelHierarchy* hierarchy = nullptr;
 	PanelFileDialog* fileDialog = nullptr;
+	PanelResourcesList* resourcesList = nullptr;
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;

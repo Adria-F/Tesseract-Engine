@@ -16,6 +16,7 @@
 #include "PanelAssets.h"
 #include "PanelHierarchy.h"
 #include "PanelFileDialog.h"
+#include "PanelResourcesList.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -64,6 +65,8 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(hierarchy = new PanelHierarchy("Hierarchy"));
 
 	panels.push_back(fileDialog = new PanelFileDialog("Files"));
+
+	panels.push_back(resourcesList = new PanelResourcesList("Resources"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -252,6 +255,11 @@ void ModuleGUI::LoadDialogAt(const char * path, const char* exclusiveExtension)
 	fileDialog->LoadAt(path, exclusiveExtension);
 }
 
+void ModuleGUI::startResourceList(ResType type, int x, int y, Component* callback)
+{
+	resourcesList->startList(type, x, y, callback);
+}
+
 void ModuleGUI::saveDefaultImgui()
 {
 	LOG("imgui.ini file is missing, so there is no information about the UI layout");
@@ -303,6 +311,9 @@ void ModuleGUI::saveDefaultImgui()
 
 	ImGui::SetWindowPos("Load", { 314 * horizontalFactor,121 * verticalFactor });
 	ImGui::SetWindowSize("Load", { 564 * horizontalFactor, 356 * verticalFactor });
+
+	ImGui::SetWindowPos("Resources", { 763 * horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("Resources", { 190 * horizontalFactor, 280 * verticalFactor });
 
 	std::string path = SETTINGS_FOLDER;
 	path += "imgui.ini";

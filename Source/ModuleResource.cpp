@@ -83,6 +83,9 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 					deleteResource(UID);
 				}			
 				Resource* newRes = AddResource(type, UID);
+				std::string filename;
+				App->fileSystem->splitPath(file, nullptr, &filename, nullptr);
+				newRes->name = filename;
 				newRes->file = file;
 				newRes->exported_file = written_file;
 				for (int i = 0; i < timesLoaded; i++)
@@ -173,6 +176,19 @@ uint ModuleResource::GetResourceByFile(const char* file)
 			ret = (*it_rs).second->UID;
 			(*it_rs).second->LoadInMemory();
 		}
+	}
+
+	return ret;
+}
+
+std::vector<Resource*> ModuleResource::getResourcesByType(ResType type)
+{
+	std::vector<Resource*> ret;
+
+	for (std::map<uint, Resource*>::iterator it_rs = resources.begin(); it_rs != resources.end(); it_rs++)
+	{
+		if ((*it_rs).second->GetType() == type)
+			ret.push_back((*it_rs).second);
 	}
 
 	return ret;

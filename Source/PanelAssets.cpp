@@ -48,7 +48,23 @@ void PanelAssets::Draw()
 			current_path.pop_back();
 		App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
 	}
-	ImGui::Text(current_path.c_str());
+	std::string prevPath;
+	std::string currDir;
+	App->fileSystem->splitPath(current_path.c_str(), &prevPath, &currDir, nullptr);
+	ImGui::Text(prevPath.c_str());
+	if (prevPath.size() > 0 && ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE"))
+		{
+			std::string path = (const char*)payload->Data;
+			path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
+			std::string curr_path = current_path;
+			App->fileSystem->copyFile(path.c_str(), prevPath.c_str(), true);
+			force_update = true;
+		}
+		ImGui::EndDragDropTarget();
+	}
+	ImGui::SameLine(ImGui::GetCursorPosX()-13); ImGui::Text(currDir.c_str());
 	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 40);
 	ImGui::Button("Create");
 	if (creating)

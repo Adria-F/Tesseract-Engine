@@ -17,6 +17,7 @@ class Resource
 {
 	friend class ModuleResource;
 	friend class ModuleSceneLoader;
+	friend class ModuleMeshes;
 
 public:
 
@@ -25,6 +26,7 @@ public:
 
 	ResType GetType()const;
 	uint GetUID()const;
+	const char* GetName() const;
 	const char* GetFile()const;
 	const char* GetExportedFile()const;
 	bool IsLoaded()const;
@@ -36,6 +38,8 @@ public:
 	virtual bool UnloadFromMemory() { return false; }
 
 protected:
+
+	std::string name;
 
 	uint UID = 0;
 	uint loaded = 0;

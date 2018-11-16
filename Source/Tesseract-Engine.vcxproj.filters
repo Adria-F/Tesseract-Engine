@@ -510,6 +510,7 @@
     <ClInclude Include="PhysFS\include\physfs_platforms.h">
       <Filter>Sources\Tools\Physfs</Filter>
     </ClInclude>
+    <ClInclude Include="PanelResourcesList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -821,6 +822,7 @@
     <ClCompile Include="PhysFS\include\physfs_unicode.c">
       <Filter>Sources\Tools\Physfs</Filter>
     </ClCompile>
+    <ClCompile Include="PanelResourcesList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

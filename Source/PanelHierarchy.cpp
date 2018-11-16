@@ -10,6 +10,7 @@
 PanelHierarchy::PanelHierarchy(const char* name): Panel(name)
 {
 	active = true;
+	creating = true;
 }
 
 PanelHierarchy::~PanelHierarchy()
@@ -18,8 +19,6 @@ PanelHierarchy::~PanelHierarchy()
 
 void PanelHierarchy::Draw()
 {
-	creating = false;
-
 	ImGui::Begin("Game Objects",&active, ImGuiWindowFlags_MenuBar);
 
 	ImGui::BeginMenuBar();

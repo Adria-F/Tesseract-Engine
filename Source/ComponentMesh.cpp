@@ -5,6 +5,9 @@
 #include "ComponentMesh.h"
 #include "GameObject.h"
 #include "ModuleMeshes.h"
+#include "ModuleGUI.h"
+#include "ModuleFileSystem.h"
+#include "ModuleWindow.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
@@ -95,6 +98,11 @@ void ComponentMesh::DrawInfo()
 	
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
+		std::string filename;
+		std::string extension;
+		if (mesh != nullptr)
+			App->fileSystem->splitPath(mesh->GetFile(), nullptr, &filename, &extension);
+		beginDroppableSpace((mesh == nullptr) ? "No Mesh" : (filename + '.' + extension).c_str(), mesh == nullptr);
 		if (mesh != nullptr)
 		{
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
@@ -103,7 +111,18 @@ void ComponentMesh::DrawInfo()
 		}
 		else
 		{
-			ImGui::Text("No mesh attached");
+			ImGui::SameLine();
+			ImGui::PushID("pickMesh");
+			if (ImGui::RadioButton("", false))
+			{
+				ImVec2 pos = ImGui::GetWindowPos();
+				if (pos.x < App->window->width / 2)
+					pos.x += ImGui::GetWindowWidth();
+				else
+					pos.x -= 190;
+				App->gui->startResourceList(R_MESH, pos.x, pos.y, this);
+			}
+			ImGui::PopID();
 		}
 	}
 }
@@ -116,7 +135,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 
 	mesh->addInt("Type", type);
 	mesh->addUint("UID",UID);
-	mesh->addString("mesh", rMesh->name.c_str());
+	mesh->addString("mesh", rMesh->GetName());
 
 	component->addValue("", mesh);
 }

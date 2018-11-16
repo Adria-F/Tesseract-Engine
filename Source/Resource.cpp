@@ -7,12 +7,17 @@ Resource::Resource(uint UID, ResType type): UID(UID),type(type)
 
 ResType Resource::GetType() const
 {
-	return ResType();
+	return type;
 }
 
 uint Resource::GetUID() const
 {
 	return UID;
+}
+
+const char * Resource::GetName() const
+{
+	return name.c_str();
 }
 
 const char * Resource::GetFile() const

@@ -17,7 +17,7 @@ public:
 
 public: 
 
-	bool creating = false;
+	bool creating = true;
 
 };
 

@@ -26,8 +26,6 @@ public:
 
 public:
 
-	std::string name;
-
 	uint num_vertices = 0;
 	float* vertices = nullptr;
 
