@@ -50,6 +50,7 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 	//Copying texture coords
 	if (mesh->HasFaces())
 	{
+		ret = true;
 		int t = 0;
 		if (mesh->HasTextureCoords(0))
 		{
@@ -77,7 +78,8 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 			{
 				LOG("WARNING, geometry face with != 3 indices!");
 				LOG("WARNING, face normals couldn't be loaded");
-				newMesh = nullptr; //MEMLEAK: It should delete the resource
+				RELEASE(newMesh);
+				ret = false;
 				break;
 			}
 			else
@@ -85,8 +87,6 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 				memcpy(&newMesh->indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 			}
 		}
-
-		ret = true;
 	}
 	else
 	{

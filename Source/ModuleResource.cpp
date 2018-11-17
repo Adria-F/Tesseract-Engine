@@ -100,18 +100,25 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				{
 					newRes->LoadtoMemory(); //Load it for each time the existing resource was loaded
 				}
-				LOG("Source Created");
-			}
-			if (newMeta)
-				meta->Write();
-			else //If meta is not new, means that the file has been modified, so update meta
-				updateMetaLastChange(file);
+				LOG("File imported");
+
+				if (newMeta)
+					meta->Write();
+				else //If meta is not new, means that the file has been modified, so update meta
+					updateMetaLastChange(file);
+			}			
 		} //If the file is already loaded into resources and not been modified, just return the UID, matching the .meta UID
 		else
 			LOG("File was already imported");
 	}
 
 	App->JSON_manager->closeFile(meta);	
+	if (!loaded && newMeta) //If it is not loaded correctly, remove the new .meta file created as the resource will not exist
+	{
+		std::string metaPath = file;
+		metaPath += META_EXTENSION;
+		App->fileSystem->deleteFile(metaPath.c_str());
+	}
 	return UID;
 }
 

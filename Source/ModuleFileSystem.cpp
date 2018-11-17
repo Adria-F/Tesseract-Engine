@@ -8,6 +8,7 @@
 #include "Resource.h"
 
 #include "PhysFS\include\physfs.h"
+#include <fstream>
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
@@ -178,14 +179,22 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest, bool deleteSo
 	}
 	else
 	{
-		char* buffer = nullptr;
-		uint size = readFile(src, &buffer);
+		ifstream ifs(src, std::ifstream::in | std::ifstream::binary | std::ifstream::ate); //The file is outside search path, so we cannot use PHYSFS
+
+		ifstream::pos_type fileSize = ifs.tellg();
+		ifs.seekg(0, std::ifstream::beg);
+		uint size = fileSize;
+		if (size == -1) //It means file was not found
+			return false;
+		vector<char> buffer(fileSize);
+		ifs.read(buffer.data(), fileSize);
+
 		if (size > 0)
 		{
-			writeFile(destination.c_str(), buffer, size, true);
+			writeFile(destination.c_str(), buffer.data(), size, true);
 			ret = true;
 		}
-		RELEASE_ARRAY(buffer);
+		//RELEASE_ARRAY(buffer);
 		if (extension != "meta")
 		{
 			std::string metaPath = src;
