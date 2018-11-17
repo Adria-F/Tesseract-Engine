@@ -18,6 +18,7 @@ public:
 
 private:
 
+	float gametimer;
 	bool gamePaused = false;
 
 };

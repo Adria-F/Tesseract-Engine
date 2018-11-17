@@ -19,12 +19,15 @@ public:
 	void Draw();
 
 	void addFPS(float fps, float ms);
+	void addGameFPS(float fps, float ms);
 	void addMemory(float memory);
 
 public:
 
 	std::vector<float> fps_log;
+	std::vector<float> game_fps_log;
 	std::vector<float> ms_log;
+	std::vector<float> game_ms_log;
 	std::vector<float> memory_log;
 
 private:

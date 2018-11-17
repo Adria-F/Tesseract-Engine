@@ -118,6 +118,7 @@ bool Application::Init()
 	ms_timer.Start();
 	GameMode = false;
 	counting = false;
+	game_dt = 0;
 	return ret;
 }
 
@@ -125,6 +126,15 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.ReadTime() / 1000.0f;
+
+	if (!GameMode || GamePaused)
+	{
+		game_dt = 0;
+	}
+	else
+	{
+		game_dt = dt / ((float)GameframerateCap / (float)framerateCap);
+	}
 
 	ms_timer.Start();
 
@@ -143,6 +153,17 @@ void Application::FinishUpdate()
 		SDL_Delay(ms_cap - ms_timer.ReadTime());
 
 	gui->logFPS(1 / dt, dt * 1000);
+	
+	if (!GameMode || GamePaused)
+	{
+		gui->logGameFPS(0, 0);
+	}
+	else
+	{
+		gui->logGameFPS(1 / game_dt, game_dt * 1000);
+	}
+	
+	
 
 	if (doSave)
 	{
@@ -221,6 +242,16 @@ int Application::getFramerateCap() const
 void Application::setFramerateCap(int cap)
 {
 	framerateCap = cap;
+}
+
+int Application::getGameFramerateCap() const
+{
+	return GameframerateCap;
+}
+
+void Application::setGameFramerateCap(int cap)
+{
+	GameframerateCap = cap;
 }
 
 void Application::RequestBrowser(const char * url) const

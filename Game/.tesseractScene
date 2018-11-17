@@ -1,7 +1,7 @@
 {
     "Game Objects": [
         {
-            "UID": 673856359,
+            "UID": 1341572098,
             "ParentUID": 0,
             "Name": "tracerPistol",
             "Active": true,
@@ -47,8 +47,8 @@
             ]
         },
         {
-            "UID": 2318926507,
-            "ParentUID": 673856359,
+            "UID": 1547458002,
+            "ParentUID": 1341572098,
             "Name": "Pistol",
             "Active": true,
             "Static": true,
@@ -92,19 +92,19 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1673766701,
+                    "UID": 2897247221,
                     "FBX": "Assets/Models/tracerPistol.FBX",
                     "mesh": "Unnamed"
                 },
                 {
                     "Type": 3,
-                    "UID": 3477588380,
+                    "UID": 2643440833,
                     "texture": "Assets/Textures/tracerPistol.dds"
                 }
             ]
         },
         {
-            "UID": 3379609179,
+            "UID": 8278230,
             "ParentUID": 0,
             "Name": "Camera",
             "Active": true,
@@ -166,9 +166,9 @@
                         0.0
                     ],
                     "Near Plane": 0.10000000149011612,
-                    "Far Plane": 1000.0,
-                    "VFOV": 1.5707963705062867,
-                    "Aspect Ratio": 1.7777776718139649
+                    "Far Plane": 100.0,
+                    "VFOV": 0.5235987901687622,
+                    "Aspect Ratio": 1.7777777910232545
                 }
             ]
         }
