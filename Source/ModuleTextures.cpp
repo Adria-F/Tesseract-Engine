@@ -66,7 +66,7 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_Value* meta)
+bool ModuleTextures::importTexture(const char* path, uint UID, std::string& newpath, JSON_Value* meta)
 {
 	ILuint ilImage;
 	bool success;
@@ -95,8 +95,8 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 			{
 				std::string filename = path;
 				App->fileSystem->splitPath(path, nullptr, &filename, nullptr);			
-				App->fileSystem->writeFile((TEXTURES_FOLDER + filename + TEXTURES_EXTENSION).c_str(), data, size, true);
-				newpath = TEXTURES_FOLDER + filename + TEXTURES_EXTENSION;
+				App->fileSystem->writeFile((TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION).c_str(), data, size, true);
+				newpath = TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION;
 			}
 			RELEASE_ARRAY(data);
 		}
@@ -109,6 +109,7 @@ bool ModuleTextures::importTexture(const char* path, std::string& newpath, JSON_
 	}
 
 	ilDeleteImages(1, &ilImage);
+	RELEASE_ARRAY(buffer);
 	return true;
 }
 

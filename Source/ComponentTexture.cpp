@@ -8,6 +8,9 @@
 
 ComponentTexture::~ComponentTexture()
 {
+	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);
+	if (tex != nullptr)
+		tex->UnloadMemory();
 }
 
 bool ComponentTexture::Update()
@@ -36,6 +39,8 @@ void ComponentTexture::DrawInfo()
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
 		beginDroppableSpace((tex == nullptr) ? "No Texture" : tex->GetName(), tex ==nullptr);
+		ImGui::SameLine();
+		pickResourceButton(R_TEXTURE);
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))

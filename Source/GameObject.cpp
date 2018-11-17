@@ -26,19 +26,6 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	//TO TEST
-	if(mesh!=nullptr)
-	{
-		ResourceMesh* rMesh = (ResourceMesh*)App->resources->GetResource(mesh->RUID);
-		rMesh->UnloadMemory();
-	}
-	
-	if(texture!=nullptr)
-	{
-		ResourceTexture* rTexture = (ResourceTexture*)App->resources->GetResource(texture->RUID);
-		rTexture->UnloadMemory();
-	}
-
 	std::list<Component*>::iterator it_cp;
 	it_cp = components.begin();
 	while (it_cp != components.end())

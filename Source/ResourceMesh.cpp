@@ -47,17 +47,6 @@ bool ResourceMesh::UnloadFromMemory()
 	return true;
 }
 
-void ResourceMesh::Save(JSON_Value * component)const
-{
-	JSON_Value* resourcemesh = component->createValue();
-
-	resourcemesh->addInt("Type", type);
-	resourcemesh->addUint("UID", UID);
-	resourcemesh->addString("resource mesh", name.c_str());
-
-	component->addValue("", resourcemesh);
-}
-
 bool ResourceMesh::LoadMesh()
 {
 	//TODO with resources
@@ -126,11 +115,8 @@ bool ResourceMesh::LoadMesh()
 	boundingBox.SetNegativeInfinity();
 	boundingBox.Enclose((float3*)vertices, num_vertices);
 
+	RELEASE_ARRAY(cursor);
 	return ret;
-}
-
-void ResourceMesh::Load(JSON_Value * component)
-{
 }
 
 void ResourceMesh::calculateNormals()

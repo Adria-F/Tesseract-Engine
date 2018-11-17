@@ -74,6 +74,7 @@ public:
 	JSON_Value* createValue();
 	void addValue(const char* name, JSON_Value* value);
 	JSON_Value* getValue(const char* name);
+	void setValue(const char* name, JSON_Value* value);
 
 	void closeFile();
 

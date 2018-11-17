@@ -71,8 +71,8 @@ bool ResourceTexture::LoadResourceTexture()
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		ilDeleteImages(1, &ilImage);
+		RELEASE_ARRAY(buffer);
 		ret = true;
-		LOG("Texture creation successful.");
 	}
 	else
 	{

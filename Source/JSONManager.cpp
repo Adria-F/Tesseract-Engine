@@ -116,6 +116,14 @@ JSON_Value* JSON_File::getValue(const char* name)
 	return nullptr;
 }
 
+void JSON_File::setValue(const char * name, JSON_Value * value)
+{
+	if (this->document->HasMember(name))
+		this->document->operator[](name) = *value->getRapidJSONValue(); //If it exists modify it
+	else
+		this->addValue(name, value); //if not, set a new one
+}
+
 JSON_Value::~JSON_Value()
 {
 	int size = allocatedValues.size();

@@ -1439,7 +1439,7 @@ void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const 
 			sAllocUnit	*au = findAllocUnit(reportedAddress);
 
 			// If you hit this assert, you tried to deallocate RAM that wasn't allocated by this memory manager.
-			m_assert(au != NULL);
+			//PERSONAL_MODIFICATION m_assert(au != NULL);
 			if (au == NULL) throw "Request to deallocate RAM that was never allocated";
 
 			// If you hit this assert, then the allocation unit that is about to be deallocated is damaged. But you probably

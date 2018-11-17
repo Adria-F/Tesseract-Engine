@@ -1,6 +1,10 @@
 #include "Component.h"
 #include "Application.h"
 #include "GameObject.h"
+#include "ModuleWindow.h"
+#include "ModuleGUI.h"
+#include "Resource.h"
+#include "ModuleResource.h"
 
 void Component::DrawUI()
 {
@@ -50,6 +54,15 @@ bool Component::DrawExtraConfig()
 	return false;
 }
 
+void Component::assignResource(uint UID)
+{
+	Resource* old = App->resources->GetResource(RUID);
+	if (old != nullptr)
+		old->UnloadMemory();
+	RUID = UID;
+	App->resources->GetResource(RUID)->LoadtoMemory();
+}
+
 void Component::beginDroppableSpace(const char * string, bool empty, float2 size)
 {
 	float button_alpha = 0.7f;
@@ -66,4 +79,19 @@ void Component::beginDroppableSpace(const char * string, bool empty, float2 size
 	if (empty)
 		ImGui::PopStyleVar();
 	ImGui::PopStyleColor(3);
+}
+
+void Component::pickResourceButton(ResType type)
+{
+	ImGui::PushID("pick"+type);
+	if (ImGui::RadioButton("", false))
+	{
+		ImVec2 pos = ImGui::GetWindowPos();
+		if (pos.x < App->window->width / 2)
+			pos.x += ImGui::GetWindowWidth();
+		else
+			pos.x -= 190;
+		App->gui->startResourceList(type, pos.x, pos.y, this);
+	}
+	ImGui::PopID();
 }

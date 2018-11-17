@@ -57,7 +57,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
+bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<uint>& UIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
 	//TODO deactivate this two lines after finished with the function
 	App->scene_intro->newScene();
@@ -82,6 +82,8 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs
 
 			//uint UID = GENERATE_UID(); //Or the forced UID
 			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
+			if (UID == 0)
+				UID = GENERATE_UID();
 			UIDs.push_back(UID);
 
 			std::string exportedFile;
@@ -101,8 +103,6 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs
 				aiColor3D color(0.f, 0.f, 0.f);
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 				meshResource->color = { color.r, color.g, color.b };
-
-				meshResource->LoadtoMemory();
 			}
 			rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
 		}
@@ -130,12 +130,8 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs
 					std::string newPath;	//Useful with resources
 					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 					full_path += texturePath.C_Str();
-					//App->textures->importTexture(full_path.c_str(), newPath);
 					
 					ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
-
-					if (resource != nullptr)
-						resource->LoadtoMemory();
 			
 					rtextures.push_back(resource);
 				}
@@ -155,9 +151,9 @@ bool ModuleSceneLoader::importFBXScene(const char* path, std::vector<uint>& UIDs
 			rootGO->name = filename;
 			App->scene_intro->addGameObject(rootGO);
 
-			saveScene(filename.c_str(), true);
+			saveScene(std::to_string(UID).c_str(), true);
 
-			newPath=FBX_FOLDER + filename+SCENES_EXTENSION;
+			newPath=FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
 
 			//App->scene_intro->newScene();
 		}
@@ -241,18 +237,17 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
-			mesh->RUID = meshes[node->mMeshes[i]]->GetUID();
+			mesh->assignResource(meshes[node->mMeshes[i]]->GetUID());
 
 			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-				material->RUID = textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID();
+				material->assignResource(textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID());
 			}
 
 			if (i > fail_count)
 			{
 				App->scene_intro->addGameObject(child, GO);
-				//CalculateBB
 			}
 		}
 	}
@@ -285,6 +280,8 @@ bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 {
 	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openWriteFile(path.c_str());
+	if (scene == nullptr)
+		return false;
 
 	JSON_Value* gameObjects = scene->createValue();
 	gameObjects->convertToArray();

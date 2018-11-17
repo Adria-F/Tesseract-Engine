@@ -62,15 +62,16 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 	{
 		UID = metaValue->getUint("UID");
 
-		if (newMeta || App->fileSystem->isFileModified(file) || GetResource(UID) == nullptr) //Return 0 if there is no resource loaded with such UID
+		if (newMeta || App->fileSystem->isFileModified(file) || GetResource(UID) == nullptr) //TODO If there is no resource should not import file
 		{
 			switch (type)
 			{
 			case R_TEXTURE:
-				loaded = App->textures->importTexture(file, written_file, metaValue);
+				loaded = App->textures->importTexture(file, UID, written_file, metaValue);
 				break;
 			case R_SCENE:
-				loaded = App->scene_loader->importFBXScene(file, meshesUID, written_file, metaValue, newMeta);
+				loaded = App->scene_loader->importFBXScene(file, UID, meshesUID, written_file, metaValue, newMeta);
+				meta->setValue("meta", metaValue);
 				break;
 			}
 
@@ -165,7 +166,7 @@ bool ModuleResource::deleteResource(uint uid)
 	{
 		Resource* res = resources[uid];
 		resources.erase(uid);
-		RELEASE(res); //TODO This should unload the resource and clean any allocated memory
+		RELEASE(res);
 
 		return true;
 	}
@@ -306,18 +307,22 @@ bool ModuleResource::updateMeshesUIDs(const char* path, std::map<std::string*, u
 }
 uint ModuleResource::getResourceUIDFromMeta(const char * path, const char * meshName)
 {
+	uint ret = 0;
 	std::string metaPath = path;
 	metaPath += META_EXTENSION;
 	JSON_File* file = App->JSON_manager->openReadFile(metaPath.c_str());
 	if (file != nullptr)
 	{
 		JSON_Value* meta = file->getValue("meta");
-		if (meshName == nullptr)
-			return meta->getUint("UID");
-		else
-			return meta->getValue("meshes")->getUint(meshName);
+		if (meta != nullptr)
+		{
+			if (meshName == nullptr)
+				ret = meta->getUint("UID");
+			else
+				ret = meta->getValue("meshes")->getUint(meshName);
+		}
 	}
 
 	App->JSON_manager->closeFile(file);
-	return 0;
+	return ret;
 }

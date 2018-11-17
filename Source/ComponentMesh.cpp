@@ -5,9 +5,6 @@
 #include "ComponentMesh.h"
 #include "GameObject.h"
 #include "ModuleMeshes.h"
-#include "ModuleGUI.h"
-#include "ModuleFileSystem.h"
-#include "ModuleWindow.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
@@ -19,6 +16,9 @@ ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component
 
 ComponentMesh::~ComponentMesh()
 {
+	ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(RUID);
+	if (mesh != nullptr)
+		mesh->UnloadMemory();
 }
 
 bool ComponentMesh::Update()
@@ -99,26 +99,13 @@ void ComponentMesh::DrawInfo()
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
 		beginDroppableSpace((mesh == nullptr) ? "No Mesh" : mesh->GetName(), mesh == nullptr);
+		ImGui::SameLine();
+		pickResourceButton(R_MESH);
 		if (mesh != nullptr)
 		{
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
 			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
 			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
-		}
-		else
-		{
-			ImGui::SameLine();
-			ImGui::PushID("pickMesh");
-			if (ImGui::RadioButton("", false))
-			{
-				ImVec2 pos = ImGui::GetWindowPos();
-				if (pos.x < App->window->width / 2)
-					pos.x += ImGui::GetWindowWidth();
-				else
-					pos.x -= 190;
-				App->gui->startResourceList(R_MESH, pos.x, pos.y, this);
-			}
-			ImGui::PopID();
 		}
 	}
 }

@@ -25,15 +25,17 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
 		if (PHYSFS_exists(mainPaths[i]) == 0)
 			PHYSFS_mkdir(mainPaths[i]);
-
-		addPath(mainPaths[i]);
 	}
+
+	addPath(ASSETS_FOLDER);
+	addPath(LIBRARY_FOLDER);
+	addPath(SETTINGS_FOLDER);
 
 	//Add all extra files inside assets to the search path
 	addPathOfFilesAt(ASSETS_FOLDER);
@@ -51,7 +53,7 @@ update_status ModuleFileSystem::Update(float dt)
 {
 	if (first_import || import_timer.ReadTime() >= import_delay)
 	{
-		importFilesAt(ASSETS_FOLDER);
+		importFilesAt(ASSETS_FOLDER, first_import);
 		import_timer.Start();
 		first_import = false;
 	}
@@ -183,6 +185,7 @@ bool ModuleFileSystem::copyFile(const char* src, const char* dest, bool deleteSo
 			writeFile(destination.c_str(), buffer, size, true);
 			ret = true;
 		}
+		RELEASE_ARRAY(buffer);
 		if (extension != "meta")
 		{
 			std::string metaPath = src;
@@ -244,7 +247,8 @@ bool ModuleFileSystem::renameFile(const char* path, const char* name)
 		char* buffer = nullptr;
 		uint size = readFile(full_path.c_str(), &buffer);
 		writeFile(newPath.c_str(), buffer, size, true);
-		//Rename .meta
+		RELEASE_ARRAY(buffer);
+		//TODO Rename .meta
 	}
 	deleteFile(full_path.c_str());
 	return true;
@@ -389,7 +393,7 @@ uint ModuleFileSystem::manageDroppedFiles(const char* path)
 	return ret;
 }
 
-void ModuleFileSystem::importFilesAt(const char * path)
+void ModuleFileSystem::importFilesAt(const char* path, bool firstTime)
 {
 	char** files = PHYSFS_enumerateFiles(path);
 
@@ -401,7 +405,7 @@ void ModuleFileSystem::importFilesAt(const char * path)
 		if (PHYSFS_isDirectory(currPath.c_str()))
 		{
 			currPath += '/';
-			importFilesAt(currPath.c_str());
+			importFilesAt(currPath.c_str(), firstTime);
 		}
 		else
 		{
@@ -428,7 +432,8 @@ void ModuleFileSystem::importFilesAt(const char * path)
 			else if (extension != "tesseractScene") //Ignore scene files
 			{
 				int lastChange = getLastTimeChanged(currPath.c_str());
-				if (lastChange > getMetaLastChange(currPath.c_str())) //If file updated or .meta file does not exist as getMetaLastChange returns 0
+				//If file updated or .meta file does not exist as getMetaLastChange returns 0 & if is the first time than assets are imported (to create all resources)
+				if (firstTime || lastChange > getMetaLastChange(currPath.c_str()))
 					manageDroppedFiles(currPath.c_str()); //Import it
 			}			
 		}

@@ -40,7 +40,7 @@ public:
 	//Returns the UID of the resource if some has been created, 0 if not
 	uint manageDroppedFiles(const char* path);
 
-	void importFilesAt(const char* path);
+	void importFilesAt(const char* path, bool firstTime = false);
 	
 	void getFilesAt(const char* path, std::list<assetsElement*>& elements, const char* exclusiveExtension = nullptr, const char* ignoreExtension = nullptr);
 

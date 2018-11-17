@@ -17,6 +17,8 @@ enum componentType
 	CAMERA
 };
 
+enum ResType;
+
 class Component
 {
 public:
@@ -29,8 +31,11 @@ public:
 	virtual bool DrawExtraConfig();
 	virtual bool Update() { return true; }
 
+	void assignResource(uint UID);
+
 	//Draw a gray button with given string, thought  to be a droppable space for resources inside the components
 	void beginDroppableSpace(const char* string, bool empty = false, float2 size = { 250, 20 });
+	void pickResourceButton(ResType type);
 	
 	virtual void Enable() { active = true; }
 	virtual void Disable() { active = false; }

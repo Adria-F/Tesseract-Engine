@@ -30,7 +30,9 @@ public:
 	const char* GetFile()const;
 	const char* GetExportedFile()const;
 	bool IsLoaded()const;
+	//You should call this function
 	bool LoadtoMemory();
+	//You should call this function
 	bool UnloadMemory();
 	uint GetTimesLoaded() const;
 

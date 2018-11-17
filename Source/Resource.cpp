@@ -41,6 +41,7 @@ bool Resource::LoadtoMemory()
 
 	if (loaded == 0)
 	{
+		LOG("Resource loaded");
 		ret = LoadInMemory();
 	}
 
@@ -52,9 +53,12 @@ bool Resource::LoadtoMemory()
 bool Resource::UnloadMemory()
 {
 	if(loaded>0)
-		loaded -= 1;
+		loaded--;
 	if (loaded == 0)
+	{
+		LOG("Resource Unloaded");
 		UnloadFromMemory();
+	}
 
 	return false;
 }

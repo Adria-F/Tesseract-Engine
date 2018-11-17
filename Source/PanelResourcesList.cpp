@@ -1,6 +1,5 @@
 #include "PanelResourcesList.h"
 #include "Application.h"
-#include "ModuleFileSystem.h"
 #include "ModuleResource.h"
 #include "Component.h"
 
@@ -36,7 +35,9 @@ void PanelResourcesList::Draw()
 		if (ImGui::Selectable(resources[i]->GetName()))
 		{
 			if (callbackComponent != nullptr)
-				callbackComponent->RUID = resources[i]->GetUID();
+			{
+				callbackComponent->assignResource(resources[i]->GetUID());
+			}
 			active = false;
 		}
 	}
