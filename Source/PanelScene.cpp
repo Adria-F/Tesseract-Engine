@@ -11,6 +11,7 @@
 PanelScene::PanelScene(const char* name) : Panel(name)
 {
 	active = true;
+	gamePaused = false;
 }
 
 
@@ -41,7 +42,7 @@ void PanelScene::Draw()
 
 	ImGui::BeginMenuBar();
 	
-	if(!App->scene_intro->GameMode)
+	if(!App->GameMode)
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.95f,0.5f,0.0f,0.7f });
 	else
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
@@ -52,38 +53,71 @@ void PanelScene::Draw()
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
 	if (ImGui::ArrowButton("play", ImGuiDir_Right))
 	{
-		if (!App->scene_intro->GameMode)
+		if (!gamePaused)
 		{
-			App->Save();
-			App->scene_intro->GameMode = true;
+			if (!App->GameMode)
+			{
+				App->Save();
+				App->GameMode = true;
+			}
+			else
+			{
+				App->Load();
+				App->GameMode = false;
+			}
 		}
 		else
 		{
-			App->Load();
-			App->scene_intro->GameMode = false;
+			App->game_timer.Start();
+			gamePaused = false;
 		}
 	}
 
 	ImGui::SameLine();
-	if ( ImGui::Button("||", {23,19}) && App->scene_intro->GameMode )
+
+	if ( ImGui::Button("||", {23,19}) && App->GameMode )
 	{
-		//dt=0;
+		App->game_timer.PauseTimer();
+		gamePaused = true;
 	}
+
 	ImGui::PopStyleColor(2);
 	ImGui::SameLine();
 
-	if (!App->scene_intro->GameMode)
+	if (!App->GameMode)
 		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
 	else
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
 	
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
 
-	if ( ImGui::Button("->", { 23,19 }) && App->scene_intro->GameMode )
+	if ( ImGui::Button("->", { 23,19 }) && App->GameMode )
 	{
 		
 	}
 	ImGui::PopStyleColor(2);
+
+	char sec[64], min[64];
+	if (App->GameMode)
+	{
+		int nsec= (int)((App->game_timer.ReadTime() / 1000) % 60);
+		int nmin= (int)((App->game_timer.ReadTime() / 60000) % 3600);
+
+		//milisec = std::to_string(App->game_timer.ReadTime() /1000);
+		sprintf(sec,"%02d",nsec);
+		sprintf(min, "%02d", nmin);
+	}
+	else
+	{
+		sprintf(sec, "00");
+		sprintf(min, "00");
+	}
+
+	std::string smin = min ;
+	std::string ssec = sec;
+	std::string total = smin +":"+ ssec;
+
+	ImGui::Text(total.c_str());
 	ImGui::EndMenuBar();
 
 	

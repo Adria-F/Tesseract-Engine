@@ -1,9 +1,11 @@
 {
     "Game Objects": [
         {
-            "UID": 3903591840,
+            "UID": 1396649007,
             "ParentUID": 0,
             "Name": "tracerPistol",
+            "Active": true,
+            "Static": true,
             "Components": [
                 {
                     "Type": 1,
@@ -45,9 +47,11 @@
             ]
         },
         {
-            "UID": 1037854078,
-            "ParentUID": 3903591840,
+            "UID": 222844725,
+            "ParentUID": 1396649007,
             "Name": "Pistol",
+            "Active": true,
+            "Static": true,
             "Components": [
                 {
                     "Type": 1,
@@ -88,14 +92,83 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2752431264,
+                    "UID": 4165838616,
                     "FBX": "Assets/Models/tracerPistol.FBX",
                     "mesh": "Unnamed"
                 },
                 {
                     "Type": 3,
-                    "UID": 15350042,
+                    "UID": 4264092770,
                     "texture": "Assets/Textures/tracerPistol.dds"
+                }
+            ]
+        },
+        {
+            "UID": 2365429938,
+            "ParentUID": 0,
+            "Name": "Camera",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Transform": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "Frustum Type": 2,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Front": [
+                        -0.0,
+                        -0.0,
+                        -1.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Near Plane": 0.10000000149011612,
+                    "Far Plane": 100.0,
+                    "VFOV": 0.5235987901687622,
+                    "Aspect Ratio": 1.7777777910232545
                 }
             ]
         }

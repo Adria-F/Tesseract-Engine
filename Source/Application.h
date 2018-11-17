@@ -49,6 +49,9 @@ public:
 	ModuleFileSystem* fileSystem = nullptr;
 	ModuleSceneLoader* scene_loader= nullptr;
 
+	Timer	game_timer;
+	bool GameMode = false;
+
 private:
 
 	Timer	ms_timer;
@@ -61,6 +64,7 @@ private:
 
 	bool doSave = false;
 	bool doLoad = false;
+	bool counting = false;
 
 public:
 

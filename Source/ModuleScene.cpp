@@ -42,8 +42,6 @@ bool ModuleScene::Start()
 	//App->scene_loader->loadScene("sceneTest");
 	
 	ImGuizmo::Enable(false);
-
-	GameMode = false;
 	
 	return ret;
 }
@@ -327,6 +325,10 @@ void ModuleScene::AddCamera()
 	GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
 
 	newGameObject->camera = (ComponentCamera*)newGameObject->AddComponent(CAMERA);
+	newGameObject->camera->frustum.farPlaneDistance=100.0f;
+	newGameObject->camera->frustum.verticalFov = DEGTORAD * 30.0f;
+	newGameObject->camera->setAspectRatio(16.0f / 9.0f);
+
 
 	newGameObject->boundingBox = newGameObject->camera->cameraBB;
 }
