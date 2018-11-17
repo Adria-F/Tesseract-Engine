@@ -1,7 +1,7 @@
 {
     "Game Objects": [
         {
-            "UID": 2075791035,
+            "UID": 715576231,
             "ParentUID": 0,
             "Name": "BakerHouse",
             "Active": true,
@@ -47,8 +47,8 @@
             ]
         },
         {
-            "UID": 872221645,
-            "ParentUID": 2075791035,
+            "UID": 2577918923,
+            "ParentUID": 715576231,
             "Name": "Chimney",
             "Active": true,
             "Static": true,
@@ -92,20 +92,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 859412405,
-                    "FBX": "Assets/Models/BakerHouse.fbx",
+                    "UID": 1035293509,
+                    "FBX": "Assets/Models/BakerHouse.FBX",
                     "mesh": "Untitled.001"
                 },
                 {
                     "Type": 3,
-                    "UID": 3206003302,
+                    "UID": 3308626276,
                     "texture": "Assets/Textures/Baker_house.png"
                 }
             ]
         },
         {
-            "UID": 99664057,
-            "ParentUID": 2075791035,
+            "UID": 922193946,
+            "ParentUID": 715576231,
             "Name": "Baker_house",
             "Active": true,
             "Static": true,
@@ -149,19 +149,19 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3175205153,
-                    "FBX": "Assets/Models/BakerHouse.fbx",
+                    "UID": 3421246407,
+                    "FBX": "Assets/Models/BakerHouse.FBX",
                     "mesh": "Untitled"
                 },
                 {
                     "Type": 3,
-                    "UID": 3624124345,
+                    "UID": 2894813429,
                     "texture": "Assets/Textures/Baker_house.png"
                 }
             ]
         },
         {
-            "UID": 4281305992,
+            "UID": 2230485684,
             "ParentUID": 0,
             "Name": "Camera",
             "Active": true,
@@ -223,9 +223,9 @@
                         0.0
                     ],
                     "Near Plane": 0.10000000149011612,
-                    "Far Plane": 1000.0,
-                    "VFOV": 1.5707963705062867,
-                    "Aspect Ratio": 1.7777776718139649
+                    "Far Plane": 100.0,
+                    "VFOV": 0.5235987901687622,
+                    "Aspect Ratio": 1.7777777910232545
                 }
             ]
         }
