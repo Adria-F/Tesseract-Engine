@@ -293,6 +293,8 @@ void GameObject::Save(JSON_Value* gameobject)
 	gameObject->addUint("UID", UID);
 	gameObject->addUint("ParentUID", (parent == App->scene_intro->root) ? 0 : parent->UID);
 	gameObject->addString("Name", name.c_str());
+	gameObject->addBool("Active", active);
+	gameObject->addBool("Static", isStatic);
 
 	JSON_Value* Components = gameobject->createValue();
 	Components->convertToArray();
@@ -317,6 +319,8 @@ void GameObject::Load(JSON_Value* gameobject)
 	UID = gameobject->getUint("UID");
 	parentUID = gameobject->getUint("ParentUID");
 	name = gameobject->getString("Name");
+	active= gameobject->getBool("Active");
+	isStatic = gameobject->getBool("Static");
 
 	JSON_Value* Components = gameobject->getValue("Components"); //It is an array of values
 	if (Components->getRapidJSONValue()->IsArray()) //Just make sure

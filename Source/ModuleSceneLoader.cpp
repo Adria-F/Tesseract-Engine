@@ -160,6 +160,8 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 
 		aiReleaseImport(scene);
 
+		App->scene_intro->AddCamera();
+
 		App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 		App->scene_intro->root->RecalculateBB();
 		App->scene_intro->StartQuadTree();

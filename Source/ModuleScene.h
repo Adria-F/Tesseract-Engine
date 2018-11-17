@@ -48,6 +48,8 @@ public:
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 
 	void addGameObject(GameObject* gameObject, GameObject* parent = nullptr);
+	void AddCamera();
+	void AddEmptyGameObject();
 	void deleteGameObject(GameObject* GO);
 	void selectGameObject(GameObject* gameObject);
 	GameObject* getGameObject(uint UID);

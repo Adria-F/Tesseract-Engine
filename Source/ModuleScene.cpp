@@ -40,7 +40,7 @@ bool ModuleScene::Start()
 	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
 	App->fileSystem->manageDroppedFiles("Assets/Models/BakerHouse.fbx");
 	//App->scene_loader->loadScene("sceneTest");
-
+	
 	ImGuizmo::Enable(false);
 
 	GameMode = false;
@@ -306,6 +306,48 @@ void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent)
 	}
 
 	gameObjects[gameObject->UID] = gameObject;
+}
+
+void ModuleScene::AddCamera()
+{
+	GameObject* newGameObject = new GameObject();
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+	newGameObject->name = "Camera";
+	newGameObject->isStatic = false;
+
+	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+
+	float3 pos = float3::zero;
+	float3 scale = float3::one;
+	Quat rot = Quat::identity;
+
+	GOTransform->position = pos;
+	GOTransform->scale = scale;
+	GOTransform->rotation = rot;
+	GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
+	newGameObject->camera = (ComponentCamera*)newGameObject->AddComponent(CAMERA);
+
+	newGameObject->boundingBox = newGameObject->camera->cameraBB;
+}
+
+void ModuleScene::AddEmptyGameObject()
+{
+	GameObject* newGameObject = new GameObject();
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
+	newGameObject->name = "Empty Object";
+
+	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
+
+	float3 pos = float3::zero;
+	float3 scale = float3::one;
+	Quat rot = Quat::identity;
+
+	GOTransform->position = pos;
+	GOTransform->scale = scale;
+	GOTransform->rotation = rot;
+	GOTransform->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
 }
 
 void ModuleScene::deleteGameObject(GameObject* GO)

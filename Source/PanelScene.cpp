@@ -40,24 +40,53 @@ void PanelScene::Draw()
 		App->scene_intro->DrawGuizmo(App->scene_intro->guizmoOperation);
 
 	ImGui::BeginMenuBar();
+	
+	if(!App->scene_intro->GameMode)
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.95f,0.5f,0.0f,0.7f });
+	else
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
+
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
+	
+
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
 	if (ImGui::ArrowButton("play", ImGuiDir_Right))
 	{
-		App->Save();
-		App->scene_intro->GameMode = true;
-	
+		if (!App->scene_intro->GameMode)
+		{
+			App->Save();
+			App->scene_intro->GameMode = true;
+		}
+		else
+		{
+			App->Load();
+			App->scene_intro->GameMode = false;
+		}
 	}
+
 	ImGui::SameLine();
-	if (ImGui::Button("||", {23,19}))
+	if ( ImGui::Button("||", {23,19}) && App->scene_intro->GameMode )
 	{
 		//dt=0;
 	}
+	ImGui::PopStyleColor(2);
 	ImGui::SameLine();
-	if (ImGui::Button("[]", { 23,19 }))
+
+	if (!App->scene_intro->GameMode)
+		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
+	else
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
+	
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
+
+	if ( ImGui::Button("->", { 23,19 }) && App->scene_intro->GameMode )
 	{
-		App->Load();
+		
 	}
+	ImGui::PopStyleColor(2);
 	ImGui::EndMenuBar();
+
+	
 
 	ImGui::End();
 }

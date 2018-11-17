@@ -1,9 +1,11 @@
 {
     "Game Objects": [
         {
-            "UID": 532411372,
+            "UID": 2387714966,
             "ParentUID": 0,
-            "Name": "BakerHouse",
+            "Name": "tracerPistol",
+            "Active": true,
+            "Static": true,
             "Components": [
                 {
                     "Type": 1,
@@ -45,22 +47,24 @@
             ]
         },
         {
-            "UID": 445508788,
-            "ParentUID": 532411372,
-            "Name": "Baker_house",
+            "UID": 3518938200,
+            "ParentUID": 2387714966,
+            "Name": "Pistol",
+            "Active": true,
+            "Static": true,
             "Components": [
                 {
                     "Type": 1,
                     "Position": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -2.1675548553466799,
+                        39.311439514160159,
+                        -28.81985855102539
                     ],
                     "Rotation": [
+                        -0.7071067690849304,
                         0.0,
                         0.0,
-                        0.0,
-                        1.0
+                        0.7071067690849304
                     ],
                     "Scale": [
                         1.0,
@@ -69,17 +73,17 @@
                     ],
                     "Transform": [
                         1.0,
+                        -0.0,
                         0.0,
+                        -2.1675548553466799,
                         0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
+                        5.960464477539063e-8,
+                        0.9999999403953552,
+                        39.311439514160159,
+                        -0.0,
+                        -0.9999999403953552,
+                        5.960464477539063e-8,
+                        -28.81985855102539,
                         0.0,
                         0.0,
                         0.0,
@@ -88,21 +92,23 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 477389968,
-                    "FBX": "Assets/Models/BakerHouse.fbx",
-                    "mesh": "Untitled"
+                    "UID": 223431869,
+                    "FBX": "Assets/Models/tracerPistol.FBX",
+                    "mesh": "Unnamed"
                 },
                 {
                     "Type": 3,
-                    "UID": 2453068455,
-                    "texture": "Assets/Textures/Baker_house.png"
+                    "UID": 638257230,
+                    "texture": "Assets/Textures/tracerPistol.dds"
                 }
             ]
         },
         {
-            "UID": 269003530,
-            "ParentUID": 532411372,
-            "Name": "Chimney",
+            "UID": 3558113928,
+            "ParentUID": 0,
+            "Name": "Camera",
+            "Active": true,
+            "Static": false,
             "Components": [
                 {
                     "Type": 1,
@@ -142,15 +148,27 @@
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 3296734030,
-                    "FBX": "Assets/Models/BakerHouse.fbx",
-                    "mesh": "Untitled.001"
-                },
-                {
-                    "Type": 3,
-                    "UID": 3194041898,
-                    "texture": "Assets/Textures/Baker_house.png"
+                    "Type": 4,
+                    "Frustum Type": 2,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Front": [
+                        -0.0,
+                        -0.0,
+                        -1.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Near Plane": 0.10000000149011612,
+                    "Far Plane": 1000.0,
+                    "VFOV": 1.5707963705062867,
+                    "Aspect Ratio": 1.7777776718139649
                 }
             ]
         }
