@@ -218,11 +218,6 @@ void PanelConfiguration::Draw()
 			App->camera->camera->setAspectRatio(AR);
 			App->renderer3D->changedFOV = true;
 		}
-		if (ImGui::InputFloat("Aspect Ratio", &AR, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			App->camera->camera->setAspectRatio(AR);
-			App->renderer3D->changedFOV = true;
-		}
 		ImGui::NewLine();
 
 		ImGui::PushItemWidth(100.0f);

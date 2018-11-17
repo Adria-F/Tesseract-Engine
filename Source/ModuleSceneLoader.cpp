@@ -74,13 +74,11 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			//Create Resource Mesh
-			//TODO Here should read if a .fbx.meta exists, and read the UID for the mesh name, then force this UID
 			std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
 			App->fileSystem->getAvailableNameFromArray(meshesNames, meshName); //Get the available name for the mesh
 			
 			ResourceMesh* meshResource = nullptr;
 
-			//uint UID = GENERATE_UID(); //Or the forced UID
 			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
 			if (UID == 0)
 				UID = GENERATE_UID();
@@ -140,7 +138,6 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 					rtextures.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
 				}
 			}
-
 		}
 
 		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures);
