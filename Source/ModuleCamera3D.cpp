@@ -64,6 +64,13 @@ bool ModuleCamera3D::CleanUp()
 	return true;
 }
 
+void ModuleCamera3D::OnResize(int width, int height)
+{
+	float newAR = (float)width / (float)height;
+	camera->setAspectRatio(newAR);
+	App->renderer3D->changedFOV = true;
+}
+
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {

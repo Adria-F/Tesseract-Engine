@@ -1,9 +1,9 @@
 {
     "Game Objects": [
         {
-            "UID": 2387714966,
+            "UID": 2075791035,
             "ParentUID": 0,
-            "Name": "tracerPistol",
+            "Name": "BakerHouse",
             "Active": true,
             "Static": true,
             "Components": [
@@ -47,24 +47,24 @@
             ]
         },
         {
-            "UID": 3518938200,
-            "ParentUID": 2387714966,
-            "Name": "Pistol",
+            "UID": 872221645,
+            "ParentUID": 2075791035,
+            "Name": "Chimney",
             "Active": true,
             "Static": true,
             "Components": [
                 {
                     "Type": 1,
                     "Position": [
-                        -2.1675548553466799,
-                        39.311439514160159,
-                        -28.81985855102539
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "Rotation": [
-                        -0.7071067690849304,
                         0.0,
                         0.0,
-                        0.7071067690849304
+                        0.0,
+                        1.0
                     ],
                     "Scale": [
                         1.0,
@@ -73,17 +73,17 @@
                     ],
                     "Transform": [
                         1.0,
-                        -0.0,
                         0.0,
-                        -2.1675548553466799,
                         0.0,
-                        5.960464477539063e-8,
-                        0.9999999403953552,
-                        39.311439514160159,
-                        -0.0,
-                        -0.9999999403953552,
-                        5.960464477539063e-8,
-                        -28.81985855102539,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
                         0.0,
                         0.0,
                         0.0,
@@ -92,19 +92,76 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 223431869,
-                    "FBX": "Assets/Models/tracerPistol.FBX",
-                    "mesh": "Unnamed"
+                    "UID": 859412405,
+                    "FBX": "Assets/Models/BakerHouse.fbx",
+                    "mesh": "Untitled.001"
                 },
                 {
                     "Type": 3,
-                    "UID": 638257230,
-                    "texture": "Assets/Textures/tracerPistol.dds"
+                    "UID": 3206003302,
+                    "texture": "Assets/Textures/Baker_house.png"
                 }
             ]
         },
         {
-            "UID": 3558113928,
+            "UID": 99664057,
+            "ParentUID": 2075791035,
+            "Name": "Baker_house",
+            "Active": true,
+            "Static": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Transform": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 3175205153,
+                    "FBX": "Assets/Models/BakerHouse.fbx",
+                    "mesh": "Untitled"
+                },
+                {
+                    "Type": 3,
+                    "UID": 3624124345,
+                    "texture": "Assets/Textures/Baker_house.png"
+                }
+            ]
+        },
+        {
+            "UID": 4281305992,
             "ParentUID": 0,
             "Name": "Camera",
             "Active": true,

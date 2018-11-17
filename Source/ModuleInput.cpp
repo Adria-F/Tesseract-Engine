@@ -166,6 +166,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
 				App->window->OnResize(event.window.data1, event.window.data2);
+				App->camera->OnResize(event.window.data1, event.window.data2);
 				App->renderer3D->OnResize(event.window.data1, event.window.data2);
 			}
 			break;

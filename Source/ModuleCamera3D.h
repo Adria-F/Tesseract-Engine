@@ -37,6 +37,8 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void OnResize(int width, int height);
+
 	void Look(const vec &Position, const vec &Reference, bool RotateAroundReference = false);
 	void LookAt(const vec &Spot);
 	void Move(const vec &Movement);
