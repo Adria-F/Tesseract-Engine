@@ -343,7 +343,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 	App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 	App->scene_intro->root->RecalculateBB();
 
-	if(App->scene_intro->GameMode==false)
+	if(App->GameMode==false)
 		App->camera->FitCamera(App->scene_intro->root->boundingBox);
 
 	App->scene_intro->StartQuadTree();

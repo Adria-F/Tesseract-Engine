@@ -109,6 +109,8 @@ bool Application::Init()
 	
 	JSON_manager->closeFile(document);
 	ms_timer.Start();
+	GameMode = false;
+	counting = false;
 	return ret;
 }
 
@@ -118,6 +120,12 @@ void Application::PrepareUpdate()
 	dt = (float)ms_timer.ReadTime() / 1000.0f;
 
 	ms_timer.Start();
+
+	if (GameMode && !counting)
+	{
+		counting =true;
+		game_timer.Start();
+	}
 }
 
 // ---------------------------------------------
@@ -138,6 +146,12 @@ void Application::FinishUpdate()
 	{
 		scene_loader->loadScene(scene_loader->next_scene_path.c_str());
 		doLoad = false;
+	}
+
+	if (!GameMode && counting)
+	{
+		game_timer.Stop();
+		counting = false;
 	}
 }
 
