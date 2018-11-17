@@ -6,6 +6,11 @@
 #include "ResourceTexture.h"
 #include "ModuleFileSystem.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ComponentTexture::~ComponentTexture()
 {
 	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);

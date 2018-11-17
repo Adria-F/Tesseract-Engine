@@ -9,6 +9,11 @@
 #include "ModuleCamera3D.h"
 #include "ComponentCamera.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelScene::PanelScene(const char* name) : Panel(name)
 {
 	active = true;

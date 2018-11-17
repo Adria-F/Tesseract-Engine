@@ -18,6 +18,11 @@
 
 #include "GameObject.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {}
 
@@ -50,6 +55,9 @@ bool ModuleScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 	newScene();
+
+	RELEASE(root);
+	RELEASE(quadTree);
 	return true;
 }
 

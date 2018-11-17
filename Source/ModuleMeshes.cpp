@@ -12,6 +12,11 @@
 
 #include "Assimp/include/mesh.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ModuleMeshes::ModuleMeshes(bool start_enabled): Module(start_enabled)
 {
 }
@@ -141,6 +146,7 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 	cursor += bytes;
 
 	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true);
+	RELEASE_ARRAY(buffer);
 
 	//TODO: the name should be the UID of the resource
 	newpath = MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION;

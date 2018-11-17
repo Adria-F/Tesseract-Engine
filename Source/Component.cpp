@@ -6,6 +6,11 @@
 #include "Resource.h"
 #include "ModuleResource.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 void Component::DrawUI()
 {
 	float Y = ImGui::GetCursorPosY();

@@ -1,6 +1,11 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 using namespace rapidjson;
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)

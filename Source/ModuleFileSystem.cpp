@@ -10,6 +10,11 @@
 #include "PhysFS\include\physfs.h"
 #include <fstream>
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
 ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
@@ -100,6 +105,12 @@ void ModuleFileSystem::addPathOfFilesAt(const char* path)
 			addPathOfFilesAt(currPath.c_str());
 		}
 	}
+
+	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
+	{
+		RELEASE(*it_e);
+	}
+	elements.clear();
 }
 
 bool ModuleFileSystem::fileExists(const char* path, const char* atDirectory, const char* withExtension)

@@ -7,6 +7,11 @@
 #include "ComponentCamera.h"
 #include "GameObject.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelHierarchy::PanelHierarchy(const char* name): Panel(name)
 {
 	active = true;

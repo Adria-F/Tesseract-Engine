@@ -28,6 +28,11 @@
 #include "ModuleSceneLoader.h"
 #include "ModuleFileSystem.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
 }

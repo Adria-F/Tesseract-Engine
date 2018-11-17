@@ -6,6 +6,11 @@
 
 #include "ResourceTexture.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
@@ -105,12 +110,11 @@ bool ModuleTextures::importTexture(const char* path, uint UID, std::string& newp
 	{
 		error = ilGetError();
 		LOG("Image load failed - IL error: %s", iluErrorString(error));
-		return false;
 	}
 
 	ilDeleteImages(1, &ilImage);
 	RELEASE_ARRAY(buffer);
-	return true;
+	return success;
 }
 
 Texture * ModuleTextures::loadIcon(const char * path)

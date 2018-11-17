@@ -3,6 +3,11 @@
 #include "DevIL\include\il.h"
 #include "Assimp/include/version.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelAbout::PanelAbout(const char* name) : Panel(name)
 {
 }

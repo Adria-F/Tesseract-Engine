@@ -9,6 +9,11 @@
 #include "ResourceScene.h"
 #include "ResourceTexture.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ModuleResource::ModuleResource(bool start_enabled):Module(start_enabled)
 {
 }
@@ -33,6 +38,13 @@ bool ModuleResource::CleanUp()
 {
 	bool ret = true;
 
+	std::map <uint, Resource*>::iterator it_r;
+	it_r = resources.begin();
+	while (it_r != resources.end())
+	{
+		RELEASE((*it_r).second);
+		it_r++;
+	}
 	resources.clear();
 
 	return true;

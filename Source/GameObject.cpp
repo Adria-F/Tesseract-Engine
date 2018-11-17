@@ -14,6 +14,10 @@
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
 
 GameObject::GameObject()
 {

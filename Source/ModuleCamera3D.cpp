@@ -13,6 +13,11 @@
 #include "ComponentTransformation.h"
 #include "ResourceMesh.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ModuleCamera3D::ModuleCamera3D(bool start_enabled)
 {
 	
@@ -60,6 +65,8 @@ bool ModuleCamera3D::Start()
 bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
+
+	RELEASE(camera);
 
 	return true;
 }

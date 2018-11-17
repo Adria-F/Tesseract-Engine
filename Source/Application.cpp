@@ -13,6 +13,11 @@
 
 #include "JSONManager.h"
 
+#ifdef _DEBUG
+	//#define TEST_MEMORY_MANAGER
+	#include "mmgr/mmgr.h"
+#endif
+
 using namespace std;
 
 Application::Application()
@@ -63,6 +68,8 @@ Application::~Application()
 	{
 		RELEASE((*item));
 	}
+
+	RELEASE(JSON_manager);
 }
 
 bool Application::Init()

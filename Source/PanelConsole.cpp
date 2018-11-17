@@ -1,4 +1,10 @@
 #include "PanelConsole.h"
+
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelConsole::PanelConsole(const char* name): Panel(name)
 {
 	active = true;

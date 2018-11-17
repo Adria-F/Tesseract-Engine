@@ -4,6 +4,11 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ComponentTransformation::~ComponentTransformation()
 {
 }

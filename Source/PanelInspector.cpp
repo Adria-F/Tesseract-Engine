@@ -10,6 +10,11 @@
 #include "ComponentTexture.h"
 #include "ComponentCamera.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelInspector::PanelInspector(const char* name): Panel(name)
 {
 	active = true;

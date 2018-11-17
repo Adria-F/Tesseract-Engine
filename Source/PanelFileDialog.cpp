@@ -7,6 +7,11 @@
 #include "ModuleGUI.h"
 #include "ModuleTextures.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelFileDialog::PanelFileDialog(const char* name) : Panel(name)
 {
 }

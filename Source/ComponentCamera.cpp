@@ -3,6 +3,10 @@
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
 
 ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Component(gameobject, type)
 {

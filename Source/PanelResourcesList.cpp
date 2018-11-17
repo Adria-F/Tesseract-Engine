@@ -3,6 +3,11 @@
 #include "ModuleResource.h"
 #include "Component.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelResourcesList::PanelResourcesList(const char* name) : Panel(name)
 {
 }

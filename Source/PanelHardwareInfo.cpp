@@ -4,6 +4,11 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelHardwareInfo::PanelHardwareInfo(const char* name): Panel(name)
 {
 }

@@ -3,6 +3,11 @@
 #include "PanelElements.h"
 #include "Primitive.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelElements::PanelElements(const char* name) : Panel(name)
 {
 	active = true;

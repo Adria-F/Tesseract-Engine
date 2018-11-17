@@ -7,6 +7,11 @@
 
 #include "ImGui\imgui_internal.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelAssets::PanelAssets(const char* name) : Panel(name)
 {
 	active = true;

@@ -20,7 +20,11 @@
 #include "ResourceScene.h"
 
 #include <map>
-//#include "mmgr/mmgr.h"
+
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
 
 #include "Assimp/include/cimport.h"
 
