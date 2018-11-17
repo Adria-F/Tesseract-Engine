@@ -41,9 +41,8 @@ bool ModuleScene::Start()
 	quadTree = new Quadtree();
 	StartQuadTree();
 
-	//Load Baker House model
-	//App->scene_loader->importFBXScene("Assets/Models/BakerHouse.fbx");
-	App->fileSystem->manageDroppedFiles("Assets/Models/BakerHouse.fbx");
+	//Load Street scene
+	//App->scene_loader->loadScene("Assets/Scenes/sceneTest");
 	//App->scene_loader->loadScene("sceneTest");
 	
 	ImGuizmo::Enable(false);

@@ -12,7 +12,6 @@ ResourceScene::~ResourceScene()
 {
 	for (int i = 0; i < meshesUID.size(); i++)
 	{
-		App->fileSystem->deleteFile(App->resources->GetResource(meshesUID[i])->GetExportedFile());
 		App->resources->deleteResource(meshesUID[i]);
 	}
 	meshesUID.clear();

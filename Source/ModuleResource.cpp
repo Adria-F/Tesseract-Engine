@@ -74,7 +74,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 	{
 		UID = metaValue->getUint("UID");
 
-		if (newMeta || App->fileSystem->isFileModified(file) || GetResource(UID) == nullptr) //TODO If there is no resource should not import file
+		if (newMeta || App->fileSystem->isFileModified(file))
 		{
 			switch (type)
 			{
@@ -119,9 +119,43 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				else //If meta is not new, means that the file has been modified, so update meta
 					updateMetaLastChange(file);
 			}			
-		} //If the file is already loaded into resources and not been modified, just return the UID, matching the .meta UID
-		else
-			LOG("File was already imported");
+		}
+		else if (GetResource(UID) == nullptr) //If the file is imported but the resources is not created
+		{
+			Resource* newRes = AddResource(type, UID);
+			std::string filename;
+			App->fileSystem->splitPath(file, nullptr, &filename, nullptr);
+			newRes->name = filename;
+			newRes->file = file;
+
+			switch (type)
+			{
+			case R_TEXTURE:
+				newRes->exported_file = TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION;
+				break;
+			case R_SCENE:
+				JSON_Value* meshes = metaValue->getValue("meshes");
+				if (meshes != nullptr)
+				{
+					//Create the resource for each mesh inside the meta
+					for (rapidjson::Value::MemberIterator it_m = meshes->getRapidJSONValue()->MemberBegin(); it_m != meshes->getRapidJSONValue()->MemberEnd(); it_m++)
+					{
+						uint meshUID = (*it_m).value.GetUint();
+						Resource* meshResource = App->resources->AddResource(R_MESH, meshUID);
+						meshResource->name = (*it_m).name.GetString();
+						meshResource->file = file;
+						meshResource->exported_file = MESHES_FOLDER + std::to_string(meshUID) + MESH_EXTENSION;
+						((ResourceScene*)newRes)->meshesUID.push_back(meshUID); //Add its UID to the scene resource list
+					}
+				}
+				newRes->exported_file = FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
+				break;
+			}
+
+			LOG("File was already imported, loading resource");
+			loaded = true;
+		}
+			
 	}
 
 	App->JSON_manager->closeFile(meta);	

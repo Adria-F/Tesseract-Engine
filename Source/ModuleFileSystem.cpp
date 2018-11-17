@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleGUI.h"
 #include "Resource.h"
+#include "ResourceScene.h"
 
 #include "PhysFS\include\physfs.h"
 #include <fstream>
@@ -441,7 +442,20 @@ void ModuleFileSystem::importFilesAt(const char* path, bool firstTime)
 					std::string extension;
 					JSON_File* metaFile = App->resources->getMeta((dir_path + filename).c_str());
 					uint UID = metaFile->getValue("meta")->getUint("UID");
-					deleteFile(App->resources->GetResource(UID)->GetExportedFile());
+					Resource* res = App->resources->GetResource(UID);
+					if (res != nullptr)
+					{
+						deleteFile(res->GetExportedFile());
+						if (res->GetType() == R_SCENE)
+						{
+							for (int i = 0; i < ((ResourceScene*)res)->meshesUID.size(); i++)
+							{
+								Resource* mesh = App->resources->GetResource(((ResourceScene*)res)->meshesUID[i]);
+								if (mesh != nullptr)
+									App->fileSystem->deleteFile(mesh->GetExportedFile());
+							}
+						}
+					}
 					App->resources->deleteResource(UID);		
 					//TODO if it's an fbx, need to delete all meshes
 

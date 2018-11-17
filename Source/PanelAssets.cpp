@@ -170,6 +170,7 @@ void PanelAssets::Draw()
 
 				if (extension == "fbx" || extension == "FBX")
 				{
+					//TODO it should get the path of the scene
 					App->scene_loader->loadScene(filename.c_str(), true);
 				}
 			}
