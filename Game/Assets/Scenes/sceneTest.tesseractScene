@@ -1,6 +1,75 @@
 {
     "Game Objects": [
         {
+            "UID": 2230485684,
+            "ParentUID": 0,
+            "Name": "Camera",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Transform": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "Frustum Type": 2,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Front": [
+                        -0.0,
+                        -0.0,
+                        -1.0
+                    ],
+                    "Up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Near Plane": 0.10000000149011612,
+                    "Far Plane": 100.0,
+                    "VFOV": 0.5235987901687622,
+                    "Aspect Ratio": 1.7777777910232545
+                }
+            ]
+        },
+        {
             "UID": 715576231,
             "ParentUID": 0,
             "Name": "BakerHouse",
@@ -157,75 +226,6 @@
                     "Type": 3,
                     "UID": 2894813429,
                     "texture": "Assets/Textures/Baker_house.png"
-                }
-            ]
-        },
-        {
-            "UID": 2230485684,
-            "ParentUID": 0,
-            "Name": "Camera",
-            "Active": true,
-            "Static": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "Position": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Transform": [
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": 4,
-                    "Frustum Type": 2,
-                    "Position": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Front": [
-                        -0.0,
-                        -0.0,
-                        -1.0
-                    ],
-                    "Up": [
-                        0.0,
-                        1.0,
-                        0.0
-                    ],
-                    "Near Plane": 0.10000000149011612,
-                    "Far Plane": 100.0,
-                    "VFOV": 0.5235987901687622,
-                    "Aspect Ratio": 1.7777777910232545
                 }
             ]
         }

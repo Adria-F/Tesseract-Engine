@@ -18,6 +18,7 @@ PanelScene::PanelScene(const char* name) : Panel(name)
 {
 	active = true;
 	gamePaused = false;
+	step = false;
 	gametimer = 0;
 }
 
@@ -86,6 +87,7 @@ void PanelScene::Draw()
 		{
 			App->Load();
 			App->GameMode = false;
+			App->GamePaused = false;
 		}
 	}
 
@@ -112,10 +114,16 @@ void PanelScene::Draw()
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
 	
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
-
-	if ( ImGui::Button("->", { 23,19 }) && App->GameMode )
+	if (App->GameMode && !App->GamePaused && step == true)
 	{
-		
+		App->GamePaused = true;
+		step = false;
+	}
+
+	if ( ImGui::Button("->", { 23,19 }) && App->GameMode && App->GamePaused)
+	{
+		App->GamePaused = false;
+		step = true;
 	}
 	ImGui::PopStyleColor(2);
 

@@ -54,6 +54,9 @@ public:
 	void selectGameObject(GameObject* gameObject);
 	GameObject* getGameObject(uint UID);
 
+	//Provisional
+	GameObject* FindCamera();
+
 public:
 
 	std::string scene_name = "";

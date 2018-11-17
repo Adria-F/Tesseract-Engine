@@ -92,6 +92,8 @@ bool ModuleScene::Load(JSON_File* document) {
 
 void ModuleScene::Draw()
 {
+	GameObject* sceneCamera = FindCamera();
+
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{
 		(*it)->Render();
@@ -100,15 +102,16 @@ void ModuleScene::Draw()
 	ComponentCamera* activeCamera = App->camera->camera;
 
 	//Static objects-------------------------------------------------------------------
-	if (quadTree->QT_Box != nullptr)
+	if (quadTree->QT_Box != nullptr && sceneCamera!=nullptr)
 	{
 		//Fill the vector of the objects inside the same quads of the camera's bb		
-		quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
+		//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
+		quadTree->Intersect(ObjectsToDraw, sceneCamera->camera->frustum);
 
 		//From the possible objects only draw the ones inside the frustum
 		for (int i = 0; i < ObjectsToDraw.size(); i++)
 		{
-			if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox))
+			if (sceneCamera->camera->ContainsAABB(ObjectsToDraw[i]->boundingBox))
 			{
 				ObjectsToDraw[i]->culling = true;
 			}
@@ -126,7 +129,7 @@ void ModuleScene::Draw()
 	{
 		if (!(*it_ch)->isStatic)
 		{
-			if (activeCamera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
+			if (sceneCamera->camera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
 			{
 				(*it_ch)->culling = true;
 			}
@@ -382,4 +385,24 @@ void ModuleScene::selectGameObject(GameObject* gameObject)
 GameObject* ModuleScene::getGameObject(uint UID)
 {
 	return gameObjects[UID];
+}
+
+GameObject * ModuleScene::FindCamera()
+{
+	GameObject* ret=nullptr;
+	for (std::list<GameObject*>::iterator go_it=root->childs.begin();go_it!=root->childs.end();go_it++)
+	{
+		if ((*go_it)->camera != nullptr)
+		{
+			ret = *go_it;
+			break;
+		}
+		else
+		{
+			if ((*go_it)->childs.size() > 0)
+				ret=FindCamera();
+		}
+	}
+	
+	return ret;
 }
