@@ -68,6 +68,8 @@ public:
 
 	ImGuizmo::OPERATION guizmoOperation;
 
+	bool GameMode = false;
+
 private:
 
 	map<uint, GameObject*> gameObjects;

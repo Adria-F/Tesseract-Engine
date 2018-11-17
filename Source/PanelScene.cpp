@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleGUI.h"
 #include "ModuleScene.h"
+#include "ModuleSceneLoader.h"
 #include "PanelScene.h"
 #include "ModuleInput.h"
 
@@ -42,7 +43,9 @@ void PanelScene::Draw()
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
 	if (ImGui::ArrowButton("play", ImGuiDir_Right))
 	{
-		//App->scene_loader->saveScene();
+		App->Save();
+		App->scene_intro->GameMode = true;
+	
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("||", {23,19}))
@@ -52,7 +55,7 @@ void PanelScene::Draw()
 	ImGui::SameLine();
 	if (ImGui::Button("[]", { 23,19 }))
 	{
-		//App->scene_loader->loadScene();
+		App->Load();
 	}
 	ImGui::EndMenuBar();
 
