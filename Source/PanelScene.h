@@ -16,6 +16,10 @@ public:
 	ImVec2 size = { 0,0 };
 	bool resizedLastFrame = false;
 
+private:
+
+	bool gamePaused = false;
+
 };
 
 #endif // !__PANELSCENE_H__
