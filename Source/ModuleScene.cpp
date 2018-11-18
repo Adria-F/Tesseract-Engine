@@ -148,31 +148,31 @@ void ModuleScene::Draw()
 			//Non-Static objects-------------------------------------------------------------------
 
 			//From the possible objects only draw the ones inside the frustum
-			for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
+			for(std::map<uint,GameObject*>::iterator it_ch=gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 			{
-				if (!(*it_ch)->isStatic)
+				if (!(*it_ch).second->isStatic)
 				{
-					if (sceneCamera->camera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
+					if (sceneCamera->camera->ContainsAABB((*it_ch).second->boundingBox) && (*it_ch).second->GetComponent(CAMERA) == nullptr)
 					{
-						(*it_ch)->culling = true;
+						(*it_ch).second->culling = true;
 					}
 					else
 					{
-						(*it_ch)->culling = false;
+						(*it_ch).second->culling = false;
 					}
-					if ((*it_ch)->GetComponent(CAMERA) != nullptr)
+					if ((*it_ch).second->GetComponent(CAMERA) != nullptr)
 					{
-						(*it_ch)->culling = true;
+						(*it_ch).second->culling = true;
 					}
 				}
 			}
 		}
 	}
 
-	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
+	for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 	{
-		(*it_ch)->Update();
-		(*it_ch)->culling = false;
+		(*it_ch).second->Update();
+		(*it_ch).second->culling = false;
 	}
 
 
