@@ -18,6 +18,10 @@ If you want to download the latest release click [here](https://github.com/Adria
 * CTRL + Movement to reducethe movement speed.
 * N to recalculate QuadTree
 * M to erase QuadTree
+* Q to hide gizmo
+* W to show translation gizmo
+* E to show rotation gizmo
+* R to show scale gizmo
 
 ## Extra instructions
 

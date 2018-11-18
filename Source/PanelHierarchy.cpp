@@ -106,11 +106,19 @@ void PanelHierarchy::FillTree(GameObject* gameobject)
 	}
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_SourceAllowNullID))
+		bool isParent = false;
+		if (const ImGuiPayload* prevPayload = ImGui::GetDragDropPayload())
+		{
+			GameObject* draggedGameobject = App->scene_intro->getGameObject(*(uint*)prevPayload->Data);
+			if (draggedGameobject != nullptr && draggedGameobject->parent == gameobject)
+				isParent = true;
+		}
+		
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAME_OBJECT", ImGuiDragDropFlags_SourceAllowNullID, isParent, isParent))
 		{
 			GameObject* draggedGameobject = App->scene_intro->getGameObject(*(uint*)payload->Data);
 			if (draggedGameobject != nullptr)
-				draggedGameobject->changeParent(gameobject);
+				draggedGameobject->changeParent((isParent)? gameobject->parent : gameobject);
 		}
 		ImGui::EndDragDropTarget();
 	}

@@ -72,6 +72,8 @@ void PanelScene::Draw()
 
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
 	
+	if (App->GameMode)
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
 
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
 	if (ImGui::ArrowButton("play", ImGuiDir_Right))
@@ -82,28 +84,39 @@ void PanelScene::Draw()
 		{
 			App->Save();
 			App->GameMode = true;
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
 		}
 		else
 		{
 			App->Load();
 			App->GameMode = false;
 			App->GamePaused = false;
+			ImGui::PopStyleColor();
 		}
 	}
+	if (App->GameMode)
+		ImGui::PopStyleColor();
 
 	ImGui::SameLine();
+
+	if (App->GamePaused)
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
 
 	if ( ImGui::Button("||", {23,19}) && App->GameMode )
 	{
 		if (!App->GamePaused)
 		{
 			App->GamePaused = true;
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
 		}
 		else
 		{
 			App->GamePaused = false;
+			ImGui::PopStyleColor();
 		}
 	}
+	if (App->GamePaused)
+		ImGui::PopStyleColor();
 
 	ImGui::PopStyleColor(2);
 	ImGui::SameLine();
@@ -120,11 +133,15 @@ void PanelScene::Draw()
 		step = false;
 	}
 
+	if (App->GameMode)
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.1f,0.1f,0.65f,0.7f });
 	if ( ImGui::Button("->", { 23,19 }) && App->GameMode && App->GamePaused)
 	{
 		App->GamePaused = false;
 		step = true;
 	}
+	if (App->GameMode)
+		ImGui::PopStyleColor();
 	ImGui::PopStyleColor(2);
 
 	char sec[64], min[64];

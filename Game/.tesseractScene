@@ -1,7 +1,7 @@
 {
     "Game Objects": [
         {
-            "UID": 1521916093,
+            "UID": 2157868016,
             "ParentUID": 0,
             "Name": "Camera",
             "Active": true,
@@ -71,7 +71,7 @@
             ]
         },
         {
-            "UID": 280074789,
+            "UID": 627972100,
             "ParentUID": 0,
             "Name": "Street environment_V01",
             "Active": true,
@@ -117,8 +117,8 @@
             ]
         },
         {
-            "UID": 1425995217,
-            "ParentUID": 280074789,
+            "UID": 2081076131,
+            "ParentUID": 627972100,
             "Name": "Dummy001",
             "Active": true,
             "Static": true,
@@ -163,8 +163,8 @@
             ]
         },
         {
-            "UID": 4165581672,
-            "ParentUID": 1425995217,
+            "UID": 1807256195,
+            "ParentUID": 2081076131,
             "Name": "City_building_034",
             "Active": true,
             "Static": true,
@@ -208,20 +208,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3929004386,
+                    "UID": 643642432,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(14)"
                 },
                 {
                     "Type": 3,
-                    "UID": 442336041,
+                    "UID": 1761878073,
                     "texture": "Assets/Textures/building05 _c.tga"
                 }
             ]
         },
         {
-            "UID": 4149478468,
-            "ParentUID": 1425995217,
+            "UID": 1239013212,
+            "ParentUID": 2081076131,
             "Name": "City_building_017",
             "Active": true,
             "Static": true,
@@ -265,20 +265,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2186062386,
+                    "UID": 1433515991,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(4)"
                 },
                 {
                     "Type": 3,
-                    "UID": 3755338600,
+                    "UID": 649318392,
                     "texture": "Assets/Textures/building 01_c.tga"
                 }
             ]
         },
         {
-            "UID": 4125033961,
-            "ParentUID": 1425995217,
+            "UID": 140104172,
+            "ParentUID": 2081076131,
             "Name": "Object010",
             "Active": true,
             "Static": true,
@@ -322,15 +322,15 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 478314970,
+                    "UID": 3844039224,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(12)"
                 }
             ]
         },
         {
-            "UID": 4030935401,
-            "ParentUID": 1425995217,
+            "UID": 2271750021,
+            "ParentUID": 2081076131,
             "Name": "City_building_038",
             "Active": true,
             "Static": true,
@@ -374,20 +374,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3067935550,
+                    "UID": 3308975801,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(16)"
                 },
                 {
                     "Type": 3,
-                    "UID": 4026289191,
+                    "UID": 903138417,
                     "texture": "Assets/Textures/building05 _c.tga"
                 }
             ]
         },
         {
-            "UID": 3846518257,
-            "ParentUID": 1425995217,
+            "UID": 1875024298,
+            "ParentUID": 2081076131,
             "Name": "City_building_037",
             "Active": true,
             "Static": true,
@@ -431,20 +431,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 4045712971,
+                    "UID": 652477778,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(15)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2285385633,
+                    "UID": 250971325,
                     "texture": "Assets/Textures/building05 _c.tga"
                 }
             ]
         },
         {
-            "UID": 3675483502,
-            "ParentUID": 1425995217,
+            "UID": 1321614681,
+            "ParentUID": 2081076131,
             "Name": "City_building_022",
             "Active": true,
             "Static": true,
@@ -488,20 +488,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2097941560,
+                    "UID": 3915282448,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(10)"
                 },
                 {
                     "Type": 3,
-                    "UID": 232169018,
+                    "UID": 2818148586,
                     "texture": "Assets/Textures/building05 _c.tga"
                 }
             ]
         },
         {
-            "UID": 3583243919,
-            "ParentUID": 1425995217,
+            "UID": 2162319646,
+            "ParentUID": 2081076131,
             "Name": "Plane001",
             "Active": true,
             "Static": true,
@@ -545,15 +545,15 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2294438477,
+                    "UID": 317511204,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(8)"
                 }
             ]
         },
         {
-            "UID": 3287986239,
-            "ParentUID": 1425995217,
+            "UID": 738450668,
+            "ParentUID": 2081076131,
             "Name": "City_building_028",
             "Active": true,
             "Static": true,
@@ -597,20 +597,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2738656037,
+                    "UID": 2859819304,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 33169037,
+                    "UID": 2240283881,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 3271399345,
-            "ParentUID": 1425995217,
+            "UID": 3660410352,
+            "ParentUID": 2081076131,
             "Name": "City_building_031",
             "Active": true,
             "Static": true,
@@ -654,20 +654,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3745558137,
+                    "UID": 3818895913,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2938422441,
+                    "UID": 595553587,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 3218714319,
-            "ParentUID": 1425995217,
+            "UID": 2763956931,
+            "ParentUID": 2081076131,
             "Name": "City_building_014",
             "Active": true,
             "Static": true,
@@ -711,20 +711,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 807244642,
+                    "UID": 1483141405,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(9)"
                 },
                 {
                     "Type": 3,
-                    "UID": 3275168212,
+                    "UID": 777090365,
                     "texture": "Assets/Textures/building03_c.tga"
                 }
             ]
         },
         {
-            "UID": 3089132138,
-            "ParentUID": 1425995217,
+            "UID": 3226822108,
+            "ParentUID": 2081076131,
             "Name": "City_building_033",
             "Active": true,
             "Static": true,
@@ -768,20 +768,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1607771511,
+                    "UID": 606089417,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(13)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2135072564,
+                    "UID": 1385781006,
                     "texture": "Assets/Textures/building 06_ c.tga"
                 }
             ]
         },
         {
-            "UID": 2604714460,
-            "ParentUID": 1425995217,
+            "UID": 2963162000,
+            "ParentUID": 2081076131,
             "Name": "City_building_004",
             "Active": true,
             "Static": true,
@@ -825,20 +825,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2903918248,
+                    "UID": 2751105063,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed"
                 },
                 {
                     "Type": 3,
-                    "UID": 2091226452,
+                    "UID": 502869647,
                     "texture": "Assets/Textures/building03_c.tga"
                 }
             ]
         },
         {
-            "UID": 2567822172,
-            "ParentUID": 1425995217,
+            "UID": 2399682630,
+            "ParentUID": 2081076131,
             "Name": "City_building_024",
             "Active": true,
             "Static": true,
@@ -882,20 +882,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3482463774,
+                    "UID": 1373545507,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(3)"
                 },
                 {
                     "Type": 3,
-                    "UID": 586905511,
+                    "UID": 1993089298,
                     "texture": "Assets/Textures/building_025_c.tga"
                 }
             ]
         },
         {
-            "UID": 2463298122,
-            "ParentUID": 1425995217,
+            "UID": 4046319005,
+            "ParentUID": 2081076131,
             "Name": "City_building_001",
             "Active": true,
             "Static": true,
@@ -939,20 +939,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 931539177,
+                    "UID": 2116837660,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(1)"
                 },
                 {
                     "Type": 3,
-                    "UID": 971370001,
+                    "UID": 3931865171,
                     "texture": "Assets/Textures/Building_V02_C.png"
                 }
             ]
         },
         {
-            "UID": 2047305838,
-            "ParentUID": 1425995217,
+            "UID": 2229754814,
+            "ParentUID": 2081076131,
             "Name": "City_building_035",
             "Active": true,
             "Static": true,
@@ -996,20 +996,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2307245999,
+                    "UID": 4163837031,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 267017679,
+                    "UID": 1680671668,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 2020020437,
-            "ParentUID": 1425995217,
+            "UID": 1013541000,
+            "ParentUID": 2081076131,
             "Name": "City_building_032",
             "Active": true,
             "Static": true,
@@ -1053,20 +1053,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3058396145,
+                    "UID": 1236459420,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed"
                 },
                 {
                     "Type": 3,
-                    "UID": 578706390,
+                    "UID": 722256760,
                     "texture": "Assets/Textures/building03_c.tga"
                 }
             ]
         },
         {
-            "UID": 1875956821,
-            "ParentUID": 1425995217,
+            "UID": 251944,
+            "ParentUID": 2081076131,
             "Name": "City_building_036",
             "Active": true,
             "Static": true,
@@ -1110,20 +1110,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1817156465,
+                    "UID": 1246786612,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(5)"
                 },
                 {
                     "Type": 3,
-                    "UID": 451092268,
+                    "UID": 1587614008,
                     "texture": "Assets/Textures/building 06_ c.tga"
                 }
             ]
         },
         {
-            "UID": 1733472127,
-            "ParentUID": 1425995217,
+            "UID": 2950148162,
+            "ParentUID": 2081076131,
             "Name": "City_building_010",
             "Active": true,
             "Static": true,
@@ -1167,20 +1167,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2498859325,
+                    "UID": 1678193588,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(4)"
                 },
                 {
                     "Type": 3,
-                    "UID": 1895666397,
+                    "UID": 582102607,
                     "texture": "Assets/Textures/building 01_c.tga"
                 }
             ]
         },
         {
-            "UID": 1563359126,
-            "ParentUID": 1425995217,
+            "UID": 3463229975,
+            "ParentUID": 2081076131,
             "Name": "City_building_016",
             "Active": true,
             "Static": true,
@@ -1224,20 +1224,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1684983569,
+                    "UID": 3423996843,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(4)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2911895888,
+                    "UID": 978869716,
                     "texture": "Assets/Textures/building 01_c.tga"
                 }
             ]
         },
         {
-            "UID": 1262813434,
-            "ParentUID": 1425995217,
+            "UID": 249228628,
+            "ParentUID": 2081076131,
             "Name": "Line002",
             "Active": true,
             "Static": true,
@@ -1281,15 +1281,15 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 812402995,
+                    "UID": 3971388885,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(7)"
                 }
             ]
         },
         {
-            "UID": 1213947618,
-            "ParentUID": 1425995217,
+            "UID": 326899955,
+            "ParentUID": 2081076131,
             "Name": "City_building_041",
             "Active": true,
             "Static": true,
@@ -1333,20 +1333,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1731038503,
+                    "UID": 2633998541,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(1)"
                 },
                 {
                     "Type": 3,
-                    "UID": 16041067,
+                    "UID": 3963626428,
                     "texture": "Assets/Textures/Building_V02_C.png"
                 }
             ]
         },
         {
-            "UID": 1052903187,
-            "ParentUID": 1425995217,
+            "UID": 267822958,
+            "ParentUID": 2081076131,
             "Name": "City_building_030",
             "Active": true,
             "Static": true,
@@ -1390,20 +1390,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3884864540,
+                    "UID": 3960951236,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2327362235,
+                    "UID": 725479513,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 889483876,
-            "ParentUID": 1425995217,
+            "UID": 3323373242,
+            "ParentUID": 2081076131,
             "Name": "City_building_011",
             "Active": true,
             "Static": true,
@@ -1447,20 +1447,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 2368560487,
+                    "UID": 3556806631,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(2)"
                 },
                 {
                     "Type": 3,
-                    "UID": 3380972377,
+                    "UID": 1993343812,
                     "texture": "Assets/Textures/building_016_c.tga"
                 }
             ]
         },
         {
-            "UID": 660293046,
-            "ParentUID": 1425995217,
+            "UID": 82204949,
+            "ParentUID": 2081076131,
             "Name": "City_building_026",
             "Active": true,
             "Static": true,
@@ -1504,20 +1504,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3280217151,
+                    "UID": 1297397235,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(11)"
                 },
                 {
                     "Type": 3,
-                    "UID": 3267802316,
+                    "UID": 2717652622,
                     "texture": "Assets/Textures/building05 _c.tga"
                 }
             ]
         },
         {
-            "UID": 517071109,
-            "ParentUID": 1425995217,
+            "UID": 1214253617,
+            "ParentUID": 2081076131,
             "Name": "City_building_013",
             "Active": true,
             "Static": true,
@@ -1561,20 +1561,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 4036331955,
+                    "UID": 2627386343,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(5)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2855281863,
+                    "UID": 4110950682,
                     "texture": "Assets/Textures/building 06_ c.tga"
                 }
             ]
         },
         {
-            "UID": 479220467,
-            "ParentUID": 1425995217,
+            "UID": 2361612919,
+            "ParentUID": 2081076131,
             "Name": "City_building_008",
             "Active": true,
             "Static": true,
@@ -1618,20 +1618,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 603525948,
+                    "UID": 3829623265,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(3)"
                 },
                 {
                     "Type": 3,
-                    "UID": 790492202,
+                    "UID": 1557483216,
                     "texture": "Assets/Textures/building_025_c.tga"
                 }
             ]
         },
         {
-            "UID": 411752926,
-            "ParentUID": 1425995217,
+            "UID": 4023041011,
+            "ParentUID": 2081076131,
             "Name": "City_building_007",
             "Active": true,
             "Static": true,
@@ -1675,20 +1675,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 648462951,
+                    "UID": 2605885741,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(2)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2487848462,
+                    "UID": 1718903006,
                     "texture": "Assets/Textures/building_016_c.tga"
                 }
             ]
         },
         {
-            "UID": 345249430,
-            "ParentUID": 1425995217,
+            "UID": 2316317508,
+            "ParentUID": 2081076131,
             "Name": "City_building_039",
             "Active": true,
             "Static": true,
@@ -1732,20 +1732,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1361807440,
+                    "UID": 3414320563,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 2524097243,
+                    "UID": 216271448,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 319436033,
-            "ParentUID": 1425995217,
+            "UID": 1238718056,
+            "ParentUID": 2081076131,
             "Name": "City_building_040",
             "Active": true,
             "Static": true,
@@ -1789,20 +1789,20 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 1699731553,
+                    "UID": 1625352280,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(6)"
                 },
                 {
                     "Type": 3,
-                    "UID": 999449215,
+                    "UID": 310635941,
                     "texture": "Assets/Textures/Building_V01_C.png"
                 }
             ]
         },
         {
-            "UID": 178806594,
-            "ParentUID": 1425995217,
+            "UID": 3241583361,
+            "ParentUID": 2081076131,
             "Name": "City_building_023",
             "Active": true,
             "Static": true,
@@ -1846,13 +1846,13 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 3706814042,
+                    "UID": 228826584,
                     "FBX": "Assets/Models/Street environment_V01.FBX",
                     "mesh": "Unnamed(2)"
                 },
                 {
                     "Type": 3,
-                    "UID": 537126350,
+                    "UID": 3298550526,
                     "texture": "Assets/Textures/building_016_c.tga"
                 }
             ]

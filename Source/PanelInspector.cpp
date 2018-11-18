@@ -56,15 +56,25 @@ void PanelInspector::Draw()
 		{
 			if (ImGui::BeginPopupContextItem("Add Component", 0))
 			{
+				bool canAdd = false;
 				if (go->GetComponent(MESH) == nullptr)
+				{
+					canAdd = true;
 					if (ImGui::Selectable("Mesh Component"))
 						go->AddComponent(MESH);
+				}
 				if (go->GetComponent(MATERIAL) == nullptr)
+				{
+					canAdd = true;
 					if (ImGui::Selectable("Material Component"))
 						go->AddComponent(MATERIAL);
-				/*if (go->GetComponent(CAMERA) == nullptr)
-					if (ImGui::Selectable("Camera Component"))
-						go->AddComponent(CAMERA);*/
+				}
+				if (!canAdd)
+				{
+					ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+					ImGui::Text("No more components to add");
+					ImGui::PopStyleVar();
+				}
 
 				ImGui::EndPopup();
 			}

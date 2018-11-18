@@ -427,7 +427,7 @@ void GameObject::changeParent(GameObject* newParent, bool recalculateTransformat
 		{
 			//Update the transformation
 			ComponentTransformation* transform = (ComponentTransformation*)GetComponent(TRANSFORMATION);
-			transform->localMatrix = transform->globalMatrix*((ComponentTransformation*)parent->GetComponent(TRANSFORMATION))->globalMatrix.Inverted();
+			transform->localMatrix = ((ComponentTransformation*)parent->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*transform->globalMatrix.Transposed();
 			transform->localMatrix.Decompose(transform->position, transform->rotation, transform->scale);
 			transform->changed = true;
 		}
