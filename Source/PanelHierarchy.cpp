@@ -125,6 +125,15 @@ void PanelHierarchy::FillTree(GameObject* gameobject)
 	{
 		App->scene_intro->selectGameObject(gameobject);
 	}
+	bool deleted = false;
+	if (ImGui::BeginPopupContextItem((gameobject->name + "rightClick").c_str(), 1))
+	{
+		if (ImGui::Button("Delete"))
+		{
+			gameobject->to_delete = true;
+		}
+		ImGui::EndPopup();
+	}
 	if (opened)
 	{
 		if (gameobject->childs.size() > 0)

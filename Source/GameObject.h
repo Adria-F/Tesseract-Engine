@@ -53,6 +53,7 @@ public:
 	bool child_selected = false;
 	bool isStatic = false;
 	bool culling = false;
+	bool to_delete = false;
 	
 	std::string name = "";
 	

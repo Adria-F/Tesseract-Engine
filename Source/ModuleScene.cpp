@@ -80,6 +80,20 @@ update_status ModuleScene::Update(float dt)
 		StartQuadTree();
 	}
 
+	std::map<uint, GameObject*>::iterator it_go = gameObjects.begin();
+	while (it_go != gameObjects.end())
+	{
+		if ((*it_go).second->to_delete)
+		{
+			std::map<uint, GameObject*>::iterator prev = --it_go;
+			it_go++;
+			deleteGameObject((*it_go).second);
+			it_go = prev;
+		}
+		else
+			it_go++;
+	}
+
 	return ret;
 }
 
@@ -102,9 +116,9 @@ void ModuleScene::Draw()
 		(*it)->Render();
 	}
 
-	for (int c = 0; c < cameras.size(); c++)
+	for (std::list<GameObject*>::iterator it_c = cameras.begin(); it_c != cameras.end(); it_c++)
 	{
-		GameObject* sceneCamera = cameras[c];
+		GameObject* sceneCamera = (*it_c);
 
 		if (sceneCamera != nullptr && sceneCamera->camera->IsCulling)
 		{
@@ -349,14 +363,21 @@ void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent)
 		gameObject->parent = root;
 	}
 
+	std::vector<std::string*> names;
+	for (map<uint, GameObject*>::iterator it_go = gameObjects.begin(); it_go != gameObjects.end(); it_go++)
+	{
+		names.push_back(&(*it_go).second->name);
+	}
+	App->fileSystem->getAvailableNameFromArray(names, gameObject->name);
+
 	gameObjects[gameObject->UID] = gameObject;
 }
 
 void ModuleScene::AddCamera()
 {
 	GameObject* newGameObject = new GameObject();
-	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
 	newGameObject->name = "Camera";
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);	
 	newGameObject->isStatic = false;
 
 	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
@@ -384,8 +405,8 @@ void ModuleScene::AddCamera()
 void ModuleScene::AddEmptyGameObject()
 {
 	GameObject* newGameObject = new GameObject();
-	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
 	newGameObject->name = "Empty Object";
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);	
 
 	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
 
@@ -405,7 +426,17 @@ void ModuleScene::deleteGameObject(GameObject* GO)
 	if (GO->parent != nullptr)
 		GO->parent->childs.remove(GO);
 
+	if (GO->camera != nullptr) //It is a camera
+	{
+		cameras.remove(GO);
+		if (GO->camera->IsCulling && cameras.size() > 0)
+			cameras.front()->camera->IsCulling = true;
+	}
+
 	gameObjects.erase(GO->UID);
+
+	if (selected_GO == GO)
+		selected_GO = nullptr;
 
 	RELEASE(GO);
 }
@@ -440,11 +471,11 @@ void ModuleScene::FindCameras(GameObject* parent)
 
 void ModuleScene::ChangeCulling(GameObject * GO)
 {
-	for (int i = 0; i < cameras.size(); i++)
+	for (std::list<GameObject*>::iterator it_c = cameras.begin(); it_c != cameras.end(); it_c++)
 	{
-		if (cameras[i] != GO)
+		if ((*it_c) != GO)
 		{
-			cameras[i]->camera->IsCulling = false;
+			(*it_c)->camera->IsCulling = false;
 		}
 	}
 }

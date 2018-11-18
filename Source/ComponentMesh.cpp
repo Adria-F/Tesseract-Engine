@@ -108,6 +108,14 @@ void ComponentMesh::DrawInfo()
 		pickResourceButton(R_MESH);
 		if (mesh != nullptr)
 		{
+			/*ImGui::PushID("color checkbox");
+			ImGui::Checkbox("");
+			ImGui::PopID();*/
+			if (ImGui::TreeNodeEx("Color", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
+			{
+
+			}
+
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
 			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
 			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);

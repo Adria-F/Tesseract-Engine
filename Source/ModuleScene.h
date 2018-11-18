@@ -61,7 +61,7 @@ public:
 public:
 
 	std::string scene_name = "";
-	std::vector<GameObject*> cameras;
+	std::list<GameObject*> cameras;
 
 	list<Primitive*> ShapesToDraw;
 
