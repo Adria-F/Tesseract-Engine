@@ -13,7 +13,7 @@ Quadtree::Quadtree()
 	QT_Box->SetNegativeInfinity();
 
 	maxElements = 1;
-	maxLevels = 3;
+	maxLevels = 8;
 	level = 0;
 
 	for (int i = 0; i < 4; i++)

@@ -318,11 +318,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		GlobalMat->Decompose(pos, rot, scale);
 		GlobalMat->Set(float4x4::FromTRS(pos, rot, float3::one));
 		GlobalMat->Transpose();
-		/*if (operation != ImGuizmo::OPERATION::SCALE)
-		{			
-			ObjectMat->Decompose(pos, rot, scale);
-			ObjectMat->Set(float4x4::FromTRS(pos, rot, float3::one));		
-		}*/
+		
 		ObjectMat->Transpose();
 
 		ImGuizmo::SetOrthographic(false);
@@ -330,18 +326,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat, (float*)GlobalMat);
 		ObjectMat->Transpose();
 
-		/*if (operation != ImGuizmo::OPERATION::SCALE)
-		{
-			float3 oneScale;
-			ObjectMat->Decompose(pos, rot, oneScale);
-			ObjectMat->Set(float4x4::FromTRS(pos, rot, scale));
-		}*/
-		LOG("%f %f %f %f\n %f %f %f %f\n %f %f %f %f\n %f %f %f %f", ObjectMat->v[0][0], ObjectMat->v[0][1], ObjectMat->v[0][2], ObjectMat->v[0][3],
-			ObjectMat->v[1][0], ObjectMat->v[1][1], ObjectMat->v[1][2], ObjectMat->v[1][3],
-			ObjectMat->v[2][0], ObjectMat->v[2][1], ObjectMat->v[2][2], ObjectMat->v[2][3],
-			ObjectMat->v[3][0], ObjectMat->v[3][1], ObjectMat->v[3][2], ObjectMat->v[3][3]
-			);
-		LOG("---------------------------------------------");
+	
 		if (ImGuizmo::IsUsing())
 		{
 			transform->localMatrix.Decompose(transform->position, transform->rotation, transform->scale);

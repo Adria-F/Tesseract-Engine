@@ -110,6 +110,8 @@ void GameObject::Update()
 		else
 			it_c++;
 	}
+
+	culling = false;
 }
 
 void GameObject::DrawComponentsUI()

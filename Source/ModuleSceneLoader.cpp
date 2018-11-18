@@ -89,7 +89,12 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			UIDs.push_back(UID);
 
 			std::string exportedFile;
-			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile); //Import the mesh
+
+			//TODO move this into resource material
+			aiColor3D color(0.f, 0.f, 0.f);
+			scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+
+			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b }); //Import the mesh
 			if (success)
 			{
 				std::string* nameAlloc = new std::string(meshName);
@@ -100,11 +105,6 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 				meshResource->name = meshName;
 				meshResource->file = path;
 				meshResource->exported_file = exportedFile;
-
-				//TODO move this into resource material
-				aiColor3D color(0.f, 0.f, 0.f);
-				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-				meshResource->color = { color.r, color.g, color.b };
 			}
 			rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
 		}
