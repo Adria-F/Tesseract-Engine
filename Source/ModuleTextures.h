@@ -38,6 +38,7 @@ public:
 	std::list<Texture*> textures;
 	std::list<ResourceTexture*> resourcetextures;
 	std::list<Texture*> icons;
+
 };
 
 #endif // !__MODULETEXTURES_H__

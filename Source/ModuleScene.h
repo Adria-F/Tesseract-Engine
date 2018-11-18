@@ -67,7 +67,7 @@ public:
 
 	GameObject* root = nullptr;
 
-	vector<GameObject*> ObjectsToDraw;
+	list<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
 

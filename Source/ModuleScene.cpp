@@ -23,6 +23,11 @@
 #include "mmgr/mmgr.h"
 #endif
 
+bool Same_GameObject(GameObject* first, GameObject* second)
+{
+	return (first == second);
+}
+
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {}
 
@@ -109,17 +114,19 @@ void ModuleScene::Draw()
 				//Fill the vector of the objects inside the same quads of the camera's bb		
 				//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
 				quadTree->Intersect(ObjectsToDraw, sceneCamera->camera->frustum);
+				ObjectsToDraw.sort();
+				ObjectsToDraw.unique(Same_GameObject);
 
 				//From the possible objects only draw the ones inside the frustum
-				for (int i = 0; i < ObjectsToDraw.size(); i++)
+				for (list<GameObject*>::iterator Otd_it = ObjectsToDraw.begin(); Otd_it != ObjectsToDraw.end(); Otd_it++)
 				{
-					if (sceneCamera->camera->ContainsAABB(ObjectsToDraw[i]->boundingBox))
+					if (sceneCamera->camera->ContainsAABB((*Otd_it)->boundingBox))
 					{
-						ObjectsToDraw[i]->culling = true;
+						(*Otd_it)->culling = true;
 					}
 					else
 					{
-						ObjectsToDraw[i]->culling = false;
+						(*Otd_it)->culling = false;
 					}
 				}
 			}
