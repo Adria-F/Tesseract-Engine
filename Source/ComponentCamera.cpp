@@ -38,7 +38,7 @@ bool ComponentCamera::Update()
 		return false;
 
 	DrawFrustum();
-	CameraBB();
+	//CameraBB();
 	
 	if (gameObject != nullptr)
 	{
@@ -148,7 +148,7 @@ void ComponentCamera::DrawInfo()
 		}
 		if (ImGui::Checkbox("Culling", &IsCulling))
 		{
-			App->scene_intro->ChangeCulling(gameObject);
+			App->scene_intro->ChangeCulling(gameObject, IsCulling);
 		}
 	}
 }

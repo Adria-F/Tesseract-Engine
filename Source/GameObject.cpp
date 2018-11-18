@@ -297,7 +297,7 @@ void GameObject::Save(JSON_Value* gameobject)
 	JSON_Value* gameObject = gameobject->createValue();
 
 	gameObject->addUint("UID", UID);
-	gameObject->addUint("ParentUID", (parent == App->scene_intro->root) ? 0 : parent->UID);
+	gameObject->addUint("ParentUID", (parent == App->scene_intro->root || parent == nullptr) ? 0 : parent->UID);
 	gameObject->addString("Name", name.c_str());
 	gameObject->addBool("Active", active);
 	gameObject->addBool("Static", isStatic);

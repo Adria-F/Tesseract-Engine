@@ -152,7 +152,10 @@ update_status ModuleGUI::Update(float dt)
 			if (ImGui::MenuItem("Load Scene"))
 				App->scene_intro->wantToLoadScene();
 			if (ImGui::MenuItem("New Scene"))
+			{
 				App->scene_intro->newScene();
+				App->scene_intro->AddCamera();
+			}
 			if (ImGui::MenuItem("Close", "ESC"))
 			{
 				ImGui::EndMenu(); //End menu

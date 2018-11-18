@@ -4,6 +4,7 @@
 #include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
 #include "ModuleSceneLoader.h"
+#include "ModuleResource.h"
 
 #include "ImGui\imgui_internal.h"
 
@@ -170,8 +171,12 @@ void PanelAssets::Draw()
 
 				if (extension == "fbx" || extension == "FBX")
 				{
-					//TODO it should get the path of the scene
-					App->scene_loader->loadScene(filename.c_str(), true);
+					std::string path = current_path;
+					if (path.size() > 0 && path.back() != '/')
+						path += '/';
+					path += (*it_e)->name;
+					uint UID = App->resources->getResourceUIDFromMeta(path.c_str());
+					App->scene_loader->loadScene(std::to_string(UID).c_str(), true);
 				}
 			}
 		}

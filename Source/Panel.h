@@ -9,6 +9,9 @@
 
 struct assetsElement
 {
+	~assetsElement()
+	{}
+
 	enum elementType
 	{
 		FOLDER = 0,

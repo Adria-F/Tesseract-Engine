@@ -47,8 +47,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 	//Add all extra files inside assets to the search path
 	addPathOfFilesAt(ASSETS_FOLDER);
 
-	import_delay = 1000.0f;
-	first_import = true;	
+	import_delay = 1000.0f;	
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -56,13 +55,20 @@ ModuleFileSystem::~ModuleFileSystem()
 	PHYSFS_deinit();
 }
 
+bool ModuleFileSystem::Start()
+{
+	importFilesAt(ASSETS_FOLDER, true);
+	import_timer.Start();
+
+	return true;
+}
+
 update_status ModuleFileSystem::Update(float dt)
 {
-	if (first_import || import_timer.ReadTime() >= import_delay)
+	if (import_timer.ReadTime() >= import_delay)
 	{
-		importFilesAt(ASSETS_FOLDER, first_import);
+		importFilesAt(ASSETS_FOLDER);
 		import_timer.Start();
-		first_import = false;
 	}
 
 	return UPDATE_CONTINUE;
