@@ -91,7 +91,7 @@ void ComponentTexture::Save(JSON_Value * component) const
 
 void ComponentTexture::Load(JSON_Value* component)
 {
-	UID = component->getUint("UID");
+	//UID = component->getUint("UID");
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("texture"));
 
 	App->resources->GetResource(RUID)->LoadtoMemory();

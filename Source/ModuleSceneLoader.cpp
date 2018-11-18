@@ -63,10 +63,6 @@ bool ModuleSceneLoader::CleanUp()
 
 bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<uint>& UIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
-	//TODO deactivate this two lines after finished with the function
-	App->scene_intro->newScene();
-	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
-
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr && scene->HasMeshes())
@@ -162,13 +158,6 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 		}
 
 		aiReleaseImport(scene);
-
-		/*App->scene_intro->AddCamera();
-
-		App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
-		App->scene_intro->root->RecalculateBB();
-		App->scene_intro->StartQuadTree();*/
-
 	}
 	else
 	{
@@ -328,8 +317,8 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 		for (int i = 0; i < gameObjects->getRapidJSONValue()->Size(); i++)
 		{
 			GameObject* GO = new GameObject();
-			GO->Load(gameObjects->getValueFromArray(i));
-			gameobjects.insert(std::pair<uint, GameObject*>(GO->UID, GO));
+			uint UID = GO->Load(gameObjects->getValueFromArray(i));
+			gameobjects.insert(std::pair<uint, GameObject*>(UID, GO));
 			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
 

@@ -218,6 +218,7 @@ void ModuleScene::newScene()
 	quadTree->Clear();
 
 	selected_GO = nullptr;
+	activeCamera = nullptr;
 
 	LOG("Unloading scene");
 	std::list<Primitive*>::iterator it_p;

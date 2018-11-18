@@ -31,7 +31,7 @@ public:
 	void DrawBB(const OBB& BB, vec color) const;
 
 	void Save(JSON_Value* gameobject);
-	void Load(JSON_Value* gameobject);
+	uint Load(JSON_Value* gameobject);
 
 	Component* GetComponent(componentType type);
 

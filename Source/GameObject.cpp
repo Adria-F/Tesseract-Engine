@@ -318,9 +318,8 @@ void GameObject::Save(JSON_Value* gameobject)
 	}
 }
 
-void GameObject::Load(JSON_Value* gameobject)
+uint GameObject::Load(JSON_Value* gameobject)
 {
-	UID = gameobject->getUint("UID");
 	parentUID = gameobject->getUint("ParentUID");
 	name = gameobject->getString("Name");
 	active= gameobject->getBool("Active");
@@ -336,6 +335,8 @@ void GameObject::Load(JSON_Value* gameobject)
 			component->Load(componentData); //Load its info
 		}
 	}
+
+	return gameobject->getUint("UID");
 }
 
 Component* GameObject::GetComponent(componentType type)
