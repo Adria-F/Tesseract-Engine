@@ -206,6 +206,7 @@ void ComponentCamera::Save(JSON_Value * component) const
 
 	camera->addFloat("VFOV", frustum.verticalFov);
 	camera->addFloat("Aspect Ratio", frustum.AspectRatio());
+	camera->addBool("Culling", IsCulling);
 
 	component->addValue("", camera);
 }
@@ -223,6 +224,7 @@ void ComponentCamera::Load(JSON_Value * component)
 
 	frustum.verticalFov = component->getFloat("VFOV");
 	setAspectRatio(component->getFloat("Aspect Ratio"));
+	IsCulling = component->getBool("Culling");
 }
 
 void ComponentCamera::CameraBB()

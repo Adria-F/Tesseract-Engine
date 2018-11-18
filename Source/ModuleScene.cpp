@@ -343,7 +343,6 @@ void ModuleScene::AddCamera()
 	newGameObject->camera->frustum.verticalFov = DEGTORAD * 30.0f;
 	newGameObject->camera->setAspectRatio(16.0f / 9.0f);
 	newGameObject->camera->RecalculateBB();
-	newGameObject->camera->IsCulling = true;
 
 	newGameObject->boundingBox = newGameObject->camera->cameraBB;
 
