@@ -23,6 +23,11 @@
 #include "mmgr/mmgr.h"
 #endif
 
+bool Same_GameObject(GameObject* first, GameObject* second)
+{
+	return (first == second);
+}
+
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {}
 
@@ -97,47 +102,55 @@ void ModuleScene::Draw()
 		(*it)->Render();
 	}
 
-	ComponentCamera* activeCamera = App->camera->camera;
-
-	//Static objects-------------------------------------------------------------------
-	if (quadTree->QT_Box != nullptr)
+	for (int c = 0; c < cameras.size(); c++)
 	{
-		//Fill the vector of the objects inside the same quads of the camera's bb		
-		quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
+		GameObject* sceneCamera = cameras[c];
 
-		//From the possible objects only draw the ones inside the frustum
-		for (int i = 0; i < ObjectsToDraw.size(); i++)
+		if (sceneCamera != nullptr && sceneCamera->camera->IsCulling)
 		{
-			if (activeCamera->ContainsAABB(ObjectsToDraw[i]->boundingBox))
+			//Static objects-------------------------------------------------------------------
+			if (quadTree->QT_Box != nullptr)
 			{
-				ObjectsToDraw[i]->culling = true;
-			}
-			else
-			{
-				ObjectsToDraw[i]->culling = false;
-			}
-		}
-	}
+				//Fill the vector of the objects inside the same quads of the camera's bb		
+				//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
+				quadTree->Intersect(ObjectsToDraw, sceneCamera->camera->frustum);
+				ObjectsToDraw.sort();
+				ObjectsToDraw.unique(Same_GameObject);
 
-	//Non-Static objects-------------------------------------------------------------------
-
-	//From the possible objects only draw the ones inside the frustum
-	for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
-	{
-		if (!(*it_ch)->isStatic)
-		{
-			if (activeCamera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
-			{
-				(*it_ch)->culling = true;
-			}
-			else
-			{
-				(*it_ch)->culling = false;
+				//From the possible objects only draw the ones inside the frustum
+				for (list<GameObject*>::iterator Otd_it = ObjectsToDraw.begin(); Otd_it != ObjectsToDraw.end(); Otd_it++)
+				{
+					if (sceneCamera->camera->ContainsAABB((*Otd_it)->boundingBox))
+					{
+						(*Otd_it)->culling = true;
+					}
+					else
+					{
+						(*Otd_it)->culling = false;
+					}
+				}
 			}
 
-			if ((*it_ch)->GetComponent(CAMERA) != nullptr)
+			//Non-Static objects-------------------------------------------------------------------
+
+			//From the possible objects only draw the ones inside the frustum
+			for (std::list<GameObject*>::iterator it_ch = root->childs.begin(); it_ch != root->childs.end(); it_ch++)
 			{
-				(*it_ch)->culling = true;
+				if (!(*it_ch)->isStatic)
+				{
+					if (sceneCamera->camera->ContainsAABB((*it_ch)->boundingBox) && (*it_ch)->GetComponent(CAMERA) == nullptr)
+					{
+						(*it_ch)->culling = true;
+					}
+					else
+					{
+						(*it_ch)->culling = false;
+					}
+					if ((*it_ch)->GetComponent(CAMERA) != nullptr)
+					{
+						(*it_ch)->culling = true;
+					}
+				}
 			}
 		}
 	}
@@ -205,6 +218,7 @@ void ModuleScene::newScene()
 	ShapesToDraw.clear();
 
 	gameObjects.clear(); //Just stores pointers, the gameObjects will be deleted bellow
+	cameras.clear();
 
 	std::list<GameObject*>::iterator it_ch;
 	it_ch = root->childs.begin();
@@ -360,9 +374,11 @@ void ModuleScene::AddCamera()
 	newGameObject->camera->frustum.farPlaneDistance=100.0f;
 	newGameObject->camera->frustum.verticalFov = DEGTORAD * 30.0f;
 	newGameObject->camera->setAspectRatio(16.0f / 9.0f);
-
+	newGameObject->camera->RecalculateBB();
 
 	newGameObject->boundingBox = newGameObject->camera->cameraBB;
+
+	cameras.push_back(newGameObject);
 }
 
 void ModuleScene::AddEmptyGameObject()
@@ -407,4 +423,28 @@ void ModuleScene::selectGameObject(GameObject* gameObject)
 GameObject* ModuleScene::getGameObject(uint UID)
 {
 	return gameObjects[UID];
+}
+
+void ModuleScene::FindCameras(GameObject* parent)
+{
+	for (std::list<GameObject*>::iterator go_it=parent->childs.begin();go_it!=parent->childs.end();go_it++)
+	{
+		if ((*go_it)->childs.size() > 0)
+		{
+			FindCameras((*go_it));
+		}
+		if ((*go_it)->camera != nullptr)
+			cameras.push_back(*go_it);	
+	}
+}
+
+void ModuleScene::ChangeCulling(GameObject * GO)
+{
+	for (int i = 0; i < cameras.size(); i++)
+	{
+		if (cameras[i] != GO)
+		{
+			cameras[i]->camera->IsCulling = false;
+		}
+	}
 }

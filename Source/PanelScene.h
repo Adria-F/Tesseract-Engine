@@ -18,7 +18,9 @@ public:
 
 private:
 
+	float gametimer;
 	bool gamePaused = false;
+	bool step = false;
 
 };
 

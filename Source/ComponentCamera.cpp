@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
@@ -22,11 +23,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	frustum.verticalFov = DEGTORAD * 90.0f;
 	setAspectRatio(16.0f / 9.0f);
 
-	float3 corner[8];
-	frustum.GetCornerPoints(corner);
-
-	cameraBB.SetNegativeInfinity();
-	cameraBB.Enclose(corner, 8);
+	RecalculateBB();
 
 	IsCulling = false;
 }
@@ -149,7 +146,10 @@ void ComponentCamera::DrawInfo()
 		{
 			setAspectRatio(AR);
 		}
-		ImGui::Checkbox("Culling", &IsCulling);
+		if (ImGui::Checkbox("Culling", &IsCulling))
+		{
+			App->scene_intro->ChangeCulling(gameObject);
+		}
 	}
 }
 
@@ -206,6 +206,7 @@ void ComponentCamera::Save(JSON_Value * component) const
 
 	camera->addFloat("VFOV", frustum.verticalFov);
 	camera->addFloat("Aspect Ratio", frustum.AspectRatio());
+	camera->addBool("Culling", IsCulling);
 
 	component->addValue("", camera);
 }
@@ -223,6 +224,7 @@ void ComponentCamera::Load(JSON_Value * component)
 
 	frustum.verticalFov = component->getFloat("VFOV");
 	setAspectRatio(component->getFloat("Aspect Ratio"));
+	IsCulling = component->getBool("Culling");
 }
 
 void ComponentCamera::CameraBB()
@@ -272,4 +274,13 @@ void ComponentCamera::CameraBB()
 
 	glColor3f(1, 1, 1);
 	glLineWidth(1.0f);
+}
+
+void ComponentCamera::RecalculateBB()
+{
+	float3 corner[8];
+	frustum.GetCornerPoints(corner);
+
+	cameraBB.SetNegativeInfinity();
+	cameraBB.Enclose(corner, 8);
 }

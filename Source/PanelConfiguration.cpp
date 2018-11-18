@@ -12,7 +12,8 @@
 #include "mmgr/mmgr.h"
 
 PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
-fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE)
+fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE),
+game_fps_log(FPS_LOG_SIZE), game_ms_log(FPS_LOG_SIZE)
 {	
 	resizable = WIN_RESIZABLE;
 
@@ -233,6 +234,28 @@ void PanelConfiguration::Draw()
 		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
 	}
 
+	if (ImGui::CollapsingHeader("Time Manager"))
+	{
+		static int GameFrCap = App->getGameFramerateCap();
+		if (ImGui::SliderInt("Game MaxFPS", &GameFrCap, 1, 120))
+			App->setGameFramerateCap(GameFrCap);
+		
+		if (ImGui::Checkbox("Game Vsync", &App->renderer3D->vsync))
+		{
+			if (App->renderer3D->vsync)
+				SDL_GL_SetSwapInterval(1);
+			else
+				SDL_GL_SetSwapInterval(0);
+		}
+
+		char title[25];
+		sprintf_s(title, 25, "Game Framerate %.1f", game_fps_log[game_fps_log.size() - 1]);
+		ImGui::PlotHistogram("##Game framerate", &game_fps_log[0], game_fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
+		sprintf_s(title, 25, "Game Milliseconds %0.1f", game_ms_log[game_ms_log.size() - 1]);
+		ImGui::PlotHistogram("##Game milliseconds", &game_ms_log[0], game_ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+	}
+
 	ImGui::End();
 }
 
@@ -246,6 +269,18 @@ void PanelConfiguration::addFPS(float fps, float ms)
 
 	fps_log[FPS_LOG_SIZE - 1] = fps;
 	ms_log[FPS_LOG_SIZE - 1] = ms;
+}
+
+void PanelConfiguration::addGameFPS(float fps, float ms)
+{
+	for (uint i = 0; i < FPS_LOG_SIZE - 1; ++i)
+	{
+		game_fps_log[i] = game_fps_log[i + 1];
+		game_ms_log[i] = game_ms_log[i + 1];
+	}
+
+	game_fps_log[FPS_LOG_SIZE - 1] = fps;
+	game_ms_log[FPS_LOG_SIZE - 1] = ms;
 }
 
 void PanelConfiguration::addMemory(float memory)

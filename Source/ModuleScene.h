@@ -54,15 +54,20 @@ public:
 	void selectGameObject(GameObject* gameObject);
 	GameObject* getGameObject(uint UID);
 
+	//Provisional
+	void FindCameras(GameObject* parent);
+	void ChangeCulling(GameObject* GO);
+
 public:
 
 	std::string scene_name = "";
+	std::vector<GameObject*> cameras;
 
 	list<Primitive*> ShapesToDraw;
 
 	GameObject* root = nullptr;
 
-	vector<GameObject*> ObjectsToDraw;
+	list<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
 

@@ -16,7 +16,7 @@ public:
 	void Remove(GameObject* gameObject);
 
 	void Intersect(vector<GameObject*>& gameObjects, const AABB& boundingBox);
-	void Intersect(vector<GameObject*>& gameObjects, const Frustum& boundingBox);
+	void Intersect(list<GameObject*>& gameObjects, const Frustum& boundingBox);
 	void DrawQT();
 
 	void Clear();

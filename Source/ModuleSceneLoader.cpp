@@ -344,6 +344,8 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 		}
 	}
 
+	App->scene_intro->FindCameras(App->scene_intro->root);
+
 	App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 	App->scene_intro->root->RecalculateBB();
 

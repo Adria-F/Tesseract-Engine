@@ -51,6 +51,9 @@ public:
 
 	Timer	game_timer;
 	bool GameMode = false;
+	int GameframerateCap = 60;
+	float game_dt = 0.0f;
+	bool GamePaused = false;
 
 private:
 
@@ -80,6 +83,8 @@ public:
 
 	int getFramerateCap() const;
 	void setFramerateCap(int cap);
+	int getGameFramerateCap() const;
+	void setGameFramerateCap(int cap);
 
 	void RequestBrowser(const char * url) const;
 

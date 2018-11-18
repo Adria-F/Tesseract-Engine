@@ -18,6 +18,8 @@ PanelScene::PanelScene(const char* name) : Panel(name)
 {
 	active = true;
 	gamePaused = false;
+	step = false;
+	gametimer = 0;
 }
 
 
@@ -74,23 +76,18 @@ void PanelScene::Draw()
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85)/2);
 	if (ImGui::ArrowButton("play", ImGuiDir_Right))
 	{
-		if (!gamePaused)
+		gametimer = 0;
+
+		if (!App->GameMode)
 		{
-			if (!App->GameMode)
-			{
-				App->Save();
-				App->GameMode = true;
-			}
-			else
-			{
-				App->Load();
-				App->GameMode = false;
-			}
+			App->Save();
+			App->GameMode = true;
 		}
 		else
 		{
-			App->game_timer.Start();
-			gamePaused = false;
+			App->Load();
+			App->GameMode = false;
+			App->GamePaused = false;
 		}
 	}
 
@@ -98,8 +95,14 @@ void PanelScene::Draw()
 
 	if ( ImGui::Button("||", {23,19}) && App->GameMode )
 	{
-		App->game_timer.PauseTimer();
-		gamePaused = true;
+		if (!App->GamePaused)
+		{
+			App->GamePaused = true;
+		}
+		else
+		{
+			App->GamePaused = false;
+		}
 	}
 
 	ImGui::PopStyleColor(2);
@@ -111,28 +114,29 @@ void PanelScene::Draw()
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
 	
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
-
-	if ( ImGui::Button("->", { 23,19 }) && App->GameMode )
+	if (App->GameMode && !App->GamePaused && step == true)
 	{
-		
+		App->GamePaused = true;
+		step = false;
+	}
+
+	if ( ImGui::Button("->", { 23,19 }) && App->GameMode && App->GamePaused)
+	{
+		App->GamePaused = false;
+		step = true;
 	}
 	ImGui::PopStyleColor(2);
 
 	char sec[64], min[64];
-	if (App->GameMode)
-	{
-		int nsec= (int)((App->game_timer.ReadTime() / 1000) % 60);
-		int nmin= (int)((App->game_timer.ReadTime() / 60000) % 3600);
 
-		//milisec = std::to_string(App->game_timer.ReadTime() /1000);
-		sprintf(sec,"%02d",nsec);
-		sprintf(min, "%02d", nmin);
-	}
-	else
-	{
-		sprintf(sec, "00");
-		sprintf(min, "00");
-	}
+	float framerelation = (float)App->getFramerateCap()/(float)App->getGameFramerateCap();
+
+	gametimer += App->game_dt/(framerelation*framerelation);
+	int nsec= ((int)gametimer) % 60;
+	int nmin= ((int)gametimer/60);
+
+	sprintf(sec,"%02d",nsec);
+	sprintf(min, "%02d", nmin);	
 
 	std::string smin = min ;
 	std::string ssec = sec;

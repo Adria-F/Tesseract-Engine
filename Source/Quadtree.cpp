@@ -145,7 +145,7 @@ void Quadtree::Intersect(vector<GameObject*>& gameObjects, const AABB & bounding
 	}
 }
 
-void Quadtree::Intersect(vector<GameObject*>& gameObjects, const Frustum& frustum)
+void Quadtree::Intersect(list<GameObject*>& gameObjects, const Frustum& frustum)
 {
 	Plane planes[6];
 	float3 BBcorners[8];

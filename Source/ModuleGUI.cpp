@@ -233,6 +233,12 @@ void ModuleGUI::logFPS(float fps, float ms)
 		configuration->addFPS(fps, ms);
 }
 
+void ModuleGUI::logGameFPS(float fps, float ms)
+{
+	if (configuration != nullptr)
+		configuration->addGameFPS(fps, ms);
+}
+
 void ModuleGUI::logMemory(float memory)
 {
 	if (configuration != nullptr)
