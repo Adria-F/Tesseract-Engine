@@ -111,6 +111,12 @@ bool ResourceMesh::LoadMesh()
 		cursor += bytes;
 	}
 
+	//Load Color
+	bytes = sizeof(float) * 3;
+	float color[3];
+	memcpy(color, cursor, bytes);
+	Color = { color[0],color[1],color[2]};
+
 	//Calculate bounding box
 	boundingBox.SetNegativeInfinity();
 	boundingBox.Enclose((float3*)vertices, num_vertices);

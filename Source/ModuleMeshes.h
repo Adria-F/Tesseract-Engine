@@ -5,7 +5,6 @@
 
 #include <string>
 
-struct Mesh;
 struct aiMesh;
 class ResourceMesh;
 class Resource;
@@ -16,8 +15,7 @@ public:
 	ModuleMeshes(bool start_enabled = true);
 	~ModuleMeshes() {}
 
-	bool importRMesh(aiMesh* mesh, uint UID, std::string& path);
-	Mesh* loadMesh(const char* meshName);
+	bool importRMesh(aiMesh* mesh, uint UID, std::string& path, vec color);
 	bool saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath);
 	
 };

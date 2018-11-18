@@ -22,7 +22,7 @@ ModuleMeshes::ModuleMeshes(bool start_enabled): Module(start_enabled)
 }
 
 
-bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
+bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path, vec color)
 {
 	bool ret = false;
 	
@@ -76,6 +76,9 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 		//Copying indices
 		newMesh->num_indices = mesh->mNumFaces * 3;
 		newMesh->indices = new uint[newMesh->num_indices]; // assume each face is a triangle
+		
+		//Copying color
+		newMesh->Color = color;
 
 		for (int j = 0; j < mesh->mNumFaces; ++j)
 		{
@@ -116,7 +119,7 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 
 	//Total size of the buffer
 	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices * 3 + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_normals * 3 + sizeof(float)*mesh->num_texCoords * 2;
-	//size += sizeof(float) * 10;
+	size += sizeof(float) * 3;
 	char* buffer = new char[size];
 	char* cursor = buffer;
 
@@ -144,6 +147,11 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 	bytes = sizeof(float)*mesh->num_texCoords * 2;
 	memcpy(cursor, mesh->texCoords, bytes);
 	cursor += bytes;
+
+	//Store Color
+	float color[3] = { mesh->Color.x,mesh->Color.y,mesh->Color.z };
+	bytes = sizeof(float)*3;
+	memcpy(cursor, color, bytes);
 
 	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true);
 	RELEASE_ARRAY(buffer);

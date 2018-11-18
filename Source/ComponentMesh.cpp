@@ -16,7 +16,7 @@
 
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
 {
-
+	color = true;
 }
 
 ComponentMesh::~ComponentMesh()
@@ -43,8 +43,15 @@ bool ComponentMesh::Update()
 	if (mesh->texCoords != nullptr)
 		glTexCoordPointer(2, GL_FLOAT, 0, &mesh->texCoords[0]);
 
+	if (color)
+	{
+		glColor3f(mesh->Color.x, mesh->Color.y, mesh->Color.z);
+	}
+
 	//Draw
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glColor3f(1.0f,1.0f,1.0f);
 
 	//Disable
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

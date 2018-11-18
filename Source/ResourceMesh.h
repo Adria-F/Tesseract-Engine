@@ -32,7 +32,7 @@ public:
 	uint num_normals = 0;
 	float* normals = nullptr;
 
-	vec color = { 0,0,0 };
+	vec Color = { 1.0f,1.0f,1.0f };
 
 	uint num_texCoords = 0;
 	float* texCoords = nullptr;
