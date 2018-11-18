@@ -22,6 +22,8 @@ public:
 
 	bool ContainsAABB(const AABB& boundingBox);
 
+	void RecalculateBB();
+
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 

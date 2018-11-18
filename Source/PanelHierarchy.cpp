@@ -63,7 +63,7 @@ void PanelHierarchy::Draw()
 
 	ImGui::End();
 
-	if (creating)
+	if (!creating)
 	{
 		App->scene_intro->StartQuadTree();
 	}

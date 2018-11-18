@@ -55,11 +55,12 @@ public:
 	GameObject* getGameObject(uint UID);
 
 	//Provisional
-	GameObject* FindCamera();
+	void FindCameras(GameObject* parent);
 
 public:
 
 	std::string scene_name = "";
+	std::vector<GameObject*> cameras;
 
 	list<Primitive*> ShapesToDraw;
 

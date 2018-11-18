@@ -22,11 +22,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 	frustum.verticalFov = DEGTORAD * 90.0f;
 	setAspectRatio(16.0f / 9.0f);
 
-	float3 corner[8];
-	frustum.GetCornerPoints(corner);
-
-	cameraBB.SetNegativeInfinity();
-	cameraBB.Enclose(corner, 8);
+	RecalculateBB();
 
 	IsCulling = false;
 }
@@ -272,4 +268,13 @@ void ComponentCamera::CameraBB()
 
 	glColor3f(1, 1, 1);
 	glLineWidth(1.0f);
+}
+
+void ComponentCamera::RecalculateBB()
+{
+	float3 corner[8];
+	frustum.GetCornerPoints(corner);
+
+	cameraBB.SetNegativeInfinity();
+	cameraBB.Enclose(corner, 8);
 }
