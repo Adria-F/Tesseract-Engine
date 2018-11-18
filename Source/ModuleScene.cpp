@@ -101,10 +101,10 @@ void ModuleScene::Draw()
 	{
 		GameObject* sceneCamera = cameras[c];
 
-		if (sceneCamera != nullptr)
+		if (sceneCamera != nullptr && sceneCamera->camera->IsCulling)
 		{
 			//Static objects-------------------------------------------------------------------
-			if (quadTree->QT_Box != nullptr && sceneCamera->camera->IsCulling)
+			if (quadTree->QT_Box != nullptr)
 			{
 				//Fill the vector of the objects inside the same quads of the camera's bb		
 				//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
@@ -404,5 +404,16 @@ void ModuleScene::FindCameras(GameObject* parent)
 		}
 		if ((*go_it)->camera != nullptr)
 			cameras.push_back(*go_it);	
+	}
+}
+
+void ModuleScene::ChangeCulling(GameObject * GO)
+{
+	for (int i = 0; i < cameras.size(); i++)
+	{
+		if (cameras[i] != GO)
+		{
+			cameras[i]->camera->IsCulling = false;
+		}
 	}
 }

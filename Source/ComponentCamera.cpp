@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
@@ -145,7 +146,10 @@ void ComponentCamera::DrawInfo()
 		{
 			setAspectRatio(AR);
 		}
-		ImGui::Checkbox("Culling", &IsCulling);
+		if (ImGui::Checkbox("Culling", &IsCulling))
+		{
+			App->scene_intro->ChangeCulling(gameObject);
+		}
 	}
 }
 

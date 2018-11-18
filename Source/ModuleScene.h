@@ -56,6 +56,7 @@ public:
 
 	//Provisional
 	void FindCameras(GameObject* parent);
+	void ChangeCulling(GameObject* GO);
 
 public:
 
