@@ -192,7 +192,7 @@ void GameObject::RemoveComponent(Component* component)
 	RELEASE(component);
 }
 
-void GameObject::DrawBB(const AABB& BB, vec3 color) const
+void GameObject::DrawBB(const AABB& BB, vec color) const
 {
 	glLineWidth(1.5f);
 	glColor3f(color.x, color.y, color.z);
@@ -241,7 +241,7 @@ void GameObject::DrawBB(const AABB& BB, vec3 color) const
 	glLineWidth(1.0f);
 }
 
-void GameObject::DrawBB(const OBB& BB, vec3 color) const
+void GameObject::DrawBB(const OBB& BB, vec color) const
 {
 	glLineWidth(1.5f);
 	glColor3f(color.x, color.y, color.z);
@@ -295,7 +295,7 @@ void GameObject::Save(JSON_Value* gameobject)
 	JSON_Value* gameObject = gameobject->createValue();
 
 	gameObject->addUint("UID", UID);
-	gameObject->addUint("ParentUID", (parent == App->scene_intro->root) ? 0 : parent->UID);
+	gameObject->addUint("ParentUID", (parent == App->scene_intro->root || parent == nullptr) ? 0 : parent->UID);
 	gameObject->addString("Name", name.c_str());
 	gameObject->addBool("Active", active);
 	gameObject->addBool("Static", isStatic);

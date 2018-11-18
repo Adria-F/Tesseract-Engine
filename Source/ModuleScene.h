@@ -47,7 +47,7 @@ public:
 	void ResizeQuadTree(GameObject* gameObject);
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 
-	void addGameObject(GameObject* gameObject, GameObject* parent = nullptr);
+	void addGameObject(GameObject* gameObject, GameObject* parent = nullptr, GameObject* fakeScene = nullptr);
 	void AddCamera();
 	void AddEmptyGameObject();
 	void deleteGameObject(GameObject* GO);
@@ -56,7 +56,7 @@ public:
 
 	//Provisional
 	void FindCameras(GameObject* parent);
-	void ChangeCulling(GameObject* GO);
+	void ChangeCulling(GameObject* GO, bool culling = true);
 
 public:
 
@@ -70,6 +70,7 @@ public:
 	list<GameObject*> ObjectsToDraw;
 
 	GameObject* selected_GO = nullptr;
+	GameObject* activeCamera = nullptr;
 
 	Quadtree* quadTree=nullptr;
 

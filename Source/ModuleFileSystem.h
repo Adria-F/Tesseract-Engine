@@ -11,6 +11,8 @@ public:
 	ModuleFileSystem(bool start_enabled = true);
 	~ModuleFileSystem();
 
+	bool Start();
+
 	update_status Update(float dt);
 
 	bool addPath(const char* path);
@@ -54,8 +56,6 @@ private:
 
 	Timer import_timer;
 	float import_delay = 1000.0f;
-
-	bool first_import = false;
 };
 
 #endif // !__MODULEFILESYSTEM_H__

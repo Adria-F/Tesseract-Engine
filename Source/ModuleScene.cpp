@@ -47,7 +47,7 @@ bool ModuleScene::Start()
 	StartQuadTree();
 
 	//Load Street scene
-	//App->scene_loader->loadScene("Assets/Scenes/sceneTest");
+	App->scene_loader->loadScene("Assets/Scenes/street");
 	//App->scene_loader->loadScene("sceneTest");
 	
 	ImGuizmo::Enable(false);
@@ -335,7 +335,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 	}
 }
 
-void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent)
+void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent, GameObject* fakeScene)
 {
 	if (parent != nullptr)
 	{
@@ -344,18 +344,29 @@ void ModuleScene::addGameObject(GameObject* gameObject, GameObject* parent)
 	}
 	else
 	{
-		root->childs.push_back(gameObject);
-		gameObject->parent = root;
+		if (fakeScene == nullptr)
+		{
+			root->childs.push_back(gameObject);
+			gameObject->parent = root;
+		}
+		else
+		{
+			fakeScene->childs.push_back(gameObject);
+			gameObject->parent = fakeScene;
+		}
 	}
 
-	std::vector<std::string*> names;
-	for (map<uint, GameObject*>::iterator it_go = gameObjects.begin(); it_go != gameObjects.end(); it_go++)
+	if (fakeScene == nullptr)
 	{
-		names.push_back(&(*it_go).second->name);
-	}
-	App->fileSystem->getAvailableNameFromArray(names, gameObject->name);
+		std::vector<std::string*> names;
+		for (map<uint, GameObject*>::iterator it_go = gameObjects.begin(); it_go != gameObjects.end(); it_go++)
+		{
+			names.push_back(&(*it_go).second->name);
+		}
+		App->fileSystem->getAvailableNameFromArray(names, gameObject->name);
 
-	gameObjects[gameObject->UID] = gameObject;
+		gameObjects[gameObject->UID] = gameObject;
+	}
 }
 
 void ModuleScene::AddCamera()
@@ -383,6 +394,9 @@ void ModuleScene::AddCamera()
 	newGameObject->camera->RecalculateBB();
 
 	newGameObject->boundingBox = newGameObject->camera->cameraBB;
+	
+	if (cameras.size() == 0)
+		ChangeCulling(newGameObject);
 
 	cameras.push_back(newGameObject);
 }
@@ -454,13 +468,22 @@ void ModuleScene::FindCameras(GameObject* parent)
 	}
 }
 
-void ModuleScene::ChangeCulling(GameObject * GO)
+void ModuleScene::ChangeCulling(GameObject* GO, bool culling)
 {
-	for (std::list<GameObject*>::iterator it_c = cameras.begin(); it_c != cameras.end(); it_c++)
+	if (activeCamera != nullptr)
+		activeCamera->camera->IsCulling = false;
+	else if (culling)
 	{
-		if ((*it_c) != GO)
-		{
-			(*it_c)->camera->IsCulling = false;
-		}
+		App->renderer3D->Frustum_Culling = true;
+	}
+
+	GO->camera->IsCulling = culling;
+
+	if (culling)
+		activeCamera = GO;
+	else if (activeCamera == GO)
+	{
+		activeCamera = nullptr;
+		App->renderer3D->Frustum_Culling = false;
 	}
 }

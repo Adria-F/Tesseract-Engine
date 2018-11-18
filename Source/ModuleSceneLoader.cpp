@@ -71,6 +71,9 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		GameObject* fakeScene = new GameObject();
+		fakeScene->UID = 0;
+
 		//Import all meshes
 		vector<ResourceMesh*> rMeshes;
 		vector<std::string*> meshesNames;
@@ -145,28 +148,26 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			}
 		}
 
-		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures, fakeScene);
 		if (rootGO != nullptr)
 		{
 			std::string filename;
 			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
 			rootGO->name = filename;
-			App->scene_intro->addGameObject(rootGO);
+			fakeScene->childs.push_back(rootGO);
 
-			saveScene(std::to_string(UID).c_str(), true);
+			saveScene(std::to_string(UID).c_str(), true, fakeScene);
 
 			newPath=FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
-
-			//App->scene_intro->newScene();
 		}
 
 		aiReleaseImport(scene);
 
-		App->scene_intro->AddCamera();
+		/*App->scene_intro->AddCamera();
 
 		App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 		App->scene_intro->root->RecalculateBB();
-		App->scene_intro->StartQuadTree();
+		App->scene_intro->StartQuadTree();*/
 
 	}
 	else
@@ -178,7 +179,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 	return true;
 }
 
-GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures, GameObject* fakeScene)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -251,7 +252,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 
 			if (i > fail_count)
 			{
-				App->scene_intro->addGameObject(child, GO);
+				App->scene_intro->addGameObject(child, GO, fakeScene);
 			}
 		}
 	}
@@ -269,10 +270,10 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 		}
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, textures);
+			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, textures, fakeScene);
 			if (child != nullptr)
 			{
-				App->scene_intro->addGameObject(child, GO);
+				App->scene_intro->addGameObject(child, GO, fakeScene);
 			}
 		}
 	}
@@ -280,7 +281,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	return GO;
 }
 
-bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
+bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX, GameObject* fakeScene)
 {
 	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openWriteFile(path.c_str());
@@ -290,7 +291,9 @@ bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 	JSON_Value* gameObjects = scene->createValue();
 	gameObjects->convertToArray();
 
-	for (std::list<GameObject*>::iterator it_ch = App->scene_intro->root->childs.begin(); it_ch != App->scene_intro->root->childs.end(); it_ch++)
+	GameObject* rootObject = (fakeScene != nullptr) ? fakeScene : App->scene_intro->root;
+
+	for (std::list<GameObject*>::iterator it_ch = rootObject->childs.begin(); it_ch != rootObject->childs.end(); it_ch++)
 	{
 		(*it_ch)->Save(gameObjects);
 	}
@@ -306,9 +309,12 @@ bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX)
 
 bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 {
-	App->scene_intro->newScene();
+	if (!isFBX)
+	{
+		App->scene_intro->newScene();
+		App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
+	}
 	LOG("Loading scene: %s", scene_name);
-	App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
 
 	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openReadFile(path.c_str());
@@ -350,7 +356,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 	App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 	App->scene_intro->root->RecalculateBB();
 
-	if(App->GameMode==false)
+	if(App->GameMode==false && !isFBX)
 		App->camera->FitCamera(App->scene_intro->root->boundingBox);
 
 	App->scene_intro->StartQuadTree();
