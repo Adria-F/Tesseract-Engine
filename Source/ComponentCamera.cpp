@@ -42,7 +42,7 @@ bool ComponentCamera::Update()
 	
 	if (gameObject != nullptr)
 	{
-		frustum.SetWorldMatrix(gameObject->transformation->localMatrix.Float3x4Part());
+		frustum.SetWorldMatrix(gameObject->transformation->globalMatrix.Float3x4Part());
 	}
 	return true;
 }

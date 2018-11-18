@@ -68,17 +68,6 @@ void GameObject::Update()
 
 		}
 
-		if (transformation != nullptr && transformation->changed)
-		{
-			GameObject* bigParent = this;
-			while (bigParent->parent != nullptr)
-				bigParent = bigParent->parent;
-			bigParent->RecalculateBB();
-
-			App->scene_intro->StartQuadTree();
-			transformation->changed = false;
-		}
-
 		if (camera != nullptr)
 			camera->Update();
 
@@ -100,6 +89,17 @@ void GameObject::Update()
 		}		
 	}	
 
+	if (transformation != nullptr && transformation->changed)
+	{
+		GameObject* bigParent = this;
+		while (bigParent->parent != nullptr)
+			bigParent = bigParent->parent;
+		bigParent->RecalculateBB();
+
+		App->scene_intro->StartQuadTree();
+		transformation->changed = false;
+	}
+
 	std::list<Component*>::iterator it_c = components.begin();
 	while( it_c != components.end())
 	{
@@ -110,8 +110,6 @@ void GameObject::Update()
 		else
 			it_c++;
 	}
-
-	culling = false;
 }
 
 void GameObject::DrawComponentsUI()
