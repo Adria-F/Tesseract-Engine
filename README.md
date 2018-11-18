@@ -1,7 +1,7 @@
 # 3D Tesseract-Engine
 
-This is a 3D Engine created by [Adri‡ Ferrer](https://github.com/Adria-F) and [Marc Garcia](https://github.com/MaxitoSama) students of the
- [Bachelorís Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/).
+This is a 3D Engine created by [Adri√† Ferrer](https://github.com/Adria-F) and [Marc Garcia](https://github.com/MaxitoSama) students of the
+ [Bachelor‚Äôs Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/).
 
 If you want to take a look to our repository click [Here](https://github.com/Adria-F/Engines).
 If you want to download the latest release click [here](https://github.com/Adria-F/Engines/releases/latest).
@@ -9,7 +9,7 @@ If you want to download the latest release click [here](https://github.com/Adria
 ##  Controls:
 
 * Right click to rotate the camera arround itself.
-* Right click + ìWASDî to move the camera.
+* Right click + ‚ÄúWASD‚Äù to move the camera.
 * Alt + left click to rotate the camera arround an object.
 * Mouse wheel to zoom in/out.
 * Mouse wheel click to move the camera across camera local Y and X axis.
@@ -37,9 +37,9 @@ If you want to download the latest release click [here](https://github.com/Adria
 * We are using a frame buffer to draw all the scene on a gl texture, which we then draw into an ImGui window.
 This texture, accepts windows resizing without deforming.
 
-* We dessigned our own File System using PHYSFS.
+* We designed our own File System using PHYSFS.
 
-* We dessigned a JSON_manager to easily work with JSON files using rapidjson library.
+* We designed a JSON_manager to easily work with JSON files using rapidjson library.
 
 * We have a panel Assets that show everything in Assets folder (except .meta files) were you can move or remove any asset and add/remove folders.
 
@@ -69,22 +69,22 @@ This texture, accepts windows resizing without deforming.
 * GameObjects (Both)
 * AABBs (Marc)
 * Game Components (Marc)
-* Panel Assets (Adri‡)
+* Panel Assets (Adri√†)
 * Panel Hierarchy (Both)
-* Panel Inspector (Adri‡)
-* Panel FileDialog (Adri‡)
+* Panel Inspector (Adri√†)
+* Panel FileDialog (Adri√†)
 * QuadTree (Marc)
 * Frustum Culling (Marc)
-* Textures Importing (Adri‡)
+* Textures Importing (Adri√†)
 * FBX importing (Both)
-* meshes and scenes own format (Adri‡)
+* meshes and scenes own format (Adri√†)
 * Mouse picking (Both)
 * Time manager (Marc)
 * Resources (classes) (Marc)
 * Resource Manager (Both)
-* .meta files management (Adri‡)
-* File system (Adri‡)
-* JSON_Manager (Adri‡)
+* .meta files management (Adri√†)
+* File system (Adri√†)
+* JSON_Manager (Adri√†)
 * Guizmos (Both)
 
 ## License
@@ -93,7 +93,7 @@ You can access to our license [here]().
 
 MIT License
 
-Copyright (c) 2018 Adri‡ Ferrer and Marc Garcia.
+Copyright (c) 2018 Adri√† Ferrer and Marc Garcia.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
