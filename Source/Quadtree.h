@@ -24,7 +24,7 @@ public:
 
 public:
 
-	AABB* QT_Box;
+	AABB* QT_Box=nullptr;
 
 private:
 

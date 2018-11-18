@@ -37,12 +37,12 @@ private:
 	bool borderless = false;
 	bool full_desktop = false;
 	
-	float brightness;
+	float brightness=0.0f;
 	
 	SDL_DisplayMode mode;
 
-	int prevWidth;
-	int prevHeight;
+	int prevWidth=0;
+	int prevHeight=0;
 
 };
 

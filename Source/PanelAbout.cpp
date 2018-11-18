@@ -87,6 +87,12 @@ void PanelAbout::Draw()
 
 	if (ImGui::Selectable("mmgr - version 1.0", false, 0, { 130, 13 }))
 		App->RequestBrowser("http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml");
+	
+	if (ImGui::Selectable("PhysFS - version 3.0.1", false, 0, { 155, 13 }))
+		App->RequestBrowser("https://icculus.org/physfs/");
+	
+	if (ImGui::Selectable("ImGuizmo - version 1.61", false, 0, { 160, 13 }))
+		App->RequestBrowser("https://github.com/CedricGuillemet/ImGuizmo");
 
 	//License
 	ImGui::NewLine();

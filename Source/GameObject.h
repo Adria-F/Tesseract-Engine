@@ -70,8 +70,6 @@ public:
 
 private:
 
-	
-	
 	std::list<Component*> components;
 };
 
