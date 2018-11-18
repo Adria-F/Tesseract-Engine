@@ -34,7 +34,7 @@ public:
 	Frustum frustum;
 	AABB cameraBB;
 	bool IsCulling =false;
-	float4x4 currentTransform;
+	float4x4 currentTransform=float4x4::identity;
 };
 
 #endif

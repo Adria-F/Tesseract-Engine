@@ -74,7 +74,7 @@ public:
 
 	Quadtree* quadTree=nullptr;
 
-	ImGuizmo::OPERATION guizmoOperation;
+	ImGuizmo::OPERATION guizmoOperation=ImGuizmo::NO_OPERATION;
 
 private:
 

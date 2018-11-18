@@ -18,7 +18,7 @@ struct assetsElement
 		FILE
 	}type;
 
-	std::string name;
+	std::string name="";
 	bool selected = false;
 	bool renaming = false;
 };
@@ -37,7 +37,7 @@ public:
 
 protected:
 
-	std::string name;
+	std::string name="";
 	bool active = false;
 
 };

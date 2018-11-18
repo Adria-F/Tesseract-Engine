@@ -37,7 +37,7 @@ public:
 
 private:
 
-	int root_counter;	
+	int root_counter=0;	
 };
 
 #endif // !__MODULESCENELOADER_H__

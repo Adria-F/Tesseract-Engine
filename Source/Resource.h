@@ -46,8 +46,8 @@ protected:
 	uint UID = 0;
 	uint loaded = 0;
 
-	std::string file;
-	std::string exported_file;
+	std::string file="";
+	std::string exported_file="";
 
 	ResType type = NO_TYPE;
 	
