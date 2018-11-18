@@ -16,12 +16,38 @@ If you want to download the latest release click [here](https://github.com/Adria
 * F to focus the camera around the geometry.
 * SHIFT + Movement to duplicate the movement speed.
 * CTRL + Movement to reducethe movement speed.
-* Drag and drop of .FBX/.fbx/.png/.dds
+* N to recalculate QuadTree
+* M to erase QuadTree
+
+## Extra instructions
+
+* Drag and drop of .FBX/.fbx/.png/.dds to import into assets
+* Double click assets on Assets panel to add them to the scene
+* Right click on an item of asset panel or game object in hierarchy to delete
+* Drag an item from assets panel into a folder to move item
+* Drag an item from assets panel into the link at the top of the panel to move to the previous folder
+* Drag game objects through hierarchy to change parents
+* Select a game object to see its components on inspector
+* In inspector you can click the '+' symbol at the end of each component tab to see more options
+* In inspector you can add empty components of type "mesh" or "texture"
+* Click the sphere next to the gray box to change the assigned asset to each component
 
 ## Innovation:
 
-We are using a frame buffer to draw all the scene on a gl texture, which we then draw into an ImGui window.
+* We are using a frame buffer to draw all the scene on a gl texture, which we then draw into an ImGui window.
 This texture, accepts windows resizing without deforming.
+
+* We dessigned our own File System using PHYSFS.
+
+* We dessigned a JSON_manager to easily work with JSON files using rapidjson library.
+
+* We have a panel Assets that show everything in Assets folder (except .meta files) were you can move or remove any asset and add/remove folders.
+
+* Can freely change the color that a mesh is using from the panel inspector.
+
+* Can change the resource assigned to a component from a list of all the resources of that type.
+
+* We have a panel file dialog that allows to open a directory and navigate through its folders, (you can define an exclusive extension to search or ignore).
 
 ## Libraries
 
@@ -32,10 +58,34 @@ This texture, accepts windows resizing without deforming.
 * [rapidjson](https://github.com/Tencent/rapidjson) to read and write JSON files.
 * [PCG](http://www.pcg-random.org/download.html) to create random numbers.
 * [MathGeolib](https://github.com/juj/MathGeoLib) to make all the math operations.
-* glmath to use math operations compatibles with OpenGL.
 * [Assimp](http://www.assimp.org/) to import .FBX/.fbx of 3D models.
 * [DevIL](http://openil.sourceforge.net/) to import the .png and .dds to create te textures.
 * [mmgr](http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml) to manage the memory used.
+* [PHYSFS](https://icculus.org/physfs/) to manage files.
+* [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) Immediate mode 3D gizmo for scene editing and other controls based on Dear Imgui
+
+## Work of each member
+
+* GameObjects (Both)
+* AABBs (Marc)
+* Game Components (Marc)
+* Panel Assets (Adrià)
+* Panel Hierarchy (Both)
+* Panel Inspector (Adrià)
+* Panel FileDialog (Adrià)
+* QuadTree (Marc)
+* Frustum Culling (Marc)
+* Textures Importing (Adrià)
+* FBX importing (Both)
+* meshes and scenes own format (Adrià)
+* Mouse picking (Both)
+* Time manager (Marc)
+* Resources (classes) (Marc)
+* Resource Manager (Both)
+* .meta files management (Adrià)
+* File system (Adrià)
+* JSON_Manager (Adrià)
+* Guizmos (Both)
 
 ## License
 
