@@ -194,7 +194,7 @@ void GameObject::RemoveComponent(Component* component)
 	RELEASE(component);
 }
 
-void GameObject::DrawBB(const AABB& BB, vec3 color) const
+void GameObject::DrawBB(const AABB& BB, vec color) const
 {
 	glLineWidth(1.5f);
 	glColor3f(color.x, color.y, color.z);
@@ -243,7 +243,7 @@ void GameObject::DrawBB(const AABB& BB, vec3 color) const
 	glLineWidth(1.0f);
 }
 
-void GameObject::DrawBB(const OBB& BB, vec3 color) const
+void GameObject::DrawBB(const OBB& BB, vec color) const
 {
 	glLineWidth(1.5f);
 	glColor3f(color.x, color.y, color.z);

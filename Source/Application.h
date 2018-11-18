@@ -5,7 +5,6 @@
 #include "Timer.h"
 
 #include "MathGeoLib/MathGeoLib.h"
-#include "glMath/glmath.h"
 #include "ImGui\imgui.h"
 #include "ImGuizmo/ImGuizmo.h"
 

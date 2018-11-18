@@ -37,9 +37,6 @@
     <Filter Include="Sources\Tools\mmgr">
       <UniqueIdentifier>{63160ae1-bcc1-45c7-9d58-23a534ae5bc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Tools\glMath">
-      <UniqueIdentifier>{2dc5f69c-bfbe-4907-bcd0-a6f883f8ba79}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Modules\Components">
       <UniqueIdentifier>{1dd093dd-e988-40db-a6d6-372ca04771bc}</UniqueIdentifier>
     </Filter>
@@ -414,9 +411,6 @@
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>Sources\Tools\mmgr</Filter>
     </ClInclude>
-    <ClInclude Include="glMath\glmath.h">
-      <Filter>Sources\Tools\glMath</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Modules\Game</Filter>
     </ClInclude>
@@ -679,9 +673,6 @@
     </ClCompile>
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>Sources\Tools\mmgr</Filter>
-    </ClCompile>
-    <ClCompile Include="glMath\glmath.cpp">
-      <Filter>Sources\Tools\glMath</Filter>
     </ClCompile>
     <ClCompile Include="ModuleScene.cpp">
       <Filter>Sources\Modules\Game</Filter>

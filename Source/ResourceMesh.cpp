@@ -130,13 +130,13 @@ void ResourceMesh::calculateNormals()
 	for (int i = 0; i < num_indices; i += 3)
 	{
 		float x, y, z;
-		vec3 A, B, C, N;
+		vec A, B, C, N;
 
 		A = { vertices[indices[i] * 3],vertices[indices[i] * 3 + 1],vertices[indices[i] * 3 + 2] };
 		B = { vertices[indices[i + 1] * 3],vertices[indices[i + 1] * 3 + 1],vertices[indices[i + 1] * 3 + 2] };
 		C = { vertices[indices[i + 2] * 3],vertices[indices[i + 2] * 3 + 1],vertices[indices[i + 2] * 3 + 2] };
-		N = cross(B - A, C - A);
-		N = normalize(N);
+		N = (B - A).Cross(C - A);
+		N.Normalize();
 
 		x = (vertices[indices[i] * 3] + vertices[indices[i + 1] * 3] + vertices[indices[i + 2] * 3]) / 3;
 		y = (vertices[indices[i] * 3 + 1] + vertices[indices[i + 1] * 3 + 1] + vertices[indices[i + 2] * 3 + 1]) / 3;
