@@ -50,7 +50,7 @@ public:
 	void addGameObject(GameObject* gameObject, GameObject* parent = nullptr, GameObject* fakeScene = nullptr);
 	void AddCamera();
 	void AddEmptyGameObject();
-	void deleteGameObject(GameObject* GO);
+	void deleteGameObject(GameObject* GO, bool deleteFromParent = true);
 	void selectGameObject(GameObject* gameObject);
 	GameObject* getGameObject(uint UID);
 

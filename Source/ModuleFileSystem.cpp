@@ -316,6 +316,7 @@ uint ModuleFileSystem::getAvailableNameFromArray(std::vector<std::string*> names
 		{
 			num_version++;
 			final_name = name + '(' + std::to_string(num_version) + ')';
+			i = -1; //Start again
 		}
 	}
 	name = final_name;
