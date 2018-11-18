@@ -90,9 +90,10 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 
 			std::string exportedFile;
 
-			//TODO move this into resource material
-			aiColor3D color(0.f, 0.f, 0.f);
+			aiColor3D color(1.f, 1.f, 1.f);
 			scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			if (scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0) //It has texture
+				color = { 1.0f,1.0f,1.0f }; //Reset color to white;
 
 			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b }); //Import the mesh
 			if (success)

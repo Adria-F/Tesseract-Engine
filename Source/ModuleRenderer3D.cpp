@@ -335,7 +335,7 @@ bool ModuleRenderer3D::SaveDefaultConfig(JSON_File* document)const
 	renderer->addBool("Vsync", false);
 	renderer->addBool("Depth_Test", true);
 	renderer->addBool("Cull_Face", true);
-	renderer->addBool("Lighting", true);
+	renderer->addBool("Lighting", false);
 	renderer->addBool("Color_Material", true);
 	renderer->addBool("Texture_2D", true);
 	renderer->addBool("Wireframe", false);

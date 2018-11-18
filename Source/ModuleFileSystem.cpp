@@ -107,9 +107,12 @@ void ModuleFileSystem::addPathOfFilesAt(const char* path)
 		}
 	}
 
-	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
+	std::list<assetsElement*>::iterator it_e;
+	it_e = elements.begin();
+	while (it_e != elements.end())
 	{
 		RELEASE(*it_e);
+		it_e++;
 	}
 	elements.clear();
 }
