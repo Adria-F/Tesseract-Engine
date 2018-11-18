@@ -85,10 +85,8 @@ update_status ModuleScene::Update(float dt)
 	{
 		if ((*it_go).second->to_delete)
 		{
-			std::map<uint, GameObject*>::iterator prev = --it_go;
-			it_go++;
 			deleteGameObject((*it_go).second);
-			it_go = prev;
+			it_go = gameObjects.begin();
 		}
 		else
 			it_go++;
@@ -420,16 +418,23 @@ void ModuleScene::AddEmptyGameObject()
 
 }
 
-void ModuleScene::deleteGameObject(GameObject* GO)
+void ModuleScene::deleteGameObject(GameObject* GO, bool deleteFromParent)
 {
-	if (GO->parent != nullptr)
+	if (GO->parent != nullptr && deleteFromParent)
 		GO->parent->childs.remove(GO);
 
 	if (GO->camera != nullptr) //It is a camera
 	{
 		cameras.remove(GO);
 		if (GO->camera->IsCulling && cameras.size() > 0)
-			cameras.front()->camera->IsCulling = true;
+		{
+			ChangeCulling(cameras.front(), true);
+		}
+		else if (cameras.size() == 0)
+		{
+			activeCamera = nullptr;
+			App->renderer3D->Frustum_Culling = false;
+		}
 	}
 
 	gameObjects.erase(GO->UID);

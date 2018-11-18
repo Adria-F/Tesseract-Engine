@@ -43,7 +43,7 @@ GameObject::~GameObject()
 	it_c = childs.begin();
 	while(it_c != childs.end())
 	{
-		RELEASE((*it_c));
+		App->scene_intro->deleteGameObject((*it_c), false);
 		it_c++;
 	}
 	childs.clear();
