@@ -507,6 +507,9 @@
     <ClInclude Include="PanelResourcesList.h">
       <Filter>Sources\Modules\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="PanelGame.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -816,6 +819,9 @@
       <Filter>Sources\Tools\Physfs</Filter>
     </ClCompile>
     <ClCompile Include="PanelResourcesList.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelGame.cpp">
       <Filter>Sources\Modules\Panels</Filter>
     </ClCompile>
   </ItemGroup>

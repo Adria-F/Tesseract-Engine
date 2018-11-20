@@ -17,6 +17,7 @@
 #include "PanelHierarchy.h"
 #include "PanelFileDialog.h"
 #include "PanelResourcesList.h"
+#include "PanelGame.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -72,6 +73,8 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(fileDialog = new PanelFileDialog("Files"));
 
 	panels.push_back(resourcesList = new PanelResourcesList("Resources"));
+	
+	//panels.push_back(GameScene = new PanelGame("Game"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 

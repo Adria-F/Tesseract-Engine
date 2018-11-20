@@ -172,6 +172,7 @@
     <ClInclude Include="PanelConsole.h" />
     <ClInclude Include="PanelElements.h" />
     <ClInclude Include="PanelFileDialog.h" />
+    <ClInclude Include="PanelGame.h" />
     <ClInclude Include="PanelHardwareInfo.h" />
     <ClInclude Include="PanelHierarchy.h" />
     <ClInclude Include="PanelInspector.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="PanelConsole.cpp" />
     <ClCompile Include="PanelElements.cpp" />
     <ClCompile Include="PanelFileDialog.cpp" />
+    <ClCompile Include="PanelGame.cpp" />
     <ClCompile Include="PanelHardwareInfo.cpp" />
     <ClCompile Include="PanelHierarchy.cpp" />
     <ClCompile Include="PanelInspector.cpp" />
