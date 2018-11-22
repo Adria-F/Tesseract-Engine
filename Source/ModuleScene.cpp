@@ -302,6 +302,9 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
 
 		float4x4 ViewMatrix, ProjectionMatrix;
+		float4x4* ViewMatrix_test=(float4x4*)App->camera->camera->getViewMatrix();
+		float4x4*ProjectionMatrix_test= (float4x4*)App->camera->camera->getProjectionMatrix();
+
 		ImGuizmo::MODE mode;
 		float4x4* ObjectMat;
 		float4x4* GlobalMat;
@@ -322,7 +325,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		ImGuizmo::SetOrthographic(false);
 
-		ImGuizmo::Manipulate((float*)ViewMatrix.v, (float*)ProjectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)ObjectMat, (float*)GlobalMat);
+		ImGuizmo::Manipulate((float*)ViewMatrix_test, (float*)ProjectionMatrix_test, operation, ImGuizmo::LOCAL, (float*)ObjectMat, (float*)GlobalMat);
 		ObjectMat->Transpose();
 
 	

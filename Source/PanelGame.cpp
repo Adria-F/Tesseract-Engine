@@ -47,22 +47,10 @@ void PanelGame::Draw()
 	else
 		resizedLastFrame = false;
 
-	ImGui::SetCursorPos({ 0,0 });
-	App->gui->sceneX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
-	App->gui->sceneY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
-	App->gui->sceneW = size.x;
-	App->gui->sceneH = size.y;
+	ImGui::Image((ImTextureID)App->renderer3D->GamerenderedTexture, { (float)size.x, (float)size.y }, { 0,1 }, { 1,0 });
 
-
-	ImGui::Image((ImTextureID)App->renderer3D->renderedTexture, { (float)size.x, (float)size.y }, { 0,1 }, { 1,0 });
-
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_MIDDLE) != KEY_REPEAT)
-		App->gui->hoveringScene = ImGui::IsMouseHoveringWindow();
-
-	ImGuizmo::SetDrawlist();
-
-	if (App->scene_intro->selected_GO)
-		App->scene_intro->DrawGuizmo(App->scene_intro->guizmoOperation);
+	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_MIDDLE) != KEY_REPEAT)
+		App->gui->hoveringScene = ImGui::IsMouseHoveringWindow();*/
 
 	ImGui::BeginMenuBar();
 

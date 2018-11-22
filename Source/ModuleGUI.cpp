@@ -74,7 +74,7 @@ bool ModuleGUI::Init(JSON_File* document)
 
 	panels.push_back(resourcesList = new PanelResourcesList("Resources"));
 	
-	//panels.push_back(GameScene = new PanelGame("Game"));
+	panels.push_back(GameScene = new PanelGame("Game"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 

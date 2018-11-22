@@ -46,6 +46,10 @@ public:
 	GLuint renderedTexture = 0;
 	GLuint depthrenderbuffer = 0;
 
+	GLuint GameFramebufferName = 0;
+	GLuint GamerenderedTexture = 0;
+	GLuint Gamedepthrenderbuffer = 0;
+
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 

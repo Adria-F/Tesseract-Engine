@@ -239,7 +239,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw Scene  ---------------------------	
 
 	App->scene_intro->Draw();
-	
+
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
 	base_plane.Render();
@@ -259,6 +259,38 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 		glLineWidth(1.0f);
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, GameFramebufferName);
+	glViewport(0, 0, App->window->width, App->window->height);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	float* ViewM=App->camera->camera->getViewMatrix();
+	float* ProjectionM= ViewM = App->camera->camera->getProjectionMatrix();
+
+	if (App->scene_intro->activeCamera != nullptr)
+	{
+		ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
+		ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
+	}
+
+	if (changedFOV)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(ProjectionM);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		changedFOV = false;
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(ViewM);
+
+	App->scene_intro->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
@@ -302,6 +334,27 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
+
+	glDeleteFramebuffers(1, &GameFramebufferName);
+	glDeleteTextures(1, &GamerenderedTexture);
+	glDeleteRenderbuffers(1, &Gamedepthrenderbuffer);
+
+	glGenFramebuffers(1, &GameFramebufferName);
+	glBindFramebuffer(GL_FRAMEBUFFER, GameFramebufferName);
+
+	glGenTextures(1, &GamerenderedTexture);
+
+	glBindTexture(GL_TEXTURE_2D, GamerenderedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->window->width, App->window->height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glGenRenderbuffers(1, &Gamedepthrenderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, Gamedepthrenderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->width, App->window->height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, Gamedepthrenderbuffer);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, GamerenderedTexture, 0);
 
 	// Set the list of draw buffers.
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
