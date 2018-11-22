@@ -25,7 +25,19 @@ bool ComponentTexture::Update()
 		return false;
 
 	if (tex != nullptr)
+	{
+		if (doAlphaTest)
+		{
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, alphaTest);
+		}
+		if (doBlendColors)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 		glBindTexture(GL_TEXTURE_2D, tex->GL_id);
+	}
 	else
 		glColor3f(1, 1, 1);
 
@@ -68,10 +80,12 @@ void ComponentTexture::DrawInfo()
 			float conversionFactor = panelWidth / tex->width;
 			ImVec2 imageSize = { tex->height *conversionFactor, panelWidth };
 			ImGui::Image((ImTextureID)tex->GL_id, imageSize);
-		}
-		else
-		{
-			
+
+			ImGui::Checkbox("Alpha Test", &doAlphaTest); ImGui::SameLine();
+			ImGui::PushID("alphaTest slider");
+			ImGui::SliderFloat("", &alphaTest, 0.0f, 1.0f);
+			ImGui::PopID();
+			ImGui::Checkbox("Blend Colors", &doBlendColors);
 		}
 	}
 }

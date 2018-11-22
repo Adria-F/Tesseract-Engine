@@ -20,6 +20,12 @@ public:
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 
+public:
+
+	float alphaTest = 0.0f;
+
+	bool doAlphaTest = false;
+	bool doBlendColors = false;
 };
 
 #endif // !__COMPONENTTEXTURE_H__

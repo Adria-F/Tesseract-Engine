@@ -72,6 +72,8 @@ void GameObject::Update()
 			camera->Update();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
 
 		if (App->renderer3D->ShowBB || selected)
 		{
