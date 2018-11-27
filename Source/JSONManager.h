@@ -67,6 +67,7 @@ public:
 
 	JSON_File(rapidjson::FileWriteStream* os, FILE* fp);
 	JSON_File(rapidjson::FileReadStream* is, FILE* fp);
+	JSON_File();
 	~JSON_File();
 
 	bool Write();
@@ -98,6 +99,7 @@ public:
 
 	JSON_File* openReadFile(const char* path);
 	JSON_File* openWriteFile(const char* path);
+	JSON_File* openVirtualFile();
 	void closeFile(JSON_File* file);
 };
 

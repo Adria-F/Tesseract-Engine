@@ -66,6 +66,7 @@ public:
 	list<Primitive*> ShapesToDraw;
 
 	GameObject* root = nullptr;
+	JSON_File* virtualFile = nullptr;
 
 	list<GameObject*> ObjectsToDraw;
 

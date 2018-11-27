@@ -167,7 +167,7 @@ void Application::FinishUpdate()
 
 	if (doSave)
 	{
-		scene_loader->saveScene(scene_loader->next_scene_path.c_str());
+		scene_loader->saveSceneFile(scene_loader->next_scene_path.c_str());
 		doSave = false;
 	}
 	if (doLoad)

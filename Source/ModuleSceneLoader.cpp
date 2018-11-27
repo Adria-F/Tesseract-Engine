@@ -152,7 +152,8 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			rootGO->name = filename;
 			fakeScene->childs.push_back(rootGO);
 
-			saveScene(std::to_string(UID).c_str(), true, fakeScene);
+			saveSceneFile(std::to_string(UID).c_str(), fakeScene);
+			//TODO need to clean scene
 
 			newPath=FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
 		}
@@ -270,17 +271,37 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	return GO;
 }
 
-bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX, GameObject* fakeScene)
+bool ModuleSceneLoader::saveSceneFile(const char* scene_name, GameObject* fakeRoot)
 {
-	string path = App->fileSystem->getFullPath(scene_name, (isFBX)?FBX_FOLDER:nullptr, SCENES_EXTENSION);
+	string path = App->fileSystem->getFullPath(scene_name, (fakeRoot != nullptr)?FBX_FOLDER:nullptr, SCENES_EXTENSION);
 	JSON_File* scene = App->JSON_manager->openWriteFile(path.c_str());
-	if (scene == nullptr)
-		return false;
 
+	GameObject* rootObject = (fakeRoot != nullptr) ? fakeRoot : App->scene_intro->root;
+
+	bool ret = saveScene(scene, rootObject);
+
+	scene->Write();
+	App->JSON_manager->closeFile(scene);
+
+	return ret;
+}
+
+bool ModuleSceneLoader::saveVirtualScene()
+{
+	if (App->scene_intro->virtualFile != nullptr)
+		App->JSON_manager->closeFile(App->scene_intro->virtualFile); //Delete old file
+
+	App->scene_intro->virtualFile = App->JSON_manager->openVirtualFile();
+
+	bool ret = saveScene(App->scene_intro->virtualFile, App->scene_intro->root);
+
+	return ret;
+}
+
+bool ModuleSceneLoader::saveScene(JSON_File* scene, GameObject* rootObject)
+{
 	JSON_Value* gameObjects = scene->createValue();
 	gameObjects->convertToArray();
-
-	GameObject* rootObject = (fakeScene != nullptr) ? fakeScene : App->scene_intro->root;
 
 	for (std::list<GameObject*>::iterator it_ch = rootObject->childs.begin(); it_ch != rootObject->childs.end(); it_ch++)
 	{
@@ -289,12 +310,8 @@ bool ModuleSceneLoader::saveScene(const char* scene_name, bool isFBX, GameObject
 
 	scene->addValue("Game Objects", gameObjects);
 
-	scene->Write();
-	App->JSON_manager->closeFile(scene);
-
 	return true;
 }
-
 
 bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 {

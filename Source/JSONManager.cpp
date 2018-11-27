@@ -36,6 +36,11 @@ JSON_File* JSONManager::openWriteFile(const char * path)
 		return nullptr;
 }
 
+JSON_File* JSONManager::openVirtualFile()
+{
+	return new JSON_File();
+}
+
 void JSONManager::closeFile(JSON_File* file)
 {
 	if (file != nullptr)
@@ -59,6 +64,14 @@ JSON_File::JSON_File(rapidjson::FileReadStream* is, FILE* fp): is(is), fp(fp)
 {
 	document = new rapidjson::Document();
 	document->ParseStream(*is);
+
+	allocator = &document->GetAllocator();
+}
+
+JSON_File::JSON_File()
+{
+	document = new rapidjson::Document();
+	document->SetObject();
 
 	allocator = &document->GetAllocator();
 }
@@ -89,7 +102,18 @@ bool JSON_File::Write()
 		return true;
 	}
 	else
+	{
+		if (is != nullptr)
+		{
+			LOG("Cannot write a read only file!");
+		}
+		else
+		{
+			LOG("Cannot write a virtual file!");
+		}
+
 		return false;
+	}
 }
 
 JSON_Value* JSON_File::createValue()
@@ -444,4 +468,8 @@ rapidjson::Value* JSON_Value::getRapidJSONValue()
 void JSON_File::closeFile()
 {
 	fclose(fp);
+
+	RELEASE(document);
+	RELEASE(is);
+	RELEASE(os);
 }
