@@ -167,12 +167,21 @@ void Application::FinishUpdate()
 
 	if (doSave)
 	{
-		scene_loader->saveSceneFile(scene_loader->next_scene_path.c_str());
+		if (GameMode)
+			scene_loader->saveVirtualScene();
+		else
+			scene_loader->saveSceneFile(scene_loader->next_scene_path.c_str());
 		doSave = false;
 	}
 	if (doLoad)
 	{
-		scene_loader->loadScene(scene_loader->next_scene_path.c_str());
+		if (GameMode)
+		{
+			scene_loader->loadVirtualScene();
+			App->GameMode = false;
+		}
+		else
+			scene_loader->loadSceneFile(scene_loader->next_scene_path.c_str());
 		doLoad = false;
 	}
 

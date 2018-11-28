@@ -288,14 +288,51 @@ bool ModuleSceneLoader::saveSceneFile(const char* scene_name, GameObject* fakeRo
 
 bool ModuleSceneLoader::saveVirtualScene()
 {
-	if (App->scene_intro->virtualFile != nullptr)
-		App->JSON_manager->closeFile(App->scene_intro->virtualFile); //Delete old file
-
 	App->scene_intro->virtualFile = App->JSON_manager->openVirtualFile();
 
 	bool ret = saveScene(App->scene_intro->virtualFile, App->scene_intro->root);
 
 	return ret;
+}
+
+bool ModuleSceneLoader::loadSceneFile(const char * scene_name, bool isFBX)
+{
+	LOG("Loading scene: %s", scene_name);
+
+	if (!isFBX)
+	{
+		App->scene_intro->newScene();
+		App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
+	}
+
+	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : nullptr, SCENES_EXTENSION);
+	JSON_File* scene = App->JSON_manager->openReadFile(path.c_str());
+	if (scene != nullptr)
+		loadScene(scene);
+	else
+		return false;
+
+	if (App->GameMode == false && !isFBX)
+		App->camera->FitCamera(App->scene_intro->root->boundingBox);
+
+	App->JSON_manager->closeFile(scene);
+
+	return true;
+}
+
+bool ModuleSceneLoader::loadVirtualScene()
+{
+	if (App->scene_intro->virtualFile != nullptr)
+	{
+		App->scene_intro->newScene();
+		loadScene(App->scene_intro->virtualFile);
+
+		App->JSON_manager->closeFile(App->scene_intro->virtualFile); //Delete old file
+
+		return true;
+	}
+
+	return false;
 }
 
 bool ModuleSceneLoader::saveScene(JSON_File* scene, GameObject* rootObject)
@@ -313,20 +350,8 @@ bool ModuleSceneLoader::saveScene(JSON_File* scene, GameObject* rootObject)
 	return true;
 }
 
-bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
+bool ModuleSceneLoader::loadScene(JSON_File* scene)
 {
-	if (!isFBX)
-	{
-		App->scene_intro->newScene();
-		App->camera->BBtoLook = AABB({ 0,0,0 }, { 0,0,0 });
-	}
-	LOG("Loading scene: %s", scene_name);
-
-	string path = App->fileSystem->getFullPath(scene_name, (isFBX) ? FBX_FOLDER : nullptr, SCENES_EXTENSION);
-	JSON_File* scene = App->JSON_manager->openReadFile(path.c_str());
-	if (scene == nullptr)
-		return false;
-
 	JSON_Value* gameObjects = scene->getValue("Game Objects"); //It is an array of values
 	if (gameObjects->getRapidJSONValue()->IsArray()) //Just make sure
 	{
@@ -339,7 +364,7 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
 
-		for (std::map<uint, GameObject*>::reverse_iterator it_go = gameobjects.rbegin(); it_go != gameobjects.rend(); it_go++) //Reversed to keep the same order as the original
+		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
 		{
 			if ((*it_go).second->parentUID != 0) //If it has a parent
 			{
@@ -362,11 +387,8 @@ bool ModuleSceneLoader::loadScene(const char* scene_name, bool isFBX)
 	App->renderer3D->CalculateGlobalMatrix(App->scene_intro->root);
 	App->scene_intro->root->RecalculateBB();
 
-	if(App->GameMode==false && !isFBX)
-		App->camera->FitCamera(App->scene_intro->root->boundingBox);
-
 	App->scene_intro->StartQuadTree();
-	App->JSON_manager->closeFile(scene);
+	
 	return true;
 }
 

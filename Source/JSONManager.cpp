@@ -467,7 +467,8 @@ rapidjson::Value* JSON_Value::getRapidJSONValue()
 
 void JSON_File::closeFile()
 {
-	fclose(fp);
+	if (fp != nullptr)
+		fclose(fp);
 
 	RELEASE(document);
 	RELEASE(is);

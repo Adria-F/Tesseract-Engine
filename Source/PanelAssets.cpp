@@ -176,7 +176,7 @@ void PanelAssets::Draw()
 						path += '/';
 					path += (*it_e)->name;
 					uint UID = App->resources->getResourceUIDFromMeta(path.c_str());
-					App->scene_loader->loadScene(std::to_string(UID).c_str(), true);
+					App->scene_loader->loadSceneFile(std::to_string(UID).c_str(), true);
 				}
 			}
 		}

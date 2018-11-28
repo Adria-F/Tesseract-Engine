@@ -47,7 +47,7 @@ bool ModuleScene::Start()
 	StartQuadTree();
 
 	//Load Street scene
-	App->scene_loader->loadScene("Assets/Scenes/street");
+	App->scene_loader->loadSceneFile("Assets/Scenes/street");
 	//App->scene_loader->loadScene("sceneTest");
 	
 	ImGuizmo::Enable(false);

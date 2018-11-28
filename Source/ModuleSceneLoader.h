@@ -31,8 +31,11 @@ public:
 	bool saveSceneFile(const char* scene_name, GameObject* fakeRoot = nullptr);
 	bool saveVirtualScene();
 
+	bool loadSceneFile(const char* scene_name, bool isFBX = false);
+	bool loadVirtualScene();
+
 	bool saveScene(JSON_File* scene, GameObject* rootObject);
-	bool loadScene(const char* scene_name, bool isFBX = false);
+	bool loadScene(JSON_File* scene);
 
 public:
 

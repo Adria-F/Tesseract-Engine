@@ -88,10 +88,8 @@ void PanelScene::Draw()
 		}
 		else
 		{
-			App->Load();
-			App->GameMode = false;
+			App->Load(); //Game mode is set to false after loading the virtual scene			
 			App->GamePaused = false;
-			ImGui::PopStyleColor();
 		}
 	}
 	if (App->GameMode)
