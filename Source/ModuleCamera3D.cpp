@@ -282,6 +282,13 @@ GameObject* ModuleCamera3D::checkMousePick()
 	if (gameObjects.size() > 0)
 		ret = checkCloserGameObjects(gameObjects, ray);
 
+	while (gameObjects.size() > 0)
+	{
+		HitGameObject* hit = gameObjects.top();
+		RELEASE(hit);
+		gameObjects.pop();
+	}
+
 	return ret;
 }
 
