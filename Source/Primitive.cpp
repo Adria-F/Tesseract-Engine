@@ -1,5 +1,13 @@
+#include "Application.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include "ModuleScene.h"
+#include "ModuleResource.h"
+#include "Component.h"
+#include "ComponentMesh.h"
+#include "GameObject.h"
+#include "Resource.h"
+#include "ResourceMesh.h"
 #include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
 
@@ -113,6 +121,9 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
+	uint indice[36] ={ 0,1,2,1,3,2,3,1,5,5,7,3,7,5,4,6,7,4,6,4,0,0,2,6,6,2,3,6,3,7,0,4,5,0,5,1 };
+	float vertices[24];
+
 	shape.push_back(center.x - sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//A
 	shape.push_back(center.x + sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//B
 	shape.push_back(center.x - sx); shape.push_back(center.y + sy); shape.push_back(center.z + sz);	//C
@@ -123,20 +134,42 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 	shape.push_back(center.x - sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//G
 	shape.push_back(center.x + sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//H
 
+	for (int i = 0; i < shape.size(); i++)
+	{
+		vertices[i] = shape[i];
+	}
+
 	indices.push_back(0); indices.push_back(1); indices.push_back(2);
 	indices.push_back(1); indices.push_back(3); indices.push_back(2);
+
 	indices.push_back(3); indices.push_back(1); indices.push_back(5);
 	indices.push_back(5); indices.push_back(7); indices.push_back(3);
+
 	indices.push_back(7); indices.push_back(5); indices.push_back(4);
 	indices.push_back(6); indices.push_back(7); indices.push_back(4);
+
 	indices.push_back(6); indices.push_back(4); indices.push_back(0);
 	indices.push_back(0); indices.push_back(2); indices.push_back(6);
+
 	indices.push_back(6); indices.push_back(2); indices.push_back(3);
 	indices.push_back(6); indices.push_back(3); indices.push_back(7);
+
 	indices.push_back(0); indices.push_back(4); indices.push_back(5);
 	indices.push_back(0); indices.push_back(5); indices.push_back(1);
 
 	generateBuffer();
+
+	/*GameObject* newGameObject = new GameObject();
+	App->scene_intro->addGameObject(newGameObject);
+	ComponentMesh* mesh =(ComponentMesh*)newGameObject->AddComponent(MESH);
+	ResourceMesh* newResource = (ResourceMesh*) App->resources->AddResource(R_MESH);
+	mesh->RUID = newResource->GetUID();
+
+	newResource->num_indices=36;
+	newResource->num_vertices = 8;
+	newResource->indices = indice;
+	newResource->vertices = vertices;*/
+
 
 	type = PrimitiveTypes::Primitive_Cube;
 }
