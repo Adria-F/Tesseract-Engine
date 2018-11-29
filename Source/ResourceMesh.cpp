@@ -3,23 +3,13 @@
 #include "Resource.h"
 #include "ResourceMesh.h"
 
-
-
 ResourceMesh::ResourceMesh(uint UID, ResType type) :Resource(UID, type)
 {
 }
 
 ResourceMesh::~ResourceMesh()
 {
-	RELEASE_ARRAY(vertices);
-
-	RELEASE_ARRAY(normals);
-
-	RELEASE_ARRAY(texCoords);
-
 	UnloadFromMemory();
-	RELEASE_ARRAY(indices);
-
 }
 
 void ResourceMesh::setImportDefaults(JSON_Value & importSettings)
@@ -38,31 +28,26 @@ bool ResourceMesh::LoadInMemory()
 	return true;
 }
 
-
-
 bool ResourceMesh::UnloadFromMemory()
 {
+	RELEASE_ARRAY(vertices);
+	RELEASE_ARRAY(normals);
+	RELEASE_ARRAY(texCoords);
+
 	glDeleteBuffers(1, &id_indices);
+	RELEASE_ARRAY(indices);
 
 	return true;
 }
 
 bool ResourceMesh::LoadMesh()
 {
-	//TODO with resources
-	//call this function from the loadinmesh
-	//then call generate buffer.
-
 	bool ret = true;
 
-	/*name = meshName;
-	std::string path = MESHES_FOLDER;
-	path += meshName;
-	path += MESH_EXTENSION;*/
-
 	//Get the buffer
-	char* cursor = nullptr;
-	App->fileSystem->readFile(exported_file.c_str(), &cursor);
+	char* buffer = nullptr;
+	App->fileSystem->readFile(exported_file.c_str(), &buffer);
+	char* cursor = buffer;
 
 	//Load ranges
 	uint ranges[4];
@@ -121,7 +106,7 @@ bool ResourceMesh::LoadMesh()
 	boundingBox.SetNegativeInfinity();
 	boundingBox.Enclose((float3*)vertices, num_vertices);
 
-	RELEASE_ARRAY(cursor);
+	RELEASE_ARRAY(buffer);
 	return ret;
 }
 

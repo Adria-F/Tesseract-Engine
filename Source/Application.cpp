@@ -64,7 +64,7 @@ Application::Application()
 
 Application::~Application()
 {
-	for (list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend() && (*item)==NULL; item++)
+	for (list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend() && (*item)!=NULL; item++)
 	{
 		RELEASE((*item));
 	}
