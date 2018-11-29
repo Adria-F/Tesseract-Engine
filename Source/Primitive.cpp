@@ -121,8 +121,14 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
-	uint indice[36] ={ 0,1,2,1,3,2,3,1,5,5,7,3,7,5,4,6,7,4,6,4,0,0,2,6,6,2,3,6,3,7,0,4,5,0,5,1 };
-	float vertices[24];
+	//uint *indices = new uint[36];
+	uint aux[36]= { 0,1,2,1,3,2,3,1,5,5,7,3,7,5,4,6,7,4,6,4,0,0,2,6,6,2,3,6,3,7,0,4,5,0,5,1 };
+
+	//for (int i = 0; i < 36; i++)
+	//{
+	//	indices[i] = aux[i];
+	//}
+
 
 	shape.push_back(center.x - sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//A
 	shape.push_back(center.x + sx); shape.push_back(center.y - sy); shape.push_back(center.z + sz);	//B
@@ -134,10 +140,12 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 	shape.push_back(center.x - sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//G
 	shape.push_back(center.x + sx); shape.push_back(center.y + sy); shape.push_back(center.z - sz);	//H
 
-	for (int i = 0; i < shape.size(); i++)
-	{
-		vertices[i] = shape[i];
-	}
+	//float* vertices = new float[shape.size()];
+
+	//for (int i = 0; i < shape.size(); i++)
+	//{
+	//	vertices[i] = shape[i];
+	//}
 
 	indices.push_back(0); indices.push_back(1); indices.push_back(2);
 	indices.push_back(1); indices.push_back(3); indices.push_back(2);
@@ -160,17 +168,24 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 	generateBuffer();
 
 	/*GameObject* newGameObject = new GameObject();
+	newGameObject->name = "Box";
 	App->scene_intro->addGameObject(newGameObject);
+
+	newGameObject->AddComponent(TRANSFORMATION);
 	ComponentMesh* mesh =(ComponentMesh*)newGameObject->AddComponent(MESH);
 	ResourceMesh* newResource = (ResourceMesh*) App->resources->AddResource(R_MESH);
 	mesh->RUID = newResource->GetUID();
 
 	newResource->num_indices=36;
 	newResource->num_vertices = 8;
-	newResource->indices = indice;
-	newResource->vertices = vertices;*/
+	newResource->indices = indices;
+	newResource->vertices = vertices;
 
-
+	glGenBuffers(1, (GLuint*)&(newResource->id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newResource->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newResource->num_indices, &indices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+*/
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
