@@ -8,6 +8,7 @@
 #include "ModuleGUI.h"
 #include "ModuleTextures.h"
 #include "ModuleMeshes.h"
+#include "ModuleAnimations.h"
 #include "ModuleFileSystem.h"
 #include "ModuleSceneLoader.h"
 
@@ -36,6 +37,7 @@ Application::Application()
 	scene_loader = new ModuleSceneLoader();
 	textures = new ModuleTextures();
 	meshes = new ModuleMeshes();
+	animations = new ModuleAnimations();
 	fileSystem = new ModuleFileSystem();
 
 	// The order of calls is very important!
@@ -50,6 +52,7 @@ Application::Application()
 	AddModule(scene_loader);
 	AddModule(textures);
 	AddModule(meshes);
+	AddModule(animations);
 
 	// Scenes
 	AddModule(resources);

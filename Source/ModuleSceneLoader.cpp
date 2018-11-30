@@ -5,6 +5,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleTextures.h"
 #include "ModuleMeshes.h"
+#include "ModuleAnimations.h"
 #include "GameObject.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResource.h"
@@ -13,11 +14,13 @@
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
+#include "ComponentAnimation.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
 #include "ResourceScene.h"
+#include "ResourceAnimation.h"
 
 #include <map>
 
@@ -117,6 +120,20 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			RELEASE(meshesNames[i]);
 		meshesNames.clear();
 		meshesUIDs.clear(); //The allocated names are cleaned with the vector
+
+		//Import animations
+		for (int i = 0; i < scene->mNumAnimations; i++)
+		{
+			std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : "Unnamed";
+			//App->fileSystem->getAvailableNameFromArray(meshesNames, animationName); //Get the available name for the animation
+
+			uint UID = App->resources->getResourceUIDFromMeta(path, animationName.c_str());
+			if (UID == 0)
+				UID = GENERATE_UID();
+
+			std::string exportedFile;
+			App->animations->importAnimation(scene->mAnimations[i], UID, exportedFile);			
+		}
 
 		//Import textures
 		vector<ResourceTexture*> rtextures;

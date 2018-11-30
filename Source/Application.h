@@ -27,6 +27,7 @@ class ModuleCamera3D;
 class ModuleGUI;
 class ModuleMeshes;
 class ModuleTextures;
+class ModuleAnimations;
 class ModuleFileSystem;
 class ModuleSceneLoader;
 class ModuleResource;
@@ -45,6 +46,7 @@ public:
 	ModuleGUI* gui = nullptr;
 	ModuleTextures* textures = nullptr;
 	ModuleMeshes* meshes = nullptr;
+	ModuleAnimations* animations = nullptr;
 	ModuleFileSystem* fileSystem = nullptr;
 	ModuleSceneLoader* scene_loader= nullptr;
 
