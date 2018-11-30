@@ -8,6 +8,7 @@
 #include "ResourceMesh.h"
 #include "ResourceScene.h"
 #include "ResourceTexture.h"
+#include "ResourceAnimation.h"
 
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
@@ -81,9 +82,13 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 			case R_TEXTURE:
 				loaded = App->textures->importTexture(file, UID, written_file, metaValue);
 				break;
+			
 			case R_SCENE:
 				loaded = App->scene_loader->importFBXScene(file, UID, meshesUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
+				break;
+			
+			case R_ANIMATION:
 				break;
 			}
 
@@ -133,6 +138,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 			case R_TEXTURE:
 				newRes->exported_file = TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION;
 				break;
+			
 			case R_SCENE:
 				JSON_Value* meshes = metaValue->getValue("meshes");
 				if (meshes != nullptr)
@@ -150,6 +156,10 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				}
 				newRes->exported_file = FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
 				break;
+			
+			/*case R_ANIMATION:
+				LOG("animation mesh");
+				break;*/
 			}
 
 			LOG("File was already imported, loading resource");
@@ -205,6 +215,9 @@ Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 		break;
 	case R_SCENE:
 		ret = (Resource*)new ResourceScene(forced_uid, R_SCENE);
+		break;
+	case R_ANIMATION:
+		ret = (Resource*)new ResourceAnimation(forced_uid, R_ANIMATION);
 		break;
 	}
 	
@@ -285,6 +298,9 @@ JSON_File* ModuleResource::createMeta(const char* path, ResType type) const
 		break;
 	case R_SCENE:
 		ResourceScene::setImportDefaults(*importSettings);
+		break;
+	case R_ANIMATION:
+		ResourceAnimation::setImportDefaults(*importSettings);
 		break;
 	}
 	
