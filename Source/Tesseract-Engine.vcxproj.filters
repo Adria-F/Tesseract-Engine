@@ -513,8 +513,12 @@
     <ClInclude Include="ResourceAnimation.h">
       <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleAnimations.h" />
-    <ClInclude Include="ComponentAnimation.h" />
+    <ClInclude Include="ComponentAnimation.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleAnimations.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -832,8 +836,12 @@
     <ClCompile Include="ResourceAnimation.cpp">
       <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleAnimations.cpp" />
-    <ClCompile Include="ComponentAnimation.cpp" />
+    <ClCompile Include="ComponentAnimation.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAnimations.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
