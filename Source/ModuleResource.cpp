@@ -85,7 +85,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				break;
 			
 			case R_SCENE:
-				loaded = App->scene_loader->importFBXScene(file, UID, meshesUID, animationsUID, written_file, metaValue, newMeta);
+				loaded = App->scene_loader->importScene(file, UID, meshesUID, animationsUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
 				break;
 			}

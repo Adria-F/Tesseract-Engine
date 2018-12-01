@@ -169,7 +169,7 @@ void PanelAssets::Draw()
 				std::string filename;
 				App->fileSystem->splitPath((*it_e)->name.c_str(), nullptr, &filename, &extension);
 
-				if (extension == "fbx" || extension == "FBX")
+				if (extension == "fbx" || extension == "FBX" || extension == "dae")
 				{
 					std::string path = current_path;
 					if (path.size() > 0 && path.back() != '/')

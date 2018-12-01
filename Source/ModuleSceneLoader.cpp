@@ -64,126 +64,23 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
+bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		//Import all meshes
+		vector<ResourceMesh*> rMeshes = importMeshes(path, scene, meshUIDs, meta, newMeta);
+
+		//Import all animations
+		vector<ResourceAnimation*> rAnimations = importAnimations(path, scene, animationUIDs, meta, newMeta);
+
+		//Import all textures
+		vector<ResourceTexture*> rtextures = importTextures(path, scene);		
+
 		GameObject* fakeScene = new GameObject();
 		fakeScene->UID = 0;
-
-		//Import all meshes
-		vector<ResourceMesh*> rMeshes;
-		vector<std::string*> meshesNames;
-		std::map<std::string*, uint> meshesUIDs;
-		for (int i = 0; i < scene->mNumMeshes; i++)
-		{
-			//Create Resource Mesh
-			std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
-			App->fileSystem->getAvailableNameFromArray(meshesNames, meshName); //Get the available name for the mesh
-			
-			ResourceMesh* meshResource = nullptr;
-
-			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
-			if (UID == 0)
-				UID = GENERATE_UID();		
-
-			std::string exportedFile;
-
-			aiColor3D color(1.f, 1.f, 1.f);
-			scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-			if (scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0) //It has texture
-				color = { 1.0f,1.0f,1.0f }; //Reset color to white;
-
-			if (App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b })) //Import the mesh
-			{
-				meshUIDs.push_back(UID);
-				std::string* nameAlloc = new std::string(meshName);
-				meshesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
-				meshesUIDs[nameAlloc] = UID;
-
-				meshResource = (ResourceMesh*)App->resources->AddResource(R_MESH, UID);
-				meshResource->name = meshName;
-				meshResource->file = path;
-				meshResource->exported_file = exportedFile;
-			}
-			rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
-		}
-		if(newMeta)
-			App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs, meta);
-		else
-			App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs);
-		int size = meshesNames.size();
-		for (int i = 0; i < size; i++) //Clean the vector of names
-			RELEASE(meshesNames[i]);
-		meshesNames.clear();
-		meshesUIDs.clear(); //The allocated names are cleaned with the vector
-
-		//Import animations
-		vector<ResourceAnimation*> rAnimations;
-		vector<std::string*> animationsNames;
-		std::map<std::string*, uint> animationsUIDs;
-		for (int i = 0; i < scene->mNumAnimations; i++)
-		{
-			std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : "Unnamed";
-			App->fileSystem->getAvailableNameFromArray(animationsNames, animationName); //Get the available name for the animation
-
-			uint UID = App->resources->getResourceUIDFromMeta(path, animationName.c_str());
-			if (UID == 0)
-				UID = GENERATE_UID();			
-
-			std::string exportedFile;
-			ResourceAnimation* animationResource = nullptr;
-			if (App->animations->importAnimation(scene->mAnimations[i], UID, exportedFile)) //Import animation
-			{
-				animationUIDs.push_back(UID);
-				std::string* nameAlloc = new std::string(animationName);
-				animationsNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
-				animationsUIDs[nameAlloc] = UID;
-
-				animationResource = (ResourceAnimation*)App->resources->AddResource(R_ANIMATION, UID);
-				animationResource->name = animationName;
-				animationResource->file = path;
-				animationResource->exported_file = exportedFile;
-			}
-			rAnimations.push_back(animationResource);
-		}
-		if (newMeta)
-			App->resources->updateMetaUIDsList(path, "animations", animationsUIDs, meta);
-		else
-			App->resources->updateMetaUIDsList(path, "animations", animationsUIDs);
-		size = animationsNames.size();
-		for (int i = 0; i < size; i++) //Clean the vector of names
-			RELEASE(animationsNames[i]);
-		animationsNames.clear();
-		animationsUIDs.clear(); //The allocated names are cleaned with the vector
-
-		//Import textures
-		vector<ResourceTexture*> rtextures;
-		if (scene->HasMaterials()) //Need to check embeded textures
-		{
-			for (int i = 0; i < scene->mNumMaterials; i++)
-			{
-				aiString texturePath;
-				aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texturePath);
-				if (textureError == aiReturn::aiReturn_SUCCESS)
-				{
-					std::string full_path = path;
-					std::string newPath;	//Useful with resources
-					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
-					full_path += texturePath.C_Str();
-					
-					ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
-			
-					rtextures.push_back(resource);
-				}
-				else
-				{
-					rtextures.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
-				}
-			}
-		}
 
 		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures, fakeScene);
 		if (rootGO != nullptr)
@@ -194,7 +91,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			fakeScene->childs.push_back(rootGO);
 
 			saveSceneFile(std::to_string(UID).c_str(), fakeScene);
-			//TODO need to clean scene
+			RELEASE(fakeScene);
 
 			newPath=FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
 		}
@@ -249,7 +146,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	{
 		GO = new GameObject();
 		GO->name = name;
-
+		
 		int fail_count = 0;
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
@@ -310,6 +207,130 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	}
 
 	return GO;
+}
+
+std::vector<ResourceMesh*> ModuleSceneLoader::importMeshes(const char* path, const aiScene* scene, std::vector<uint>& meshUIDs, JSON_Value* meta, bool newMeta)
+{
+	vector<ResourceMesh*> rMeshes;
+	vector<std::string*> meshesNames;
+	std::map<std::string*, uint> meshesUIDs;
+	for (int i = 0; i < scene->mNumMeshes; i++)
+	{
+		//Create Resource Mesh
+		std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
+		App->fileSystem->getAvailableNameFromArray(meshesNames, meshName); //Get the available name for the mesh
+
+		ResourceMesh* meshResource = nullptr;
+
+		uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
+		if (UID == 0)
+			UID = GENERATE_UID();
+
+		std::string exportedFile;
+
+		aiColor3D color(1.f, 1.f, 1.f);
+		scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		if (scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0) //It has texture
+			color = { 1.0f,1.0f,1.0f }; //Reset color to white;
+
+		if (App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b })) //Import the mesh
+		{
+			meshUIDs.push_back(UID);
+			std::string* nameAlloc = new std::string(meshName);
+			meshesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
+			meshesUIDs[nameAlloc] = UID;
+
+			meshResource = (ResourceMesh*)App->resources->AddResource(R_MESH, UID);
+			meshResource->name = meshName;
+			meshResource->file = path;
+			meshResource->exported_file = exportedFile;
+		}
+		rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
+	}
+	if (newMeta)
+		App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs, meta);
+	else
+		App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs);
+	int size = meshesNames.size();
+	for (int i = 0; i < size; i++) //Clean the vector of names
+		RELEASE(meshesNames[i]);
+	meshesNames.clear();
+	meshesUIDs.clear(); //The allocated names are cleaned with the vector
+
+	return rMeshes;
+}
+
+std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* path, const aiScene* scene, std::vector<uint>& animationUIDs, JSON_Value* meta, bool newMeta)
+{
+	vector<ResourceAnimation*> rAnimations;
+	vector<std::string*> animationsNames;
+	std::map<std::string*, uint> animationsUIDs;
+	for (int i = 0; i < scene->mNumAnimations; i++)
+	{
+		std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : "Unnamed";
+		App->fileSystem->getAvailableNameFromArray(animationsNames, animationName); //Get the available name for the animation
+
+		uint UID = App->resources->getResourceUIDFromMeta(path, animationName.c_str());
+		if (UID == 0)
+			UID = GENERATE_UID();
+
+		std::string exportedFile;
+		ResourceAnimation* animationResource = nullptr;
+		if (App->animations->importAnimation(scene->mAnimations[i], UID, exportedFile)) //Import animation
+		{
+			animationUIDs.push_back(UID);
+			std::string* nameAlloc = new std::string(animationName);
+			animationsNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
+			animationsUIDs[nameAlloc] = UID;
+
+			animationResource = (ResourceAnimation*)App->resources->AddResource(R_ANIMATION, UID);
+			animationResource->name = animationName;
+			animationResource->file = path;
+			animationResource->exported_file = exportedFile;
+		}
+		rAnimations.push_back(animationResource);
+	}
+	if (newMeta)
+		App->resources->updateMetaUIDsList(path, "animations", animationsUIDs, meta);
+	else
+		App->resources->updateMetaUIDsList(path, "animations", animationsUIDs);
+	int size = animationsNames.size();
+	for (int i = 0; i < size; i++) //Clean the vector of names
+		RELEASE(animationsNames[i]);
+	animationsNames.clear();
+	animationsUIDs.clear(); //The allocated names are cleaned with the vector
+
+	return rAnimations;
+}
+
+std::vector<ResourceTexture*> ModuleSceneLoader::importTextures(const char * path, const aiScene * scene)
+{
+	vector<ResourceTexture*> rtextures;
+	if (scene->HasMaterials()) //Need to check embeded textures
+	{
+		for (int i = 0; i < scene->mNumMaterials; i++)
+		{
+			aiString texturePath;
+			aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texturePath);
+			if (textureError == aiReturn::aiReturn_SUCCESS)
+			{
+				std::string full_path = path;
+				std::string newPath;	//Useful with resources
+				App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
+				full_path += texturePath.C_Str();
+
+				ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
+
+				rtextures.push_back(resource);
+			}
+			else
+			{
+				rtextures.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
+			}
+		}
+	}
+
+	return rtextures;
 }
 
 bool ModuleSceneLoader::saveSceneFile(const char* scene_name, GameObject* fakeRoot)
