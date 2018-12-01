@@ -49,9 +49,9 @@ bool ModuleScene::Start()
 	//Load Street scene
 	App->scene_loader->loadSceneFile("Assets/Scenes/street");
 	//App->scene_loader->loadScene("sceneTest");
-	
+
 	ImGuizmo::Enable(false);
-	
+
 	return ret;
 }
 
@@ -100,7 +100,7 @@ bool ModuleScene::Save(JSON_File* document) {
 	JSON_Value* scene = document->createValue();
 	scene->addString("name", "scene");
 	document->addValue("scene", scene);
-	
+
 	return true;
 }
 bool ModuleScene::Load(JSON_File* document) {
@@ -123,7 +123,7 @@ void ModuleScene::Draw()
 			//Static objects-------------------------------------------------------------------
 			if (quadTree->QT_Box != nullptr)
 			{
-				//Fill the vector of the objects inside the same quads of the camera's bb		
+				//Fill the vector of the objects inside the same quads of the camera's bb
 				//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
 				quadTree->Intersect(ObjectsToDraw, sceneCamera->camera->frustum);
 				ObjectsToDraw.sort();
@@ -264,12 +264,12 @@ void ModuleScene::FillQuadtree(GameObject* gameObject)
 {
 	if (gameObject != nullptr && gameObject->isStatic)
 	{
-		quadTree->Insert(gameObject);	
+		quadTree->Insert(gameObject);
 	}
 	for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
 	{
 		FillQuadtree((*it_c));
-	}		
+	}
 }
 
 void ModuleScene::ResizeQuadTree(GameObject* gameObject)
@@ -301,37 +301,45 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		ImVec2 windowSize = { App->gui->sceneW,App->gui->sceneH };
 		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
 
-		float4x4 ViewMatrix, ProjectionMatrix;
-		float4x4* ViewMatrix_test=(float4x4*)App->camera->camera->getViewMatrix();
-		float4x4*ProjectionMatrix_test= (float4x4*)App->camera->camera->getProjectionMatrix();
+		float4x4* ViewMatrix = (float4x4*)App->camera->camera->getViewMatrix();
+		float4x4*ProjectionMatrix = (float4x4*)App->camera->camera->getProjectionMatrix();
 
 		ImGuizmo::MODE mode;
-		float4x4* ObjectMat;
-		float4x4* GlobalMat;
 
-		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)ViewMatrix.v);
-		glGetFloatv(GL_PROJECTION_MATRIX, (float*)ProjectionMatrix.v);
-		ObjectMat = &transform->localMatrix;
+		float4x4* GlobalMat;
 		GlobalMat = &transform->globalMatrix;
 
 		float3 scale = float3::one;
 		float3 pos;
 		Quat rot;
-		GlobalMat->Decompose(pos, rot, scale);
-		GlobalMat->Set(float4x4::FromTRS(pos, rot, float3::one));
+		if (operation != ImGuizmo::OPERATION::SCALE)
+		{			
+			GlobalMat->Decompose(pos, rot, scale);
+			GlobalMat->Set(float4x4::FromTRS(pos, rot, float3::one));
+		}
 		GlobalMat->Transpose();
-		
-		ObjectMat->Transpose();
 
 		ImGuizmo::SetOrthographic(false);
 
-		ImGuizmo::Manipulate((float*)ViewMatrix_test, (float*)ProjectionMatrix_test, operation, ImGuizmo::LOCAL, (float*)ObjectMat, (float*)GlobalMat);
-		ObjectMat->Transpose();
+		ImGuizmo::Manipulate((float*)ViewMatrix, (float*)ProjectionMatrix, operation, ImGuizmo::LOCAL, (float*)GlobalMat,NULL,NULL);
+		GlobalMat->Transpose();
 
-	
+		if (operation != ImGuizmo::OPERATION::SCALE)
+		{
+			float3 oneScale;
+			GlobalMat->Decompose(pos, rot, oneScale);
+			GlobalMat->Set(float4x4::FromTRS(pos, rot, scale));
+		}
+
 		if (ImGuizmo::IsUsing())
 		{
+			if (App->scene_intro->selected_GO->parent != nullptr)
+			{
+				transform->localMatrix = ((ComponentTransformation*)App->scene_intro->selected_GO->parent->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*transform->globalMatrix;
+
+			}
 			transform->localMatrix.Decompose(transform->position, transform->rotation, transform->scale);
+			App->scene_intro->selected_GO->RecalculateBB(); //To avoid that the BB laggs to follow object position
 			transform->changed = true;
 		}
 	}
@@ -375,7 +383,7 @@ void ModuleScene::AddCamera()
 {
 	GameObject* newGameObject = new GameObject();
 	newGameObject->name = "Camera";
-	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);	
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
 	newGameObject->isStatic = false;
 
 	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
@@ -396,7 +404,7 @@ void ModuleScene::AddCamera()
 	newGameObject->camera->RecalculateBB();
 
 	newGameObject->boundingBox = newGameObject->camera->cameraBB;
-	
+
 	if (cameras.size() == 0)
 		ChangeCulling(newGameObject);
 
@@ -407,7 +415,7 @@ void ModuleScene::AddEmptyGameObject()
 {
 	GameObject* newGameObject = new GameObject();
 	newGameObject->name = "Empty Object";
-	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);	
+	App->scene_intro->addGameObject(newGameObject, App->scene_intro->root);
 
 	ComponentTransformation* GOTransform = (ComponentTransformation*)newGameObject->AddComponent(TRANSFORMATION);
 
@@ -473,7 +481,7 @@ void ModuleScene::FindCameras(GameObject* parent)
 			FindCameras((*go_it));
 		}
 		if ((*go_it)->camera != nullptr)
-			cameras.push_back(*go_it);	
+			cameras.push_back(*go_it);
 	}
 }
 
