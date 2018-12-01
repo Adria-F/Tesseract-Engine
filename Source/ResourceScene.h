@@ -14,6 +14,7 @@ public:
 public:
 
 	std::vector<uint> meshesUID;
+	std::vector<uint> animationsUID;
 };
 
 #endif // !__RESOURCESCENE_H__

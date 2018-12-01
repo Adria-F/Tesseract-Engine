@@ -32,7 +32,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER, MESHES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER, MESHES_FOLDER, ANIMATIONS_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{

@@ -64,7 +64,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<uint>& UIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
+bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -87,8 +87,7 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 
 			uint UID = App->resources->getResourceUIDFromMeta(path, meshName.c_str());
 			if (UID == 0)
-				UID = GENERATE_UID();
-			UIDs.push_back(UID);
+				UID = GENERATE_UID();		
 
 			std::string exportedFile;
 
@@ -97,9 +96,9 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			if (scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0) //It has texture
 				color = { 1.0f,1.0f,1.0f }; //Reset color to white;
 
-			bool success = App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b }); //Import the mesh
-			if (success)
+			if (App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b })) //Import the mesh
 			{
+				meshUIDs.push_back(UID);
 				std::string* nameAlloc = new std::string(meshName);
 				meshesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
 				meshesUIDs[nameAlloc] = UID;
@@ -112,9 +111,9 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 			rMeshes.push_back(meshResource); //Add it even if it is nullptr, to keep correct index order
 		}
 		if(newMeta)
-			App->resources->updateMeshesUIDs(path, meshesUIDs, meta);
+			App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs, meta);
 		else
-			App->resources->updateMeshesUIDs(path, meshesUIDs);
+			App->resources->updateMetaUIDsList(path, "meshes", meshesUIDs);
 		int size = meshesNames.size();
 		for (int i = 0; i < size; i++) //Clean the vector of names
 			RELEASE(meshesNames[i]);
@@ -122,18 +121,43 @@ bool ModuleSceneLoader::importFBXScene(const char* path, uint UID, std::vector<u
 		meshesUIDs.clear(); //The allocated names are cleaned with the vector
 
 		//Import animations
+		vector<ResourceAnimation*> rAnimations;
+		vector<std::string*> animationsNames;
+		std::map<std::string*, uint> animationsUIDs;
 		for (int i = 0; i < scene->mNumAnimations; i++)
 		{
 			std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : "Unnamed";
-			//App->fileSystem->getAvailableNameFromArray(meshesNames, animationName); //Get the available name for the animation
+			App->fileSystem->getAvailableNameFromArray(animationsNames, animationName); //Get the available name for the animation
 
 			uint UID = App->resources->getResourceUIDFromMeta(path, animationName.c_str());
 			if (UID == 0)
-				UID = GENERATE_UID();
+				UID = GENERATE_UID();			
 
 			std::string exportedFile;
-			App->animations->importAnimation(scene->mAnimations[i], UID, exportedFile);			
+			ResourceAnimation* animationResource = nullptr;
+			if (App->animations->importAnimation(scene->mAnimations[i], UID, exportedFile)) //Import animation
+			{
+				animationUIDs.push_back(UID);
+				std::string* nameAlloc = new std::string(animationName);
+				animationsNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
+				animationsUIDs[nameAlloc] = UID;
+
+				animationResource = (ResourceAnimation*)App->resources->AddResource(R_ANIMATION, UID);
+				animationResource->name = animationName;
+				animationResource->file = path;
+				animationResource->exported_file = exportedFile;
+			}
+			rAnimations.push_back(animationResource);
 		}
+		if (newMeta)
+			App->resources->updateMetaUIDsList(path, "animations", animationsUIDs, meta);
+		else
+			App->resources->updateMetaUIDsList(path, "animations", animationsUIDs);
+		size = animationsNames.size();
+		for (int i = 0; i < size; i++) //Clean the vector of names
+			RELEASE(animationsNames[i]);
+		animationsNames.clear();
+		animationsUIDs.clear(); //The allocated names are cleaned with the vector
 
 		//Import textures
 		vector<ResourceTexture*> rtextures;

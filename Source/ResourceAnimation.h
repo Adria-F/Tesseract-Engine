@@ -3,36 +3,24 @@
 
 #include "Resource.h"
 
-struct PositionKey
-{
-	double time;
-	vec Value;
-};
-
-struct ScalingKey
-{
-	double time;
-	vec Value;
-};
-
-struct RotationKey
-{
-	double time;
-	Quat Value;
-};
-
 struct Bone
 {
+	~Bone();
+
 	std::string NodeName = "";
 	
 	int numPosKeys = 0;
-	int numScalKeys = 0;
+	int numScaleKeys = 0;
 	int numRotKeys = 0;	
 
+	float* PosKeysValues = nullptr;
+	double* PosKeysTimes = nullptr;
 
-	PositionKey* PosKeys = nullptr;
-	ScalingKey* ScalKeys  = nullptr;
-	RotationKey* RotKeys = nullptr;
+	float* ScaleKeysValues = nullptr;
+	double* ScaleKeysTimes = nullptr;
+
+	float* RotKeysValues = nullptr;
+	double* RotKeysTimes = nullptr;
 };
 
 class ResourceAnimation : public Resource

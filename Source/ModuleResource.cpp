@@ -60,6 +60,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 {
 	std::string written_file;
 	std::vector<uint> meshesUID;
+	std::vector<uint> animationsUID;
 	bool loaded = false;
 
 	bool newMeta = false;
@@ -84,11 +85,8 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				break;
 			
 			case R_SCENE:
-				loaded = App->scene_loader->importFBXScene(file, UID, meshesUID, written_file, metaValue, newMeta);
+				loaded = App->scene_loader->importFBXScene(file, UID, meshesUID, animationsUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
-				break;
-			
-			case R_ANIMATION:
 				break;
 			}
 
@@ -111,6 +109,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				if (type == R_SCENE)
 				{
 					((ResourceScene*)newRes)->meshesUID = meshesUID;
+					((ResourceScene*)newRes)->animationsUID = animationsUID;
 				}
 
 				for (int i = 0; i < timesLoaded; i++)
@@ -333,7 +332,7 @@ bool ModuleResource::updateMetaLastChange(const char* path)
 	App->JSON_manager->closeFile(readFile);
 	return ret;
 }
-bool ModuleResource::updateMeshesUIDs(const char* path, std::map<std::string*, uint> meshesUIDs, JSON_Value* existingMeta)
+bool ModuleResource::updateMetaUIDsList(const char* path, const char* tag, std::map<std::string*, uint> UIDs, JSON_Value* existingMeta)
 {
 	bool ret = false;
 	std::string metaPath = path;
@@ -348,19 +347,19 @@ bool ModuleResource::updateMeshesUIDs(const char* path, std::map<std::string*, u
 		else
 		{
 			writeFile = App->JSON_manager->openWriteFile(metaPath.c_str());
-			meta = readFile->getValue("meta");
+			meta = readFile->getValue(tag);
 		}
 		if (meta != nullptr)
 		{
-			JSON_Value* meshes = meta->getValue("meshes");
-			if (meshes == nullptr)
-				meshes = meta->createValue();
+			JSON_Value* elements = meta->getValue(tag);
+			if (elements == nullptr)
+				elements = meta->createValue();
 
-			for (std::map<std::string*, uint>::iterator it_m = meshesUIDs.begin(); it_m != meshesUIDs.end(); it_m++)
+			for (std::map<std::string*, uint>::iterator it_m = UIDs.begin(); it_m != UIDs.end(); it_m++)
 			{
-				meshes->setUint((*it_m).first->c_str(), (*it_m).second);
+				elements->setUint((*it_m).first->c_str(), (*it_m).second);
 			}
-			meta->setValue("meshes", meshes);
+			meta->setValue(tag, elements);
 			if (writeFile != nullptr)
 			{
 				writeFile->addValue("meta", meta);

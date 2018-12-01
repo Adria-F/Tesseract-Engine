@@ -15,6 +15,12 @@ ResourceScene::~ResourceScene()
 		App->resources->deleteResource(meshesUID[i]);
 	}
 	meshesUID.clear();
+
+	for (int i = 0; i < animationsUID.size(); i++)
+	{
+		App->resources->deleteResource(animationsUID[i]);
+	}
+	animationsUID.clear();
 }
 
 void ResourceScene::setImportDefaults(JSON_Value & importSettings)
