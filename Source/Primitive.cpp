@@ -197,7 +197,7 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 }
 
 // SPHERE ============================================
-MSphere::MSphere() : MSphere(1, 6, 12, { 0,0,0 })
+MSphere::MSphere() : MSphere(0.01f, 6, 12, { 0,0,0 })
 {
 }
 
@@ -376,12 +376,14 @@ void MLine::Render() const
 {
 	glLineWidth(2.0f);
 
+	glColor3f(color.r, color.g, color.b);
 	glBegin(GL_LINES);
 
 	glVertex3f(origin.x, origin.y, origin.z);
 	glVertex3f(destination.x, destination.y, destination.z);
 
 	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glLineWidth(1.0f);
 }

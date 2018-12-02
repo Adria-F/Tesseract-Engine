@@ -58,9 +58,22 @@ bool ComponentAnimation::Update()
 				ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
 				mat = mat * transform->localMatrix;
 				
-				mat.Decompose(position, rot, scale);
-				animation->spheres[i].SetPos(position.x, position.y, position.z);
-				animation->spheres[i].Render();
+				if (GO->parent != nullptr)
+				{
+					float4x4 parentMat = ((ComponentTransformation*)GO->parent->GetComponent(TRANSFORMATION))->globalMatrix;
+					mat = parentMat * mat;
+					mat.Decompose(position, rot, scale);
+					animation->spheres[i].SetPos(position.x, position.y, position.z);
+					animation->spheres[i].Render();
+
+					if (GO->parent->GetComponent(ANIMATION) == nullptr)
+					{
+						animation->lines[i].origin = position;
+						parentMat.Decompose(position, rot, scale);
+						animation->lines[i].destination = position;
+						animation->lines[i].Render();
+					}
+				}				
 			}
 		}
 	}

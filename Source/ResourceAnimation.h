@@ -4,6 +4,7 @@
 #include "Resource.h"
 
 class MSphere;
+class MLine;
 
 struct Bone
 {
@@ -46,7 +47,10 @@ public:
 	int numBones=0;
 
 	Bone* bones=nullptr;
+
+	//TMP
 	MSphere* spheres = nullptr;
+	MLine* lines = nullptr;
 };
 
 #endif // !__RESOURCEANIMATION_H__
