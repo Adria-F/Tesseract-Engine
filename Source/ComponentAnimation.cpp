@@ -23,7 +23,22 @@ bool ComponentAnimation::Update()
 
 void ComponentAnimation::DrawInfo()
 {
+	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 
+	ImGui::PushID("toggleAnimation");
+	ImGui::Checkbox("", &active);
+	ImGui::PopID();
+	ImGui::SameLine();
+
+	if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
+	{
+		if (animation != nullptr)
+		{
+			ImGui::Text(animation->name.c_str());
+			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->time,animation->ticksXsecond);
+			ImGui::Text("Number of bones: %d", animation->numBones);
+		}
+	}
 }
 
 void ComponentAnimation::Save(JSON_Value * component) const
