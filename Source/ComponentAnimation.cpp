@@ -37,7 +37,6 @@ void ComponentAnimation::DrawInfo()
 		pickResourceButton(R_ANIMATION);
 		if (animation != nullptr)
 		{
-			ImGui::Text(animation->name.c_str());
 			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->time,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
@@ -60,7 +59,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 
 void ComponentAnimation::Load(JSON_Value * component)
 {
-	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), component->getString("animation"));
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "animations", component->getString("animation"));
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)

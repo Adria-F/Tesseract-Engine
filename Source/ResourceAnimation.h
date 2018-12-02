@@ -37,8 +37,6 @@ public:
 	bool UnloadFromMemory();
 
 public:
-
-	std::string name = "";
 	
 	float time = 0.0f;
 	float ticksXsecond = 0.0f;

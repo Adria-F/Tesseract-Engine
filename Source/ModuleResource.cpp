@@ -153,6 +153,20 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 						((ResourceScene*)newRes)->meshesUID.push_back(meshUID); //Add its UID to the scene resource list
 					}
 				}
+				JSON_Value* animations = metaValue->getValue("animations");
+				if (animations != nullptr)
+				{
+					//Create the resource for each animation inside the meta
+					for (rapidjson::Value::MemberIterator it_m = animations->getRapidJSONValue()->MemberBegin(); it_m != animations->getRapidJSONValue()->MemberEnd(); it_m++)
+					{
+						uint animationUID = (*it_m).value.GetUint();
+						Resource* meshResource = App->resources->AddResource(R_ANIMATION, animationUID);
+						meshResource->name = (*it_m).name.GetString();
+						meshResource->file = file;
+						meshResource->exported_file = ANIMATIONS_FOLDER + std::to_string(animationUID) + ANIMATION_EXTENSION;
+						((ResourceScene*)newRes)->animationsUID.push_back(animationUID); //Add its UID to the scene resource list
+					}
+				}
 				newRes->exported_file = FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
 				break;
 			
@@ -373,7 +387,7 @@ bool ModuleResource::updateMetaUIDsList(const char* path, const char* tag, std::
 	App->JSON_manager->closeFile(readFile);
 	return ret;
 }
-uint ModuleResource::getResourceUIDFromMeta(const char * path, const char * meshName)
+uint ModuleResource::getResourceUIDFromMeta(const char * path, const char* tag, const char * elementName)
 {
 	uint ret = 0;
 	std::string metaPath = path;
@@ -384,10 +398,10 @@ uint ModuleResource::getResourceUIDFromMeta(const char * path, const char * mesh
 		JSON_Value* meta = file->getValue("meta");
 		if (meta != nullptr)
 		{
-			if (meshName == nullptr)
+			if (elementName == nullptr)
 				ret = meta->getUint("UID");
 			else
-				ret = meta->getValue("meshes")->getUint(meshName);
+				ret = meta->getValue(tag)->getUint(elementName);
 		}
 	}
 

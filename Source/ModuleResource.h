@@ -31,7 +31,7 @@ public:
 	bool updateMetaLastChange(const char* path);
 	bool updateMetaUIDsList(const char* path, const char* tag, std::map<std::string*, uint> UIDs, JSON_Value* existingMeta = nullptr);
 	//To get the UID of a mesh, enter the .fbx path + the mesh name
-	uint getResourceUIDFromMeta(const char* path, const char* meshName = nullptr);
+	uint getResourceUIDFromMeta(const char* path, const char* tag = nullptr, const char* elementName = nullptr);
 
 public:
 

@@ -158,7 +158,7 @@ void ComponentMesh::Save(JSON_Value * component) const
 void ComponentMesh::Load(JSON_Value* component)
 {
 	//UID = component->getUint("UID");
-	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"),component->getString("mesh"));
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "meshes", component->getString("mesh"));
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)

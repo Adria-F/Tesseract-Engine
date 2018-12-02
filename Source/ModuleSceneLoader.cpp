@@ -88,6 +88,12 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 			std::string filename;
 			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
 			rootGO->name = filename;
+			if (rAnimations.size() > 0)
+			{
+				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
+				animation->assignResource(rAnimations.front()->GetUID());
+			}
+
 			fakeScene->childs.push_back(rootGO);
 
 			saveSceneFile(std::to_string(UID).c_str(), fakeScene);

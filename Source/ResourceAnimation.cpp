@@ -55,8 +55,8 @@ bool ResourceAnimation::LoadAnimation()
 		{
 			//Loading Ranges
 			uint boneRanges[4];
-			uint bytes = sizeof(ranges);
-			memcpy(ranges, cursor, bytes);
+			uint bytes = sizeof(boneRanges);
+			memcpy(boneRanges, cursor, bytes);
 			cursor += bytes;
 
 			bones[i].numPosKeys = boneRanges[0];
@@ -65,9 +65,10 @@ bool ResourceAnimation::LoadAnimation()
 
 			//Loading Name
 			bytes = boneRanges[3];
-			char* auxName;
+			char* auxName = new char[bytes];
 			memcpy(auxName, cursor, bytes);
 			bones[i].NodeName = auxName;
+			RELEASE_ARRAY(auxName);
 			cursor += bytes;
 
 			//Loading Pos Time
@@ -103,6 +104,7 @@ bool ResourceAnimation::LoadAnimation()
 			bytes = bones[i].numRotKeys * sizeof(float) * 4;
 			bones[i].RotKeysValues = new float[bones[i].numRotKeys * 4];
 			memcpy(bones[i].RotKeysValues, cursor, bytes);
+			cursor += bytes;
 		}
 
 		ret = true;
