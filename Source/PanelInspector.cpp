@@ -69,6 +69,12 @@ void PanelInspector::Draw()
 					if (ImGui::Selectable("Material Component"))
 						go->AddComponent(MATERIAL);
 				}
+				if (go->GetComponent(ANIMATION) == nullptr)
+				{
+					canAdd = true;
+					if (ImGui::Selectable("Animation Component"))
+						go->AddComponent(ANIMATION);
+				}
 				if (!canAdd)
 				{
 					ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);

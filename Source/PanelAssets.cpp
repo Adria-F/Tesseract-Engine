@@ -34,7 +34,7 @@ void PanelAssets::Draw()
 
 	if (force_update || (!renaming && update_timer.ReadTime() >= update_delay))
 	{
-		clearElements(); //BUG: Possible crash? NOTIFY
+		clearElements(); //BUG: Possible crash? NOTIFY (When happens when loading an scene?)
 		App->fileSystem->getFilesAt(current_path.c_str(), elements, nullptr, "meta");
 		update_timer.Start();
 	}

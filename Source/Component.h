@@ -14,6 +14,7 @@ enum componentType
 	TRANSFORMATION,
 	MESH,
 	MATERIAL,
+	ANIMATION,
 	CAMERA
 };
 

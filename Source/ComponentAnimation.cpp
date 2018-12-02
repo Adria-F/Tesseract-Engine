@@ -32,6 +32,9 @@ void ComponentAnimation::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
+		beginDroppableSpace((animation == nullptr) ? "No Animation" : animation->GetName(), animation == nullptr);
+		ImGui::SameLine();
+		pickResourceButton(R_ANIMATION);
 		if (animation != nullptr)
 		{
 			ImGui::Text(animation->name.c_str());

@@ -32,6 +32,9 @@ void PanelResourcesList::Draw()
 	case R_SCENE:
 		ImGui::Text("Scenes");
 		break;
+	case R_ANIMATION:
+		ImGui::Text("Animations");
+		break;
 	}
 	ImGui::EndMenuBar();
 

@@ -9,6 +9,7 @@
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentTexture.h"
+#include "ComponentAnimation.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
@@ -153,6 +154,14 @@ Component* GameObject::AddComponent(componentType type)
 			itsNew = true;
 		}
 		ret = texture;
+		break;
+	case ANIMATION:
+		if (animation == nullptr)
+		{
+			animation = new ComponentAnimation(this, type);
+			itsNew = true;
+		}
+		ret = animation;
 		break;
 	case CAMERA:
 		if (camera == nullptr)

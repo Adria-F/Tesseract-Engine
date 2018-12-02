@@ -35,6 +35,7 @@ bool ModuleAnimations::importAnimation(aiAnimation* animation, uint UID, std::st
 		newAnimation->bones = new Bone[newAnimation->numBones];
 		for (int i = 0; i < newAnimation->numBones; i++)
 		{
+			//TODO manage dummy nodes
 			newAnimation->bones[i].NodeName = (animation->mChannels[i]->mNodeName.length > 0) ? animation->mChannels[i]->mNodeName.C_Str() : "Unnamed";
 
 			newAnimation->bones[i].numPosKeys = animation->mChannels[i]->mNumPositionKeys;
@@ -94,7 +95,7 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 	uint size = sizeof(ranges);
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys,(int)animation->bones[i].NodeName.size()};
+		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys, animation->bones[i].NodeName.size()};
 		size += sizeof(boneRanges);
 		size += animation->bones[i].NodeName.size();
 
@@ -117,7 +118,7 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys,(int)animation->bones[i].NodeName.size() };
+		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys, animation->bones[i].NodeName.size() };
 
 		bytes = sizeof(boneRanges);
 		memcpy(cursor, boneRanges, bytes);
