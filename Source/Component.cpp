@@ -95,7 +95,7 @@ void Component::pickResourceButton(ResType type)
 		if (pos.x < App->window->width / 2)
 			pos.x += ImGui::GetWindowWidth();
 		else
-			pos.x -= 190;
+			pos.x -= 204;
 		App->gui->startResourceList(type, pos.x, pos.y, this);
 	}
 	ImGui::PopID();

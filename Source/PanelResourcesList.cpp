@@ -18,7 +18,7 @@ PanelResourcesList::~PanelResourcesList()
 
 void PanelResourcesList::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
 
 	ImGui::BeginMenuBar();
 	switch (currentType)

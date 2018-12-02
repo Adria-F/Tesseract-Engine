@@ -332,8 +332,8 @@ void ModuleGUI::saveDefaultImgui()
 	ImGui::SetWindowPos("Load", { 314 * horizontalFactor,121 * verticalFactor });
 	ImGui::SetWindowSize("Load", { 564 * horizontalFactor, 356 * verticalFactor });
 
-	ImGui::SetWindowPos("Resources", { 763 * horizontalFactor,19 * verticalFactor });
-	ImGui::SetWindowSize("Resources", { 190 * horizontalFactor, 280 * verticalFactor });
+	ImGui::SetWindowPos("Resources", { 847 * horizontalFactor,19 * verticalFactor });
+	ImGui::SetWindowSize("Resources", { 204 * horizontalFactor, 288 * verticalFactor });
 
 	std::string path = SETTINGS_FOLDER;
 	path += "imgui.ini";
