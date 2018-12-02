@@ -12,6 +12,11 @@ public:
 	~PanelAnimation();
 
 	void Draw();
+
+private:
+
+	ImVec2 mouseMovement = { 0, 0 };
+	bool dragging = false;
 };
 
 #endif // !__PANELANIMATION_H__
