@@ -3,8 +3,12 @@
 #include "ModuleResource.h"
 #include "Resource.h"
 #include "ResourceAnimation.h"
+#include "GameObject.h"
 
 #include "Component.h"
+#include "ComponentTransformation.h"
+
+#include "Primitive.h"
 
 ComponentAnimation::ComponentAnimation(GameObject* parent, componentType type) : Component(parent, type)
 {
@@ -17,6 +21,49 @@ ComponentAnimation::~ComponentAnimation()
 bool ComponentAnimation::Update()
 {
 	bool ret = false;
+
+	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	if (animation != nullptr)
+	{
+		for (int i = 0; i < animation->numBones; i++)
+		{
+			GameObject* GO = gameObject->getChildByName(animation->bones[i].NodeName.c_str());
+			if (GO != nullptr)
+			{
+				vec position = float3::zero;
+				vec scale = float3::one;
+				Quat rot = Quat::identity;
+				if (animation->bones[i].numPosKeys > 0)
+				{					
+					position.x = animation->bones[i].PosKeysValues[0];
+					position.y = animation->bones[i].PosKeysValues[1];
+					position.z = animation->bones[i].PosKeysValues[2];
+				}
+				if (animation->bones[i].numScaleKeys > 0)
+				{
+					scale.x = animation->bones[i].ScaleKeysValues[0];
+					scale.y = animation->bones[i].ScaleKeysValues[1];
+					scale.z = animation->bones[i].ScaleKeysValues[2];
+				}
+				if (animation->bones[i].numRotKeys > 0)
+				{
+					rot.x = animation->bones[i].RotKeysValues[0];
+					rot.y = animation->bones[i].RotKeysValues[1];
+					rot.z = animation->bones[i].RotKeysValues[2];
+					rot.w = animation->bones[i].RotKeysValues[3];
+				}
+				float4x4 mat;
+				mat.Set(float4x4::FromTRS(position, rot, scale));
+
+				ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
+				mat = mat * transform->localMatrix;
+				
+				mat.Decompose(position, rot, scale);
+				animation->spheres[i].SetPos(position.x, position.y, position.z);
+				animation->spheres[i].Render();
+			}
+		}
+	}
 
 	return ret;
 }

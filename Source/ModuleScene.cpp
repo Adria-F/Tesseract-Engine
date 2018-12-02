@@ -41,6 +41,7 @@ bool ModuleScene::Start()
 
 	root = new GameObject();
 	root->name = "root";
+	root->culling = true;
 	root->AddComponent(TRANSFORMATION);
 
 	quadTree = new Quadtree();
@@ -167,9 +168,9 @@ void ModuleScene::Draw()
 		}
 	}
 
+	root->Update();
 	for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 	{
-		(*it_ch).second->Update();
 		(*it_ch).second->culling = false;
 	}
 

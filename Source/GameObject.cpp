@@ -69,6 +69,9 @@ void GameObject::Update()
 
 		}
 
+		if (animation != nullptr)
+			animation->Update();
+
 		if (camera != nullptr)
 			camera->Update();
 
@@ -443,4 +446,26 @@ void GameObject::changeParent(GameObject* newParent, bool recalculateTransformat
 			transform->changed = true;
 		}
 	}
+}
+
+GameObject* GameObject::getChildByName(const char* name) const
+{
+	GameObject* child = nullptr;
+
+	for (std::list<GameObject*>::const_iterator it_go = childs.begin(); it_go != childs.end(); it_go++)
+	{
+		if ((*it_go)->name == name)
+		{
+			child = (*it_go);
+			break;
+		}
+		else
+		{
+			child = (*it_go)->getChildByName(name);
+			if (child != nullptr)
+				break;
+		}
+	}
+
+	return child;
 }

@@ -3,6 +3,8 @@
 
 #include "Resource.h"
 
+class MSphere;
+
 struct Bone
 {
 	~Bone();
@@ -44,7 +46,7 @@ public:
 	int numBones=0;
 
 	Bone* bones=nullptr;
-
+	MSphere* spheres = nullptr;
 };
 
 #endif // !__RESOURCEANIMATION_H__

@@ -20,7 +20,9 @@
 
 // ------------------------------------------------------------
 Primitive::Primitive() :  color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
-{}
+{
+	transform.SetIdentity();
+}
 
 Primitive::~Primitive()
 {
@@ -80,6 +82,9 @@ void Primitive::Render() const
 
 	glColor3f(color.r, color.g, color.b);
 
+	glPushMatrix();
+	glMultMatrixf((float*)transform.Transposed().v);
+
 	//Draw shape
 	glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -89,12 +94,14 @@ void Primitive::Render() const
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPopMatrix();
 }
 
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
-	transform.Translate(x, y, z);
+	transform.Set(float4x4::FromTRS({ x,y,z }, Quat::identity, float3::one));
 }
 
 // ------------------------------------------------------------

@@ -2,7 +2,7 @@
 #include "ModuleFileSystem.h"
 #include "ResourceAnimation.h"
 
-
+#include "Primitive.h"
 
 ResourceAnimation::ResourceAnimation(uint UID, ResType type) :Resource(UID, type)
 {
@@ -49,10 +49,13 @@ bool ResourceAnimation::LoadAnimation()
 	if (numBones > 0)
 	{
 		bones = new Bone[numBones];
+		spheres = new MSphere[numBones];
 
 		//Loading Bones
 		for (int i = 0; i < numBones; i++)
 		{
+			spheres[i].color = { 1.0,0.0f,0.0f,1.0f };
+
 			//Loading Ranges
 			uint boneRanges[4];
 			uint bytes = sizeof(boneRanges);
@@ -68,6 +71,7 @@ bool ResourceAnimation::LoadAnimation()
 			char* auxName = new char[bytes];
 			memcpy(auxName, cursor, bytes);
 			bones[i].NodeName = auxName;
+			bones[i].NodeName = bones[i].NodeName.substr(0, bytes);
 			RELEASE_ARRAY(auxName);
 			cursor += bytes;
 

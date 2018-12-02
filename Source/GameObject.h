@@ -42,6 +42,7 @@ public:
 	void setChildSelected(bool selected);
 
 	void changeParent(GameObject* newParent, bool recalculateTransformation = true);
+	GameObject* getChildByName(const char* name) const;
 
 public:
 
