@@ -23,7 +23,7 @@ bool ComponentAnimation::Update()
 	bool ret = false;
 
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
-	if (animation != nullptr)
+	if (animation != nullptr && debugDraw)
 	{
 		for (int i = 0; i < animation->numBones; i++)
 		{
@@ -97,6 +97,7 @@ void ComponentAnimation::DrawInfo()
 		pickResourceButton(R_ANIMATION);
 		if (animation != nullptr)
 		{
+			ImGui::Checkbox("Draw Bones", &debugDraw);
 			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->time,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}

@@ -87,7 +87,6 @@ bool ResourceAnimation::LoadAnimation()
 			bones[i].PosKeysValues = new float[bones[i].numPosKeys*3];
 			memcpy(bones[i].PosKeysValues, cursor, bytes);
 			cursor += bytes;
-
 			
 			//Loading Scale Time
 			bytes = bones[i].numScaleKeys * sizeof(double);
@@ -99,7 +98,6 @@ bool ResourceAnimation::LoadAnimation()
 			bones[i].ScaleKeysValues = new float[bones[i].numScaleKeys * 3];
 			memcpy(bones[i].ScaleKeysValues, cursor, bytes);
 			cursor += bytes;
-
 			
 			//Loading Rotation Time
 			bytes = bones[i].numRotKeys * sizeof(double);
@@ -135,4 +133,54 @@ Bone::~Bone()
 
 	RELEASE_ARRAY(RotKeysValues);
 	RELEASE_ARRAY(RotKeysTimes);
+}
+
+bool Bone::calcCurrentIndex(float time)
+{
+	bool ret = false;
+
+	if (currentPosIndex == -1 || currentRotIndex == -1 || currentScaleIndex == -1)
+	{
+		currentPosIndex = currentRotIndex = currentScaleIndex = 0;
+		return true;
+	}
+
+	for (int i = currentPosIndex+1; i < numPosKeys; i++)
+	{
+		if (PosKeysTimes[i] <= time && (i + 1 >= numPosKeys || PosKeysTimes[i + 1] > time))
+		{
+			currentPosIndex = i * 3;
+			ret = true;
+			break;
+		}
+	}
+	for (int i = currentRotIndex+1; i < numRotKeys; i++)
+	{
+		if (RotKeysTimes[i] <= time && (i + 1 >= numRotKeys || RotKeysTimes[i + 1] > time))
+		{
+			currentRotIndex = i * 4;
+			ret = true;
+			break;
+		}
+	}
+	for (int i = currentScaleIndex+1; i < numScaleKeys; i++)
+	{
+		if (ScaleKeysTimes[i] <= time && (i + 1 >= numScaleKeys || ScaleKeysTimes[i + 1] > time))
+		{
+			currentScaleIndex = i * 3;
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void Bone::calcTransfrom()
+{
+	vec position = { PosKeysValues[currentPosIndex], PosKeysValues[currentPosIndex +1], PosKeysValues[currentPosIndex +2] };
+	Quat rotation = { RotKeysValues[currentRotIndex], RotKeysValues[currentRotIndex +1], RotKeysValues[currentRotIndex +2], RotKeysValues[currentRotIndex +3] };
+	vec scale = { ScaleKeysValues[currentScaleIndex], ScaleKeysValues[currentScaleIndex + 1], ScaleKeysValues[currentScaleIndex + 2] };
+
+	lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
 }

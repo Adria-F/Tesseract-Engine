@@ -18,6 +18,9 @@ public:
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 
+public:
+
+	bool debugDraw = false;
 
 };
 

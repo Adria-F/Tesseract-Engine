@@ -10,8 +10,16 @@ struct Bone
 {
 	~Bone();
 
+	bool calcCurrentIndex(float time);
+	void calcTransfrom();
+
 	std::string NodeName = "";
 	
+	float4x4 lastTransform = float4x4::identity;
+	int currentPosIndex = -1;
+	int currentRotIndex = -1;
+	int currentScaleIndex = -1;
+
 	int numPosKeys = 0;
 	int numScaleKeys = 0;
 	int numRotKeys = 0;	
