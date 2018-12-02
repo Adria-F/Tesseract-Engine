@@ -94,7 +94,7 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 	uint size = sizeof(ranges);
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[3] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys };
+		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys,(int)animation->bones[i].NodeName.size()};
 		size += sizeof(boneRanges);
 		size += animation->bones[i].NodeName.size();
 
@@ -117,7 +117,7 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys,animation->bones[i].NodeName.size() };
+		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys,(int)animation->bones[i].NodeName.size() };
 
 		bytes = sizeof(boneRanges);
 		memcpy(cursor, boneRanges, bytes);
