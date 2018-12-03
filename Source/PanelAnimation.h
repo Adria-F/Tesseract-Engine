@@ -15,12 +15,14 @@ public:
 
 private:
 
+	ImVec2 barMovement = { 0, 0 };
 	ImVec2 mouseMovement = { 0, 0 };
 	bool dragging = false;
 
 	float recSize=700;
-	float minSeparation = 50;
+	float zoom = 50;
 	float numFrames=1;
+	float speed = 0.0f;
 
 };
 

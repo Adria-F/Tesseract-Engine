@@ -6,9 +6,10 @@ PanelAnimation::PanelAnimation(const char* name):Panel(name)
 {
 	active = true;
 
-	minSeparation = 50;
+	zoom= 50;
 	numFrames = 100;
 	recSize = 700;
+	speed = 20.0f;
 }
 
 
@@ -47,15 +48,15 @@ void PanelAnimation::Draw()
 	{
 		ImGui::BeginGroup();
 				
-		ImGui::GetWindowDrawList()->AddLine({ p.x - mouseMovement.x * 2,p.y }, ImVec2(p.x - mouseMovement.x * 2, p.y + 135), IM_COL32(100, 100, 100, 255), 1.0f);
+		ImGui::GetWindowDrawList()->AddLine({ p.x - barMovement.x,p.y }, ImVec2(p.x - barMovement.x, p.y + 135), IM_COL32(100, 100, 100, 255), 1.0f);
 
 		char frame[8];
 		sprintf(frame, "%01d", i);
-		ImVec2 aux = { p.x - mouseMovement.x * 2 + 3,p.y };
+		ImVec2 aux = { p.x - barMovement.x + 3,p.y };
 		ImGui::GetWindowDrawList()->AddText(aux, ImColor(1.0f, 1.0f, 1.0f, 1.0f), frame);
-		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x - mouseMovement.x*2 + 1, p.y + 50), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 1.0f));
+		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x - barMovement.x + 1, p.y + 50), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 1.0f));
 
-		p = { p.x + 50,p.y };
+		p = { p.x + zoom,p.y };
 
 		ImGui::EndGroup();
 
@@ -83,8 +84,21 @@ void PanelAnimation::Draw()
 	{
 		if ( leftLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x > leftLimit.x && rightLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x < leftLimit.x+700)
 		{
-			mouseMovement.x += ImGui::GetMouseDragDelta(0).x;
-			mouseMovement.y += ImGui::GetMouseDragDelta(0).y;
+
+			int num = (numFrames - (700.0f / zoom));
+
+			if (ImGui::GetMouseDragDelta(0).x > 0)
+			{
+				mouseMovement.x +=  (700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/num;
+				barMovement.x += ((numFrames - (700.0f / zoom)) * zoom) / zoom;
+			}
+			if (ImGui::GetMouseDragDelta(0).x < 0)
+			{
+				mouseMovement.x -=(700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) /num ;
+				barMovement.x -= ((numFrames - (700.0f / zoom)) * zoom) / zoom;
+			}
+			
+			mouseMovement.y += 0;
 			ImGui::ResetMouseDragDelta();
 		}
 	}
