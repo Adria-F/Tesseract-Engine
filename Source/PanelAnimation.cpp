@@ -41,20 +41,23 @@ void PanelAnimation::Draw()
 	ImGui::SameLine();
 
 	//Animation TimeLine
-	ImGui::BeginChild("TimeLine", ImVec2(700, 180), true, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::BeginChild("TimeLine", ImVec2(700, 180), true, ImGuiWindowFlags_HorizontalScrollbar);
 	ImVec2 p = ImGui::GetCursorScreenPos();
+
+	ImGui::InvisibleButton("scrollbar", { numFrames*zoom ,140});
+	ImGui::SetCursorScreenPos(p);
 
 	for (int i = 0; i < numFrames; i++)
 	{
 		ImGui::BeginGroup();
 				
-		ImGui::GetWindowDrawList()->AddLine({ p.x - barMovement.x,p.y }, ImVec2(p.x - barMovement.x, p.y + 135), IM_COL32(100, 100, 100, 255), 1.0f);
+		ImGui::GetWindowDrawList()->AddLine({ p.x,p.y }, ImVec2(p.x, p.y + 135), IM_COL32(100, 100, 100, 255), 1.0f);
 
 		char frame[8];
 		sprintf(frame, "%01d", i);
-		ImVec2 aux = { p.x - barMovement.x + 3,p.y };
+		ImVec2 aux = { p.x + 3,p.y };
 		ImGui::GetWindowDrawList()->AddText(aux, ImColor(1.0f, 1.0f, 1.0f, 1.0f), frame);
-		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x - barMovement.x + 1, p.y + 50), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 1.0f));
+		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x + 1, p.y + 50), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 1.0f));
 
 		p = { p.x + zoom,p.y };
 
@@ -64,7 +67,7 @@ void PanelAnimation::Draw()
 
 	}
 
-	ImGui::NewLine();
+	/*ImGui::NewLine();
 
 	ImVec2 leftLimit = { ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y + 130 };
 	ImVec2 rightLimit = { ImGui::GetCursorScreenPos().x+(numFrames>10?recSize/10:recSize/numFrames), ImGui::GetCursorScreenPos().y + 145 };
@@ -112,7 +115,7 @@ void PanelAnimation::Draw()
 	if (mouse && io.MouseWheel != 0.0f)
 	{
 		zoom += 5*io.MouseWheel;
-	}
+	}*/
 
 
 
