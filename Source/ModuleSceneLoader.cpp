@@ -147,12 +147,16 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 		}
 	}
 
-	GameObject* GO = nullptr;
+	GameObject* GO = new GameObject();
+	GO->name = name;
+	ComponentTransformation* transformation = (ComponentTransformation*)GO->AddComponent(TRANSFORMATION);
+	transformation->position = pos;
+	transformation->scale = scale;
+	transformation->rotation = rot;
+	transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+
 	if (node->mNumMeshes > 0)
 	{
-		GO = new GameObject();
-		GO->name = name;
-		
 		int fail_count = 0;
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
@@ -169,11 +173,14 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 				child->name = meshes[node->mMeshes[i]]->name;
 			}
 
-			ComponentTransformation* transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
-			transformation->position = pos;
-			transformation->scale = scale;
-			transformation->rotation = rot;
-			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+			if (child != GO)
+			{
+				ComponentTransformation* transformation = (ComponentTransformation*)child->AddComponent(TRANSFORMATION);
+				transformation->position = pos;
+				transformation->scale = scale;
+				transformation->rotation = rot;
+				transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+			}
 
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
 			mesh->assignResource(meshes[node->mMeshes[i]]->GetUID());
@@ -192,16 +199,6 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	}
 	if (node->mNumChildren > 0)
 	{
-		if (GO == nullptr)
-		{
-			GO = new GameObject();
-			GO->name = name;
-			ComponentTransformation* transformation = (ComponentTransformation*)GO->AddComponent(TRANSFORMATION);
-			transformation->position = pos;
-			transformation->scale = scale;
-			transformation->rotation = rot;
-			transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
-		}
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
 			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, textures, fakeScene);

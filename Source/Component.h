@@ -30,7 +30,7 @@ public:
 	virtual void DrawInfo() {}
 	void DrawConfig();
 	virtual bool DrawExtraConfig();
-	virtual bool Update() { return true; }
+	virtual bool Update(float dt) { return true; }
 
 	void assignResource(uint UID);
 

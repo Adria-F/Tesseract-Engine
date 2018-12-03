@@ -48,7 +48,7 @@ bool ModuleScene::Start()
 	StartQuadTree();
 
 	//Load Street scene
-	App->scene_loader->loadSceneFile("Assets/Scenes/street");
+	App->scene_loader->loadSceneFile("Assets/Scenes/Walk");
 	//App->scene_loader->loadScene("sceneTest");
 
 	ImGuizmo::Enable(false);
@@ -168,7 +168,7 @@ void ModuleScene::Draw()
 		}
 	}
 
-	root->Update();
+	root->Update(App->game_dt);
 	for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 	{
 		(*it_ch).second->culling = false;

@@ -18,7 +18,7 @@ ComponentAnimation::~ComponentAnimation()
 {
 }
 
-bool ComponentAnimation::Update()
+bool ComponentAnimation::Update(float dt)
 {
 	bool ret = false;
 
@@ -30,50 +30,38 @@ bool ComponentAnimation::Update()
 			GameObject* GO = gameObject->getChildByName(animation->bones[i].NodeName.c_str());
 			if (GO != nullptr)
 			{
-				vec position = float3::zero;
-				vec scale = float3::one;
-				Quat rot = Quat::identity;
-				if (animation->bones[i].numPosKeys > 0)
-				{					
-					position.x = animation->bones[i].PosKeysValues[0];
-					position.y = animation->bones[i].PosKeysValues[1];
-					position.z = animation->bones[i].PosKeysValues[2];
-				}
-				if (animation->bones[i].numScaleKeys > 0)
+				int time = App->game_timer.ReadTime()*dt;
+				if (time > animation->time)
 				{
-					scale.x = animation->bones[i].ScaleKeysValues[0];
-					scale.y = animation->bones[i].ScaleKeysValues[1];
-					scale.z = animation->bones[i].ScaleKeysValues[2];
+					animation->resetFrames();
+					int count = time / animation->time;
+					time -= animation->time*count;
 				}
-				if (animation->bones[i].numRotKeys > 0)
+				if (animation->bones[i].calcCurrentIndex(time))
 				{
-					rot.x = animation->bones[i].RotKeysValues[0];
-					rot.y = animation->bones[i].RotKeysValues[1];
-					rot.z = animation->bones[i].RotKeysValues[2];
-					rot.w = animation->bones[i].RotKeysValues[3];
-				}
-				float4x4 mat;
-				mat.Set(float4x4::FromTRS(position, rot, scale));
+					animation->bones[i].calcTransfrom();
 
-				ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
-				mat = mat * transform->localMatrix;
-				
-				if (GO->parent != nullptr)
-				{
-					float4x4 parentMat = ((ComponentTransformation*)GO->parent->GetComponent(TRANSFORMATION))->globalMatrix;
-					mat = parentMat * mat;
+					ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
+					transform->localMatrix = animation->bones[i].lastTransform;
+
+					vec position = float3::zero;
+					vec scale = float3::one;
+					Quat rot = Quat::identity;
+					float4x4 mat = transform->globalMatrix;
 					mat.Decompose(position, rot, scale);
 					animation->spheres[i].SetPos(position.x, position.y, position.z);
-					animation->spheres[i].Render();
 
-					if (GO->parent->GetComponent(ANIMATION) == nullptr)
+					if (GO->parent != nullptr && GO->parent->GetComponent(ANIMATION) == nullptr)
 					{
 						animation->lines[i].origin = position;
+						float4x4 parentMat = ((ComponentTransformation*)GO->parent->GetComponent(TRANSFORMATION))->globalMatrix;
 						parentMat.Decompose(position, rot, scale);
 						animation->lines[i].destination = position;
-						animation->lines[i].Render();
 					}
-				}				
+				}
+
+				animation->spheres[i].Render();
+				animation->lines[i].Render();
 			}
 		}
 	}
@@ -114,6 +102,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 	animation->addUint("UID", UID);
 	animation->addString("FBX", rAnimation->GetFile());
 	animation->addString("animation", rAnimation->GetName());
+	animation->addBool("debugDraw", debugDraw);
 
 	component->addValue("", animation);
 }
@@ -121,6 +110,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 void ComponentAnimation::Load(JSON_Value * component)
 {
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "animations", component->getString("animation"));
+	debugDraw = component->getBool("debugDraw");
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)

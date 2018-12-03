@@ -48,6 +48,7 @@ public:
 	bool UnloadFromMemory();
 	
 	void SendAnimationtoPanel();
+	void resetFrames();
 
 public:
 	

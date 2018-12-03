@@ -13,7 +13,7 @@ public:
 
 	void DrawInfo();
 	bool DrawExtraConfig();
-	bool Update();
+	bool Update(float dt);
 
 	void RecalculateMatrix();
 

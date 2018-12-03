@@ -10,7 +10,7 @@ public:
 	ComponentCamera(GameObject* gameobject, componentType type);
 	~ComponentCamera();
 
-	bool Update();
+	bool Update(float dt);
 
 	float* getViewMatrix();
 	float* getProjectionMatrix();
