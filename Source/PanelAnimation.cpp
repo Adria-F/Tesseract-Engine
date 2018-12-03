@@ -7,7 +7,7 @@ PanelAnimation::PanelAnimation(const char* name):Panel(name)
 	active = true;
 
 	zoom= 50;
-	numFrames = 100;
+	numFrames = 200;
 	recSize = 700;
 	speed = 20.0f;
 }
@@ -89,13 +89,13 @@ void PanelAnimation::Draw()
 
 			if (ImGui::GetMouseDragDelta(0).x > 0)
 			{
-				mouseMovement.x +=  (700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/num;
-				barMovement.x += ((numFrames - (700.0f / zoom)) * zoom) / zoom;
+				mouseMovement.x +=  (700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/ numFrames;
+				barMovement.x += ((numFrames - (700.0f / zoom)) * zoom) / numFrames;
 			}
 			if (ImGui::GetMouseDragDelta(0).x < 0)
 			{
-				mouseMovement.x -=(700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) /num ;
-				barMovement.x -= ((numFrames - (700.0f / zoom)) * zoom) / zoom;
+				mouseMovement.x -=(700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) / numFrames;
+				barMovement.x -= ((numFrames - (700.0f / zoom)) * zoom) / numFrames;
 			}
 			
 			mouseMovement.y += 0;
