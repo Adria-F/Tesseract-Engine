@@ -42,24 +42,21 @@ bool ComponentAnimation::Update(float dt)
 					animation->bones[i].calcTransfrom();
 
 					ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
-					animation->bones[i].lastTransform = animation->bones[i].lastTransform * transform->localMatrix;
+					transform->localMatrix = animation->bones[i].lastTransform;
 
-					if (GO->parent != nullptr)
+					vec position = float3::zero;
+					vec scale = float3::one;
+					Quat rot = Quat::identity;
+					float4x4 mat = transform->globalMatrix;
+					mat.Decompose(position, rot, scale);
+					animation->spheres[i].SetPos(position.x, position.y, position.z);
+
+					if (GO->parent != nullptr && GO->parent->GetComponent(ANIMATION) == nullptr)
 					{
-						vec position = float3::zero;
-						vec scale = float3::one;
-						Quat rot = Quat::identity;
+						animation->lines[i].origin = position;
 						float4x4 parentMat = ((ComponentTransformation*)GO->parent->GetComponent(TRANSFORMATION))->globalMatrix;
-						animation->bones[i].lastTransform = parentMat * animation->bones[i].lastTransform;
-						animation->bones[i].lastTransform.Decompose(position, rot, scale);
-						animation->spheres[i].SetPos(position.x, position.y, position.z);
-
-						if (GO->parent->GetComponent(ANIMATION) == nullptr)
-						{
-							animation->lines[i].origin = position;
-							parentMat.Decompose(position, rot, scale);
-							animation->lines[i].destination = position;
-						}
+						parentMat.Decompose(position, rot, scale);
+						animation->lines[i].destination = position;
 					}
 				}
 
@@ -105,6 +102,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 	animation->addUint("UID", UID);
 	animation->addString("FBX", rAnimation->GetFile());
 	animation->addString("animation", rAnimation->GetName());
+	animation->addBool("debugDraw", debugDraw);
 
 	component->addValue("", animation);
 }
@@ -112,6 +110,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 void ComponentAnimation::Load(JSON_Value * component)
 {
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "animations", component->getString("animation"));
+	debugDraw = component->getBool("debugDraw");
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)
