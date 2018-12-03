@@ -9,7 +9,7 @@ PanelAnimation::PanelAnimation(const char* name):Panel(name)
 	zoom= 50;
 	numFrames = 200;
 	recSize = 700;
-	speed = 20.0f;
+	speed = 0.5f;
 }
 
 
@@ -89,13 +89,13 @@ void PanelAnimation::Draw()
 
 			if (ImGui::GetMouseDragDelta(0).x > 0)
 			{
-				mouseMovement.x +=  (700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/ numFrames;
-				barMovement.x += ((numFrames - (700.0f / zoom)) * zoom) / numFrames;
+				mouseMovement.x +=  ((700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/ numFrames)*speed;
+				barMovement.x += (((numFrames - (700.0f / zoom)) * zoom) / numFrames)*speed;
 			}
 			if (ImGui::GetMouseDragDelta(0).x < 0)
 			{
-				mouseMovement.x -=(700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) / numFrames;
-				barMovement.x -= ((numFrames - (700.0f / zoom)) * zoom) / numFrames;
+				mouseMovement.x -=((700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) / numFrames)*speed;
+				barMovement.x -= (((numFrames - (700.0f / zoom)) * zoom) / numFrames)*speed;
 			}
 			
 			mouseMovement.y += 0;
@@ -106,7 +106,16 @@ void PanelAnimation::Draw()
 	{
 		dragging = false;
 	}
-	   	 
+
+	ImGuiIO io = ImGui::GetIO();
+
+	if (mouse && io.MouseWheel != 0.0f)
+	{
+		zoom += 5*io.MouseWheel;
+	}
+
+
+
 	ImGui::EndChild();
 
 	ImGui::End();
