@@ -18,7 +18,7 @@ ComponentTexture::~ComponentTexture()
 		tex->UnloadMemory();
 }
 
-bool ComponentTexture::Update()
+bool ComponentTexture::Update(float dt)
 {
 	ResourceTexture* tex = (ResourceTexture*)App->resources->GetResource(RUID);
 	if (!active || tex == nullptr)

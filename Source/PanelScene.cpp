@@ -105,11 +105,13 @@ void PanelScene::Draw()
 		if (!App->GamePaused)
 		{
 			App->GamePaused = true;
+			App->game_timer.PauseTimer();
 			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
 		}
 		else
 		{
 			App->GamePaused = false;
+			App->game_timer.Start();
 			ImGui::PopStyleColor();
 		}
 	}

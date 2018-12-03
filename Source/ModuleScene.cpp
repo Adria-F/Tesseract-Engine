@@ -168,7 +168,7 @@ void ModuleScene::Draw()
 		}
 	}
 
-	root->Update();
+	root->Update(App->game_dt);
 	for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 	{
 		(*it_ch).second->culling = false;

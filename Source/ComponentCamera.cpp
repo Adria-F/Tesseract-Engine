@@ -32,7 +32,7 @@ ComponentCamera::~ComponentCamera()
 {
 }
 
-bool ComponentCamera::Update()
+bool ComponentCamera::Update(float dt)
 {
 	if (!active)
 		return false;

@@ -17,7 +17,7 @@ JSONManager::~JSONManager()
 JSON_File* JSONManager::openReadFile(const char * path)
 {
 	FILE* fp = fopen(path, "rb");
-	char readBuffer[131072];
+	char readBuffer[262144];
 
 	if (fp != nullptr)
 		return new JSON_File(new rapidjson::FileReadStream(fp, readBuffer, sizeof(readBuffer)), fp);
@@ -28,7 +28,7 @@ JSON_File* JSONManager::openReadFile(const char * path)
 JSON_File* JSONManager::openWriteFile(const char * path)
 {
 	FILE* fp = fopen(path, "wb");
-	char writeBuffer[131072];
+	char writeBuffer[262144];
 
 	if (fp != nullptr)
 		return new JSON_File(new rapidjson::FileWriteStream(fp, writeBuffer, sizeof(writeBuffer)), fp);

@@ -46,6 +46,7 @@ public:
 	bool LoadInMemory();
 	bool LoadAnimation();
 	bool UnloadFromMemory();
+	void resetFrames();
 
 public:
 	

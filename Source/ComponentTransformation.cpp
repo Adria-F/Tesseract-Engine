@@ -120,7 +120,7 @@ bool ComponentTransformation::DrawExtraConfig()
 	return true;
 }
 
-bool ComponentTransformation::Update()
+bool ComponentTransformation::Update(float dt)
 {
 	return true;
 }

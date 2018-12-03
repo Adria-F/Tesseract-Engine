@@ -50,30 +50,30 @@ GameObject::~GameObject()
 	childs.clear();
 }
 
-void GameObject::Update()
+void GameObject::Update(float dt)
 {
 	//TODO:Use the render camera for the frustum culling 
 	
 	if (active && (culling || !App->renderer3D->Frustum_Culling))
 	{
 		if (texture != nullptr)
-			texture->Update();
+			texture->Update(dt);
 
 		if (mesh != nullptr)
 		{
 			//comented to test the frustum culling
 			glPushMatrix();
 			glMultMatrixf((float*)transformation->globalMatrix.Transposed().v);
-			mesh->Update();
+			mesh->Update(dt);
 			glPopMatrix();
 
 		}
 
 		if (animation != nullptr)
-			animation->Update();
+			animation->Update(dt);
 
 		if (camera != nullptr)
-			camera->Update();
+			camera->Update(dt);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_ALPHA_TEST);
@@ -91,7 +91,7 @@ void GameObject::Update()
 
 		for (std::list<GameObject*>::iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
 		{
-			(*it_c)->Update();
+			(*it_c)->Update(dt);
 		}		
 	}	
 

@@ -26,7 +26,7 @@ ComponentMesh::~ComponentMesh()
 		mesh->UnloadMemory();
 }
 
-bool ComponentMesh::Update()
+bool ComponentMesh::Update(float dt)
 {
 	ResourceMesh* mesh =(ResourceMesh*) App->resources->GetResource(RUID);
 

@@ -22,7 +22,7 @@ void Timer::Stop()
 {
 	running = false;
 	isPaused = false;
-	stopped_at = SDL_GetTicks();
+	stopped_at = 0;
 }
 
 Uint32 Timer::ReadTime()

@@ -123,6 +123,16 @@ bool ResourceAnimation::UnloadFromMemory()
 	return true;
 }
 
+void ResourceAnimation::resetFrames()
+{
+	for (int i = 0; i < numBones; i++)
+	{
+		bones[i].currentPosIndex = 0;
+		bones[i].currentRotIndex = 0;
+		bones[i].currentScaleIndex = 0;
+	}
+}
+
 Bone::~Bone()
 {
 	RELEASE_ARRAY(PosKeysValues);
@@ -145,31 +155,28 @@ bool Bone::calcCurrentIndex(float time)
 		return true;
 	}
 
-	for (int i = currentPosIndex+1; i < numPosKeys; i++)
+	for (int i = currentPosIndex + 1; i < numPosKeys; i++)
 	{
 		if (PosKeysTimes[i] <= time && (i + 1 >= numPosKeys || PosKeysTimes[i + 1] > time))
 		{
-			currentPosIndex = i * 3;
+			currentPosIndex = i;
 			ret = true;
-			break;
 		}
 	}
-	for (int i = currentRotIndex+1; i < numRotKeys; i++)
+	for (int i = currentRotIndex + 1; i < numRotKeys; i++)
 	{
 		if (RotKeysTimes[i] <= time && (i + 1 >= numRotKeys || RotKeysTimes[i + 1] > time))
 		{
-			currentRotIndex = i * 4;
+			currentRotIndex = i;
 			ret = true;
-			break;
 		}
 	}
-	for (int i = currentScaleIndex+1; i < numScaleKeys; i++)
+	for (int i = currentScaleIndex + 1; i < numScaleKeys; i++)
 	{
 		if (ScaleKeysTimes[i] <= time && (i + 1 >= numScaleKeys || ScaleKeysTimes[i + 1] > time))
 		{
-			currentScaleIndex = i * 3;
+			currentScaleIndex = i;
 			ret = true;
-			break;
 		}
 	}
 
@@ -178,9 +185,10 @@ bool Bone::calcCurrentIndex(float time)
 
 void Bone::calcTransfrom()
 {
-	vec position = { PosKeysValues[currentPosIndex], PosKeysValues[currentPosIndex +1], PosKeysValues[currentPosIndex +2] };
-	Quat rotation = { RotKeysValues[currentRotIndex], RotKeysValues[currentRotIndex +1], RotKeysValues[currentRotIndex +2], RotKeysValues[currentRotIndex +3] };
-	vec scale = { ScaleKeysValues[currentScaleIndex], ScaleKeysValues[currentScaleIndex + 1], ScaleKeysValues[currentScaleIndex + 2] };
+	LOG("%d", currentPosIndex);
+	vec position = { PosKeysValues[currentPosIndex*3], PosKeysValues[currentPosIndex*3 +1], PosKeysValues[currentPosIndex*3 +2] };
+	Quat rotation = { RotKeysValues[currentRotIndex*4], RotKeysValues[currentRotIndex*4 +1], RotKeysValues[currentRotIndex*4 +2], RotKeysValues[currentRotIndex*4 +3] };
+	vec scale = { ScaleKeysValues[currentScaleIndex*3], ScaleKeysValues[currentScaleIndex*3 + 1], ScaleKeysValues[currentScaleIndex*3 + 2] };
 
 	lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
 }

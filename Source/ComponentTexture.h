@@ -14,7 +14,7 @@ public:
 
 	~ComponentTexture();
 
-	bool Update();
+	bool Update(float dt);
 	void DrawInfo();
 
 	void Save(JSON_Value* component) const;

@@ -119,6 +119,7 @@ bool Application::Init()
 	
 	JSON_manager->closeFile(document);
 	ms_timer.Start();
+	game_timer.Stop();
 	GameMode = false;
 	counting = false;
 	game_dt = 0;
@@ -166,8 +167,6 @@ void Application::FinishUpdate()
 		gui->logGameFPS(1 / game_dt, game_dt * 1000);
 	}
 	
-	
-
 	if (doSave)
 	{
 		if (GameMode)

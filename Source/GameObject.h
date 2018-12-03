@@ -26,7 +26,7 @@ public:
 	Component* AddComponent(componentType type);
 	void RemoveComponent(Component* component);
 
-	void Update();
+	void Update(float dt);
 	void DrawComponentsUI();
 	void DrawBB(const AABB& BB, vec color) const; 
 	void DrawBB(const OBB& BB, vec color) const;
