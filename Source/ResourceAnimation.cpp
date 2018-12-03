@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "ResourceAnimation.h"
+#include "ModuleGUI.h"
+#include "PanelAnimation.h"
 
 #include "Primitive.h"
 
@@ -23,6 +25,7 @@ void ResourceAnimation::setImportDefaults(JSON_Value& importSettings)
 bool ResourceAnimation::LoadInMemory()
 {
 	LoadAnimation();
+	SendAnimationtoPanel();
 
 	return true;
 }
@@ -120,7 +123,21 @@ bool ResourceAnimation::LoadAnimation()
 }
 bool ResourceAnimation::UnloadFromMemory()
 {
+	if (App->gui->animations != nullptr)
+	{
+		App->gui->animations->animation = nullptr;
+	}
+
 	return true;
+}
+
+void ResourceAnimation::SendAnimationtoPanel()
+{
+	if (App->gui->animations != nullptr)
+	{
+		App->gui->animations->animation = this;
+		App->gui->animations->numFrames = time;
+	}
 }
 
 Bone::~Bone()

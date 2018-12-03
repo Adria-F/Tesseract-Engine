@@ -1,13 +1,14 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "PanelAnimation.h"
+#include "ResourceAnimation.h"
 
 PanelAnimation::PanelAnimation(const char* name):Panel(name)
 {
 	active = true;
 
 	zoom= 50;
-	numFrames = 200;
+	numFrames = 100;
 	recSize = 700;
 	speed = 0.5f;
 }
@@ -27,21 +28,25 @@ void PanelAnimation::Draw()
 
 	//Animation typeos of Keys
 	ImGui::BeginGroup();
-	ImGui::Text("Position X");
-	ImGui::Text("Position Y");
-	ImGui::Text("Position Z");
-	ImGui::Text("Rotation X");
-	ImGui::Text("Rotation Y");
-	ImGui::Text("Rotation Z");
-	ImGui::Text("Scale X");
-	ImGui::Text("Scale Y");
-	ImGui::Text("Scale Z");
+
+	ImGui::SetCursorPosY(85);
+
+	ImGui::Text("Position");
+
+	ImGui::SetCursorPosY(125);
+
+	ImGui::Text("Scale");
+
+	ImGui::SetCursorPosY(165);
+	
+	ImGui::Text("Rotation");
+	
 	ImGui::EndGroup();
 
 	ImGui::SameLine();
 
 	//Animation TimeLine
-	ImGui::BeginChild("TimeLine", ImVec2(700, 180), true, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::BeginChild("TimeLine", ImVec2(1000, 180), true, ImGuiWindowFlags_HorizontalScrollbar);
 	ImVec2 p = ImGui::GetCursorScreenPos();
 
 	ImGui::InvisibleButton("scrollbar", { numFrames*zoom ,140});
@@ -57,7 +62,22 @@ void PanelAnimation::Draw()
 		sprintf(frame, "%01d", i);
 		ImVec2 aux = { p.x + 3,p.y };
 		ImGui::GetWindowDrawList()->AddText(aux, ImColor(1.0f, 1.0f, 1.0f, 1.0f), frame);
-		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x + 1, p.y + 50), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 1.0f));
+
+		if (animation != nullptr && selectedBone!=nullptr)
+		{
+			if (selectedBone->PosKeysTimes[i] == i)
+			{
+				ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x + 1, p.y+35), 6.0f, ImColor(0.0f, 0.0f, 1.0f, 0.5f));
+			}
+			if (selectedBone->ScaleKeysTimes[i] == i)
+			{
+				ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x + 1, p.y + 75), 6.0f, ImColor(0.0f, 1.0f, 0.0f, 0.5f));
+			}
+			if (selectedBone->RotKeysTimes[i] == i)
+			{
+				ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(p.x + 1, p.y + 115), 6.0f, ImColor(1.0f, 0.0f, 0.0f, 0.5f));
+			}
+		}
 
 		p = { p.x + zoom,p.y };
 
@@ -117,9 +137,38 @@ void PanelAnimation::Draw()
 		zoom += 5*io.MouseWheel;
 	}*/
 
+	ImGui::EndChild();
 
+	ImGui::SameLine();
+
+	ImGui::BeginGroup();
+	
+	ImGui::BeginChild("All Animations", ImVec2(250, 140), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+	if (animation != nullptr)
+	{
+		for (int i = 0; i < animation->numBones; i++)
+		{
+			if (ImGui::Button(animation->bones[i].NodeName.c_str()))
+			{
+				selectedBone = &animation->bones[i];
+			}
+		}
+	}
 
 	ImGui::EndChild();
+
+	//ImGui::SameLine();
+
+	ImGui::BeginChild("Selected Bone", ImVec2(250, 30), true);
+
+	if (selectedBone != nullptr)
+	{
+		ImGui::Text(selectedBone->NodeName.c_str());
+	}
+
+	ImGui::EndChild();
+	ImGui::EndGroup();
 
 	ImGui::End();
 }

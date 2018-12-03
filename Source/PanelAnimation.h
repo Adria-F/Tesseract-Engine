@@ -3,6 +3,9 @@
 
 #include "Panel.h"
 
+class ResourceAnimation;
+class Bone;
+
 class PanelAnimation :
 	public Panel
 {
@@ -13,6 +16,13 @@ public:
 
 	void Draw();
 
+public:
+
+	ResourceAnimation* animation = nullptr;
+	Bone* selectedBone=nullptr;
+
+	float numFrames = 1;
+
 private:
 
 	ImVec2 barMovement = { 0, 0 };
@@ -21,7 +31,6 @@ private:
 
 	float recSize=700;
 	float zoom = 50;
-	float numFrames=1;
 	float speed = 0.0f;
 
 };

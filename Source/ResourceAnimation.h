@@ -46,6 +46,8 @@ public:
 	bool LoadInMemory();
 	bool LoadAnimation();
 	bool UnloadFromMemory();
+	
+	void SendAnimationtoPanel();
 
 public:
 	
