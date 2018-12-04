@@ -90,8 +90,12 @@ void PanelAnimation::Draw()
 	}
 
 	//RedLine 
-	if(!App->GameMode)
-		ImGui::GetWindowDrawList()->AddLine({ redbar.x,redbar.y-10 }, ImVec2(redbar.x, redbar.y + 165), IM_COL32(255, 0, 0, 100), 1.0f);
+	if (!App->GameMode)
+	{
+		ImGui::GetWindowDrawList()->AddLine({ redbar.x,redbar.y - 10 }, ImVec2(redbar.x, redbar.y + 165), IM_COL32(255, 0, 0, 100), 1.0f);
+		progress = 0.0f;
+		ImGui::SetScrollX(0);
+	}
 	else
 	{
 		ImGui::GetWindowDrawList()->AddLine({ redbar.x + progress,redbar.y - 10 }, ImVec2(redbar.x + progress, redbar.y + 165), IM_COL32(255, 0, 0, 255), 1.0f);
