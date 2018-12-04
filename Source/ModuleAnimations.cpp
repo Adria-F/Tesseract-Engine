@@ -26,7 +26,7 @@ bool ModuleAnimations::importAnimation(aiAnimation* animation, uint UID, std::st
 
 	ResourceAnimation* newAnimation = new ResourceAnimation(0, R_ANIMATION);
 
-	newAnimation->time = animation->mDuration;
+	newAnimation->ticks = animation->mDuration;
 	newAnimation->ticksXsecond = animation->mTicksPerSecond;
 	newAnimation->numBones = animation->mNumChannels;
 
@@ -91,7 +91,7 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 {
 	bool ret = false;
 
-	uint ranges[3] = { animation->time, animation->ticksXsecond, animation->numBones };
+	uint ranges[3] = { animation->ticks, animation->ticksXsecond, animation->numBones };
 	uint size = sizeof(ranges);
 	for (int i = 0; i < animation->numBones; i++)
 	{

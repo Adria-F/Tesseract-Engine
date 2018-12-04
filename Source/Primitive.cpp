@@ -197,7 +197,7 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 }
 
 // SPHERE ============================================
-MSphere::MSphere() : MSphere(0.5f, 6, 12, { 0,0,0 })
+MSphere::MSphere() : MSphere(1.0f, 6, 12, { 0,0,0 })
 {
 }
 

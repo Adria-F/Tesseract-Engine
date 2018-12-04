@@ -49,11 +49,14 @@ public:
 	
 	void SendAnimationtoPanel();
 	void resetFrames();
+	float getDuration() const;
 
 public:
 	
-	float time = 0.0f;
+	float ticks = 0.0f;
 	float ticksXsecond = 0.0f;
+
+	float time = 0.0f;
 	
 	int numBones=0;
 

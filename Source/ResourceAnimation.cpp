@@ -45,7 +45,7 @@ bool ResourceAnimation::LoadAnimation()
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
 
-	time = ranges[0];
+	ticks = ranges[0];
 	ticksXsecond = ranges[1];
 	numBones = ranges[2];
 
@@ -136,7 +136,7 @@ void ResourceAnimation::SendAnimationtoPanel()
 	if (App->gui->animations != nullptr)
 	{
 		App->gui->animations->animation = this;
-		App->gui->animations->numFrames = time;
+		App->gui->animations->numFrames = ticks;
 
 	}
 }
@@ -149,6 +149,11 @@ void ResourceAnimation::resetFrames()
 		bones[i].currentRotIndex = 0;
 		bones[i].currentScaleIndex = 0;
 	}
+}
+
+float ResourceAnimation::getDuration() const
+{
+	return ticks / ticksXsecond;
 }
 
 Bone::~Bone()
@@ -173,28 +178,31 @@ bool Bone::calcCurrentIndex(float time)
 		return true;
 	}
 
-	for (int i = currentPosIndex + 1; i < numPosKeys; i++)
+	for (int i = 0; i < numPosKeys; i++)
 	{
 		if (PosKeysTimes[i] <= time && (i + 1 >= numPosKeys || PosKeysTimes[i + 1] > time))
 		{
 			currentPosIndex = i;
 			ret = true;
+			break;
 		}
 	}
-	for (int i = currentRotIndex + 1; i < numRotKeys; i++)
+	for (int i = 0; i < numRotKeys; i++)
 	{
 		if (RotKeysTimes[i] <= time && (i + 1 >= numRotKeys || RotKeysTimes[i + 1] > time))
 		{
 			currentRotIndex = i;
 			ret = true;
+			break;
 		}
 	}
-	for (int i = currentScaleIndex + 1; i < numScaleKeys; i++)
+	for (int i = 0; i < numScaleKeys; i++)
 	{
 		if (ScaleKeysTimes[i] <= time && (i + 1 >= numScaleKeys || ScaleKeysTimes[i + 1] > time))
 		{
 			currentScaleIndex = i;
 			ret = true;
+			break;
 		}
 	}
 
@@ -203,7 +211,6 @@ bool Bone::calcCurrentIndex(float time)
 
 void Bone::calcTransfrom()
 {
-	LOG("%d", currentPosIndex);
 	vec position = { PosKeysValues[currentPosIndex*3], PosKeysValues[currentPosIndex*3 +1], PosKeysValues[currentPosIndex*3 +2] };
 	Quat rotation = { RotKeysValues[currentRotIndex*4], RotKeysValues[currentRotIndex*4 +1], RotKeysValues[currentRotIndex*4 +2], RotKeysValues[currentRotIndex*4 +3] };
 	vec scale = { ScaleKeysValues[currentScaleIndex*3], ScaleKeysValues[currentScaleIndex*3 + 1], ScaleKeysValues[currentScaleIndex*3 + 2] };

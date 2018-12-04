@@ -30,14 +30,13 @@ bool ComponentAnimation::Update(float dt)
 			GameObject* GO = gameObject->getChildByName(animation->bones[i].NodeName.c_str());
 			if (GO != nullptr)
 			{
-				int time = App->game_timer.ReadTime()*dt;
-				if (time > animation->time)
+				animation->time += dt*0.005f;
+				if (animation->time > animation->getDuration())
 				{
-					animation->resetFrames();
-					int count = time / animation->time;
-					time -= animation->time*count;
+					animation->time -= animation->getDuration();
 				}
-				if (animation->bones[i].calcCurrentIndex(time))
+
+				if (animation->bones[i].calcCurrentIndex(animation->time*animation->ticksXsecond))
 				{
 					animation->bones[i].calcTransfrom();
 
@@ -86,7 +85,7 @@ void ComponentAnimation::DrawInfo()
 		if (animation != nullptr)
 		{
 			ImGui::Checkbox("Draw Bones", &debugDraw);
-			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->time,animation->ticksXsecond);
+			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->ticks,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
 	}
