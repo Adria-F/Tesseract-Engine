@@ -11,6 +11,8 @@ PanelAnimation::PanelAnimation(const char* name):Panel(name)
 	numFrames = 100;
 	recSize = 700;
 	speed = 0.5f;
+	progress = 0.0f;
+	winSize = 1000.0f;
 }
 
 
@@ -24,7 +26,7 @@ void PanelAnimation::Draw()
 
 	//Animation bar Progress
 	ImGui::SetCursorPosX(85);
-	ImGui::ProgressBar(0.1f, { 700,0 });
+	ImGui::ProgressBar((progress/(zoom*numFrames)), { winSize,0 });
 
 	//Animation typeos of Keys
 	ImGui::BeginGroup();
@@ -46,9 +48,9 @@ void PanelAnimation::Draw()
 	ImGui::SameLine();
 
 	//Animation TimeLine
-	ImGui::BeginChild("TimeLine", ImVec2(1000, 180), true, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::BeginChild("TimeLine", ImVec2(winSize, 180), true, ImGuiWindowFlags_HorizontalScrollbar);
 	ImVec2 p = ImGui::GetCursorScreenPos();
-
+	ImVec2 redbar = ImGui::GetCursorScreenPos();
 	ImGui::InvisibleButton("scrollbar", { numFrames*zoom ,140});
 	ImGui::SetCursorScreenPos(p);
 
@@ -87,55 +89,34 @@ void PanelAnimation::Draw()
 
 	}
 
-	/*ImGui::NewLine();
-
-	ImVec2 leftLimit = { ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y + 130 };
-	ImVec2 rightLimit = { ImGui::GetCursorScreenPos().x+(numFrames>10?recSize/10:recSize/numFrames), ImGui::GetCursorScreenPos().y + 145 };
-	
-	bool mouse = ImGui::IsMouseHoveringRect({ leftLimit.x + mouseMovement.x , leftLimit.y}, {rightLimit.x + mouseMovement.x , rightLimit.y });
-
-	ImGui::GetWindowDrawList()->AddRectFilled({ leftLimit.x + mouseMovement.x , leftLimit.y }, { rightLimit.x + mouseMovement.x , rightLimit.y }, ImColor(1.0f, 0.7f, 0.3f, 1.0f));
-
-
-	if (mouse && ImGui::IsMouseDown(0) && dragging == false)
-	{
-		dragging = true;
-	}
-
-
-	if (dragging && ImGui::IsMouseDown(0))
-	{
-		if ( leftLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x > leftLimit.x && rightLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x < leftLimit.x+700)
-		{
-
-			int num = (numFrames - (700.0f / zoom));
-
-			if (ImGui::GetMouseDragDelta(0).x > 0)
-			{
-				mouseMovement.x +=  ((700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames))/ numFrames)*speed;
-				barMovement.x += (((numFrames - (700.0f / zoom)) * zoom) / numFrames)*speed;
-			}
-			if (ImGui::GetMouseDragDelta(0).x < 0)
-			{
-				mouseMovement.x -=((700.0f- (numFrames>10 ? recSize / 10 : recSize / numFrames)) / numFrames)*speed;
-				barMovement.x -= (((numFrames - (700.0f / zoom)) * zoom) / numFrames)*speed;
-			}
-			
-			mouseMovement.y += 0;
-			ImGui::ResetMouseDragDelta();
-		}
-	}
+	//RedLine 
+	if(!App->GameMode)
+		ImGui::GetWindowDrawList()->AddLine({ redbar.x,redbar.y-10 }, ImVec2(redbar.x, redbar.y + 165), IM_COL32(255, 0, 0, 100), 1.0f);
 	else
 	{
-		dragging = false;
+		ImGui::GetWindowDrawList()->AddLine({ redbar.x + progress,redbar.y - 10 }, ImVec2(redbar.x + progress, redbar.y + 165), IM_COL32(255, 0, 0, 255), 1.0f);
+
+		if (!App->GamePaused)
+		{
+			progress += zoom;
+			scrolled = false;
+		}
+
+		float framesInWindow = winSize/zoom;
+
+		if (progress!=0 && fmod(progress,winSize) ==0 && !scrolled)
+		{
+			float scroolPos=ImGui::GetScrollX();
+			ImGui::SetScrollX(scroolPos+ winSize);
+			scrolled = true;
+		}
+
+		if (progress == zoom * numFrames)
+		{
+			progress = 0.0f;
+			ImGui::SetScrollX(0);
+		}
 	}
-
-	ImGuiIO io = ImGui::GetIO();
-
-	if (mouse && io.MouseWheel != 0.0f)
-	{
-		zoom += 5*io.MouseWheel;
-	}*/
 
 	ImGui::EndChild();
 
