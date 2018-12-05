@@ -414,7 +414,11 @@ uint ModuleFileSystem::manageDroppedFiles(const char* path)
 	}
 	else if (extension == "png" || extension == "dds" || extension == "tga" || extension == "jpg")
 	{
-		ret = App->resources->ImportFile(full_path.c_str(), R_MATERIAL);
+		ret = App->resources->ImportFile(full_path.c_str(), R_TEXTURE);
+	}
+	else if (extension == "tesseractMat")
+	{
+		ret = App->resources->ImportFile(full_path.c_str(), R_COLOR);
 	}
 	else
 	{

@@ -18,7 +18,7 @@ PanelResourcesList::~PanelResourcesList()
 
 void PanelResourcesList::Draw()
 {
-	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 	ImGui::BeginMenuBar();
 	switch (currentType)
@@ -26,8 +26,8 @@ void PanelResourcesList::Draw()
 	case R_MESH:
 		ImGui::Text("Meshes");
 		break;
-	case R_MATERIAL:
-		ImGui::Text("Textures");
+	case R_TEXTURE:
+		ImGui::Text("Materials");
 		break;
 	case R_SCENE:
 		ImGui::Text("Scenes");
@@ -37,14 +37,45 @@ void PanelResourcesList::Draw()
 		break;
 	}
 	ImGui::EndMenuBar();
-
-	for (int i = 0; i < resources.size(); i++)
+	if (currentType == R_TEXTURE)
 	{
-		if (ImGui::Selectable(resources[i]->GetName()))
+		float width = ImGui::GetWindowContentRegionWidth();
+		bool pushed = false;
+		if (!showExtra)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,0.65f,0.1f,1.0f });
+			pushed = true;
+		}
+		if (ImGui::Button("Textures", { width / 2,20 }))
+			showExtra = false;
+		if (pushed)
+		{
+			ImGui::PopStyleColor();
+			pushed = false;
+		}
+		ImGui::SameLine();
+		if (showExtra)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,0.65f,0.1f,1.0f });
+			pushed = true;
+		}
+		if (ImGui::Button("Colors", { width / 2, 20 }))
+			showExtra = true;
+		if (pushed)
+			ImGui::PopStyleColor();
+	}
+
+	std::vector<Resource*> resourceList = resources;
+	if (currentType == R_TEXTURE && showExtra)
+		resourceList = extraResources;
+
+	for (int i = 0; i < resourceList.size(); i++)
+	{
+		if (ImGui::Selectable(resourceList[i]->GetName()))
 		{
 			if (callbackComponent != nullptr)
 			{
-				callbackComponent->assignResource(resources[i]->GetUID());
+				callbackComponent->assignResource(resourceList[i]->GetUID());
 			}
 			active = false;
 		}
@@ -59,6 +90,8 @@ void PanelResourcesList::startList(ResType type, int x, int y, Component* callba
 {
 	currentType = type;
 	resources = App->resources->getResourcesByType(type);
+	if (type == R_TEXTURE)
+		extraResources = App->resources->getResourcesByType(R_COLOR);
 	callbackComponent = callback;
 
 	ImGui::SetWindowPos(name.c_str(), {(float)x, (float)y });

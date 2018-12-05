@@ -397,6 +397,8 @@ void GameObject::RecalculateBB()
 		if (childs.size() <= 0)
 		{
 			boundingBox.TransformAsAABB(transformation->globalMatrix);
+			if(mesh == nullptr)
+				boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
 		}
 	}
 }

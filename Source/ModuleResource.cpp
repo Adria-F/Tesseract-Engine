@@ -79,10 +79,9 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 		{
 			switch (type)
 			{
-			case R_MATERIAL:
+			case R_TEXTURE:
 				loaded = App->textures->importTexture(file, UID, written_file, metaValue);
 				break;
-			
 			case R_SCENE:
 				loaded = App->scene_loader->importScene(file, UID, meshesUID, animationsUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
@@ -133,7 +132,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 
 			switch (type)
 			{
-			case R_MATERIAL:
+			case R_TEXTURE:
 				newRes->exported_file = TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION;
 				break;
 			
@@ -222,8 +221,11 @@ Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 	case R_MESH:
 		ret = (Resource*)new ResourceMesh(forced_uid, R_MESH);
 		break;
-	case R_MATERIAL:
-		ret = (Resource*)new ResourceMaterial(forced_uid, R_MATERIAL);
+	case R_TEXTURE:
+		ret = (Resource*)new ResourceMaterial(forced_uid, R_TEXTURE);
+		break;
+	case R_COLOR:
+		ret = (Resource*)new ResourceMaterial(forced_uid, R_COLOR);
 		break;
 	case R_SCENE:
 		ret = (Resource*)new ResourceScene(forced_uid, R_SCENE);
@@ -305,7 +307,8 @@ JSON_File* ModuleResource::createMeta(const char* path, ResType type) const
 	case R_MESH:
 		ResourceMesh::setImportDefaults(*importSettings);
 		break;
-	case R_MATERIAL:
+	case R_TEXTURE:
+	case R_COLOR:
 		ResourceMaterial::setImportDefaults(*importSettings);
 		break;
 	case R_SCENE:

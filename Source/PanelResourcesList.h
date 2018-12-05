@@ -20,7 +20,10 @@ public:
 
 	ResType currentType = ResType::NO_TYPE;
 	std::vector<Resource*> resources;
+	std::vector<Resource*> extraResources;
 	Component* callbackComponent = nullptr;
+
+	bool showExtra = false;
 };
 
 #endif // !__PANELRESOURCESLIST_H__

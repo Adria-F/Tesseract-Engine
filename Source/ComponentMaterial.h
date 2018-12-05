@@ -6,12 +6,6 @@
 class Texture;
 class ResourceMaterial;
 
-enum MaterialType
-{
-	COLOR = 0,
-	TEXTURE
-};
-
 class ComponentMaterial : public Component
 {
 public:
@@ -29,8 +23,6 @@ public:
 public:
 
 	float alphaTest = 0.0f;
-
-	MaterialType materialType = COLOR;
 
 	bool transparentColor = false;
 	bool doAlphaTest = false;

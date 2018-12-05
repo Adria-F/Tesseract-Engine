@@ -90,8 +90,8 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 			rootGO->name = filename;
 			if (rAnimations.size() > 0)
 			{
-				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
-				animation->assignResource(rAnimations.front()->GetUID());
+				//ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
+				//animation->assignResource(rAnimations.front()->GetUID());
 			}
 
 			fakeScene->childs.push_back(rootGO);
@@ -154,6 +154,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	transformation->scale = scale;
 	transformation->rotation = rot;
 	transformation->localMatrix.Set(float4x4::FromTRS(pos, rot, scale));
+	GO->boundingBox = AABB({ 0,0,0 }, { 0,0,0 });
 
 	if (node->mNumMeshes > 0)
 	{
@@ -188,7 +189,6 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			if (materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentMaterial* material = (ComponentMaterial*)child->AddComponent(MATERIAL);
-				material->materialType = MaterialType::TEXTURE;
 				material->assignResource(materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID());
 			}
 
@@ -232,12 +232,7 @@ std::vector<ResourceMesh*> ModuleSceneLoader::importMeshes(const char* path, con
 
 		std::string exportedFile;
 
-		aiColor3D color(1.f, 1.f, 1.f);
-		scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-		if (scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0) //It has texture
-			color = { 1.0f,1.0f,1.0f }; //Reset color to white;
-
-		if (App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile, { color.r,color.g,color.b })) //Import the mesh
+		if (App->meshes->importRMesh(scene->mMeshes[i], UID, exportedFile)) //Import the mesh
 		{
 			meshUIDs.push_back(UID);
 			std::string* nameAlloc = new std::string(meshName);
@@ -307,34 +302,72 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	return rAnimations;
 }
 
-std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char * path, const aiScene * scene)
+std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char* path, const aiScene * scene)
 {
 	vector<ResourceMaterial*> rMaterials;
 	if (scene->HasMaterials()) //Need to check embeded textures
 	{
 		for (int i = 0; i < scene->mNumMaterials; i++)
 		{
-			aiString texturePath;
-			aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texturePath);
-			if (textureError == aiReturn::aiReturn_SUCCESS)
+			if (scene->mMaterials[i]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 			{
-				std::string full_path = path;
-				std::string newPath;	//Useful with resources
-				App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
-				full_path += texturePath.C_Str();
+				aiString texturePath;
+				aiReturn textureError = scene->mMaterials[i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texturePath);
+				if (textureError == aiReturn::aiReturn_SUCCESS)
+				{
+					std::string full_path = path;
+					std::string newPath;	//Useful with resources
+					App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
+					full_path += texturePath.C_Str();
 
-				ResourceMaterial* resource = (ResourceMaterial*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
+					ResourceMaterial* resource = (ResourceMaterial*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
 
-				rMaterials.push_back(resource);
+					rMaterials.push_back(resource);
+				}
+				else
+					rMaterials.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
 			}
 			else
 			{
-				rMaterials.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
+				rMaterials.push_back(importColor(path, scene, i));
 			}
 		}
 	}
 
 	return rMaterials;
+}
+
+ResourceMaterial* ModuleSceneLoader::importColor(const char* path, const aiScene* scene, int index)
+{
+	ResourceMaterial* resource = (ResourceMaterial*)App->resources->AddResource(R_COLOR, 0);
+	aiColor3D color(1.f, 1.f, 1.f);
+	scene->mMaterials[index]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+	resource->color = { color.r, color.g, color.b, 1.0f };
+
+	//Create a file for stroing the material
+	char* buffer = new char[sizeof(float) * 4];
+	float colors[4] = { color.r, color.g, color.b, 1.0f };
+	memcpy(buffer, colors, sizeof(float) * 4);
+	std::string file;
+	App->fileSystem->splitPath(path, &file, nullptr, nullptr);
+	file += std::to_string(resource->UID) + MATERIAL_EXTENSION;
+	App->fileSystem->writeFile(file.c_str(), buffer, sizeof(float) * 4, true);
+	RELEASE_ARRAY(buffer);
+
+	resource->file = file;
+
+	//Force the creation of a .meta
+	JSON_File* ret = App->JSON_manager->openWriteFile((file+META_EXTENSION).c_str());
+
+	JSON_Value* meta = ret->createValue();
+	meta->addUint("UID", resource->UID);
+	meta->addInt("last_change", App->fileSystem->getLastTimeChanged(file.c_str()));
+
+	ret->addValue("meta", meta);
+	ret->Write();
+	App->JSON_manager->closeFile(ret);
+
+	return resource;
 }
 
 bool ModuleSceneLoader::saveSceneFile(const char* scene_name, GameObject* fakeRoot)

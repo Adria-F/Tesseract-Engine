@@ -28,7 +28,15 @@ bool ResourceMaterial::LoadInMemory()
 {
 	bool ret = true;
 
-	LoadResourceTexture();
+	switch (type)
+	{
+	case R_TEXTURE:
+		LoadResourceTexture();
+		break;
+	case R_COLOR:
+		LoadResourceColor();
+		break;
+	}
 
 	return ret;
 }
@@ -82,9 +90,28 @@ bool ResourceMaterial::LoadResourceTexture()
 	return ret;
 }
 
+bool ResourceMaterial::LoadResourceColor()
+{
+	bool ret = false;
+	char* buffer = nullptr;
+	uint size = App->fileSystem->readFile(file.c_str(), &buffer);
+
+	if (buffer != nullptr && size > 0)
+	{
+		float colors[4];
+		memcpy(colors, buffer, size);
+		color = { colors[0], colors[1], colors[2], colors[3] };
+
+		RELEASE_ARRAY(buffer);
+	}
+
+	return false;
+}
+
 
 bool ResourceMaterial::UnloadFromMemory()
 {
-	glDeleteTextures(1, &GL_id);
+	if (type == R_TEXTURE)
+		glDeleteTextures(1, &GL_id);
 	return false;
 }

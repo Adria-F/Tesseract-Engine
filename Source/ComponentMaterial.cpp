@@ -28,13 +28,13 @@ bool ComponentMaterial::Update(float dt)
 	if (!active || mat == nullptr)
 		return false;
 
-	if (materialType == COLOR)
+	if (mat->GetType() == R_COLOR)
 	{
 		glColor4f(mat->color.x, mat->color.y, mat->color.z, mat->color.w);
 		if (transparentColor)
 		{
 			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, alphaTest);
+			glAlphaFunc(GL_GREATER, 0.0f);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
@@ -70,54 +70,53 @@ void ComponentMaterial::DrawInfo()
 
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		ImGui::PushItemWidth(200);
-		ImGui::Combo("Material Type", (int*)&materialType, "Color\0Texture");
-		ImGui::PopItemWidth();
-
-		if (materialType == COLOR)
+		beginDroppableSpace((mat == nullptr) ? "No Material" : mat->GetName(), mat == nullptr);
+		// WIP
+		/*if (ImGui::BeginDragDropTarget())
 		{
-			if (ImGui::RadioButton("Solid", !transparentColor))
-				transparentColor = false;
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Transparent", transparentColor))
-				transparentColor = true;
-			if (transparentColor)
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))
 			{
-				float colors[4] = { mat->color.x, mat->color.y, mat->color.z , mat->color.w};
-				if (ImGui::ColorPicker4("", colors))
+				std::string path = (const char*)payload->Data;
+				path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
+				JSON_File* meta = App->resources->getMeta(path.c_str());
+				UID = meta->getValue("meta")->getUint("UID");
+				App->JSON_manager->closeFile(meta);
+			}
+			ImGui::EndDragDropTarget();
+		}*/
+		ImGui::SameLine();
+		pickResourceButton(R_TEXTURE);
+
+		if (mat != nullptr)
+		{
+			if (mat->GetType() == R_COLOR)
+			{
+				if (ImGui::RadioButton("Solid", !transparentColor))
+					transparentColor = false;
+				ImGui::SameLine();
+				if (ImGui::RadioButton("Transparent", transparentColor))
+					transparentColor = true;
+				if (transparentColor)
 				{
-					mat->color = { colors[0], colors[1], colors[2] , colors[3]};
+					float colors[4] = { mat->color.x, mat->color.y, mat->color.z , mat->color.w };
+					if (ImGui::ColorPicker4("", colors, ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_AlphaBar))
+					{
+						mat->color = { colors[0], colors[1], colors[2] , colors[3] };
+					}
 				}
+				else
+				{
+					float colors[3] = { mat->color.x, mat->color.y, mat->color.z };
+					if (ImGui::ColorPicker3("", colors))
+					{
+						mat->color = { colors[0], colors[1], colors[2], mat->color.w };
+					}
+				}
+
 			}
 			else
 			{
-				float colors[3] = { mat->color.x, mat->color.y, mat->color.z };
-				if (ImGui::ColorPicker3("", colors))
-				{
-					mat->color = { colors[0], colors[1], colors[2], mat->color.w };
-				}
-			}
-		}
-		else
-		{
-			beginDroppableSpace((mat == nullptr) ? "No Texture" : mat->GetName(), mat == nullptr);
-			ImGui::SameLine();
-			pickResourceButton(R_MATERIAL);
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TEXTURE"))
-				{
-					std::string path = (const char*)payload->Data;
-					path = path.substr(0, payload->DataSize); //For some reason, it reads more than data size, so cut it
-					JSON_File* meta = App->resources->getMeta(path.c_str());
-					UID = meta->getValue("meta")->getUint("UID");
-					App->JSON_manager->closeFile(meta);
-				}
-				ImGui::EndDragDropTarget();
-			}
 
-			if (mat != nullptr)
-			{
 				ImGui::Text("Texture Size:\n Width: %d | Height: %d", mat->width, mat->height);
 				float panelWidth = ImGui::GetWindowContentRegionWidth();
 				if (panelWidth > 250)
@@ -144,8 +143,7 @@ void ComponentMaterial::Save(JSON_Value * component) const
 
 	material->addInt("Type", type);
 	material->addUint("UID", UID);
-	material->addInt("MaterialType", materialType);
-	material->addString("texture", mat->GetFile());
+	material->addString("originalFile", mat->GetFile());
 
 	component->addValue("", material);
 }
@@ -153,8 +151,7 @@ void ComponentMaterial::Save(JSON_Value * component) const
 void ComponentMaterial::Load(JSON_Value* component)
 {
 	//UID = component->getUint("UID");
-	RUID = App->resources->getResourceUIDFromMeta(component->getString("texture"));	
-	materialType = (MaterialType)component->getInt("MaterialType");
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("originalFile"));		
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)

@@ -88,6 +88,7 @@ enum update_status
 #define ANIMATION_EXTENSION ".tesseractAnimation"
 #define TEXTURES_EXTENSION ".dds"
 #define SCENES_EXTENSION ".tesseractScene"
+#define MATERIAL_EXTENSION ".tesseractMat"
 #define META_EXTENSION ".meta"
 
 #endif // !__GLOBALS_H__

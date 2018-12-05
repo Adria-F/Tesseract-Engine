@@ -43,11 +43,6 @@ bool ComponentMesh::Update(float dt)
 	if (mesh->texCoords != nullptr)
 		glTexCoordPointer(2, GL_FLOAT, 0, &mesh->texCoords[0]);
 
-	if (color)
-	{
-		glColor3f(mesh->Color.x, mesh->Color.y, mesh->Color.z);
-	}
-
 	//Draw
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
@@ -115,25 +110,6 @@ void ComponentMesh::DrawInfo()
 		pickResourceButton(R_MESH);
 		if (mesh != nullptr)
 		{
-			ImGui::PushID("color checkbox");
-			ImGui::Checkbox("", &color);
-			ImGui::PopID();
-			ImGui::SameLine();
-			ImGuiColorEditFlags flags = ImGuiColorEditFlags_RGB | ImGuiColorEditFlags_NoInputs;
-			if(!color)
-			{
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
-				flags |= ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview;
-			}
-			float colors[3] = { mesh->Color.x, mesh->Color.y , mesh->Color.z };
-			if (ImGui::ColorEdit3("Color", colors, flags))
-			{
-				mesh->Color = { colors[0], colors[1], colors[2] };
-			}
-			if (!color)
-			{
-				ImGui::PopStyleVar();
-			}
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
 			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
 			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);

@@ -16,6 +16,7 @@ public:
 	bool UnloadFromMemory();
 
 	bool LoadResourceTexture();
+	bool LoadResourceColor();
 
 public:
 
