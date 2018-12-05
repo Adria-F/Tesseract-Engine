@@ -9,7 +9,7 @@
 #include "GameObject.h"
 
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
 

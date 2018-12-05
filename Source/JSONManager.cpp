@@ -233,6 +233,20 @@ void JSON_Value::addVector3(const char * name, float3 vec)
 	this->value->AddMember(index, a, *allocator);
 }
 
+void JSON_Value::addVector4(const char * name, float4 vec)
+{
+	std::string str = name;
+	rapidjson::Value index(str.c_str(), str.size(), *allocator);
+
+	rapidjson::Value a(rapidjson::kArrayType);
+	a.PushBack(vec.x, *allocator);
+	a.PushBack(vec.y, *allocator);
+	a.PushBack(vec.z, *allocator);
+	a.PushBack(vec.w, *allocator);
+
+	this->value->AddMember(index, a, *allocator);
+}
+
 void JSON_Value::addQuat(const char * name, Quat quat)
 {
 	std::string str = name;
@@ -349,6 +363,26 @@ float3 JSON_Value::getVector3(const char * name)
 	}
 
 	return float3();
+}
+
+float4 JSON_Value::getVector4(const char * name)
+{
+	if (value->HasMember(name))
+	{
+		rapidjson::Value& a = value->operator[](name);
+		if (a.IsArray() && a.Size() >= 4)
+		{
+			float4 ret;
+			ret.x = a[0].GetFloat();
+			ret.y = a[1].GetFloat();
+			ret.z = a[2].GetFloat();
+			ret.w = a[3].GetFloat();
+
+			return ret;
+		}
+	}
+
+	return float4();
 }
 
 Quat JSON_Value::getQuat(const char * name)

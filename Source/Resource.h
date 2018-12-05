@@ -9,7 +9,7 @@ enum ResType {
 
 	NO_TYPE,
 	R_MESH,
-	R_TEXTURE,
+	R_MATERIAL,
 	R_SCENE,
 	R_ANIMATION
 };

@@ -13,12 +13,12 @@
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentAnimation.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
-#include "ResourceTexture.h"
+#include "ResourceMaterial.h"
 #include "ResourceScene.h"
 #include "ResourceAnimation.h"
 
@@ -77,12 +77,12 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 		vector<ResourceAnimation*> rAnimations = importAnimations(path, scene, animationUIDs, meta, newMeta);
 
 		//Import all textures
-		vector<ResourceTexture*> rtextures = importTextures(path, scene);		
+		vector<ResourceMaterial*> rMaterials = importMaterials(path, scene);		
 
 		GameObject* fakeScene = new GameObject();
 		fakeScene->UID = 0;
 
-		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rtextures, fakeScene);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rMaterials, fakeScene);
 		if (rootGO != nullptr)
 		{
 			std::string filename;
@@ -113,7 +113,7 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 	return true;
 }
 
-GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures, GameObject* fakeScene)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceMaterial*> materials, GameObject* fakeScene)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -185,10 +185,11 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
 			mesh->assignResource(meshes[node->mMeshes[i]]->GetUID());
 
-			if (textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
+			if (materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
-				ComponentTexture* material = (ComponentTexture*)child->AddComponent(MATERIAL);
-				material->assignResource(textures[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID());
+				ComponentMaterial* material = (ComponentMaterial*)child->AddComponent(MATERIAL);
+				material->materialType = MaterialType::TEXTURE;
+				material->assignResource(materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex]->GetUID());
 			}
 
 			if (i > fail_count)
@@ -201,7 +202,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	{
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, textures, fakeScene);
+			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, materials, fakeScene);
 			if (child != nullptr)
 			{
 				App->scene_intro->addGameObject(child, GO, fakeScene);
@@ -306,9 +307,9 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	return rAnimations;
 }
 
-std::vector<ResourceTexture*> ModuleSceneLoader::importTextures(const char * path, const aiScene * scene)
+std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char * path, const aiScene * scene)
 {
-	vector<ResourceTexture*> rtextures;
+	vector<ResourceMaterial*> rMaterials;
 	if (scene->HasMaterials()) //Need to check embeded textures
 	{
 		for (int i = 0; i < scene->mNumMaterials; i++)
@@ -322,18 +323,18 @@ std::vector<ResourceTexture*> ModuleSceneLoader::importTextures(const char * pat
 				App->fileSystem->splitPath(path, &full_path, nullptr, nullptr);
 				full_path += texturePath.C_Str();
 
-				ResourceTexture* resource = (ResourceTexture*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
+				ResourceMaterial* resource = (ResourceMaterial*)App->resources->GetResource(App->fileSystem->manageDroppedFiles(full_path.c_str()));
 
-				rtextures.push_back(resource);
+				rMaterials.push_back(resource);
 			}
 			else
 			{
-				rtextures.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
+				rMaterials.push_back(nullptr); //Add it even if it is nullptr, to keep correct index order
 			}
 		}
 	}
 
-	return rtextures;
+	return rMaterials;
 }
 
 bool ModuleSceneLoader::saveSceneFile(const char* scene_name, GameObject* fakeRoot)

@@ -4,7 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleResource.h"
 
-#include "ResourceTexture.h"
+#include "ResourceMaterial.h"
 
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
@@ -48,7 +48,7 @@ bool ModuleTextures::CleanUp()
 	}
 	textures.clear();
 
-	std::list<ResourceTexture*>::iterator it_rt;
+	std::list<ResourceMaterial*>::iterator it_rt;
 	it_rt = resourcetextures.begin();
 	while (it_rt != resourcetextures.end())
 	{

@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
-#include "ResourceTexture.h"
+#include "ResourceMaterial.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
@@ -11,21 +11,20 @@
 #pragma comment( lib, "DevIL/libx86/ILU.lib")
 #pragma comment( lib, "DevIL/libx86/ILUT.lib")
 
-ResourceTexture::ResourceTexture(uint UID, ResType type):Resource(UID,type)
+ResourceMaterial::ResourceMaterial(uint UID, ResType type):Resource(UID,type)
 {
 }
 
-
-ResourceTexture::~ResourceTexture()
+ResourceMaterial::~ResourceMaterial()
 {
 	UnloadFromMemory();
 }
 
-void ResourceTexture::setImportDefaults(JSON_Value & importSettings)
+void ResourceMaterial::setImportDefaults(JSON_Value & importSettings)
 {
 }
 
-bool ResourceTexture::LoadInMemory()
+bool ResourceMaterial::LoadInMemory()
 {
 	bool ret = true;
 
@@ -34,7 +33,7 @@ bool ResourceTexture::LoadInMemory()
 	return ret;
 }
 
-bool ResourceTexture::LoadResourceTexture()
+bool ResourceMaterial::LoadResourceTexture()
 {
 	bool ret = false;
 	char* buffer = nullptr;
@@ -84,7 +83,7 @@ bool ResourceTexture::LoadResourceTexture()
 }
 
 
-bool ResourceTexture::UnloadFromMemory()
+bool ResourceMaterial::UnloadFromMemory()
 {
 	glDeleteTextures(1, &GL_id);
 	return false;

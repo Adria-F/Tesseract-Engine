@@ -429,9 +429,6 @@
     <ClInclude Include="ComponentMesh.h">
       <Filter>Sources\Modules\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentTexture.h">
-      <Filter>Sources\Modules\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleTextures.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -477,9 +474,6 @@
     <ClInclude Include="ModuleResource.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceTexture.h">
-      <Filter>Sources\Modules\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceMesh.h">
       <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
@@ -521,6 +515,12 @@
     </ClInclude>
     <ClInclude Include="PanelAnimation.h">
       <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMaterial.h">
+      <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -704,9 +704,6 @@
     <ClCompile Include="ComponentMesh.cpp">
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentTexture.cpp">
-      <Filter>Sources\Modules\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -754,9 +751,6 @@
     </ClCompile>
     <ClCompile Include="ModuleResource.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceTexture.cpp">
-      <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ResourceMesh.cpp">
       <Filter>Sources\Modules\Resources</Filter>
@@ -847,6 +841,12 @@
     </ClCompile>
     <ClCompile Include="PanelAnimation.cpp">
       <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>Sources\Modules\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMaterial.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

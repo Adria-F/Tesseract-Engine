@@ -26,7 +26,7 @@ void PanelResourcesList::Draw()
 	case R_MESH:
 		ImGui::Text("Meshes");
 		break;
-	case R_TEXTURE:
+	case R_MATERIAL:
 		ImGui::Text("Textures");
 		break;
 	case R_SCENE:

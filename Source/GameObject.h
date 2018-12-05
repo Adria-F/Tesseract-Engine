@@ -11,7 +11,7 @@ class Component;
 class ComponentTransformation;
 
 class ComponentMesh;
-class ComponentTexture;
+class ComponentMaterial;
 class ComponentAnimation;
 class ComponentCamera;
 
@@ -66,7 +66,7 @@ public:
 	OBB localBB;
 
 	ComponentMesh* mesh = nullptr;
-	ComponentTexture* texture = nullptr;
+	ComponentMaterial* material = nullptr;
 	ComponentAnimation* animation = nullptr;
 	ComponentCamera* camera = nullptr;
 	ComponentTransformation* transformation = nullptr;

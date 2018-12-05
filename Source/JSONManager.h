@@ -30,6 +30,7 @@ public:
 	void addBool(const char* name, bool value);
 	void addVector2(const char* name, float2 vec);
 	void addVector3(const char* name, float3 vec);
+	void addVector4(const char* name, float4 vec);
 	void addQuat(const char* name, Quat quat);
 	void addTransform(const char* name, float4x4 mat);
 
@@ -42,6 +43,7 @@ public:
 	bool getBool(const char* name);
 	float2 getVector2(const char* name);
 	float3 getVector3(const char* name);
+	float4 getVector4(const char* name);
 	Quat getQuat(const char* name);
 	float4x4 getTransform(const char* name);
 

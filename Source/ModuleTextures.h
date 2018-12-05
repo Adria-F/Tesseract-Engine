@@ -5,7 +5,7 @@
 #include <list>
 #include <string>
 
-class ResourceTexture;
+class ResourceMaterial;
 
 struct Texture
 {
@@ -36,7 +36,7 @@ public:
 public:
 
 	std::list<Texture*> textures;
-	std::list<ResourceTexture*> resourcetextures;
+	std::list<ResourceMaterial*> resourcetextures;
 	std::list<Texture*> icons;
 
 };

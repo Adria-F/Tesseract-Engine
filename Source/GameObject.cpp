@@ -8,12 +8,12 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentAnimation.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
-#include "ResourceTexture.h"
+#include "ResourceMaterial.h"
 
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
@@ -56,8 +56,8 @@ void GameObject::Update(float dt)
 	
 	if (active && (culling || !App->renderer3D->Frustum_Culling))
 	{
-		if (texture != nullptr)
-			texture->Update(dt);
+		if (material != nullptr)
+			material->Update(dt);
 
 		if (mesh != nullptr)
 		{
@@ -151,12 +151,12 @@ Component* GameObject::AddComponent(componentType type)
 		ret = mesh;
 		break;
 	case MATERIAL:
-		if (texture == nullptr)
+		if (material == nullptr)
 		{
-			texture = new ComponentTexture(this, type);
+			material = new ComponentMaterial(this, type);
 			itsNew = true;
 		}
-		ret = texture;
+		ret = material;
 		break;
 	case ANIMATION:
 		if (animation == nullptr)
@@ -195,7 +195,10 @@ void GameObject::RemoveComponent(Component* component)
 			transformation->changed = true;
 		break;
 	case MATERIAL:
-		texture = nullptr;
+		material = nullptr;
+		break;
+	case ANIMATION:
+		animation = nullptr;
 		break;
 	case CAMERA:
 		camera = nullptr;

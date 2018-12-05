@@ -7,7 +7,7 @@
 class GameObject;
 class ResourceMesh;
 class ResourceAnimation;
-class ResourceTexture;
+class ResourceMaterial;
 
 struct aiScene;
 struct aiNode; 
@@ -26,11 +26,11 @@ public:
 	bool CleanUp();
 
 	bool importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath,JSON_Value* meta, bool newMeta = false);
-	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceTexture*> textures, GameObject* fakeScene);
+	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceMaterial*> textures, GameObject* fakeScene);
 
 	std::vector<ResourceMesh*> importMeshes(const char* path, const aiScene* scene, std::vector<uint>& meshUIDs, JSON_Value* meta, bool newMeta = false);
 	std::vector<ResourceAnimation*> importAnimations(const char* path, const aiScene* scene, std::vector<uint>& animationUIDs, JSON_Value* meta, bool newMeta = false);
-	std::vector<ResourceTexture*> importTextures(const char* path, const aiScene* scene);
+	std::vector<ResourceMaterial*> importMaterials(const char* path, const aiScene* scene);
 
 	bool saveSceneFile(const char* scene_name, GameObject* fakeRoot = nullptr);
 	bool saveVirtualScene();

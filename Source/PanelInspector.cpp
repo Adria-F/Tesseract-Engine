@@ -7,7 +7,7 @@
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
 #ifdef _DEBUG

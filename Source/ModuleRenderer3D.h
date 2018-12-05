@@ -17,7 +17,7 @@ using namespace std;
 class MSphere;
 class Component;
 class ComponentMesh;
-class ComponentTexture;
+class ComponentMaterial;
 class ComponentCamera;
 class GameObject;
 
