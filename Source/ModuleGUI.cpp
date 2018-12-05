@@ -162,6 +162,10 @@ update_status ModuleGUI::Update(float dt)
 				App->scene_intro->newScene();
 				App->scene_intro->AddCamera();
 			}
+			if (ImGui::MenuItem("Re-import all assets"))
+			{
+				App->fileSystem->reimportFiles();
+			}
 			if (ImGui::MenuItem("Close", "ESC"))
 			{
 				ImGui::EndMenu(); //End menu

@@ -247,6 +247,27 @@ bool ModuleFileSystem::createDirectory(const char* path)
 bool ModuleFileSystem::deleteFile(const char* path)
 {
 	bool wasDirectory = PHYSFS_isDirectory(path);
+	if (wasDirectory)
+	{
+		std::list<assetsElement*> elements;
+		getFilesAt(path, elements);
+		for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
+		{
+			std::string currPath = path;
+			if (currPath.size() > 0 && currPath.back() != '/')
+				currPath += '/';
+			currPath += (*it_e)->name;
+			deleteFile(currPath.c_str());
+		}
+		std::list<assetsElement*>::iterator it_e;
+		it_e = elements.begin();
+		while (it_e != elements.end())
+		{
+			RELEASE(*it_e);
+			it_e++;
+		}
+		elements.clear();
+	}
 	if (PHYSFS_delete(path) != 0)
 	{
 		if (wasDirectory)
@@ -462,7 +483,6 @@ void ModuleFileSystem::importFilesAt(const char* path, bool firstTime)
 				if (!fileExists((dir_path + filename).c_str())) //If the corresponding file does not exist
 				{
 					//Need to delete also the imported file at Library
-					std::string extension;
 					JSON_File* metaFile = App->resources->getMeta((dir_path + filename).c_str());
 					uint UID = metaFile->getValue("meta")->getUint("UID");
 					Resource* res = App->resources->GetResource(UID);
@@ -495,6 +515,60 @@ void ModuleFileSystem::importFilesAt(const char* path, bool firstTime)
 			}			
 		}
 	}
+}
+
+void ModuleFileSystem::reimportFiles()
+{
+	deleteMetasAt(ASSETS_FOLDER);
+	deleteFile(LIBRARY_FOLDER);
+
+	const char* mainPaths[] = {
+		LIBRARY_FOLDER, MESHES_FOLDER, ANIMATIONS_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
+	};
+	for (uint i = 0; i < 5; ++i)
+	{
+		if (PHYSFS_exists(mainPaths[i]) == 0)
+			PHYSFS_mkdir(mainPaths[i]);
+	}
+}
+
+void ModuleFileSystem::deleteMetasAt(const char * path)
+{
+	std::list<assetsElement*> elements;
+	getFilesAt(path, elements);
+	for (std::list<assetsElement*>::iterator it_e = elements.begin(); it_e != elements.end(); it_e++)
+	{
+		std::string currPath = path;
+		if (currPath.size() > 0 && currPath.back() != '/')
+			currPath += '/';
+		currPath += (*it_e)->name;
+		std::string extension;
+		splitPath(currPath.c_str(), nullptr, nullptr, &extension);
+		if ((*it_e)->type == assetsElement::FOLDER)
+		{
+			deleteMetasAt(currPath.c_str());
+		}
+		else if (extension == "meta")
+		{
+			std::string dir_path, filename;
+			splitPath(currPath.c_str(), &dir_path, &filename, nullptr);
+			JSON_File* metaFile = App->resources->getMeta((dir_path + filename).c_str());
+			uint UID = metaFile->getValue("meta")->getUint("UID");
+			
+			App->resources->deleteResource(UID); //Delete the resource
+			App->JSON_manager->closeFile(metaFile);
+			deleteFile(currPath.c_str()); //Delete the .meta file
+
+		}
+	}
+	std::list<assetsElement*>::iterator it_e;
+	it_e = elements.begin();
+	while (it_e != elements.end())
+	{
+		RELEASE(*it_e);
+		it_e++;
+	}
+	elements.clear();
 }
 
 void ModuleFileSystem::getFilesAt(const char * path, std::list<assetsElement*>& elements, const char* exclusiveExtension, const char* ignoreExtension)

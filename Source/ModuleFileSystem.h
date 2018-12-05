@@ -44,6 +44,9 @@ public:
 	uint manageDroppedFiles(const char* path);
 
 	void importFilesAt(const char* path, bool firstTime = false);
+	//This will delete all .meta and library files to make a clean re-import of all assets
+	void reimportFiles();
+	void deleteMetasAt(const char* path);
 	
 	void getFilesAt(const char* path, std::list<assetsElement*>& elements, const char* exclusiveExtension = nullptr, const char* ignoreExtension = nullptr);
 
