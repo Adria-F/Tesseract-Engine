@@ -38,6 +38,7 @@ public:
 	void splitPath(const char* full_path, std::string* path, std::string* filename, std::string* extension);
 	std::string normalizePath(const char* path);
 	std::string getFullPath(const char* path, const char* atDirectory = nullptr, const char* withExtension = nullptr);
+	std::string getRealDirectory(const char* path);
 
 	//Returns the UID of the resource if some has been created, 0 if not
 	uint manageDroppedFiles(const char* path);

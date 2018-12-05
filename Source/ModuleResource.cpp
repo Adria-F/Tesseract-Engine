@@ -282,6 +282,22 @@ std::vector<Resource*> ModuleResource::getResourcesByType(ResType type)
 	return ret;
 }
 
+std::string ModuleResource::getResourceAvailableName(const char* name, ResType type)
+{
+	std::vector<Resource*> resources = getResourcesByType(type);
+	std::vector<std::string*> names;
+
+	for (int i = 0; i < resources.size(); i++)
+	{
+		names.push_back(&resources[i]->name);
+	}
+
+	std::string ret = name;
+	App->fileSystem->getAvailableNameFromArray(names, ret);
+
+	return ret;
+}
+
 JSON_File* ModuleResource::getMeta(const char* path) const
 {
 	std::string metaPath = path;

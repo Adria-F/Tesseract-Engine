@@ -99,7 +99,7 @@ void ComponentMaterial::DrawInfo()
 				if (transparentColor)
 				{
 					float colors[4] = { mat->color.x, mat->color.y, mat->color.z , mat->color.w };
-					if (ImGui::ColorPicker4("", colors, ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_AlphaBar))
+					if (ImGui::ColorPicker4("", colors, ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_RGB | ImGuiColorEditFlags_HEX))
 					{
 						mat->color = { colors[0], colors[1], colors[2] , colors[3] };
 					}
@@ -107,7 +107,7 @@ void ComponentMaterial::DrawInfo()
 				else
 				{
 					float colors[3] = { mat->color.x, mat->color.y, mat->color.z };
-					if (ImGui::ColorPicker3("", colors))
+					if (ImGui::ColorPicker3("", colors, ImGuiColorEditFlags_RGB | ImGuiColorEditFlags_HEX))
 					{
 						mat->color = { colors[0], colors[1], colors[2], mat->color.w };
 					}

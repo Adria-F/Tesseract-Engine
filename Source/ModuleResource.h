@@ -25,6 +25,7 @@ public:
 	bool deleteResource(uint uid);
 	uint GetResourceByFile(const char* file);
 	std::vector<Resource*> getResourcesByType(ResType type);
+	std::string getResourceAvailableName(const char* name, ResType type);
 
 	JSON_File* getMeta(const char* path) const;
 	JSON_File* createMeta(const char* path, ResType type) const;

@@ -383,6 +383,15 @@ std::string ModuleFileSystem::getFullPath(const char * path, const char * atDire
 	return full_path.c_str();
 }
 
+std::string ModuleFileSystem::getRealDirectory(const char* path)
+{
+	std::string full_path = PHYSFS_getRealDir(path);
+	if (full_path.size() > 0 && full_path.back() != '/')
+		full_path += '/';
+	full_path += path;
+	return full_path.c_str();
+}
+
 uint ModuleFileSystem::manageDroppedFiles(const char* path)
 {
 	uint ret = 0;

@@ -82,6 +82,7 @@ enum update_status
 #define TEXTURES_FOLDER "Library/Textures/"
 #define FBX_FOLDER "Library/Scenes/"
 #define SETTINGS_FOLDER "Settings/"
+#define MATERIALS_FOLDER "Materials/"
 
 // Own format files
 #define MESH_EXTENSION ".tesseractMesh"

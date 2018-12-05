@@ -339,29 +339,42 @@ std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char* pa
 
 ResourceMaterial* ModuleSceneLoader::importColor(const char* path, const aiScene* scene, int index)
 {
+	std::string currentPath;
+	if (App->fileSystem->fileExists(MATERIALS_FOLDER))
+	{
+		currentPath = App->fileSystem->getRealDirectory(MATERIALS_FOLDER);
+	}
+	else
+	{
+		std::string file;
+		App->fileSystem->splitPath(path, &file, nullptr, nullptr);
+		currentPath = file + MATERIALS_FOLDER;
+		App->fileSystem->createDirectory(currentPath.c_str());
+	}
+
 	ResourceMaterial* resource = (ResourceMaterial*)App->resources->AddResource(R_COLOR, 0);
 	aiColor3D color(1.f, 1.f, 1.f);
 	scene->mMaterials[index]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 	resource->color = { color.r, color.g, color.b, 1.0f };
+	resource->name = App->resources->getResourceAvailableName("Color", R_COLOR);
 
 	//Create a file for stroing the material
 	char* buffer = new char[sizeof(float) * 4];
 	float colors[4] = { color.r, color.g, color.b, 1.0f };
 	memcpy(buffer, colors, sizeof(float) * 4);
-	std::string file;
-	App->fileSystem->splitPath(path, &file, nullptr, nullptr);
-	file += std::to_string(resource->UID) + MATERIAL_EXTENSION;
-	App->fileSystem->writeFile(file.c_str(), buffer, sizeof(float) * 4, true);
+	
+	currentPath += resource->name + MATERIAL_EXTENSION;
+	App->fileSystem->writeFile(currentPath.c_str(), buffer, sizeof(float) * 4, true);
 	RELEASE_ARRAY(buffer);
 
-	resource->file = file;
+	resource->file = currentPath;
 
 	//Force the creation of a .meta
-	JSON_File* ret = App->JSON_manager->openWriteFile((file+META_EXTENSION).c_str());
+	JSON_File* ret = App->JSON_manager->openWriteFile((currentPath +META_EXTENSION).c_str());
 
 	JSON_Value* meta = ret->createValue();
 	meta->addUint("UID", resource->UID);
-	meta->addInt("last_change", App->fileSystem->getLastTimeChanged(file.c_str()));
+	meta->addInt("last_change", App->fileSystem->getLastTimeChanged(currentPath.c_str()));
 
 	ret->addValue("meta", meta);
 	ret->Write();
