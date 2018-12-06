@@ -52,15 +52,10 @@ bool ResourceAnimation::LoadAnimation()
 	if (numBones > 0)
 	{
 		bones = new Bone[numBones];
-		spheres = new MSphere[numBones];
-		lines = new MLine[numBones];
 
 		//Loading Bones
 		for (int i = 0; i < numBones; i++)
 		{
-			spheres[i].color = { 1.0,0.0f,0.0f,1.0f };
-			lines[i].color = { 1.0,0.0f,0.0f,1.0f };
-
 			//Loading Ranges
 			uint boneRanges[4];
 			uint bytes = sizeof(boneRanges);

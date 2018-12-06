@@ -15,7 +15,8 @@ enum componentType
 	MESH,
 	MATERIAL,
 	ANIMATION,
-	CAMERA
+	CAMERA,
+	BONE
 };
 
 enum ResType;

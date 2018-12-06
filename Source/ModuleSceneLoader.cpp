@@ -15,12 +15,14 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentAnimation.h"
+#include "ComponentBone.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ResourceScene.h"
 #include "ResourceAnimation.h"
+#include "ResourceBone.h"
 
 #include <map>
 
@@ -69,12 +71,15 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr && scene->HasMeshes())
-	{
+	{		
 		//Import all meshes
 		vector<ResourceMesh*> rMeshes = importMeshes(path, scene, meshUIDs, meta, newMeta);
 
 		//Import all animations
 		vector<ResourceAnimation*> rAnimations = importAnimations(path, scene, animationUIDs, meta, newMeta);
+
+		//Import all bones
+		vector<ResourceBone*> rBones = importBones(path, scene);
 
 		//Import all textures
 		vector<ResourceMaterial*> rMaterials = importMaterials(path, scene);		
@@ -85,14 +90,24 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rMaterials, fakeScene);
 		if (rootGO != nullptr)
 		{
-			std::string filename;
-			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
-			rootGO->name = filename;
 			if (rAnimations.size() > 0)
 			{
-				//ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
-				//animation->assignResource(rAnimations.front()->GetUID());
+				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
+				animation->assignResource(rAnimations.front()->GetUID());
 			}
+			for (int i = 0; i < rBones.size(); i++)
+			{
+				GameObject* child = rootGO->getChildByName(rBones[i]->GetName());
+				if (child != nullptr)
+				{
+					ComponentBone* bone = (ComponentBone*)child->AddComponent(BONE);
+					bone->assignResource(rBones[i]->GetUID());
+				}
+			}
+
+			std::string filename;
+			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
+			rootGO->name = filename;			
 
 			fakeScene->childs.push_back(rootGO);
 
@@ -300,6 +315,25 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	animationsUIDs.clear(); //The allocated names are cleaned with the vector
 
 	return rAnimations;
+}
+
+std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, const aiScene * scene)
+{
+	std::vector<ResourceBone*> rBones;
+	for (int i = 0; i < scene->mNumMeshes; i++)
+	{
+		for (int j = 0; j < scene->mMeshes[i]->mNumBones; j++)
+		{
+			aiBone* bone = scene->mMeshes[i]->mBones[j];
+			ResourceBone* boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
+			//TODO what if different meshes with same name
+			boneResource->name = bone->mName.C_Str();
+
+			rBones.push_back(boneResource);
+		}
+	}
+
+	return rBones;
 }
 
 std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char* path, const aiScene * scene)

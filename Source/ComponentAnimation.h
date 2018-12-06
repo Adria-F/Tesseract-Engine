@@ -14,6 +14,7 @@ public:
 
 	bool Update(float dt);
 	void DrawInfo();
+	void activateDebugBones(GameObject* GO, bool active);
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);

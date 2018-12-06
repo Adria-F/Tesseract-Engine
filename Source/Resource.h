@@ -12,7 +12,8 @@ enum ResType {
 	R_TEXTURE,
 	R_COLOR,
 	R_SCENE,
-	R_ANIMATION
+	R_ANIMATION,
+	R_BONE
 };
 
 class Resource

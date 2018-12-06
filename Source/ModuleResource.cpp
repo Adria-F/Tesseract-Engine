@@ -9,6 +9,7 @@
 #include "ResourceScene.h"
 #include "ResourceMaterial.h"
 #include "ResourceAnimation.h"
+#include "ResourceBone.h"
 
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
@@ -232,6 +233,9 @@ Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 		break;
 	case R_ANIMATION:
 		ret = (Resource*)new ResourceAnimation(forced_uid, R_ANIMATION);
+		break;
+	case R_BONE:
+		ret = (Resource*)new ResourceBone(forced_uid, R_BONE);
 		break;
 	}
 	

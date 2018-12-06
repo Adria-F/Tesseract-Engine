@@ -12,6 +12,7 @@
 #include "ComponentAnimation.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
+#include "ComponentBone.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 
@@ -71,6 +72,12 @@ void GameObject::Update(float dt)
 
 		if (animation != nullptr)
 			animation->Update(dt);
+
+		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
+		{
+			if ((*it_c)->type == BONE)
+				(*it_c)->Update(dt);
+		}
 
 		if (camera != nullptr)
 			camera->Update(dt);
@@ -173,6 +180,10 @@ Component* GameObject::AddComponent(componentType type)
 			itsNew = true;
 		}
 		ret = camera;
+		break;
+	case BONE:
+		ret = new ComponentBone(this, type);
+		itsNew = true;
 		break;
 	}
 

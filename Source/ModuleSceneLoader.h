@@ -8,6 +8,7 @@ class GameObject;
 class ResourceMesh;
 class ResourceAnimation;
 class ResourceMaterial;
+class ResourceBone;
 
 struct aiScene;
 struct aiNode; 
@@ -30,6 +31,7 @@ public:
 
 	std::vector<ResourceMesh*> importMeshes(const char* path, const aiScene* scene, std::vector<uint>& meshUIDs, JSON_Value* meta, bool newMeta = false);
 	std::vector<ResourceAnimation*> importAnimations(const char* path, const aiScene* scene, std::vector<uint>& animationUIDs, JSON_Value* meta, bool newMeta = false);
+	std::vector<ResourceBone*> importBones(const char* path, const aiScene* scene);
 	std::vector<ResourceMaterial*> importMaterials(const char* path, const aiScene* scene);
 	ResourceMaterial* importColor(const char* path, const aiScene* scene, int index);
 
