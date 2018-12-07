@@ -167,9 +167,11 @@ bool Bone::calcCurrentIndex(float time)
 {
 	bool ret = false;
 
-	if (currentPosIndex == -1 || currentRotIndex == -1 || currentScaleIndex == -1)
+	if (currentPosIndex == -1 || currentRotIndex == -1 || currentScaleIndex == -1 ||
+		nextPosIndex == -1 || nextRotIndex == -1 || nextScaleIndex == -1)
 	{
 		currentPosIndex = currentRotIndex = currentScaleIndex = 0;
+		nextPosIndex = nextRotIndex = nextScaleIndex = 1;
 		return true;
 	}
 
@@ -178,6 +180,15 @@ bool Bone::calcCurrentIndex(float time)
 		if (PosKeysTimes[i] <= time && (i + 1 >= numPosKeys || PosKeysTimes[i + 1] > time))
 		{
 			currentPosIndex = i;
+			
+			nextPosIndex = currentPosIndex + 1;
+			
+			if (nextPosIndex >= numPosKeys && numPosKeys>1)
+			{
+				nextPosIndex = 0;
+			}
+			
+
 			ret = true;
 			break;
 		}
@@ -187,6 +198,14 @@ bool Bone::calcCurrentIndex(float time)
 		if (RotKeysTimes[i] <= time && (i + 1 >= numRotKeys || RotKeysTimes[i + 1] > time))
 		{
 			currentRotIndex = i;
+
+			nextRotIndex = currentRotIndex + 1;
+
+			if (nextRotIndex >= numRotKeys && numRotKeys > 1)
+			{
+				nextRotIndex = 0;
+			}
+
 			ret = true;
 			break;
 		}
@@ -196,6 +215,14 @@ bool Bone::calcCurrentIndex(float time)
 		if (ScaleKeysTimes[i] <= time && (i + 1 >= numScaleKeys || ScaleKeysTimes[i + 1] > time))
 		{
 			currentScaleIndex = i;
+
+			nextScaleIndex = currentScaleIndex + 1;
+
+			if (nextScaleIndex >= numScaleKeys && numScaleKeys > 1)
+			{
+				nextScaleIndex = 0;
+			}
+
 			ret = true;
 			break;
 		}
@@ -204,11 +231,32 @@ bool Bone::calcCurrentIndex(float time)
 	return ret;
 }
 
-void Bone::calcTransfrom()
+void Bone::calcTransfrom(float time)
 {
-	vec position = { PosKeysValues[currentPosIndex*3], PosKeysValues[currentPosIndex*3 +1], PosKeysValues[currentPosIndex*3 +2] };
-	Quat rotation = { RotKeysValues[currentRotIndex*4], RotKeysValues[currentRotIndex*4 +1], RotKeysValues[currentRotIndex*4 +2], RotKeysValues[currentRotIndex*4 +3] };
-	vec scale = { ScaleKeysValues[currentScaleIndex*3], ScaleKeysValues[currentScaleIndex*3 + 1], ScaleKeysValues[currentScaleIndex*3 + 2] };
+	float tp, ts, tr;
+
+	tp = ts = tr = 0.0f;
+
+	vec position_1 = { PosKeysValues[currentPosIndex*3], PosKeysValues[currentPosIndex*3 +1], PosKeysValues[currentPosIndex*3 +2] };
+	Quat rotation_1 = { RotKeysValues[currentRotIndex*4], RotKeysValues[currentRotIndex*4 +1], RotKeysValues[currentRotIndex*4 +2], RotKeysValues[currentRotIndex*4 +3] };
+	vec scale_1 = { ScaleKeysValues[currentScaleIndex*3], ScaleKeysValues[currentScaleIndex*3 + 1], ScaleKeysValues[currentScaleIndex*3 + 2] };
+
+	vec position_2 = { PosKeysValues[nextPosIndex * 3], PosKeysValues[nextPosIndex * 3 + 1], PosKeysValues[nextPosIndex * 3 + 2] };
+	Quat rotation_2 = { RotKeysValues[nextRotIndex * 4], RotKeysValues[nextRotIndex * 4 + 1], RotKeysValues[nextRotIndex * 4 + 2], RotKeysValues[nextRotIndex * 4 + 3] };
+	vec scale_2 = { ScaleKeysValues[nextScaleIndex * 3], ScaleKeysValues[nextScaleIndex * 3 + 1], ScaleKeysValues[nextScaleIndex * 3 + 2] };
+
+
+	tp = ((time - PosKeysTimes[currentPosIndex]) / (PosKeysTimes[nextPosIndex] - PosKeysTimes[currentPosIndex]));
+	tr = ((time - RotKeysTimes[currentRotIndex]) / (RotKeysTimes[nextRotIndex] - RotKeysTimes[currentRotIndex]));
+	ts = ((time - ScaleKeysTimes[currentScaleIndex]) / (ScaleKeysTimes[nextScaleIndex] - ScaleKeysTimes[currentScaleIndex]));
+
+	LOG("tp=%d", nextScaleIndex);
+
+	vec position = position_1.Lerp(position_2,tp);
+	Quat rotation = rotation_1.Slerp(rotation_2,tr);
+	vec scale = scale_1.Lerp(scale_2,ts);
+
 
 	lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
 }
+

@@ -8,7 +8,7 @@ struct Bone
 	~Bone();
 
 	bool calcCurrentIndex(float time);
-	void calcTransfrom();
+	void calcTransfrom(float time);
 
 	std::string NodeName = "";
 	
@@ -16,6 +16,9 @@ struct Bone
 	int currentPosIndex = -1;
 	int currentRotIndex = -1;
 	int currentScaleIndex = -1;
+	int nextPosIndex = -1;
+	int nextRotIndex = -1;
+	int nextScaleIndex = -1;
 
 	int numPosKeys = 0;
 	int numScaleKeys = 0;

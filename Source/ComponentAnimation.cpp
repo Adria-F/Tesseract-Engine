@@ -37,7 +37,7 @@ bool ComponentAnimation::Update(float dt)
 
 				if (animation->bones[i].calcCurrentIndex(animation->time*animation->ticksXsecond))
 				{
-					animation->bones[i].calcTransfrom();
+					animation->bones[i].calcTransfrom(animation->time*animation->ticksXsecond);
 
 					ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
 					transform->localMatrix = animation->bones[i].lastTransform;
