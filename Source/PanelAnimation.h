@@ -4,7 +4,7 @@
 #include "Panel.h"
 
 class ResourceAnimation;
-class Bone;
+class BoneTransform;
 
 class PanelAnimation :
 	public Panel
@@ -19,7 +19,7 @@ public:
 public:
 
 	ResourceAnimation* animation = nullptr;
-	Bone* selectedBone=nullptr;
+	BoneTransform* selectedBone=nullptr;
 
 	float numFrames = 1;
 

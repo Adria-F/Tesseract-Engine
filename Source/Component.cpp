@@ -88,7 +88,7 @@ void Component::beginDroppableSpace(const char * string, bool empty, float2 size
 
 void Component::pickResourceButton(ResType type)
 {
-	ImGui::PushID("pick"+type);
+	ImGui::PushID(("pick"+std::to_string(type)).c_str());
 	if (ImGui::RadioButton("", false))
 	{
 		ImVec2 pos = ImGui::GetWindowPos();

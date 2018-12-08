@@ -32,47 +32,47 @@ bool ModuleAnimations::importAnimation(aiAnimation* animation, uint UID, std::st
 
 	if (animation->mNumChannels > 0)
 	{
-		newAnimation->bones = new Bone[newAnimation->numBones];
+		newAnimation->boneTransformations = new BoneTransform[newAnimation->numBones];
 		for (int i = 0; i < newAnimation->numBones; i++)
 		{
 			//TODO manage dummy nodes
-			newAnimation->bones[i].NodeName = (animation->mChannels[i]->mNodeName.length > 0) ? animation->mChannels[i]->mNodeName.C_Str() : "Unnamed";
+			newAnimation->boneTransformations[i].NodeName = (animation->mChannels[i]->mNodeName.length > 0) ? animation->mChannels[i]->mNodeName.C_Str() : "Unnamed";
 
-			newAnimation->bones[i].numPosKeys = animation->mChannels[i]->mNumPositionKeys;
-			newAnimation->bones[i].PosKeysValues = new float[newAnimation->bones[i].numPosKeys * 3];
-			newAnimation->bones[i].PosKeysTimes = new double[newAnimation->bones[i].numPosKeys];
-			for (int j = 0; j < newAnimation->bones[i].numPosKeys; j++)
+			newAnimation->boneTransformations[i].numPosKeys = animation->mChannels[i]->mNumPositionKeys;
+			newAnimation->boneTransformations[i].PosKeysValues = new float[newAnimation->boneTransformations[i].numPosKeys * 3];
+			newAnimation->boneTransformations[i].PosKeysTimes = new double[newAnimation->boneTransformations[i].numPosKeys];
+			for (int j = 0; j < newAnimation->boneTransformations[i].numPosKeys; j++)
 			{
 				int Jvalue = j * 3;
-				newAnimation->bones[i].PosKeysTimes[j] = animation->mChannels[i]->mPositionKeys[j].mTime;
-				newAnimation->bones[i].PosKeysValues[Jvalue] = animation->mChannels[i]->mPositionKeys[j].mValue.x;
-				newAnimation->bones[i].PosKeysValues[Jvalue + 1] = animation->mChannels[i]->mPositionKeys[j].mValue.y;
-				newAnimation->bones[i].PosKeysValues[Jvalue + 2] = animation->mChannels[i]->mPositionKeys[j].mValue.z;
+				newAnimation->boneTransformations[i].PosKeysTimes[j] = animation->mChannels[i]->mPositionKeys[j].mTime;
+				newAnimation->boneTransformations[i].PosKeysValues[Jvalue] = animation->mChannels[i]->mPositionKeys[j].mValue.x;
+				newAnimation->boneTransformations[i].PosKeysValues[Jvalue + 1] = animation->mChannels[i]->mPositionKeys[j].mValue.y;
+				newAnimation->boneTransformations[i].PosKeysValues[Jvalue + 2] = animation->mChannels[i]->mPositionKeys[j].mValue.z;
 			}
 
-			newAnimation->bones[i].numScaleKeys = animation->mChannels[i]->mNumScalingKeys;
-			newAnimation->bones[i].ScaleKeysValues = new float[newAnimation->bones[i].numScaleKeys * 3];
-			newAnimation->bones[i].ScaleKeysTimes = new double[newAnimation->bones[i].numScaleKeys];
-			for (int j = 0; j < newAnimation->bones[i].numScaleKeys; j++)
+			newAnimation->boneTransformations[i].numScaleKeys = animation->mChannels[i]->mNumScalingKeys;
+			newAnimation->boneTransformations[i].ScaleKeysValues = new float[newAnimation->boneTransformations[i].numScaleKeys * 3];
+			newAnimation->boneTransformations[i].ScaleKeysTimes = new double[newAnimation->boneTransformations[i].numScaleKeys];
+			for (int j = 0; j < newAnimation->boneTransformations[i].numScaleKeys; j++)
 			{
 				int Jvalue = j * 3;
-				newAnimation->bones[i].ScaleKeysTimes[j] = animation->mChannels[i]->mScalingKeys[j].mTime;
-				newAnimation->bones[i].ScaleKeysValues[Jvalue] = animation->mChannels[i]->mScalingKeys[j].mValue.x;
-				newAnimation->bones[i].ScaleKeysValues[Jvalue + 1] = animation->mChannels[i]->mScalingKeys[j].mValue.y;
-				newAnimation->bones[i].ScaleKeysValues[Jvalue + 2] = animation->mChannels[i]->mScalingKeys[j].mValue.z;
+				newAnimation->boneTransformations[i].ScaleKeysTimes[j] = animation->mChannels[i]->mScalingKeys[j].mTime;
+				newAnimation->boneTransformations[i].ScaleKeysValues[Jvalue] = animation->mChannels[i]->mScalingKeys[j].mValue.x;
+				newAnimation->boneTransformations[i].ScaleKeysValues[Jvalue + 1] = animation->mChannels[i]->mScalingKeys[j].mValue.y;
+				newAnimation->boneTransformations[i].ScaleKeysValues[Jvalue + 2] = animation->mChannels[i]->mScalingKeys[j].mValue.z;
 			}
 
-			newAnimation->bones[i].numRotKeys = animation->mChannels[i]->mNumRotationKeys;
-			newAnimation->bones[i].RotKeysValues = new float[newAnimation->bones[i].numRotKeys * 4];
-			newAnimation->bones[i].RotKeysTimes = new double[newAnimation->bones[i].numRotKeys];
-			for (int j = 0; j < newAnimation->bones[i].numRotKeys; j++)
+			newAnimation->boneTransformations[i].numRotKeys = animation->mChannels[i]->mNumRotationKeys;
+			newAnimation->boneTransformations[i].RotKeysValues = new float[newAnimation->boneTransformations[i].numRotKeys * 4];
+			newAnimation->boneTransformations[i].RotKeysTimes = new double[newAnimation->boneTransformations[i].numRotKeys];
+			for (int j = 0; j < newAnimation->boneTransformations[i].numRotKeys; j++)
 			{
 				int Jvalue = j * 4;
-				newAnimation->bones[i].RotKeysTimes[j] = animation->mChannels[i]->mRotationKeys[j].mTime;
-				newAnimation->bones[i].RotKeysValues[Jvalue] = animation->mChannels[i]->mRotationKeys[j].mValue.x;
-				newAnimation->bones[i].RotKeysValues[Jvalue + 1] = animation->mChannels[i]->mRotationKeys[j].mValue.y;
-				newAnimation->bones[i].RotKeysValues[Jvalue + 2] = animation->mChannels[i]->mRotationKeys[j].mValue.z;
-				newAnimation->bones[i].RotKeysValues[Jvalue + 3] = animation->mChannels[i]->mRotationKeys[j].mValue.w;
+				newAnimation->boneTransformations[i].RotKeysTimes[j] = animation->mChannels[i]->mRotationKeys[j].mTime;
+				newAnimation->boneTransformations[i].RotKeysValues[Jvalue] = animation->mChannels[i]->mRotationKeys[j].mValue.x;
+				newAnimation->boneTransformations[i].RotKeysValues[Jvalue + 1] = animation->mChannels[i]->mRotationKeys[j].mValue.y;
+				newAnimation->boneTransformations[i].RotKeysValues[Jvalue + 2] = animation->mChannels[i]->mRotationKeys[j].mValue.z;
+				newAnimation->boneTransformations[i].RotKeysValues[Jvalue + 3] = animation->mChannels[i]->mRotationKeys[j].mValue.w;
 			}
 		}
 
@@ -95,18 +95,18 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 	uint size = sizeof(ranges);
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys, animation->bones[i].NodeName.size()};
+		uint boneRanges[4] = { animation->boneTransformations[i].numPosKeys, animation->boneTransformations[i].numScaleKeys, animation->boneTransformations[i].numRotKeys, animation->boneTransformations[i].NodeName.size()};
 		size += sizeof(boneRanges);
-		size += animation->bones[i].NodeName.size();
+		size += animation->boneTransformations[i].NodeName.size();
 
-		size += sizeof(double)*animation->bones[i].numPosKeys;
-		size += sizeof(float)*animation->bones[i].numPosKeys*3;
+		size += sizeof(double)*animation->boneTransformations[i].numPosKeys;
+		size += sizeof(float)*animation->boneTransformations[i].numPosKeys*3;
 
-		size += sizeof(double)*animation->bones[i].numScaleKeys;
-		size += sizeof(float)*animation->bones[i].numScaleKeys * 3;
+		size += sizeof(double)*animation->boneTransformations[i].numScaleKeys;
+		size += sizeof(float)*animation->boneTransformations[i].numScaleKeys * 3;
 
-		size += sizeof(double)*animation->bones[i].numRotKeys;
-		size += sizeof(float)*animation->bones[i].numRotKeys * 4;
+		size += sizeof(double)*animation->boneTransformations[i].numRotKeys;
+		size += sizeof(float)*animation->boneTransformations[i].numRotKeys * 4;
 	}
 
 	char* buffer = new char[size];
@@ -118,35 +118,35 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 
 	for (int i = 0; i < animation->numBones; i++)
 	{
-		uint boneRanges[4] = { animation->bones[i].numPosKeys, animation->bones[i].numScaleKeys, animation->bones[i].numRotKeys, animation->bones[i].NodeName.size() };
+		uint boneRanges[4] = { animation->boneTransformations[i].numPosKeys, animation->boneTransformations[i].numScaleKeys, animation->boneTransformations[i].numRotKeys, animation->boneTransformations[i].NodeName.size() };
 
 		bytes = sizeof(boneRanges);
 		memcpy(cursor, boneRanges, bytes);
 		cursor += bytes;
 
-		bytes = animation->bones[i].NodeName.size();
-		memcpy(cursor, animation->bones[i].NodeName.c_str(), bytes);
+		bytes = animation->boneTransformations[i].NodeName.size();
+		memcpy(cursor, animation->boneTransformations[i].NodeName.c_str(), bytes);
 		cursor += bytes;
 
-		bytes = animation->bones[i].numPosKeys * sizeof(double);
-		memcpy(cursor, animation->bones[i].PosKeysTimes, bytes);
+		bytes = animation->boneTransformations[i].numPosKeys * sizeof(double);
+		memcpy(cursor, animation->boneTransformations[i].PosKeysTimes, bytes);
 		cursor += bytes;
-		bytes = animation->bones[i].numPosKeys * sizeof(float)*3;
-		memcpy(cursor, animation->bones[i].PosKeysValues, bytes);
-		cursor += bytes;
-
-		bytes = animation->bones[i].numScaleKeys * sizeof(double);
-		memcpy(cursor, animation->bones[i].ScaleKeysTimes, bytes);
-		cursor += bytes;
-		bytes = animation->bones[i].numScaleKeys * sizeof(float) * 3;
-		memcpy(cursor, animation->bones[i].ScaleKeysValues, bytes);
+		bytes = animation->boneTransformations[i].numPosKeys * sizeof(float)*3;
+		memcpy(cursor, animation->boneTransformations[i].PosKeysValues, bytes);
 		cursor += bytes;
 
-		bytes = animation->bones[i].numRotKeys * sizeof(double);
-		memcpy(cursor, animation->bones[i].RotKeysTimes, bytes);
+		bytes = animation->boneTransformations[i].numScaleKeys * sizeof(double);
+		memcpy(cursor, animation->boneTransformations[i].ScaleKeysTimes, bytes);
 		cursor += bytes;
-		bytes = animation->bones[i].numRotKeys * sizeof(float) * 4;
-		memcpy(cursor, animation->bones[i].RotKeysValues, bytes);
+		bytes = animation->boneTransformations[i].numScaleKeys * sizeof(float) * 3;
+		memcpy(cursor, animation->boneTransformations[i].ScaleKeysValues, bytes);
+		cursor += bytes;
+
+		bytes = animation->boneTransformations[i].numRotKeys * sizeof(double);
+		memcpy(cursor, animation->boneTransformations[i].RotKeysTimes, bytes);
+		cursor += bytes;
+		bytes = animation->boneTransformations[i].numRotKeys * sizeof(float) * 4;
+		memcpy(cursor, animation->boneTransformations[i].RotKeysValues, bytes);
 		cursor += bytes;
 	}
 

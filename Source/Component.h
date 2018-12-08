@@ -33,7 +33,7 @@ public:
 	virtual bool DrawExtraConfig();
 	virtual bool Update(float dt) { return true; }
 
-	void assignResource(uint UID);
+	virtual void assignResource(uint UID);
 
 	//Draw a gray button with given string, thought  to be a droppable space for resources inside the components
 	void beginDroppableSpace(const char* string, bool empty = false, float2 size = { 250, 20 });

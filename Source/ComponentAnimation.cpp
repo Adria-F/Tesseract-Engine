@@ -4,6 +4,7 @@
 #include "Resource.h"
 #include "ResourceAnimation.h"
 #include "GameObject.h"
+#include "ModuleScene.h"
 
 #include "Component.h"
 #include "ComponentTransformation.h"
@@ -21,12 +22,21 @@ bool ComponentAnimation::Update(float dt)
 {
 	bool ret = false;
 
+	if (!bonesLoaded)
+	{
+		assignResource(RUID); //To assign used bones
+		bonesLoaded = true;
+	}
+
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr && debugDraw)
 	{
 		for (int i = 0; i < animation->numBones; i++)
 		{
-			GameObject* GO = gameObject->getChildByName(animation->bones[i].NodeName.c_str());
+			if (bones.find(i) == bones.end()) //If no game object assigned
+				continue;
+
+			GameObject* GO = App->scene_intro->getGameObject(bones[i]);
 			if (GO != nullptr)
 			{
 				animation->time += dt*0.005f;
@@ -35,12 +45,12 @@ bool ComponentAnimation::Update(float dt)
 					animation->time -= animation->getDuration();
 				}
 
-				if (animation->bones[i].calcCurrentIndex(animation->time*animation->ticksXsecond))
+				if (animation->boneTransformations[i].calcCurrentIndex(animation->time*animation->ticksXsecond))
 				{
-					animation->bones[i].calcTransfrom(animation->time*animation->ticksXsecond);
+					animation->boneTransformations[i].calcTransfrom(animation->time*animation->ticksXsecond);
 
 					ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
-					transform->localMatrix = animation->bones[i].lastTransform;
+					transform->localMatrix = animation->boneTransformations[i].lastTransform;
 				}
 			}
 		}
@@ -84,6 +94,25 @@ void ComponentAnimation::activateDebugBones(GameObject* GO, bool active)
 	for (std::list<GameObject*>::iterator it_go = GO->childs.begin(); it_go != GO->childs.end(); it_go++)
 	{
 		activateDebugBones((*it_go), active);
+	}
+}
+
+void ComponentAnimation::assignResource(uint UID)
+{
+	Component::assignResource(UID);
+	bones.clear();
+
+	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	if (animation != nullptr)
+	{
+		for (int i = 0; i < animation->numBones; i++)
+		{
+			GameObject* GO = gameObject->getChildByName(animation->boneTransformations[i].NodeName.c_str());
+			if (GO != nullptr)
+			{
+				bones[i] = GO->UID;
+			}
+		}
 	}
 }
 

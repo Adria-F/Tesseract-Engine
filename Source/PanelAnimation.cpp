@@ -134,9 +134,9 @@ void PanelAnimation::Draw()
 	{
 		for (int i = 0; i < animation->numBones; i++)
 		{
-			if (ImGui::Button(animation->bones[i].NodeName.c_str()))
+			if (ImGui::Button(animation->boneTransformations[i].NodeName.c_str()))
 			{
-				selectedBone = &animation->bones[i];
+				selectedBone = &animation->boneTransformations[i];
 			}
 		}
 	}

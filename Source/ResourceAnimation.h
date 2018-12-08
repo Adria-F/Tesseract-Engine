@@ -3,9 +3,9 @@
 
 #include "Resource.h"
 
-struct Bone
+struct BoneTransform
 {
-	~Bone();
+	~BoneTransform();
 
 	bool calcCurrentIndex(float time);
 	void calcTransfrom(float time);
@@ -60,7 +60,7 @@ public:
 	
 	int numBones=0;
 
-	Bone* bones=nullptr;
+	BoneTransform* boneTransformations=nullptr;
 };
 
 #endif // !__RESOURCEANIMATION_H__

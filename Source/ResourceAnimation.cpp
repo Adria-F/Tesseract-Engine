@@ -14,7 +14,7 @@ ResourceAnimation::ResourceAnimation(uint UID, ResType type) :Resource(UID, type
 
 ResourceAnimation::~ResourceAnimation()
 {
-	RELEASE_ARRAY(bones);
+	RELEASE_ARRAY(boneTransformations);
 }
 
 void ResourceAnimation::setImportDefaults(JSON_Value& importSettings)
@@ -51,7 +51,7 @@ bool ResourceAnimation::LoadAnimation()
 
 	if (numBones > 0)
 	{
-		bones = new Bone[numBones];
+		boneTransformations = new BoneTransform[numBones];
 
 		//Loading Bones
 		for (int i = 0; i < numBones; i++)
@@ -62,50 +62,50 @@ bool ResourceAnimation::LoadAnimation()
 			memcpy(boneRanges, cursor, bytes);
 			cursor += bytes;
 
-			bones[i].numPosKeys = boneRanges[0];
-			bones[i].numScaleKeys = boneRanges[1];
-			bones[i].numRotKeys = boneRanges[2];
+			boneTransformations[i].numPosKeys = boneRanges[0];
+			boneTransformations[i].numScaleKeys = boneRanges[1];
+			boneTransformations[i].numRotKeys = boneRanges[2];
 
 			//Loading Name
 			bytes = boneRanges[3];
 			char* auxName = new char[bytes];
 			memcpy(auxName, cursor, bytes);
-			bones[i].NodeName = auxName;
-			bones[i].NodeName = bones[i].NodeName.substr(0, bytes);
+			boneTransformations[i].NodeName = auxName;
+			boneTransformations[i].NodeName = boneTransformations[i].NodeName.substr(0, bytes);
 			RELEASE_ARRAY(auxName);
 			cursor += bytes;
 
 			//Loading Pos Time
-			bytes = bones[i].numPosKeys * sizeof(double);
-			bones[i].PosKeysTimes = new double[bones[i].numPosKeys];
-			memcpy(bones[i].PosKeysTimes, cursor, bytes);
+			bytes = boneTransformations[i].numPosKeys * sizeof(double);
+			boneTransformations[i].PosKeysTimes = new double[boneTransformations[i].numPosKeys];
+			memcpy(boneTransformations[i].PosKeysTimes, cursor, bytes);
 			cursor += bytes;
 			//Loading Pos Values
-			bytes = bones[i].numPosKeys * sizeof(float)*3;
-			bones[i].PosKeysValues = new float[bones[i].numPosKeys*3];
-			memcpy(bones[i].PosKeysValues, cursor, bytes);
+			bytes = boneTransformations[i].numPosKeys * sizeof(float)*3;
+			boneTransformations[i].PosKeysValues = new float[boneTransformations[i].numPosKeys*3];
+			memcpy(boneTransformations[i].PosKeysValues, cursor, bytes);
 			cursor += bytes;
 			
 			//Loading Scale Time
-			bytes = bones[i].numScaleKeys * sizeof(double);
-			bones[i].ScaleKeysTimes = new double[bones[i].numScaleKeys];
-			memcpy(bones[i].ScaleKeysTimes, cursor, bytes);
+			bytes = boneTransformations[i].numScaleKeys * sizeof(double);
+			boneTransformations[i].ScaleKeysTimes = new double[boneTransformations[i].numScaleKeys];
+			memcpy(boneTransformations[i].ScaleKeysTimes, cursor, bytes);
 			cursor += bytes;
 			//Loading Scale Values
-			bytes = bones[i].numScaleKeys * sizeof(float) * 3;
-			bones[i].ScaleKeysValues = new float[bones[i].numScaleKeys * 3];
-			memcpy(bones[i].ScaleKeysValues, cursor, bytes);
+			bytes = boneTransformations[i].numScaleKeys * sizeof(float) * 3;
+			boneTransformations[i].ScaleKeysValues = new float[boneTransformations[i].numScaleKeys * 3];
+			memcpy(boneTransformations[i].ScaleKeysValues, cursor, bytes);
 			cursor += bytes;
 			
 			//Loading Rotation Time
-			bytes = bones[i].numRotKeys * sizeof(double);
-			bones[i].RotKeysTimes = new double[bones[i].numRotKeys];
-			memcpy(bones[i].RotKeysTimes, cursor, bytes);
+			bytes = boneTransformations[i].numRotKeys * sizeof(double);
+			boneTransformations[i].RotKeysTimes = new double[boneTransformations[i].numRotKeys];
+			memcpy(boneTransformations[i].RotKeysTimes, cursor, bytes);
 			cursor += bytes;
 			//Loading Rotation Values
-			bytes = bones[i].numRotKeys * sizeof(float) * 4;
-			bones[i].RotKeysValues = new float[bones[i].numRotKeys * 4];
-			memcpy(bones[i].RotKeysValues, cursor, bytes);
+			bytes = boneTransformations[i].numRotKeys * sizeof(float) * 4;
+			boneTransformations[i].RotKeysValues = new float[boneTransformations[i].numRotKeys * 4];
+			memcpy(boneTransformations[i].RotKeysValues, cursor, bytes);
 			cursor += bytes;
 		}
 
@@ -140,9 +140,9 @@ void ResourceAnimation::resetFrames()
 {
 	for (int i = 0; i < numBones; i++)
 	{
-		bones[i].currentPosIndex = 0;
-		bones[i].currentRotIndex = 0;
-		bones[i].currentScaleIndex = 0;
+		boneTransformations[i].currentPosIndex = 0;
+		boneTransformations[i].currentRotIndex = 0;
+		boneTransformations[i].currentScaleIndex = 0;
 	}
 }
 
@@ -151,7 +151,7 @@ float ResourceAnimation::getDuration() const
 	return ticks / ticksXsecond;
 }
 
-Bone::~Bone()
+BoneTransform::~BoneTransform()
 {
 	RELEASE_ARRAY(PosKeysValues);
 	RELEASE_ARRAY(PosKeysTimes);
@@ -163,7 +163,7 @@ Bone::~Bone()
 	RELEASE_ARRAY(RotKeysTimes);
 }
 
-bool Bone::calcCurrentIndex(float time)
+bool BoneTransform::calcCurrentIndex(float time)
 {
 	bool ret = false;
 
@@ -231,7 +231,7 @@ bool Bone::calcCurrentIndex(float time)
 	return ret;
 }
 
-void Bone::calcTransfrom(float time)
+void BoneTransform::calcTransfrom(float time)
 {
 	float tp, ts, tr;
 

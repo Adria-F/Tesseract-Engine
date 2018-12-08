@@ -2,6 +2,7 @@
 #define __COMPONENTANIMATION_H__
 
 #include "Component.h"
+#include <map>
 
 class GameObject;
 
@@ -16,12 +17,18 @@ public:
 	void DrawInfo();
 	void activateDebugBones(GameObject* GO, bool active);
 
+	void assignResource(uint UID);
+
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
 
 public:
 
 	bool debugDraw = false;
+	bool bonesLoaded = false;
+
+	//bone transformation index and bone GameObject UID
+	std::map<uint, uint> bones;
 
 };
 

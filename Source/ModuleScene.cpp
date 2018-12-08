@@ -470,7 +470,10 @@ void ModuleScene::selectGameObject(GameObject* gameObject)
 
 GameObject* ModuleScene::getGameObject(uint UID)
 {
-	return gameObjects[UID];
+	if (gameObjects.find(UID) != gameObjects.end())
+		return gameObjects[UID];
+	else
+		return nullptr;
 }
 
 void ModuleScene::FindCameras(GameObject* parent)

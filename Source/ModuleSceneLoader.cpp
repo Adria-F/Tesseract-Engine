@@ -90,11 +90,6 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rMaterials, fakeScene);
 		if (rootGO != nullptr)
 		{
-			if (rAnimations.size() > 0)
-			{
-				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
-				animation->assignResource(rAnimations.front()->GetUID());
-			}
 			for (int i = 0; i < rBones.size(); i++)
 			{
 				GameObject* child = rootGO->getChildByName(rBones[i]->GetName());
@@ -104,6 +99,11 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 					bone->assignResource(rBones[i]->GetUID());
 				}
 			}
+			if (rAnimations.size() > 0)
+			{
+				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
+				animation->assignResource(rAnimations.front()->GetUID());
+			}			
 
 			std::string filename;
 			App->fileSystem->splitPath(path, nullptr, &filename, nullptr);
