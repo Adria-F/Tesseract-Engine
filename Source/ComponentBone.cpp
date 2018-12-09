@@ -66,16 +66,30 @@ void ComponentBone::DrawInfo()
 
 void ComponentBone::Save(JSON_Value * component) const
 {
+	ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(RUID);
+
 	JSON_Value* bone = component->createValue();
 
 	bone->addInt("Type", type);
 	bone->addUint("UID", UID);
 	bone->addBool("debugDraw", debugDraw);
 
+	if (rBone != nullptr)
+	{
+		bone->addString("FBX", rBone->GetFile());
+		bone->addString("bone", rBone->GetName());
+	}
+
 	component->addValue("", bone);
 }
 
 void ComponentBone::Load(JSON_Value * component)
 {
+	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "bones", component->getString("bone"));
+
+	Resource* res = App->resources->GetResource(RUID);
+	if (res != nullptr)
+		res->LoadtoMemory();
+
 	debugDraw = component->getBool("debugDraw");
 }

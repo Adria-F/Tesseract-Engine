@@ -125,8 +125,12 @@ void ComponentMesh::Save(JSON_Value * component) const
 
 	mesh->addInt("Type", type);
 	mesh->addUint("UID",UID);
-	mesh->addString("FBX", rMesh->GetFile());
-	mesh->addString("mesh", rMesh->GetName());
+	
+	if (rMesh != nullptr)
+	{
+		mesh->addString("FBX", rMesh->GetFile());
+		mesh->addString("mesh", rMesh->GetName());
+	}
 
 	component->addValue("", mesh);
 }

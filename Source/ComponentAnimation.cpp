@@ -124,9 +124,13 @@ void ComponentAnimation::Save(JSON_Value * component) const
 
 	animation->addInt("Type", type);
 	animation->addUint("UID", UID);
-	animation->addString("FBX", rAnimation->GetFile());
-	animation->addString("animation", rAnimation->GetName());
 	animation->addBool("debugDraw", debugDraw);
+
+	if (rAnimation != nullptr)
+	{
+		animation->addString("FBX", rAnimation->GetFile());
+		animation->addString("animation", rAnimation->GetName());
+	}
 
 	component->addValue("", animation);
 }

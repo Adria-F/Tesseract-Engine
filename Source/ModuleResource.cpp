@@ -61,6 +61,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 	std::string written_file;
 	std::vector<uint> meshesUID;
 	std::vector<uint> animationsUID;
+	std::vector<uint> bonesUID;
 	bool loaded = false;
 
 	bool newMeta = false;
@@ -84,7 +85,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				loaded = App->textures->importTexture(file, UID, written_file, metaValue);
 				break;
 			case R_SCENE:
-				loaded = App->scene_loader->importScene(file, UID, meshesUID, animationsUID, written_file, metaValue, newMeta);
+				loaded = App->scene_loader->importScene(file, UID, meshesUID, animationsUID, bonesUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
 				break;
 			}
@@ -109,6 +110,7 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				{
 					((ResourceScene*)newRes)->meshesUID = meshesUID;
 					((ResourceScene*)newRes)->animationsUID = animationsUID;
+					((ResourceScene*)newRes)->bonesUID = bonesUID;
 				}
 
 				for (int i = 0; i < timesLoaded; i++)
@@ -164,6 +166,22 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 						meshResource->file = file;
 						meshResource->exported_file = ANIMATIONS_FOLDER + std::to_string(animationUID) + ANIMATION_EXTENSION;
 						((ResourceScene*)newRes)->animationsUID.push_back(animationUID); //Add its UID to the scene resource list
+					}
+				}
+				newRes->exported_file = FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;
+				
+				JSON_Value* bones = metaValue->getValue("bones");
+				if (bones != nullptr)
+				{
+					//Create the resource for each animation inside the meta
+					for (rapidjson::Value::MemberIterator it_m = bones->getRapidJSONValue()->MemberBegin(); it_m != bones->getRapidJSONValue()->MemberEnd(); it_m++)
+					{
+						uint boneUID = (*it_m).value.GetUint();
+						Resource* boneResource = App->resources->AddResource(R_BONE, boneUID);
+						boneResource->name = (*it_m).name.GetString();
+						boneResource->file = file;
+						boneResource->exported_file = BONES_FOLDER + std::to_string(boneUID) + BONE_EXTENSION;
+						((ResourceScene*)newRes)->bonesUID.push_back(boneUID); //Add its UID to the scene resource list
 					}
 				}
 				newRes->exported_file = FBX_FOLDER + std::to_string(UID) + SCENES_EXTENSION;

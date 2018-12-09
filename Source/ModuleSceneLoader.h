@@ -26,12 +26,12 @@ public:
 
 	bool CleanUp();
 
-	bool importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath,JSON_Value* meta, bool newMeta = false);
+	bool importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::vector<uint>& bonesUIDs, std::string& newPath,JSON_Value* meta, bool newMeta = false);
 	GameObject* loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceMaterial*> textures, GameObject* fakeScene);
 
 	std::vector<ResourceMesh*> importMeshes(const char* path, const aiScene* scene, std::vector<uint>& meshUIDs, JSON_Value* meta, bool newMeta = false);
 	std::vector<ResourceAnimation*> importAnimations(const char* path, const aiScene* scene, std::vector<uint>& animationUIDs, JSON_Value* meta, bool newMeta = false);
-	std::vector<ResourceBone*> importBones(const char* path, const aiScene* scene);
+	std::vector<ResourceBone*> importBones(const char* path, const aiScene* scene, std::vector<uint>& bonesUIDs, JSON_Value* meta, bool newMeta=false);
 	std::vector<ResourceMaterial*> importMaterials(const char* path, const aiScene* scene);
 	ResourceMaterial* importColor(const char* path, const aiScene* scene, int index);
 

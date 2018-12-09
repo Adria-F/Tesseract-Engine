@@ -66,7 +66,7 @@ bool ModuleSceneLoader::CleanUp()
 	return true;
 }
 
-bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
+bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint>& meshUIDs, std::vector<uint>& animationUIDs, std::vector<uint>& bonesUIDs, std::string& newPath, JSON_Value* meta, bool newMeta)
 {
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -79,10 +79,10 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 		vector<ResourceAnimation*> rAnimations = importAnimations(path, scene, animationUIDs, meta, newMeta);
 
 		//Import all bones
-		vector<ResourceBone*> rBones = importBones(path, scene);
+		vector<ResourceBone*> rBones = importBones(path, scene, bonesUIDs,meta,newMeta);
 
 		//Import all textures
-		vector<ResourceMaterial*> rMaterials = importMaterials(path, scene);		
+		vector<ResourceMaterial*> rMaterials = importMaterials(path, scene);
 
 		GameObject* fakeScene = new GameObject();
 		fakeScene->UID = 0;
@@ -96,13 +96,13 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 				if (child != nullptr)
 				{
 					ComponentBone* bone = (ComponentBone*)child->AddComponent(BONE);
-					bone->assignResource(rBones[i]->GetUID());
+					bone->RUID=rBones[i]->GetUID();
 				}
 			}
 			if (rAnimations.size() > 0)
 			{
 				ComponentAnimation* animation = (ComponentAnimation*)rootGO->AddComponent(ANIMATION);
-				animation->assignResource(rAnimations.front()->GetUID());
+				animation->RUID=rAnimations.front()->GetUID();
 			}			
 
 			std::string filename;
@@ -317,18 +317,19 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	return rAnimations;
 }
 
-std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, const aiScene * scene)
+std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, const aiScene * scene, std::vector<uint>& bonesUIDs, JSON_Value* meta, bool newMeta)
 {
 	std::vector<ResourceBone*> rBones;
-	std::map<std::string*, uint> bonesUIDs;
+	vector<std::string*> BonesNames;
+	std::map<std::string*, uint> boneUIDs;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		for (int j = 0; j < scene->mMeshes[i]->mNumBones; j++)
 		{
 			aiBone* bone = scene->mMeshes[i]->mBones[j];
 			std::string boneName = (bone->mName.length > 0) ? bone->mName.C_Str() : "Unnamed";
+			App->fileSystem->getAvailableNameFromArray(BonesNames, boneName); //Get the available name for the animation
 
-			
 			uint UID = App->resources->getResourceUIDFromMeta(path, boneName.c_str());
 			if (UID == 0)
 				UID = GENERATE_UID();
@@ -340,6 +341,11 @@ std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, con
 				//TODO what if different meshes with same name
 				//modify scene .meta
 
+				bonesUIDs.push_back(UID);
+				std::string* nameAlloc = new std::string(boneName);
+				BonesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
+				boneUIDs[nameAlloc] = UID;
+
 				boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
 				boneResource->name = bone->mName.C_Str();
 				boneResource->file = path;
@@ -348,6 +354,16 @@ std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, con
 			rBones.push_back(boneResource);
 		}
 	}
+
+	if (newMeta)
+		App->resources->updateMetaUIDsList(path, "bones", boneUIDs, meta);
+	else
+		App->resources->updateMetaUIDsList(path, "bones", boneUIDs);
+	int size = boneUIDs.size();
+	for (int i = 0; i < size; i++) //Clean the vector of names
+		RELEASE(BonesNames[i]);
+	BonesNames.clear();
+	boneUIDs.clear(); //The allocated names are cleaned with the vector
 
 	return rBones;
 }
@@ -540,6 +556,15 @@ bool ModuleSceneLoader::loadScene(JSON_File* scene)
 			else
 			{
 				App->scene_intro->addGameObject((*it_go).second);
+			}
+		}
+
+		for (std::map<uint, GameObject*>::iterator it_go = gameobjects.begin(); it_go != gameobjects.end(); it_go++)
+		{
+			ComponentAnimation* animation = (ComponentAnimation*)(*it_go).second->GetComponent(ANIMATION);
+			if (animation != nullptr)
+			{
+				animation->assignResource(animation->RUID);
 			}
 		}
 	}

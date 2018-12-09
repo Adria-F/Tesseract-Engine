@@ -31,14 +31,17 @@ bool ResourceBone::LoadBone()
 	cursor += bytes;
 
 	bytes = sizeof(float) * 3;
+	pos = new float[3];
 	memcpy(pos, cursor, bytes);
 	cursor += bytes;
 
 	bytes = sizeof(float) * 4;
+	rot = new float[4];
 	memcpy(rot, cursor, bytes);
 	cursor += bytes;
 
 	bytes = sizeof(float) * 3;
+	scale = new float[3];
 	memcpy(scale, cursor, bytes);
 	cursor += bytes;
 

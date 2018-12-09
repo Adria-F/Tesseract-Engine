@@ -143,7 +143,9 @@ void ComponentMaterial::Save(JSON_Value * component) const
 
 	material->addInt("Type", type);
 	material->addUint("UID", UID);
-	material->addString("originalFile", mat->GetFile());
+
+	if(mat!=nullptr)
+		material->addString("originalFile", mat->GetFile());
 
 	component->addValue("", material);
 }

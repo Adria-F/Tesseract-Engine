@@ -15,6 +15,7 @@ public:
 
 	std::vector<uint> meshesUID;
 	std::vector<uint> animationsUID;
+	std::vector<uint> bonesUID;
 };
 
 #endif // !__RESOURCESCENE_H__
