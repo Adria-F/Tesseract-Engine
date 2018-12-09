@@ -320,15 +320,31 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, const aiScene * scene)
 {
 	std::vector<ResourceBone*> rBones;
+	std::map<std::string*, uint> bonesUIDs;
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		for (int j = 0; j < scene->mMeshes[i]->mNumBones; j++)
 		{
 			aiBone* bone = scene->mMeshes[i]->mBones[j];
-			ResourceBone* boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
-			//TODO what if different meshes with same name
-			boneResource->name = bone->mName.C_Str();
+			std::string boneName = (bone->mName.length > 0) ? bone->mName.C_Str() : "Unnamed";
 
+			
+			uint UID = App->resources->getResourceUIDFromMeta(path, boneName.c_str());
+			if (UID == 0)
+				UID = GENERATE_UID();
+
+			std::string exportedFile;
+			ResourceBone* boneResource = nullptr;
+			if (App->animations->importBones(bone,UID,exportedFile))
+			{
+				//TODO what if different meshes with same name
+				//modify scene .meta
+
+				boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
+				boneResource->name = bone->mName.C_Str();
+				boneResource->file = path;
+				boneResource->exported_file = exportedFile;
+			}
 			rBones.push_back(boneResource);
 		}
 	}

@@ -3,6 +3,13 @@
 
 #include "Resource.h"
 
+struct Weight {
+
+	uint VertexID;
+	float weight;
+
+};
+
 class ResourceBone : public Resource
 {
 public:
@@ -15,7 +22,17 @@ public:
 
 public:
 
-	//weights
+	
+	uint numWeights;
+
+	float4x4 Offset;
+	float* pos;
+	float* rot;
+	float* scale;
+
+	Weight* weights;
+
+
 };
 
 #endif // !__RESOURCEBONE_H__

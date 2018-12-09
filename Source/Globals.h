@@ -74,11 +74,12 @@ enum update_status
 #define TITLE "3D Engine"
 
 // Files PATHS
-#define PATHS_AMOUNT 7
+#define PATHS_AMOUNT 8
 #define ASSETS_FOLDER "Assets/"
 #define LIBRARY_FOLDER "Library/"
 #define MESHES_FOLDER "Library/Meshes/"
 #define ANIMATIONS_FOLDER "Library/Animations/"
+#define BONES_FOLDER "Library/Animations/Bones/"
 #define TEXTURES_FOLDER "Library/Textures/"
 #define FBX_FOLDER "Library/Scenes/"
 #define SETTINGS_FOLDER "Settings/"
@@ -87,6 +88,7 @@ enum update_status
 // Own format files
 #define MESH_EXTENSION ".tesseractMesh"
 #define ANIMATION_EXTENSION ".tesseractAnimation"
+#define BONE_EXTENSION ".tesseractBone"
 #define TEXTURES_EXTENSION ".dds"
 #define SCENES_EXTENSION ".tesseractScene"
 #define MATERIAL_EXTENSION ".tesseractMat"

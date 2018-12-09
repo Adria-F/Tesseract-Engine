@@ -4,8 +4,10 @@
 #include "ModuleFileSystem.h"
 #include "Resource.h"
 #include "ResourceAnimation.h"
+#include "ResourceBone.h"
 
 #include "Assimp/include/anim.h"
+#include "Assimp/include/mesh.h"
 
 //#ifdef _DEBUG
 ////#define TEST_MEMORY_MANAGER
@@ -156,4 +158,112 @@ bool ModuleAnimations::saveAnimation(ResourceAnimation* animation, uint UID, std
 	newpath = ANIMATIONS_FOLDER + std::to_string(UID) + ANIMATION_EXTENSION;
 
 	return ret;
+}
+
+bool ModuleAnimations::importBones(aiBone* bone, uint UID, std::string& newpath)
+{
+	bool ret = false;
+
+	ResourceBone* newBone = new ResourceBone(0, R_BONE);
+	newBone->numWeights = bone->mNumWeights;
+
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+
+	bone->mOffsetMatrix.Decompose(scaling, rotation, translation);
+
+	newBone->pos = new float[3];
+	newBone->pos[0] = translation.x;
+	newBone->pos[1] = translation.y;
+	newBone->pos[2] = translation.z;
+
+	newBone->rot = new float[4];
+	newBone->rot[1] = rotation.y;
+	newBone->rot[2] = rotation.z;
+	newBone->rot[3] = rotation.w;
+	newBone->rot[0] = rotation.x;
+
+	newBone->scale = new float[3];
+	newBone->scale[0] = scaling.x;
+	newBone->scale[1] = scaling.y;
+	newBone->scale[2] = scaling.z;
+
+	if (bone->mNumWeights>0)
+	{
+		newBone->weights = new Weight[newBone->numWeights];
+
+		for (int i = 0; i < newBone->numWeights; i++)
+		{
+			newBone->weights[i].VertexID = bone->mWeights[i].mVertexId;
+			newBone->weights[i].weight = bone->mWeights[i].mWeight;
+		}
+
+		ret = true;
+	}
+
+	if (ret)
+		saveBones(newBone, UID, newpath);
+
+	RELEASE(newBone);
+
+	return ret;
+
+}
+
+bool ModuleAnimations::saveBones(ResourceBone* bone, uint UID, std::string& newpath)
+{
+
+	bool ret = false;
+
+	uint ranges = bone->numWeights;
+
+	uint size = sizeof(ranges);
+
+	//Size of the offset decomposed
+	size += sizeof(float) * 3;
+	size += sizeof(float) * 4;
+	size += sizeof(float) * 3;
+
+	//Size of the weights
+	size += sizeof(uint) * bone->numWeights;
+	size += sizeof(float) * bone->numWeights;
+
+	char* buffer = new char[size];
+	char* cursor = buffer;
+
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, &ranges, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float) * 3;
+	memcpy(cursor, bone->pos, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float) * 4;
+	memcpy(cursor, bone->rot, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float) * 3;
+	memcpy(cursor, bone->scale, bytes);
+	cursor += bytes;
+
+	for (int i = 0; i < bone->numWeights; i++)
+	{
+		bytes = sizeof(uint);
+		memcpy(cursor, &bone->weights[i].VertexID, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(float);
+		memcpy(cursor, &bone->weights[i].weight, bytes);
+		cursor += bytes;
+	}
+
+	App->fileSystem->writeFile((BONES_FOLDER + std::to_string(UID) + BONE_EXTENSION).c_str(), buffer, size, true);
+	RELEASE_ARRAY(buffer);
+
+	newpath = BONES_FOLDER + std::to_string(UID) + BONE_EXTENSION;
+
+	return ret;
+
 }

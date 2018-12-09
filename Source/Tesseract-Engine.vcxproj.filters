@@ -525,7 +525,9 @@
     <ClInclude Include="ComponentBone.h">
       <Filter>Sources\Modules\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceBone.h" />
+    <ClInclude Include="ResourceBone.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -855,7 +857,9 @@
     <ClCompile Include="ComponentBone.cpp">
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceBone.cpp" />
+    <ClCompile Include="ResourceBone.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
