@@ -10,6 +10,8 @@ struct Weight {
 
 };
 
+class ComponentMesh;
+
 class ResourceBone : public Resource
 {
 public:
@@ -31,7 +33,7 @@ public:
 	float* scale;
 
 	Weight* weights;
-
+	ComponentMesh* boneMesh;
 
 };
 

@@ -1,11 +1,12 @@
-#include "ComponentBone.h"
 #include "Application.h"
+#include "ComponentBone.h"
 #include "GameObject.h"
 #include "ModuleResource.h"
 #include "ResourceBone.h"
 
 #include "Component.h"
 #include "ComponentTransformation.h"
+#include "ModuleMeshes.h"
 
 #include "Primitive.h"
 
@@ -25,6 +26,9 @@ ComponentBone::~ComponentBone()
 
 bool ComponentBone::Update(float dt)
 {
+	ResourceBone* bone = (ResourceBone*)App->resources->GetResource(RUID);
+
+
 	if (debugDraw)
 	{
 		ComponentTransformation* transform = (ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION);

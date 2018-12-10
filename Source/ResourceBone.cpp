@@ -1,6 +1,7 @@
 #include "ResourceBone.h"
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ComponentMesh.h"
 
 ResourceBone::ResourceBone(uint UID, ResType type) :Resource(UID, type)
 {
