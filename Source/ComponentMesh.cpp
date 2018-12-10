@@ -113,6 +113,7 @@ void ComponentMesh::DrawInfo()
 			ImGui::Text("Triangles Count: %d", mesh->num_indices / 3);
 			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
 			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
+			ImGui::Text("Bone Count: %d", mesh->numBones);
 		}
 	}
 }

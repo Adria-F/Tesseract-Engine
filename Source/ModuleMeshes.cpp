@@ -21,8 +21,8 @@ ModuleMeshes::ModuleMeshes(bool start_enabled): Module(start_enabled)
 {
 }
 
-
-bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
+//Changed
+bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::vector<uint> rBonesUID, std::string& path)
 {
 	bool ret = false;
 	
@@ -92,6 +92,10 @@ bool ModuleMeshes::importRMesh(aiMesh* mesh,uint UID, std::string& path)
 				memcpy(&newMesh->indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 			}
 		}
+
+		//Changed
+		if(rBonesUID.size()>0)
+			newMesh->rBonesUID = rBonesUID;
 	}
 	else
 	{
@@ -112,10 +116,10 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 	bool ret = true;
 
 	//	Vertices | Indices | Normals(vertices) | Texture coords (verties*2)
-	uint ranges[4] = { mesh->num_vertices, mesh->num_indices, mesh->num_normals, mesh->num_texCoords };
+	uint ranges[5] = { mesh->num_vertices, mesh->num_indices, mesh->num_normals, mesh->num_texCoords,mesh->rBonesUID.size()};
 
 	//Total size of the buffer
-	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices * 3 + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_normals * 3 + sizeof(float)*mesh->num_texCoords * 2;
+	uint size = sizeof(ranges) + sizeof(float)*mesh->num_vertices * 3 + sizeof(uint)*mesh->num_indices + sizeof(float)*mesh->num_normals * 3 + sizeof(float)*mesh->num_texCoords * 2+sizeof(uint)*mesh->rBonesUID.size();
 	char* buffer = new char[size];
 	char* cursor = buffer;
 
@@ -144,8 +148,20 @@ bool ModuleMeshes::saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath)
 	memcpy(cursor, mesh->texCoords, bytes);
 	cursor += bytes;
 
+	
+	uint* bonesUID = new uint[mesh->rBonesUID.size()];
+	for (int i = 0; i < mesh->rBonesUID.size(); i++)
+	{
+		bonesUID[i]=mesh->rBonesUID[i];
+	}
+
+	bytes = sizeof(uint)*mesh->rBonesUID.size();
+	memcpy(cursor, bonesUID, bytes);
+	cursor += bytes;
+
 	App->fileSystem->writeFile((MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION).c_str(), buffer, size, true);
 	RELEASE_ARRAY(buffer);
+	RELEASE_ARRAY(bonesUID);
 
 	newpath = MESHES_FOLDER + std::to_string(UID) + MESH_EXTENSION;
 

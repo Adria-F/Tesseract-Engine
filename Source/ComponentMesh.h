@@ -24,6 +24,7 @@ public:
 private:
 
 	bool color=true;
+	uint rBone = 0;
 
 };
 

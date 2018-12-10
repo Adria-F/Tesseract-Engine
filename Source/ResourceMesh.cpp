@@ -50,7 +50,7 @@ bool ResourceMesh::LoadMesh()
 	char* cursor = buffer;
 
 	//Load ranges
-	uint ranges[4];
+	uint ranges[5];
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
@@ -59,6 +59,7 @@ bool ResourceMesh::LoadMesh()
 	num_indices = ranges[1];
 	num_normals = ranges[2];
 	num_texCoords = ranges[3];
+	numBones = ranges[4];
 
 	//Load vertices
 	if (num_vertices > 0)
@@ -96,11 +97,27 @@ bool ResourceMesh::LoadMesh()
 		cursor += bytes;
 	}
 
+	if (numBones > 0)
+	{
+		bytes = sizeof(uint)*numBones;
+		uint* aux = new uint[numBones];
+		memcpy(aux, cursor, bytes);
+		cursor += bytes;
+
+		for (int i = 0; i < numBones; i++)
+		{
+			rBonesUID.push_back(aux[i]);
+		}
+
+		RELEASE_ARRAY(aux);
+	}
+
 	//Calculate bounding box
 	boundingBox.SetNegativeInfinity();
 	boundingBox.Enclose((float3*)vertices, num_vertices);
 
 	RELEASE_ARRAY(buffer);
+	
 	return ret;
 }
 

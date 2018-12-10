@@ -37,6 +37,9 @@ public:
 
 	std::vector<float> faceNormals;
 
+	uint numBones = 0;
+	std::vector <uint> rBonesUID;
+
 	AABB boundingBox;
 
 };

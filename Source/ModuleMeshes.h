@@ -15,7 +15,8 @@ public:
 	ModuleMeshes(bool start_enabled = true);
 	~ModuleMeshes() {}
 
-	bool importRMesh(aiMesh* mesh, uint UID, std::string& path);
+	//Changed
+	bool importRMesh(aiMesh* mesh, uint UID, std::vector<uint> rBonesUID, std::string& path);
 	bool saveMesh(ResourceMesh* mesh, uint UID, std::string& newpath);
 	
 };
