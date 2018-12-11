@@ -69,6 +69,15 @@ void PanelResourcesList::Draw()
 	if (currentType == R_TEXTURE && showExtra)
 		resourceList = extraResources;
 
+	if (ImGui::Selectable("None"))
+	{
+		if (callbackComponent != nullptr)
+		{
+			callbackComponent->assignResource(0);
+		}
+		active = false;
+	}
+
 	for (int i = 0; i < resourceList.size(); i++)
 	{
 		if (ImGui::Selectable(resourceList[i]->GetName()))

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Resource.h"
+#include "ModuleResource.h"
 
 Resource::Resource(uint UID, ResType type): UID(UID),type(type)
 {

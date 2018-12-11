@@ -250,8 +250,6 @@ void BoneTransform::calcTransfrom(float time)
 	tr = ((time - RotKeysTimes[currentRotIndex]) / (RotKeysTimes[nextRotIndex] - RotKeysTimes[currentRotIndex]));
 	ts = ((time - ScaleKeysTimes[currentScaleIndex]) / (ScaleKeysTimes[nextScaleIndex] - ScaleKeysTimes[currentScaleIndex]));
 
-	LOG("tp=%d", nextScaleIndex);
-
 	vec position = position_1.Lerp(position_2,tp);
 	Quat rotation = rotation_1.Slerp(rotation_2,tr);
 	vec scale = scale_1.Lerp(scale_2,ts);

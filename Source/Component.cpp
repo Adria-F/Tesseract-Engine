@@ -65,7 +65,9 @@ void Component::assignResource(uint UID)
 	if (old != nullptr)
 		old->UnloadMemory();
 	RUID = UID;
-	App->resources->GetResource(RUID)->LoadtoMemory();
+	Resource* newR = App->resources->GetResource(RUID);
+	if (newR != nullptr)
+		newR->LoadtoMemory();
 }
 
 void Component::beginDroppableSpace(const char * string, bool empty, float2 size)
