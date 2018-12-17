@@ -133,16 +133,16 @@ void ComponentMesh::Save(JSON_Value * component) const
 		mesh->addString("mesh", rMesh->GetName());
 	}
 
-	//JSON_Value* linker = mesh->createValue();
+	JSON_Value* linker = mesh->createValue();
 
-	//linker->convertToArray();
+	linker->convertToArray();
 
-	//for (int i = 0; i < componentsBones.size(); i++)
-	//{
-	//	linker->addUint("",componentsBones[i]);
-	//}
+	for (int i = 0; i < componentsBones.size(); i++)
+	{
+		linker->addUint("",componentsBones[i]);
+	}
 
-	//mesh->addValue("Linker", linker);
+	mesh->addValue("Linker", linker);
 
 	component->addValue("", mesh);
 }
@@ -152,7 +152,7 @@ void ComponentMesh::Load(JSON_Value* component)
 	//UID = component->getUint("UID");
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "meshes", component->getString("mesh"));
 
-	/*JSON_Value* linker = component->getValue("Linker");
+	JSON_Value* linker = component->getValue("Linker");
 
 	if (linker != nullptr)
 	{
@@ -166,7 +166,7 @@ void ComponentMesh::Load(JSON_Value* component)
 				componentsBones.push_back(value);
 			}
 		}
-	}*/
+	}
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)
