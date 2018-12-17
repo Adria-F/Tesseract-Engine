@@ -155,5 +155,9 @@ void PanelAnimation::Draw()
 	ImGui::EndChild();
 	ImGui::EndGroup();
 
+	ImGui::NewLine();
+
+	ImGui::Checkbox("Interpolation", &interpolation);
+
 	ImGui::End();
 }

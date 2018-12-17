@@ -22,6 +22,7 @@ public:
 	BoneTransform* selectedBone=nullptr;
 
 	float numFrames = 1;
+	bool interpolation = false;
 
 private:
 
@@ -35,6 +36,7 @@ private:
 	float speed = 0.0f;
 	float progress = 0.0f;
 	float winSize = 0.0f;
+
 
 };
 
