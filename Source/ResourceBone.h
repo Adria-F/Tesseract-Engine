@@ -33,7 +33,7 @@ public:
 	float* scale;
 
 	Weight* weights;
-	ComponentMesh* boneMesh;
+	uint boneMeshUID;
 
 };
 
