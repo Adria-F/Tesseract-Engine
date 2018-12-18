@@ -173,39 +173,75 @@ void JSON_Value::convertToArray()
 
 void JSON_Value::addInt(const char* name, int value)
 {
-	std::string str = name;
-	rapidjson::Value index(str.c_str(), str.size(), *allocator);
-	this->value->AddMember(index, value, *allocator);
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		this->value->AddMember(index, value, *allocator);
+	}
+	else
+	{
+		this->value->PushBack(value, *allocator);
+	}
 }
 
 void JSON_Value::addUint(const char * name, uint value)
 {
-	std::string str = name;
-	rapidjson::Value index(str.c_str(), str.size(), *allocator);
-	this->value->AddMember(index, value, *allocator);
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{		
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		this->value->AddMember(index, value, *allocator);
+	}
+	else
+	{
+		this->value->PushBack(value, *allocator);
+	}
 }
 
 void JSON_Value::addFloat(const char * name, float value)
 {
-	std::string str = name;
-	rapidjson::Value index(str.c_str(), str.size(), *allocator);
-	this->value->AddMember(index, value, *allocator);
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		this->value->AddMember(index, value, *allocator);
+	}
+	else
+	{
+		this->value->PushBack(value, *allocator);
+	}
 }
 
 void JSON_Value::addString(const char * name, const char * value)
 {
-	std::string str = name;
-	rapidjson::Value index(str.c_str(), str.size(), *allocator);
 	std::string str2 = value;
 	rapidjson::Value val(str2.c_str(), str2.size(), *allocator);
-	this->value->AddMember(index, val, *allocator);
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		
+		this->value->AddMember(index, val, *allocator);
+	}
+	else
+	{
+		this->value->PushBack(val, *allocator);
+	}
 }
 
 void JSON_Value::addBool(const char * name, bool value)
 {
-	std::string str = name;
-	rapidjson::Value index(str.c_str(), str.size(), *allocator);
-	this->value->AddMember(index, value, *allocator);
+	if (this->value->GetType() == rapidjson::kObjectType)
+	{
+		std::string str = name;
+		rapidjson::Value index(str.c_str(), str.size(), *allocator);
+		this->value->AddMember(index, value, *allocator);
+	}
+	else
+	{
+		this->value->PushBack(value, *allocator);
+	}
 }
 
 void JSON_Value::addVector2(const char* name, float2 vec)

@@ -82,6 +82,7 @@ void ComponentAnimation::DrawInfo()
 			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->ticks,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
+
 	}
 }
 

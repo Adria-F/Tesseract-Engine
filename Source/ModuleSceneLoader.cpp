@@ -85,10 +85,13 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 		//Import all textures
 		vector<ResourceMaterial*> rMaterials = importMaterials(path, scene);
 
+		//Map to link resource meshes with component meshes UIDs
+		std::map<uint, ComponentMesh*> meshLinker;
+
 		GameObject* fakeScene = new GameObject();
 		fakeScene->UID = 0;
 
-		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rMaterials, fakeScene);
+		GameObject* rootGO = loadGameObject(scene, scene->mRootNode, rMeshes, rMaterials, fakeScene, meshLinker);
 		if (rootGO != nullptr)
 		{
 			for (int i = 0; i < rBones.size(); i++)
@@ -98,6 +101,8 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 				{
 					ComponentBone* bone = (ComponentBone*)child->AddComponent(BONE);
 					bone->RUID=rBones[i]->GetUID();
+
+					meshLinker[rBones[i]->boneMeshUID]->componentsBones.push_back(bone->UID);
 				}
 			}
 			if (rAnimations.size() > 0)
@@ -129,7 +134,7 @@ bool ModuleSceneLoader::importScene(const char* path, uint UID, std::vector<uint
 	return true;
 }
 
-GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceMaterial*> materials, GameObject* fakeScene)
+GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node, std::vector<ResourceMesh*> meshes, std::vector<ResourceMaterial*> materials, GameObject* fakeScene, std::map<uint, ComponentMesh*>& meshlinker)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -202,6 +207,8 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 			ComponentMesh* mesh = (ComponentMesh*)child->AddComponent(componentType::MESH);
 			mesh->assignResource(meshes[node->mMeshes[i]]->GetUID());
 
+			meshlinker[mesh->RUID] = mesh;
+
 			if (materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex] != nullptr) //Check that material loaded correctly
 			{
 				ComponentMaterial* material = (ComponentMaterial*)child->AddComponent(MATERIAL);
@@ -218,7 +225,7 @@ GameObject* ModuleSceneLoader::loadGameObject(const aiScene* scene, aiNode* node
 	{
 		for (int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, materials, fakeScene);
+			GameObject* child = loadGameObject(scene, node->mChildren[i], meshes, materials, fakeScene, meshlinker);
 			if (child != nullptr)
 			{
 				App->scene_intro->addGameObject(child, GO, fakeScene);
@@ -255,7 +262,7 @@ std::vector<ResourceMesh*> ModuleSceneLoader::importMeshes(const char* path, con
 		//Changed
 		if (scene->mMeshes[i]->HasBones())
 		{
-			rBonesUIDs=importBonesFromMesh(path, scene->mMeshes[i], bonesUIDs, rBones, boneUIDs, meta, newMeta);
+			rBonesUIDs=importBonesFromMesh(path, scene->mMeshes[i], bonesUIDs, rBones, boneUIDs,UID, meta, newMeta);
 		}
 
 		if (App->meshes->importRMesh(scene->mMeshes[i], UID, rBonesUIDs, exportedFile)) //Import the mesh
@@ -393,7 +400,7 @@ std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, con
 	return rBones;
 }
 
-std::vector<uint> ModuleSceneLoader::importBonesFromMesh(const char * path, const aiMesh* mesh, std::vector<uint>& bonesUIDs, std::vector<ResourceBone*>& rBones, std::map<std::string*, uint>& boneUIDs, JSON_Value* meta, bool newMeta)
+std::vector<uint> ModuleSceneLoader::importBonesFromMesh(const char * path, const aiMesh* mesh, std::vector<uint>& bonesUIDs, std::vector<ResourceBone*>& rBones, std::map<std::string*, uint>& boneUIDs, uint meshUID, JSON_Value* meta, bool newMeta)
 {
 	std::vector<uint> rBonesUID;
 	vector<std::string*> BonesNames;
@@ -424,6 +431,7 @@ std::vector<uint> ModuleSceneLoader::importBonesFromMesh(const char * path, cons
 			boneResource->name = bone->mName.C_Str();
 			boneResource->file = path;
 			boneResource->exported_file = exportedFile;
+			boneResource->boneMeshUID = meshUID;
 		}
 		if (boneResource != nullptr)
 		{

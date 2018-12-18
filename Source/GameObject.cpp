@@ -348,12 +348,15 @@ void GameObject::Save(JSON_Value* gameobject)
 
 uint GameObject::Load(JSON_Value* gameobject)
 {
+	std::map<uint, uint> LinkerComponents;
+
 	parentUID = gameobject->getUint("ParentUID");
 	name = gameobject->getString("Name");
 	active= gameobject->getBool("Active");
 	isStatic = gameobject->getBool("Static");
 
 	JSON_Value* Components = gameobject->getValue("Components"); //It is an array of values
+
 	if (Components->getRapidJSONValue()->IsArray()) //Just make sure
 	{
 		for (int i = 0; i < Components->getRapidJSONValue()->Size(); i++)
@@ -361,6 +364,16 @@ uint GameObject::Load(JSON_Value* gameobject)
 			JSON_Value* componentData = Components->getValueFromArray(i); //Get the component data
 			Component* component = AddComponent((componentType)componentData->getInt("Type")); //Create the component type
 			component->Load(componentData); //Load its info
+
+			LinkerComponents[componentData->getUint("UID")] = component->UID;
+		}
+	}
+
+	if (mesh != nullptr)
+	{
+		for (int i = 0; i < mesh->componentsBones.size(); i++)
+		{
+			mesh->componentsBones[i] = LinkerComponents[mesh->componentsBones[i]];
 		}
 	}
 

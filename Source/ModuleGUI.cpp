@@ -188,6 +188,8 @@ update_status ModuleGUI::Update(float dt)
 				hierarchy->toggleActive();
 			if (ImGui::MenuItem("Assets", NULL, assets->isActive()))
 				assets->toggleActive();
+			if (ImGui::MenuItem("Animation", NULL, animations->isActive()))
+				animations->toggleActive();
 			ImGui::EndMenu();
 		}
 

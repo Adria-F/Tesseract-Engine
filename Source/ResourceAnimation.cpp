@@ -237,9 +237,9 @@ void BoneTransform::calcTransfrom(float time)
 
 	tp = ts = tr = 0.0f;
 
-	vec position_1 = { PosKeysValues[currentPosIndex*3], PosKeysValues[currentPosIndex*3 +1], PosKeysValues[currentPosIndex*3 +2] };
-	Quat rotation_1 = { RotKeysValues[currentRotIndex*4], RotKeysValues[currentRotIndex*4 +1], RotKeysValues[currentRotIndex*4 +2], RotKeysValues[currentRotIndex*4 +3] };
-	vec scale_1 = { ScaleKeysValues[currentScaleIndex*3], ScaleKeysValues[currentScaleIndex*3 + 1], ScaleKeysValues[currentScaleIndex*3 + 2] };
+	vec position_1 = { PosKeysValues[currentPosIndex * 3], PosKeysValues[currentPosIndex * 3 + 1], PosKeysValues[currentPosIndex * 3 + 2] };
+	Quat rotation_1 = { RotKeysValues[currentRotIndex * 4], RotKeysValues[currentRotIndex * 4 + 1], RotKeysValues[currentRotIndex * 4 + 2], RotKeysValues[currentRotIndex * 4 + 3] };
+	vec scale_1 = { ScaleKeysValues[currentScaleIndex * 3], ScaleKeysValues[currentScaleIndex * 3 + 1], ScaleKeysValues[currentScaleIndex * 3 + 2] };
 
 	vec position_2 = { PosKeysValues[nextPosIndex * 3], PosKeysValues[nextPosIndex * 3 + 1], PosKeysValues[nextPosIndex * 3 + 2] };
 	Quat rotation_2 = { RotKeysValues[nextRotIndex * 4], RotKeysValues[nextRotIndex * 4 + 1], RotKeysValues[nextRotIndex * 4 + 2], RotKeysValues[nextRotIndex * 4 + 3] };
@@ -250,11 +250,22 @@ void BoneTransform::calcTransfrom(float time)
 	tr = ((time - RotKeysTimes[currentRotIndex]) / (RotKeysTimes[nextRotIndex] - RotKeysTimes[currentRotIndex]));
 	ts = ((time - ScaleKeysTimes[currentScaleIndex]) / (ScaleKeysTimes[nextScaleIndex] - ScaleKeysTimes[currentScaleIndex]));
 
-	vec position = position_1.Lerp(position_2,tp);
-	Quat rotation = rotation_1.Slerp(rotation_2,tr);
-	vec scale = scale_1.Lerp(scale_2,ts);
+	vec position = position_1.Lerp(position_2, tp);
+	Quat rotation = rotation_1.Slerp(rotation_2, tr);
+	vec scale = scale_1.Lerp(scale_2, ts);
+
+	if (App->gui->animations->interpolation)
+	{
+		lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
+	}
+	else
+	{
+		lastTransform.Set(float4x4::FromTRS(position_1, rotation_1, scale_1));
+	}
+
+	
 
 
-	lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
+	
 }
 
