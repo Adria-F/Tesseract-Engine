@@ -46,6 +46,8 @@ bool ResourceBone::LoadBone()
 	memcpy(scale, cursor, bytes);
 	cursor += bytes;
 
+	Offset = float4x4::FromTRS({ pos[0],pos[1],pos[2] }, { rot[0],rot[1],rot[2],rot[3]}, { scale[0],scale[1],scale[2] });
+
 	if (numWeights > 0)
 	{
 		weights = new Weight[numWeights];

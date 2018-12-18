@@ -6,6 +6,7 @@
 class Mesh;
 class GameObject;
 class ResourceMesh;
+class ResourceBone;
 
 class ComponentMesh : public Component
 {
@@ -17,6 +18,8 @@ public:
 
 	bool Update(float dt);
 	void DrawInfo();
+
+	void Skining(ResourceMesh* mesh, float* vertices);
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);

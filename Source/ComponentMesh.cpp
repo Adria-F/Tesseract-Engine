@@ -1,8 +1,10 @@
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleResource.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "ComponentTransformation.h"
 #include "GameObject.h"
 #include "ModuleMeshes.h"
 
@@ -11,11 +13,12 @@
 
 #include "Resource.h"
 #include "ResourceMesh.h"
+#include "ResourceBone.h"
 
-#ifdef _DEBUG
-//#define TEST_MEMORY_MANAGER
-#include "mmgr/mmgr.h"
-#endif
+//#ifdef _DEBUG
+////#define TEST_MEMORY_MANAGER
+//#include "mmgr/mmgr.h"
+//#endif
 
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
 {
@@ -36,10 +39,15 @@ bool ComponentMesh::Update(float dt)
 	if (!active || mesh == nullptr )
 		return false;
 
+	float* auxVertex = new float[mesh->num_vertices * 3];
+	memcpy(auxVertex, &mesh->vertices[0], sizeof(float)*mesh->num_vertices * 3);
+
+	Skining(mesh,auxVertex);
+
 	//Assign Vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+	glVertexPointer(3, GL_FLOAT, 0, &auxVertex[0]);
 
 	//Assign texture
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -94,6 +102,7 @@ bool ComponentMesh::Update(float dt)
 		glLineWidth(2.0f);
 	}
 
+	RELEASE_ARRAY(auxVertex);
 	return true;
 }
 
@@ -136,6 +145,37 @@ void ComponentMesh::DrawInfo()
 			}
 		}
 	}
+}
+
+void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
+{
+	if (mesh != nullptr)
+	{
+		for (int i = 0; i < componentsBones.size(); i++)
+		{
+			ComponentBone* bone = (ComponentBone*)App->scene_intro->getComponent(componentsBones[i]);
+			ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
+			if (bone != nullptr && rBone != nullptr)
+			{
+				float4x4 boneTransform = ((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix*rBone->Offset;
+
+				for (int j = 0; j < rBone->numWeights; j++)
+				{
+					uint VertexIndex = rBone->weights[j].VertexID;
+
+					float3 originalV(&mesh->vertices[VertexIndex * 3]);
+
+					float3 movementWeight = boneTransform.TransformPos(originalV);
+
+					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
+					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
+					vertices[VertexIndex * 3 + 2] += movementWeight.z*rBone->weights[j].weight;
+				}
+			}
+		}
+}
+
+
 }
 
 void ComponentMesh::Save(JSON_Value * component) const
