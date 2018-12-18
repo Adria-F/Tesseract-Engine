@@ -476,6 +476,24 @@ GameObject* ModuleScene::getGameObject(uint UID)
 		return nullptr;
 }
 
+void ModuleScene::addComponent(Component* component)
+{
+	components[component->UID] = component;
+}
+
+Component * ModuleScene::getComponent(uint UID)
+{
+	if (components.find(UID) != components.end())
+		return components[UID];
+	else
+		return nullptr;
+}
+
+void ModuleScene::removeComponent(Component* component)
+{
+	components.erase(component->UID);
+}
+
 void ModuleScene::FindCameras(GameObject* parent)
 {
 	for (std::list<GameObject*>::iterator go_it=parent->childs.begin();go_it!=parent->childs.end();go_it++)

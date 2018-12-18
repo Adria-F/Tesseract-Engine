@@ -61,10 +61,9 @@ void ComponentBone::DrawInfo()
 
 	if (ImGui::CollapsingHeader(("Bone - "+tag).c_str(), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick))
 	{
-		ImGui::Text("This component defines current game object as a bone for executing animations");
+		ImGui::Text("This component defines current game object\nas a bone for executing animations");
 
 		ImGui::Checkbox("DebugDraw", &debugDraw);
-		ImGui::Text("WIP - Show afecting meshes");
 	}
 }
 

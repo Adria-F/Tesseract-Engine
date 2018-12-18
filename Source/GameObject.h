@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <map>
 
 struct Mesh;
 struct JSON_Value;
@@ -32,7 +33,7 @@ public:
 	void DrawBB(const OBB& BB, vec color) const;
 
 	void Save(JSON_Value* gameobject);
-	uint Load(JSON_Value* gameobject);
+	uint Load(JSON_Value* gameobject, std::map<uint, uint>& LinkerComponents);
 
 	Component* GetComponent(componentType type);
 

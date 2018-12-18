@@ -6,6 +6,9 @@
 #include "GameObject.h"
 #include "ModuleMeshes.h"
 
+#include "ModuleScene.h"
+#include "ComponentBone.h"
+
 #include "Resource.h"
 #include "ResourceMesh.h"
 
@@ -114,6 +117,23 @@ void ComponentMesh::DrawInfo()
 			ImGui::Text("Vertices Count: %d", mesh->num_vertices);
 			ImGui::Text("Mesh size:\n X: %f | Y: %f | Z: %f", mesh->boundingBox.Size().x, mesh->boundingBox.Size().y, mesh->boundingBox.Size().z);
 			ImGui::Text("Bone Count: %d", mesh->numBones);
+
+			if (ImGui::TreeNodeEx("Using Bones"))
+			{
+				for (int i = 0; i < componentsBones.size(); i++)
+				{
+					Component* bone = App->scene_intro->getComponent(componentsBones[i]);
+					if (bone != nullptr)
+					{
+						Resource* rBone = App->resources->GetResource(bone->RUID);
+						if (rBone != nullptr)
+						{
+							ImGui::Text(rBone->GetName());
+						}
+					}
+				}
+				ImGui::TreePop();
+			}
 		}
 	}
 }

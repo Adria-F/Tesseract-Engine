@@ -188,7 +188,10 @@ Component* GameObject::AddComponent(componentType type)
 	}
 
 	if (itsNew)
+	{
 		components.push_back(ret);
+		App->scene_intro->addComponent(ret);
+	}
 
 	return ret;
 }
@@ -216,6 +219,7 @@ void GameObject::RemoveComponent(Component* component)
 		break;
 	}
 
+	App->scene_intro->removeComponent(component);
 	components.remove(component);
 	RELEASE(component);
 }
@@ -346,10 +350,8 @@ void GameObject::Save(JSON_Value* gameobject)
 	}
 }
 
-uint GameObject::Load(JSON_Value* gameobject)
+uint GameObject::Load(JSON_Value* gameobject, std::map<uint, uint>& LinkerComponents)
 {
-	std::map<uint, uint> LinkerComponents;
-
 	parentUID = gameobject->getUint("ParentUID");
 	name = gameobject->getString("Name");
 	active= gameobject->getBool("Active");
@@ -366,14 +368,6 @@ uint GameObject::Load(JSON_Value* gameobject)
 			component->Load(componentData); //Load its info
 
 			LinkerComponents[componentData->getUint("UID")] = component->UID;
-		}
-	}
-
-	if (mesh != nullptr)
-	{
-		for (int i = 0; i < mesh->componentsBones.size(); i++)
-		{
-			mesh->componentsBones[i] = LinkerComponents[mesh->componentsBones[i]];
 		}
 	}
 

@@ -18,6 +18,7 @@ using namespace std;
 
 class Primitive;
 class GameObject;
+class Component;
 class ComponentCamera;
 class Quadtree;
 
@@ -54,6 +55,10 @@ public:
 	void selectGameObject(GameObject* gameObject);
 	GameObject* getGameObject(uint UID);
 
+	void addComponent(Component* component);
+	Component* getComponent(uint UID);
+	void removeComponent(Component* component);
+
 	//Provisional
 	void FindCameras(GameObject* parent);
 	void ChangeCulling(GameObject* GO, bool culling = true);
@@ -80,5 +85,6 @@ public:
 private:
 
 	map<uint, GameObject*> gameObjects;
+	map<uint, Component*> components;
 };
 #endif // !__MODULESCENE_H__

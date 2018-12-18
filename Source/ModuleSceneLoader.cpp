@@ -608,11 +608,12 @@ bool ModuleSceneLoader::loadScene(JSON_File* scene)
 	JSON_Value* gameObjects = scene->getValue("Game Objects"); //It is an array of values
 	if (gameObjects->getRapidJSONValue()->IsArray()) //Just make sure
 	{
+		std::map<uint, uint> LinkerComponents;
 		std::map<uint, GameObject*> gameobjects;
 		for (int i = 0; i < gameObjects->getRapidJSONValue()->Size(); i++)
 		{
 			GameObject* GO = new GameObject();
-			uint UID = GO->Load(gameObjects->getValueFromArray(i));
+			uint UID = GO->Load(gameObjects->getValueFromArray(i), LinkerComponents);
 			gameobjects.insert(std::pair<uint, GameObject*>(UID, GO));
 			App->camera->BBtoLook.Enclose(GO->boundingBox);
 		}
@@ -640,6 +641,14 @@ bool ModuleSceneLoader::loadScene(JSON_File* scene)
 			if (animation != nullptr)
 			{
 				animation->assignResource(animation->RUID);
+			}
+			ComponentMesh* mesh = (ComponentMesh*)(*it_go).second->GetComponent(MESH);
+			if (mesh != nullptr)
+			{
+				for (int i = 0; i < mesh->componentsBones.size(); i++)
+				{
+					mesh->componentsBones[i] = LinkerComponents[mesh->componentsBones[i]];
+				}
 			}
 		}
 	}
