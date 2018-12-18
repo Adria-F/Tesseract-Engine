@@ -47,7 +47,15 @@ bool ComponentMesh::Update(float dt)
 	//Assign Vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glVertexPointer(3, GL_FLOAT, 0, &auxVertex[0]);
+
+	if (App->inGameMode())
+	{
+		glVertexPointer(3, GL_FLOAT, 0, &auxVertex[0]);
+	}
+	else
+	{
+		glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+	}
 
 	//Assign texture
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -157,15 +165,15 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 			ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
 			if (bone != nullptr && rBone != nullptr)
 			{
-				float4x4 boneTransform = ((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix*rBone->Offset;
+
+
+				float4x4 boneTransform = (((ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix)*rBone->Offset;
 
 				for (int j = 0; j < rBone->numWeights; j++)
 				{
 					uint VertexIndex = rBone->weights[j].VertexID;
-
-					float3 originalV(&mesh->vertices[VertexIndex * 3]);
-
-					float3 movementWeight = boneTransform.TransformPos(originalV);
+					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
+					float3 movementWeight = boneTransform.TransformPos(startingVertex);
 
 					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
