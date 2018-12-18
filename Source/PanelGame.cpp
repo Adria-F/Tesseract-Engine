@@ -18,9 +18,6 @@
 PanelGame::PanelGame(const char* name) : Panel(name)
 {
 	active = true;
-	gamePaused = false;
-	step = false;
-	gametimer = 0;
 }
 
 
@@ -51,107 +48,6 @@ void PanelGame::Draw()
 
 	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_MIDDLE) != KEY_REPEAT)
 		App->gui->hoveringScene = ImGui::IsMouseHoveringWindow();*/
-
-	ImGui::BeginMenuBar();
-
-	if (!App->GameMode)
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0.95f,0.5f,0.0f,0.7f });
-	else
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
-
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
-
-	if (App->GameMode)
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
-
-	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85) / 2);
-	if (ImGui::ArrowButton("play", ImGuiDir_Right))
-	{
-		gametimer = 0;
-
-		if (!App->GameMode)
-		{
-			App->Save();
-			App->GameMode = true;
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
-		}
-		else
-		{
-			App->Load();
-			App->GameMode = false;
-			App->GamePaused = false;
-			ImGui::PopStyleColor();
-		}
-	}
-	if (App->GameMode)
-		ImGui::PopStyleColor();
-
-	ImGui::SameLine();
-
-	if (App->GamePaused)
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
-
-	if (ImGui::Button("||", { 23,19 }) && App->GameMode)
-	{
-		if (!App->GamePaused)
-		{
-			App->GamePaused = true;
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
-		}
-		else
-		{
-			App->GamePaused = false;
-			ImGui::PopStyleColor();
-		}
-	}
-	if (App->GamePaused)
-		ImGui::PopStyleColor();
-
-	ImGui::PopStyleColor(2);
-	ImGui::SameLine();
-
-	if (!App->GameMode)
-		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
-	else
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
-
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
-	if (App->GameMode && !App->GamePaused && step == true)
-	{
-		App->GamePaused = true;
-		step = false;
-	}
-
-	if (App->GameMode)
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.1f,0.1f,0.65f,0.7f });
-	if (ImGui::Button("->", { 23,19 }) && App->GameMode && App->GamePaused)
-	{
-		App->GamePaused = false;
-		step = true;
-	}
-	if (App->GameMode)
-		ImGui::PopStyleColor();
-	ImGui::PopStyleColor(2);
-
-	char sec[64], min[64];
-
-	float framerelation = (float)App->getFramerateCap() / (float)App->getGameFramerateCap();
-
-	gametimer += App->game_dt / (framerelation*framerelation);
-	int nsec = ((int)gametimer) % 60;
-	int nmin = ((int)gametimer / 60);
-
-	sprintf(sec, "%02d", nsec);
-	sprintf(min, "%02d", nmin);
-
-	std::string smin = min;
-	std::string ssec = sec;
-	std::string total = smin + ":" + ssec;
-
-	ImGui::Text(total.c_str());
-	ImGui::EndMenuBar();
-
-
 
 	ImGui::End();
 }

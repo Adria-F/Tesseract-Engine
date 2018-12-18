@@ -130,7 +130,7 @@ update_status ModuleGUI::PreUpdate(float dt)
 	ImGui::SetNextWindowBgAlpha(0.0f);
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
@@ -138,6 +138,8 @@ update_status ModuleGUI::PreUpdate(float dt)
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("DockSpace", 0, window_flags);
 	ImGui::PopStyleVar(3);
+
+	drawToolsMenu();
 
 	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_RenderWindowBg);
@@ -363,6 +365,121 @@ void ModuleGUI::Draw()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleGUI::drawToolsMenu()
+{
+	ImGui::BeginMenuBar();
+
+	bool changedGameMode = false;
+	bool changedPause = false;
+	bool doStep = false;
+	static bool step = false;
+
+	if (!App->inGameMode())
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.95f,0.5f,0.0f,0.7f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.95f,0.3f,0.0f,0.5f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f,0.37f,0.0f,1.0f });
+	}
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.5f,0.5f,0.95f,0.7f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.3f,0.3f,0.95f,0.5f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.1f,0.1f,0.65f,0.7f });
+	}
+
+	if (App->inGameMode())
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
+
+	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 85) / 2);
+	changedGameMode = ImGui::ArrowButton("play", ImGuiDir_Right);
+
+	if (App->inGameMode())
+		ImGui::PopStyleColor();
+
+	ImGui::SameLine();
+
+	if (App->isGamePaused() || step)
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f,0.1f,0.65f,0.7f });
+
+	changedPause = ImGui::Button("||", { 23,19 });
+
+	if (App->isGamePaused() || step)
+		ImGui::PopStyleColor();
+
+	ImGui::SameLine();
+
+
+	if (!App->inGameMode() || !App->isGamePaused())
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f,1.0f,1.0f,0.2f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f,1.0f,1.0f,0.2f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1.0f,1.0f,1.0f,0.2f });
+	}
+
+	doStep = ImGui::Button("->", { 23,19 });
+
+	if (!App->inGameMode() || !App->isGamePaused())
+		ImGui::PopStyleColor(3);
+
+	//Buttons actions
+	if (changedGameMode)
+	{
+		if (!App->inGameMode())
+		{
+			App->Save();
+			App->StartGame();
+		}
+		else
+		{
+			App->Load(); //Game mode is set to false after loading the virtual scene			
+			App->StopGame();
+		}
+	}
+	if (changedPause && App->inGameMode())
+	{
+		if (!App->isGamePaused())
+		{
+			App->PauseGame(true);
+		}
+		else
+		{
+			App->PauseGame(false);
+		}
+	}
+	if (step)
+	{
+		App->PauseGame(true);
+		step = false;
+	}
+	if (doStep && App->inGameMode() && App->isGamePaused())
+	{
+		App->PauseGame(false);
+		step = true;
+	}
+
+	//Game time
+	char sec[64], min[64];
+
+	float framerelation = (float)App->getFramerateCap() / (float)App->getGameFramerateCap();
+
+	float gametimer = App->ReadGameTime()/1000;
+	int nsec = ((int)gametimer) % 60;
+	int nmin = ((int)gametimer / 60);
+
+	sprintf(sec, "%02d", nsec);
+	sprintf(min, "%02d", nmin);
+
+	std::string smin = min;
+	std::string ssec = sec;
+	std::string total = smin + ":" + ssec;
+
+	ImGui::Text(total.c_str());
+
+	ImGui::PopStyleColor(3);
+
+	ImGui::EndMenuBar();
 }
 
 bool ModuleGUI::isMouseOnGUI() const

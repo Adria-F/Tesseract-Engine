@@ -565,7 +565,7 @@ bool ModuleSceneLoader::loadSceneFile(const char * scene_name, bool isFBX)
 	else
 		return false;
 
-	if (App->GameMode == false && !isFBX)
+	if (App->inGameMode() == false && !isFBX)
 		App->camera->FitCamera(App->scene_intro->root->boundingBox);
 
 	App->JSON_manager->closeFile(scene);

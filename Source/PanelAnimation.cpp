@@ -90,7 +90,7 @@ void PanelAnimation::Draw()
 	}
 
 	//RedLine 
-	if (!App->GameMode)
+	if (!App->inGameMode())
 	{
 		ImGui::GetWindowDrawList()->AddLine({ redbar.x,redbar.y - 10 }, ImVec2(redbar.x, redbar.y + 165), IM_COL32(255, 0, 0, 100), 1.0f);
 		progress = 0.0f;
@@ -100,7 +100,7 @@ void PanelAnimation::Draw()
 	{
 		ImGui::GetWindowDrawList()->AddLine({ redbar.x + progress,redbar.y - 10 }, ImVec2(redbar.x + progress, redbar.y + 165), IM_COL32(255, 0, 0, 255), 1.0f);
 
-		if (!App->GamePaused)
+		if (!App->isGamePaused())
 		{
 			progress += zoom;
 			scrolled = false;

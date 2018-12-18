@@ -50,16 +50,19 @@ public:
 	ModuleFileSystem* fileSystem = nullptr;
 	ModuleSceneLoader* scene_loader= nullptr;
 
-	Timer	game_timer;
-	bool GameMode = false;
-	int GameframerateCap = 60;
+	//Timer game_timer;
 	float game_dt = 0.0f;
-	bool GamePaused = false;
 
 private:
 
 	Timer	ms_timer;
 	float	dt;
+
+	float gameTime = 0;
+	float gamePauseTime = 0;
+	bool GameMode = false;
+	int GameframerateCap = 60;
+	bool GamePaused = false;
 
 	std::list<Module*> list_modules;
 	std::string appName = "";
@@ -90,6 +93,15 @@ public:
 	void RequestBrowser(const char * url) const;
 
 	bool SaveDefaultConfig(const char* path) const;
+
+	void StartGame();
+	void PauseGame(bool pause);
+	void StopGame();
+	//In milliseconds
+	Uint32 ReadGameTime();
+
+	bool inGameMode() const;
+	bool isGamePaused() const;
 
 	void Load();
 	void Save();

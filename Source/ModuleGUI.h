@@ -55,6 +55,8 @@ public:
 
 	void Draw();
 
+	void drawToolsMenu();
+
 	bool isMouseOnGUI() const;
 	bool GUIKeppsKeyboard() const;
 

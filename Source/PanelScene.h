@@ -15,13 +15,6 @@ public:
 
 	ImVec2 size = { 0,0 };
 	bool resizedLastFrame = false;
-
-private:
-
-	float gametimer=0.0f;
-	bool gamePaused = false;
-	bool step = false;
-
 };
 
 #endif // !__PANELSCENE_H__

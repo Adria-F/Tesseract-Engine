@@ -119,7 +119,7 @@ bool Application::Init()
 	
 	JSON_manager->closeFile(document);
 	ms_timer.Start();
-	game_timer.Stop();
+	//game_timer.Stop();
 	GameMode = false;
 	counting = false;
 	game_dt = 0;
@@ -137,16 +137,16 @@ void Application::PrepareUpdate()
 	}
 	else
 	{
-		game_dt = dt / ((float)GameframerateCap / (float)framerateCap);
+		game_dt = dt / ((float)framerateCap/ (float)GameframerateCap);
 	}
 
 	ms_timer.Start();
 
-	if (GameMode && !counting)
+	/*if (GameMode && !counting)
 	{
 		counting =true;
 		game_timer.Start();
-	}
+	}*/
 }
 
 // ---------------------------------------------
@@ -164,6 +164,8 @@ void Application::FinishUpdate()
 	}
 	else
 	{
+		gameTime += dt / ((float)framerateCap / (float)GameframerateCap);
+
 		gui->logGameFPS(1 / game_dt, game_dt * 1000);
 	}
 	
@@ -187,11 +189,11 @@ void Application::FinishUpdate()
 		doLoad = false;
 	}
 
-	if (!GameMode && counting)
+	/*if (!GameMode && counting)
 	{
 		game_timer.Stop();
 		counting = false;
-	}
+	}*/
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -296,6 +298,45 @@ bool Application::SaveDefaultConfig(const char* path)const
 	JSON_manager->closeFile(document);
 	
 	return ret;
+}
+
+void Application::StartGame()
+{
+	GameMode = true;
+}
+
+void Application::PauseGame(bool pause)
+{
+	if (pause && !GamePaused)
+		gamePauseTime = gameTime;
+	if (!pause && GamePaused)
+		gameTime = gamePauseTime;
+	
+	GamePaused = pause;
+}
+
+void Application::StopGame()
+{
+	GameMode = GamePaused = false;
+	gameTime = 0;
+}
+
+Uint32 Application::ReadGameTime()
+{
+	if (!GamePaused)
+		return gameTime*1000;
+	else
+		return gamePauseTime*1000;
+}
+
+bool Application::inGameMode() const
+{
+	return GameMode;
+}
+
+bool Application::isGamePaused() const
+{
+	return GamePaused;
 }
 
 void Application::Load()
