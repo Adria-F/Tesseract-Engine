@@ -194,6 +194,7 @@ void ComponentCamera::Save(JSON_Value * component) const
 	JSON_Value* camera = component->createValue();
 
 	camera->addInt("Type", type);
+	camera->addUint("UID", UID);
 	
 	camera->addInt("Frustum Type", frustum.type);
 
