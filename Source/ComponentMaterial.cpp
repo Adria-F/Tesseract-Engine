@@ -24,37 +24,6 @@ ComponentMaterial::~ComponentMaterial()
 
 bool ComponentMaterial::Update(float dt)
 {
-	ResourceMaterial* mat = (ResourceMaterial*)App->resources->GetResource(RUID);
-	if (!active || mat == nullptr)
-		return false;
-
-	if (mat->GetType() == R_COLOR)
-	{
-		glColor4f(mat->color.x, mat->color.y, mat->color.z, mat->color.w);
-		if (transparentColor)
-		{
-			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, 0.0f);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
-	}
-	else
-	{
-		//TMP
-		glColor4f(1, 1, 1, 1);
-		if (doAlphaTest)
-		{
-			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, alphaTest);
-		}
-		if (doBlendColors)
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
-		glBindTexture(GL_TEXTURE_2D, mat->GL_id);
-	}
 
 	return true;
 }

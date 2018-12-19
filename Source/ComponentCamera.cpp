@@ -189,6 +189,11 @@ bool ComponentCamera::ContainsAABB(const AABB& boundingBox)
 	return false;
 }
 
+float ComponentCamera::getDistance(const AABB & boundingBox)
+{
+	return boundingBox.Distance(frustum.pos);
+}
+
 void ComponentCamera::Save(JSON_Value * component) const
 {
 	JSON_Value* camera = component->createValue();

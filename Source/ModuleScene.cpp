@@ -108,7 +108,7 @@ bool ModuleScene::Load(JSON_File* document) {
 	return true;
 }
 
-void ModuleScene::Draw()
+void ModuleScene::FillDrawBuffer()
 {
 	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
 	{
@@ -242,6 +242,12 @@ void ModuleScene::newScene()
 		it_ch++;
 	}
 	root->childs.clear();
+
+	App->renderer3D->renderBuffer.clear();
+	while (App->renderer3D->blendColorsBuffer.size() > 0)
+	{
+		App->renderer3D->blendColorsBuffer.pop();
+	}
 }
 
 void ModuleScene::StartQuadTree()

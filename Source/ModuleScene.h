@@ -36,7 +36,7 @@ public:
 
 	bool Load(JSON_File* document);
 
-	void Draw();
+	void FillDrawBuffer();
 
 	void wantToSaveScene();
 	void wantToLoadScene();

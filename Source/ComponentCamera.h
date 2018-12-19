@@ -21,6 +21,7 @@ public:
 	void DrawInfo();
 
 	bool ContainsAABB(const AABB& boundingBox);
+	float getDistance(const AABB& boundingBox);
 
 	void RecalculateBB();
 

@@ -29,8 +29,6 @@ public:
 
 	void Update(float dt);
 	void DrawComponentsUI();
-	void DrawBB(const AABB& BB, vec color) const; 
-	void DrawBB(const OBB& BB, vec color) const;
 
 	void Save(JSON_Value* gameobject);
 	uint Load(JSON_Value* gameobject, std::map<uint, uint>& LinkerComponents);

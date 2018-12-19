@@ -13,6 +13,10 @@
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
 
+#include "ModuleResource.h"
+#include "ResourceMaterial.h"
+#include "ResourceMesh.h"
+
 #include "PanelScene.h"
 
 #ifdef _DEBUG
@@ -238,7 +242,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Draw Scene  ---------------------------	
 
-	App->scene_intro->Draw();
+	App->scene_intro->FillDrawBuffer();
+
+	for (int i = 0; i < renderBuffer.size(); ++i)
+	{
+		drawGameObject(renderBuffer[i]);
+	}
+	renderBuffer.clear();
+
+	int size = blendColorsBuffer.size();
+	for (int i = 0; i < size; ++i)
+	{
+		GameObject* GO = blendColorsBuffer.top();
+
+		drawGameObject(GO);
+
+		blendColorsBuffer.pop();
+	}
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -290,7 +310,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(ViewM);
 
-	App->scene_intro->Draw();
+	App->scene_intro->FillDrawBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
@@ -425,4 +445,195 @@ void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 			CalculateGlobalMatrix((*it_c));
 		}
 	}
+}
+
+void ModuleRenderer3D::drawGameObject(GameObject* gameObject)
+{
+	if (gameObject->material != nullptr && gameObject->material->active)
+	{
+		ResourceMaterial* mat = (ResourceMaterial*)App->resources->GetResource(gameObject->material->RUID);
+		if (mat->GetType() == R_COLOR)
+		{
+			glColor4f(mat->color.x, mat->color.y, mat->color.z, mat->color.w);
+			if (gameObject->material->transparentColor)
+			{
+				glEnable(GL_ALPHA_TEST);
+				glAlphaFunc(GL_GREATER, 0.0f);
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+		}
+		else
+		{
+			glColor4f(1, 1, 1, 1);
+			if (gameObject->material->doAlphaTest)
+			{
+				glEnable(GL_ALPHA_TEST);
+				glAlphaFunc(GL_GREATER, gameObject->material->alphaTest);
+			}
+			if (gameObject->material->doBlendColors)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+			glBindTexture(GL_TEXTURE_2D, mat->GL_id);
+		}
+	}
+
+	if (gameObject->mesh != nullptr && gameObject->mesh->active)
+	{
+		glPushMatrix();
+		glMultMatrixf((float*)gameObject->transformation->globalMatrix.Transposed().v);
+
+		ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(gameObject->mesh->RUID);
+		
+		float* auxVertex = new float[mesh->num_vertices * 3];
+		memcpy(auxVertex, &mesh->vertices[0], sizeof(float)*mesh->num_vertices * 3);
+
+		gameObject->mesh->Skining(mesh, auxVertex);
+
+		//Assign Vertices
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+
+		if (App->inGameMode())
+		{
+			glVertexPointer(3, GL_FLOAT, 0, &auxVertex[0]);
+		}
+		else
+		{
+			glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+		}
+
+		//Assign texture
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		if (mesh->texCoords != nullptr)
+			glTexCoordPointer(2, GL_FLOAT, 0, &mesh->texCoords[0]);
+
+		//Draw
+		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		//Disable
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		if (Normals && mesh->normals != nullptr)
+		{
+			glLineWidth(2.0f);
+			glColor3f(0, 0.5f, 1);
+
+			glBegin(GL_LINES);
+			for (int i = 0; i < mesh->num_vertices * 3; i = i + 3)
+			{
+				glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+				glVertex3f(-mesh->normals[i] * 3 + mesh->vertices[i], -mesh->normals[i + 1] * 3 + mesh->vertices[i + 1], -mesh->normals[i + 2] * 3 + mesh->vertices[i + 2]);
+			}
+			glEnd();
+
+			glColor3f(1, 1, 1);
+			glLineWidth(1.0f);
+		}
+
+		if (Faces && mesh->faceNormals.size() > 0)
+		{
+			int vert_normal = 0;
+
+			glLineWidth(2.0f);
+			glColor3f(0, 0.5f, 1);
+
+			glBegin(GL_LINES);
+			for (int i = 0; i < mesh->faceNormals.size(); i = i + 6)
+			{
+				glVertex3f(mesh->faceNormals[i], mesh->faceNormals[i + 1], mesh->faceNormals[i + 2]);
+				glVertex3f(mesh->faceNormals[i + 3] + mesh->faceNormals[i], mesh->faceNormals[i + 4] + mesh->faceNormals[i + 1], mesh->faceNormals[i + 5] + mesh->faceNormals[i + 2]);
+				vert_normal += 9;
+			}
+			glEnd();
+
+			glColor3f(1, 1, 1);
+			glLineWidth(2.0f);
+		}
+
+		RELEASE_ARRAY(auxVertex);
+
+		glPopMatrix();
+	}
+
+	glColor4f(1, 1, 1, 1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+
+	if (ShowBB || gameObject->selected)
+	{
+		DrawBB(gameObject->boundingBox, { 0, 0.5f, 1 });
+	}
+}
+
+void ModuleRenderer3D::DrawBB(const AABB & BB, vec color) const
+{
+	glLineWidth(1.5f);
+	glColor3f(color.x, color.y, color.z);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glEnd();
+
+	glColor3f(1, 1, 1);
+	glLineWidth(1.0f);
+}
+
+void ModuleRenderer3D::addToRenderBuffer(GameObject* gameObject)
+{
+	if (gameObject->material != nullptr && gameObject->material->doBlendColors)
+	{
+		blendColorsBuffer.push(gameObject);
+	}
+	else
+		renderBuffer.push_back(gameObject);
+}
+
+bool closerToCamera::operator()(const GameObject* Obj_1, const GameObject* Obj_2) const
+{
+	return App->camera->camera->getDistance(Obj_1->boundingBox) < App->camera->camera->getDistance(Obj_2->boundingBox);
 }

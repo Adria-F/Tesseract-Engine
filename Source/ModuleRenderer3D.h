@@ -6,6 +6,7 @@
 
 #include <list>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -21,6 +22,11 @@ class ComponentMaterial;
 class ComponentCamera;
 class GameObject;
 
+struct closerToCamera
+{
+	bool operator()(const GameObject* Obj_1, const GameObject* Obj_2)const;
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -35,10 +41,14 @@ public:
 
 	void OnResize(int width, int height);
 
-
 	bool SaveDefaultConfig(JSON_File* document)const;
 
 	void CalculateGlobalMatrix(GameObject* gameObject);
+
+	void drawGameObject(GameObject* gameObject);
+	void DrawBB(const AABB& BB, vec color) const;
+
+	void addToRenderBuffer(GameObject* gameObject);
 
 public:
 
@@ -78,6 +88,8 @@ public:
 	vector<ComponentCamera*> cameras;
 
 	/*list<Mesh*> meshes;*/
+	std::priority_queue<GameObject*, std::vector<GameObject*>, closerToCamera> blendColorsBuffer;
+	std::vector<GameObject*> renderBuffer;
 };
 
 #endif // !__MODULERENDERER3D_H__
