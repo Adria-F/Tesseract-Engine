@@ -137,7 +137,7 @@ void Application::PrepareUpdate()
 	}
 	else
 	{
-		game_dt = dt / ((float)framerateCap/ (float)GameframerateCap);
+		game_dt = dt / ((float)GameframerateCap/ (float)framerateCap);
 	}
 
 	ms_timer.Start();
@@ -317,7 +317,7 @@ void Application::PauseGame(bool pause)
 
 void Application::StopGame()
 {
-	GameMode = GamePaused = false;
+	GamePaused = false;
 	gameTime = 0;
 }
 
