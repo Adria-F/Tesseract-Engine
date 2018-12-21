@@ -448,13 +448,16 @@ void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 			if (gameObject->parent != nullptr)
 			{
 				ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
-				if (rBone != nullptr && (ComponentBone*)gameObject->parent->GetComponent(BONE) != nullptr)
+				if (rBone != nullptr)
 				{
-					bone->globalOffset = ((ComponentBone*)gameObject->parent->GetComponent(BONE))->globalOffset*rBone->Offset.Inverted();
-				}
-				else
-				{
-					bone->globalOffset = rBone->Offset.Inverted();
+					if ((ComponentBone*)gameObject->parent->GetComponent(BONE) != nullptr)
+					{
+						bone->globalOffset = ((ComponentBone*)gameObject->parent->GetComponent(BONE))->globalOffset*rBone->Offset.Inverted();
+					}
+					else
+					{
+						bone->globalOffset = rBone->Offset.Inverted();
+					}
 				}
 			}
 		}

@@ -485,6 +485,15 @@ std::vector<ResourceMaterial*> ModuleSceneLoader::importMaterials(const char* pa
 
 ResourceMaterial* ModuleSceneLoader::importColor(const char* path, const aiScene* scene, int index)
 {
+	float4 color;
+	aiColor3D aiColor(1.f, 1.f, 1.f);
+	scene->mMaterials[index]->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
+	color = { aiColor.r, aiColor.g, aiColor.b, 1.0f };
+
+	ResourceMaterial* resource = (ResourceMaterial*)App->resources->getColorResource(color.x, color.y, color.z, color.w);
+	if (resource != nullptr)
+		return resource;
+
 	std::string currentPath;
 	if (App->fileSystem->fileExists(MATERIALS_FOLDER))
 	{
@@ -498,15 +507,14 @@ ResourceMaterial* ModuleSceneLoader::importColor(const char* path, const aiScene
 		App->fileSystem->createDirectory(currentPath.c_str());
 	}
 
-	ResourceMaterial* resource = (ResourceMaterial*)App->resources->AddResource(R_COLOR, 0);
-	aiColor3D color(1.f, 1.f, 1.f);
-	scene->mMaterials[index]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-	resource->color = { color.r, color.g, color.b, 1.0f };
-	resource->name = App->resources->getResourceAvailableName("Color", R_COLOR);
+	resource = (ResourceMaterial*)App->resources->AddResource(R_COLOR, 0);
+	resource->color = color;
+	//resource->name = App->resources->getResourceAvailableName("Color", R_COLOR);
+	resource->setColorName();
 
 	//Create a file for stroing the material
 	char* buffer = new char[sizeof(float) * 4];
-	float colors[4] = { color.r, color.g, color.b, 1.0f };
+	float colors[4] = { color.x, color.y, color.z, 1.0f };
 	memcpy(buffer, colors, sizeof(float) * 4);
 	
 	currentPath += resource->name + MATERIAL_EXTENSION;
