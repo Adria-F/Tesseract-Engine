@@ -49,6 +49,7 @@ public:
 	void DrawBB(const AABB& BB, vec color) const;
 
 	void addToRenderBuffer(GameObject* gameObject);
+	void removeFromRenderBuffer(GameObject* gameObject);
 
 public:
 
@@ -89,7 +90,7 @@ public:
 
 	/*list<Mesh*> meshes;*/
 	std::priority_queue<GameObject*, std::vector<GameObject*>, closerToCamera> blendColorsBuffer;
-	std::vector<GameObject*> renderBuffer;
+	std::list<GameObject*> renderBuffer;
 };
 
 #endif // !__MODULERENDERER3D_H__

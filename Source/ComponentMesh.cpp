@@ -96,7 +96,7 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 					uint VertexIndex = rBone->weights[j].VertexID;
 					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
 					float3 movementWeight = boneTransform.TransformPos(startingVertex);
-
+					
 					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 2] += movementWeight.z*rBone->weights[j].weight;

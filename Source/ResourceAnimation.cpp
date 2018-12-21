@@ -262,10 +262,5 @@ void BoneTransform::calcTransfrom(float time)
 	{
 		lastTransform.Set(float4x4::FromTRS(position_1, rotation_1, scale_1));
 	}
-
-	
-
-
-	
 }
 

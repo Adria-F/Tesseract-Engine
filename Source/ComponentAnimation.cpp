@@ -29,7 +29,7 @@ bool ComponentAnimation::Update(float dt)
 	}
 
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
-	if (animation != nullptr && debugDraw)
+	if (animation != nullptr)
 	{
 		for (int i = 0; i < animation->numBones; i++)
 		{
@@ -39,7 +39,7 @@ bool ComponentAnimation::Update(float dt)
 			GameObject* GO = App->scene_intro->getGameObject(bones[i]);
 			if (GO != nullptr)
 			{
-				animation->time += dt*0.005f;
+				animation->time += dt;
 				if (animation->time > animation->getDuration())
 				{
 					animation->time -= animation->getDuration();
