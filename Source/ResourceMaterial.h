@@ -18,6 +18,8 @@ public:
 	bool LoadResourceTexture();
 	bool LoadResourceColor();
 
+	void setColorName();
+
 public:
 
 	uint width = 0;

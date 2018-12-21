@@ -320,6 +320,26 @@ std::string ModuleResource::getResourceAvailableName(const char* name, ResType t
 	return ret;
 }
 
+Resource * ModuleResource::getColorResource(float r, float g, float b, float a)
+{
+
+	for (std::map<uint, Resource*>::iterator it_rs = resources.begin(); it_rs != resources.end(); it_rs++)
+	{
+		if ((*it_rs).second->GetType() == R_COLOR)
+		{
+			if (((ResourceMaterial*)(*it_rs).second)->color.x == r &&
+				((ResourceMaterial*)(*it_rs).second)->color.y == g &&
+				((ResourceMaterial*)(*it_rs).second)->color.z == b &&
+				((ResourceMaterial*)(*it_rs).second)->color.w == a)
+			{
+				return (*it_rs).second;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 JSON_File* ModuleResource::getMeta(const char* path) const
 {
 	std::string metaPath = path;

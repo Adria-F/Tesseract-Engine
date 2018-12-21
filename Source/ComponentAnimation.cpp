@@ -86,6 +86,7 @@ void ComponentAnimation::DrawInfo()
 			{
 				activateDebugBones(gameObject, debugDraw);
 			}
+
 			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->ticks,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
@@ -191,6 +192,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 	animation->addInt("Type", type);
 	animation->addUint("UID", UID);
 	animation->addBool("debugDraw", debugDraw);
+	animation->addBool("loop", loop);
 
 	if (rAnimation != nullptr)
 	{
@@ -205,6 +207,7 @@ void ComponentAnimation::Load(JSON_Value * component)
 {
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "animations", component->getString("animation"));
 	debugDraw = component->getBool("debugDraw");
+	loop = component->getBool("loop");
 
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)

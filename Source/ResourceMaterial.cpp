@@ -108,6 +108,36 @@ bool ResourceMaterial::LoadResourceColor()
 	return false;
 }
 
+void ResourceMaterial::setColorName()
+{
+	name = "Color";
+
+	std::string r, g, b, a;
+
+	/*int first = color.x;
+	int test = (int)(color.x * 10);
+	test -= (first * 10);
+	r += std::to_string(first) + "," + std::to_string((int)(color.x * 10) - (first * 10));
+	first = color.y;
+	g += std::to_string(first) + "," + std::to_string((int)(color.y * 10) - (first * 10));
+	first = color.z;
+	b += std::to_string(first) + "," + std::to_string((int)(color.z * 10) - (first * 10));
+	first = color.w;
+	a += std::to_string(first) + "," + std::to_string((int)(color.w * 10) - (first * 10));*/
+
+	char num[64];
+	sprintf(num, "%.2f", color.x);
+	r = num;
+	sprintf(num, "%.2f", color.y);
+	g = num;
+	sprintf(num, "%.2f", color.z);
+	b = num;
+	sprintf(num, "%.2f", color.w);
+	a = num;
+
+	name += '(' + r + '-' + g + '-' + b + '-' + a + ')';
+}
+
 
 bool ResourceMaterial::UnloadFromMemory()
 {

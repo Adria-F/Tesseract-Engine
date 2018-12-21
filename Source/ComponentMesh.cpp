@@ -79,10 +79,14 @@ void ComponentMesh::DrawInfo()
 	}
 }
 
-void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
+float* ComponentMesh::Skining()
 {
-	if (mesh != nullptr)
+	ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(RUID);
+	if (mesh != nullptr && componentsBones.size() > 0)
 	{
+		float* vertices = new float[mesh->num_vertices * 3];
+		memcpy(vertices, &mesh->vertices[0], sizeof(float)*mesh->num_vertices * 3);
+
 		for (int i = 0; i < componentsBones.size(); i++)
 		{
 			ComponentBone* bone = (ComponentBone*)App->scene_intro->getComponent(componentsBones[i]);
@@ -96,14 +100,18 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 					uint VertexIndex = rBone->weights[j].VertexID;
 					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
 					float3 movementWeight = boneTransform.TransformPos(startingVertex);
-					
+
 					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 2] += movementWeight.z*rBone->weights[j].weight;
 				}
 			}
 		}
+
+		return vertices;
 	}
+
+	return nullptr;
 }
 
 void ComponentMesh::Save(JSON_Value * component) const

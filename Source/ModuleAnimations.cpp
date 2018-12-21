@@ -40,7 +40,7 @@ bool ModuleAnimations::importAnimation(aiAnimation* animation, uint UID, std::st
 			//TODO manage dummy nodes
 			newAnimation->boneTransformations[i].NodeName = (animation->mChannels[i]->mNodeName.length > 0) ? animation->mChannels[i]->mNodeName.C_Str() : "Unnamed";
 
-			static const char* transformBones[5] = {
+			/*static const char* transformBones[5] = {
 		"_$AssimpFbx$_PreRotation", "_$AssimpFbx$_Rotation", "_$AssimpFbx$_PostRotation",
 		"_$AssimpFbx$_Scaling", "_$AssimpFbx$_Translation" };
 
@@ -52,7 +52,7 @@ bool ModuleAnimations::importAnimation(aiAnimation* animation, uint UID, std::st
 					newAnimation->boneTransformations[i].NodeName = newAnimation->boneTransformations[i].NodeName.substr(0, pos);
 					break;
 				}
-			}
+			}*/
 
 			newAnimation->boneTransformations[i].numPosKeys = animation->mChannels[i]->mNumPositionKeys;
 			newAnimation->boneTransformations[i].PosKeysValues = new float[newAnimation->boneTransformations[i].numPosKeys * 3];

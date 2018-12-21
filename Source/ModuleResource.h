@@ -26,6 +26,7 @@ public:
 	uint GetResourceByFile(const char* file);
 	std::vector<Resource*> getResourcesByType(ResType type);
 	std::string getResourceAvailableName(const char* name, ResType type);
+	Resource* getColorResource(float r, float g, float b, float a);
 
 	JSON_File* getMeta(const char* path) const;
 	JSON_File* createMeta(const char* path, ResType type) const;

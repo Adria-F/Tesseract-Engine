@@ -19,7 +19,7 @@ public:
 	bool Update(float dt);
 	void DrawInfo();
 
-	void Skining(ResourceMesh* mesh, float* vertices);
+	float* Skining();
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
