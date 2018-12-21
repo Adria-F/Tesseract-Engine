@@ -457,6 +457,7 @@ void ModuleScene::deleteGameObject(GameObject* GO, bool deleteFromParent)
 	}
 
 	gameObjects.erase(GO->UID);
+	App->renderer3D->removeFromRenderBuffer(GO);
 
 	if (selected_GO == GO)
 		selected_GO = nullptr;
@@ -517,10 +518,6 @@ void ModuleScene::ChangeCulling(GameObject* GO, bool culling)
 {
 	if (activeCamera != nullptr)
 		activeCamera->camera->IsCulling = false;
-	else if (culling)
-	{
-		App->renderer3D->Frustum_Culling = true;
-	}
 
 	GO->camera->IsCulling = culling;
 

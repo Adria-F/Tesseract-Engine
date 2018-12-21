@@ -438,7 +438,7 @@ uint ModuleFileSystem::manageDroppedFiles(const char* path)
 		full_path += filename;
 	}
 
-	if (extension == "fbx" || extension == "FBX" || extension == "dae")
+	if (extension == "fbx" || extension == "FBX" || extension == "dae" || extension == "DAE")
 	{
 		ret = App->resources->ImportFile(full_path.c_str(), R_SCENE);
 	}

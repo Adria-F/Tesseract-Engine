@@ -89,8 +89,6 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 			ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
 			if (bone != nullptr && rBone != nullptr)
 			{
-
-
 				float4x4 boneTransform = (((ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix)*rBone->Offset;
 
 				for (int j = 0; j < rBone->numWeights; j++)
@@ -98,7 +96,7 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 					uint VertexIndex = rBone->weights[j].VertexID;
 					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
 					float3 movementWeight = boneTransform.TransformPos(startingVertex);
-
+					
 					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 2] += movementWeight.z*rBone->weights[j].weight;
