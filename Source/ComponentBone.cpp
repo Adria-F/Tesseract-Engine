@@ -24,10 +24,9 @@ ComponentBone::~ComponentBone()
 	RELEASE(line);
 }
 
-bool ComponentBone::Update(float dt)
+bool ComponentBone::drawDebugInfo()
 {
 	ResourceBone* bone = (ResourceBone*)App->resources->GetResource(RUID);
-
 
 	if (debugDraw)
 	{
@@ -49,7 +48,7 @@ bool ComponentBone::Update(float dt)
 		sphere->Render();
 		line->Render();
 	}
-	
+
 	return true;
 }
 

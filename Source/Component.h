@@ -32,6 +32,7 @@ public:
 	void DrawConfig();
 	virtual bool DrawExtraConfig();
 	virtual bool Update(float dt) { return true; }
+	virtual bool drawDebugInfo() { return true; }
 
 	virtual void assignResource(uint UID);
 

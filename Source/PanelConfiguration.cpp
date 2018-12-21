@@ -217,7 +217,7 @@ void PanelConfiguration::Draw()
 		{
 			App->camera->camera->frustum.verticalFov = VFOV * DEGTORAD;
 			App->camera->camera->setAspectRatio(AR);
-			App->renderer3D->changedFOV = true;
+			App->renderer3D->changedSceneFOV = true;
 		}
 		ImGui::NewLine();
 

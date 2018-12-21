@@ -36,7 +36,7 @@ public:
 
 	bool Load(JSON_File* document);
 
-	void FillDrawBuffer();
+	void FillDrawBuffer(bool game = false);
 
 	void wantToSaveScene();
 	void wantToLoadScene();
@@ -67,8 +67,6 @@ public:
 
 	std::string scene_name = "";
 	std::list<GameObject*> cameras;
-
-	list<Primitive*> ShapesToDraw;
 
 	GameObject* root = nullptr;
 	JSON_File* virtualFile = nullptr;

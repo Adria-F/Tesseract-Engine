@@ -25,7 +25,7 @@ ComponentCamera::ComponentCamera(GameObject* gameobject, componentType type) :Co
 
 	RecalculateBB();
 
-	IsCulling = false;
+	IsActive = false;
 }
 
 ComponentCamera::~ComponentCamera()
@@ -34,20 +34,23 @@ ComponentCamera::~ComponentCamera()
 
 bool ComponentCamera::Update(float dt)
 {
-	if (!active)
-		return false;
-
-	DrawFrustum();
-	//CameraBB();
-	
 	if (gameObject != nullptr)
 	{
 		frustum.SetWorldMatrix(gameObject->transformation->globalMatrix.Float3x4Part());
 	}
+
 	return true;
 }
 
-float * ComponentCamera::getViewMatrix()
+bool ComponentCamera::drawDebugInfo()
+{
+	if (active)
+		DrawFrustum();
+
+	return true;
+}
+
+float* ComponentCamera::getViewMatrix()
 {
 	static float4x4 matrix;
 	matrix = frustum.ViewMatrix();
@@ -146,9 +149,9 @@ void ComponentCamera::DrawInfo()
 		{
 			setAspectRatio(AR);
 		}
-		if (ImGui::Checkbox("Culling", &IsCulling))
+		if (ImGui::Checkbox("Main Camera", &IsActive))
 		{
-			App->scene_intro->ChangeCulling(gameObject, IsCulling);
+			App->scene_intro->ChangeCulling(gameObject, IsActive);
 		}
 	}
 }
@@ -212,7 +215,7 @@ void ComponentCamera::Save(JSON_Value * component) const
 
 	camera->addFloat("VFOV", frustum.verticalFov);
 	camera->addFloat("Aspect Ratio", frustum.AspectRatio());
-	camera->addBool("Culling", IsCulling);
+	camera->addBool("Culling", IsActive);
 
 	component->addValue("", camera);
 }
@@ -230,7 +233,7 @@ void ComponentCamera::Load(JSON_Value * component)
 
 	frustum.verticalFov = component->getFloat("VFOV");
 	setAspectRatio(component->getFloat("Aspect Ratio"));
-	IsCulling = component->getBool("Culling");
+	IsActive = component->getBool("Culling");
 }
 
 void ComponentCamera::CameraBB()

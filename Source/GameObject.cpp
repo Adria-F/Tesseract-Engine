@@ -53,28 +53,13 @@ GameObject::~GameObject()
 
 void GameObject::Update(float dt)
 {
-	//TODO:Use the render camera for the frustum culling 
-	
-	if (active && (culling || !App->renderer3D->Frustum_Culling))
+	if (active)
 	{
-		App->renderer3D->addToRenderBuffer(this);
-
 		if (animation != nullptr)
 			animation->Update(dt);
 
-		for (std::list<Component*>::iterator it_c = components.begin(); it_c != components.end(); it_c++)
-		{
-			if ((*it_c)->type == BONE)
-				(*it_c)->Update(dt);
-		}
-
 		if (camera != nullptr)
 			camera->Update(dt);
-
-		/*if (App->renderer3D->ShowBB)
-		{
-			DrawBB(App->camera->BBtoLook, { 0.8f,0.5f,0.5f });
-		}*/
 
 		for (std::list<GameObject*>::iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
 		{
@@ -102,6 +87,33 @@ void GameObject::Update(float dt)
 		}
 		else
 			it_c++;
+	}
+}
+
+void GameObject::Draw(bool game) const
+{
+	if (active && (culling || !App->renderer3D->Frustum_Culling))
+	{
+		App->renderer3D->addToRenderBuffer(this);
+
+		if (!game)
+		{
+			//Draw the debug info for components
+			for (std::list<Component*>::const_iterator it_c = components.begin(); it_c != components.end(); it_c++)
+			{
+				(*it_c)->drawDebugInfo();
+			}
+		}
+
+		if (App->renderer3D->ShowBB || selected)
+		{
+			App->renderer3D->DrawBB(boundingBox, { 0, 0.5f, 1 });
+		}
+
+		for (std::list<GameObject*>::const_iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
+		{
+			(*it_c)->Draw(game);
+		}
 	}
 }
 

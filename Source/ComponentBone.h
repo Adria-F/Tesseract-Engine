@@ -12,7 +12,7 @@ public:
 	ComponentBone(GameObject* parent, componentType type);
 	~ComponentBone();
 
-	bool Update(float dt);
+	bool drawDebugInfo();
 	void DrawInfo();
 
 	void Save(JSON_Value* component) const;

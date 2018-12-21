@@ -223,6 +223,15 @@ update_status ModuleGUI::Update(float dt)
 
 update_status ModuleGUI::PostUpdate(float dt)
 {	
+	ImGui::Begin("Scene");	
+	if (ImGui::IsWindowFocused() || ImGui::IsWindowAppearing())
+		lastFocusScene = true;
+	ImGui::End();
+
+	ImGui::Begin("Game");
+	if (ImGui::IsWindowFocused() || ImGui::IsWindowAppearing())
+		lastFocusScene = false;
+	ImGui::End();
 
 	return update_status(UPDATE_CONTINUE);
 }
@@ -365,6 +374,28 @@ void ModuleGUI::Draw()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+}
+
+bool ModuleGUI::sceneVisible() const
+{
+	return Scene->isActive() && (!sceneAndGameDocked() || lastFocusScene);
+}
+
+bool ModuleGUI::gameVisible() const
+{
+	return GameScene->isActive() && (!sceneAndGameDocked() || !lastFocusScene);
+}
+
+bool ModuleGUI::sceneAndGameDocked() const
+{
+	ImGui::Begin("Scene");
+	int scene = ImGui::GetWindowDockId();
+	ImGui::End();
+	ImGui::Begin("Game");
+	int game = ImGui::GetWindowDockId();
+	ImGui::End();
+
+	return scene == game && scene != 0;
 }
 
 void ModuleGUI::drawToolsMenu()

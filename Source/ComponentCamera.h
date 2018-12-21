@@ -11,6 +11,7 @@ public:
 	~ComponentCamera();
 
 	bool Update(float dt);
+	bool drawDebugInfo();
 
 	float* getViewMatrix();
 	float* getProjectionMatrix();
@@ -34,7 +35,7 @@ public:
 
 	Frustum frustum;
 	AABB cameraBB;
-	bool IsCulling =false;
+	bool IsActive =false;
 	float4x4 currentTransform=float4x4::identity;
 };
 

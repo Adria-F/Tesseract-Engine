@@ -30,7 +30,7 @@ bool ModuleCamera3D::Init(JSON_File* document)
 {
 	camera = new ComponentCamera(nullptr, CAMERA);
 	camera->active = false;
-	camera->IsCulling = true;
+	camera->IsActive = true;
 
 	JSON_Value* cameraConf = document->getValue("camera");
 	if (cameraConf != nullptr)
@@ -75,7 +75,7 @@ void ModuleCamera3D::OnResize(int width, int height)
 {
 	float newAR = (float)width / (float)height;
 	camera->setAspectRatio(newAR);
-	App->renderer3D->changedFOV = true;
+	App->renderer3D->changedSceneFOV = true;
 }
 
 // -----------------------------------------------------------------

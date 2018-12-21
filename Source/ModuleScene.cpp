@@ -95,6 +95,8 @@ update_status ModuleScene::Update(float dt)
 		StartQuadTree();
 	}
 
+	root->Update(App->game_dt); //Update gameObjects
+
 	std::map<uint, GameObject*>::iterator it_go = gameObjects.begin();
 	while (it_go != gameObjects.end())
 	{
@@ -149,72 +151,63 @@ bool ModuleScene::Load(JSON_File* document) {
 	return true;
 }
 
-void ModuleScene::FillDrawBuffer()
+void ModuleScene::FillDrawBuffer(bool game)
 {
-	for (list<Primitive*>::iterator it = ShapesToDraw.begin(); it != ShapesToDraw.end(); it++)
-	{
-		(*it)->Render();
-	}
+	ComponentCamera* camera = (game&&activeCamera != nullptr) ? activeCamera->camera : App->camera->camera;
 
-	for (std::list<GameObject*>::iterator it_c = cameras.begin(); it_c != cameras.end(); it_c++)
+	if ((camera == App->camera->camera && App->renderer3D->Frustum_Culling) || (activeCamera != nullptr && camera == activeCamera->camera && activeCamera->camera->IsActive))
 	{
-		GameObject* sceneCamera = (*it_c);
-
-		if (sceneCamera != nullptr && sceneCamera->camera->IsCulling)
+		//Static objects-------------------------------------------------------------------
+		if (quadTree->QT_Box != nullptr)
 		{
-			//Static objects-------------------------------------------------------------------
-			if (quadTree->QT_Box != nullptr)
-			{
-				//Fill the vector of the objects inside the same quads of the camera's bb
-				//quadTree->Intersect(ObjectsToDraw, activeCamera->frustum);
-				quadTree->Intersect(ObjectsToDraw, sceneCamera->camera->frustum);
-				ObjectsToDraw.sort();
-				ObjectsToDraw.unique(Same_GameObject);
-
-				//From the possible objects only draw the ones inside the frustum
-				for (list<GameObject*>::iterator Otd_it = ObjectsToDraw.begin(); Otd_it != ObjectsToDraw.end(); Otd_it++)
-				{
-					if (sceneCamera->camera->ContainsAABB((*Otd_it)->boundingBox))
-					{
-						(*Otd_it)->culling = true;
-					}
-					else
-					{
-						(*Otd_it)->culling = false;
-					}
-				}
-			}
-
-			//Non-Static objects-------------------------------------------------------------------
+			//Fill the vector of the objects inside the same quads of the camera's bb
+			quadTree->Intersect(ObjectsToDraw, camera->frustum);
+			ObjectsToDraw.sort();
+			ObjectsToDraw.unique(Same_GameObject);
 
 			//From the possible objects only draw the ones inside the frustum
-			for(std::map<uint,GameObject*>::iterator it_ch=gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
+			for (list<GameObject*>::iterator Otd_it = ObjectsToDraw.begin(); Otd_it != ObjectsToDraw.end(); Otd_it++)
 			{
-				if (!(*it_ch).second->isStatic)
+				if (camera->ContainsAABB((*Otd_it)->boundingBox))
 				{
-					if (sceneCamera->camera->ContainsAABB((*it_ch).second->boundingBox) && (*it_ch).second->GetComponent(CAMERA) == nullptr)
-					{
-						(*it_ch).second->culling = true;
-					}
-					else
-					{
-						(*it_ch).second->culling = false;
-					}
-					if ((*it_ch).second->GetComponent(CAMERA) != nullptr)
-					{
-						(*it_ch).second->culling = true;
-					}
+					(*Otd_it)->culling = true;
+				}
+				else
+				{
+					(*Otd_it)->culling = false;
+				}
+			}
+		}
+
+		//Non-Static objects-------------------------------------------------------------------
+
+		//From the possible objects only draw the ones inside the frustum
+		for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
+		{
+			if (!(*it_ch).second->isStatic)
+			{
+				if (camera->ContainsAABB((*it_ch).second->boundingBox) && (*it_ch).second->GetComponent(CAMERA) == nullptr)
+				{
+					(*it_ch).second->culling = true;
+				}
+				else
+				{
+					(*it_ch).second->culling = false;
+				}
+				if ((*it_ch).second->GetComponent(CAMERA) != nullptr)
+				{
+					(*it_ch).second->culling = true;
 				}
 			}
 		}
 	}
 
-	root->Update(App->game_dt);
+	root->Draw(game); //Add gameObjects to renderBuffer
+
 	for (std::map<uint, GameObject*>::iterator it_ch = gameObjects.begin(); it_ch != gameObjects.end(); it_ch++)
 	{
 		(*it_ch).second->culling = false;
 	}
-
 
 	if (App->scene_intro->selected_GO != nullptr )
 	{
@@ -239,7 +232,7 @@ void ModuleScene::FillDrawBuffer()
 		}
 	}
 
-	if (App->renderer3D->ShowQT)
+	if (App->renderer3D->ShowQT && !game)
 		quadTree->DrawQT();
 
 	ObjectsToDraw.clear();
@@ -263,15 +256,6 @@ void ModuleScene::newScene()
 	activeCamera = nullptr;
 
 	LOG("Unloading scene");
-	std::list<Primitive*>::iterator it_p;
-	it_p = ShapesToDraw.begin();
-	while (it_p != ShapesToDraw.end())
-	{
-		RELEASE((*it_p));
-		it_p++;
-	}
-	ShapesToDraw.clear();
-
 	gameObjects.clear(); //Just stores pointers, the gameObjects will be deleted bellow
 	cameras.clear();
 
@@ -486,7 +470,7 @@ void ModuleScene::deleteGameObject(GameObject* GO, bool deleteFromParent)
 	if (GO->camera != nullptr) //It is a camera
 	{
 		cameras.remove(GO);
-		if (GO->camera->IsCulling && cameras.size() > 0)
+		if (GO->camera->IsActive && cameras.size() > 0)
 		{
 			ChangeCulling(cameras.front(), true);
 		}
@@ -551,16 +535,20 @@ void ModuleScene::FindCameras(GameObject* parent)
 			FindCameras((*go_it));
 		}
 		if ((*go_it)->camera != nullptr)
+		{
 			cameras.push_back(*go_it);
+			if ((*go_it)->camera->IsActive)
+				ChangeCulling((*go_it), true);
+		}
 	}
 }
 
 void ModuleScene::ChangeCulling(GameObject* GO, bool culling)
 {
 	if (activeCamera != nullptr)
-		activeCamera->camera->IsCulling = false;
+		activeCamera->camera->IsActive = false;
 
-	GO->camera->IsCulling = culling;
+	GO->camera->IsActive = culling;
 
 	if (culling)
 		activeCamera = GO;

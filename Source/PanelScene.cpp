@@ -38,7 +38,7 @@ void PanelScene::Draw()
 		size = newSize;
 		float newAR = size.x / size.y;
 		App->camera->camera->setAspectRatio(newAR);
-		App->renderer3D->changedFOV = true;
+		App->renderer3D->changedSceneFOV = true;
 	}
 	else
 		resizedLastFrame = false;

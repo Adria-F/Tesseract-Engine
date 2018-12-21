@@ -55,6 +55,13 @@ public:
 
 	void Draw();
 
+	bool sceneVisible() const;
+	bool gameVisible() const;
+
+	//Returns true if scene and game panel are docked into the same element
+	//This will cause that just one panel is visible at the same time
+	bool sceneAndGameDocked() const;
+
 	void drawToolsMenu();
 
 	bool isMouseOnGUI() const;
@@ -88,6 +95,8 @@ public:
 	float sceneH = 0.0f;
 
 	bool hoveringScene = false;
+
+	bool lastFocusScene = true;
 };
 
 #endif // !__MODULEGUI_H__

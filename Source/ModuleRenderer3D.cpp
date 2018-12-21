@@ -210,14 +210,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	if (changedFOV)
+	if (changedSceneFOV)
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glLoadMatrixf(App->camera->camera->getProjectionMatrix());
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		changedFOV = false;
+		changedSceneFOV = false;
 	}
 
 	glMatrixMode(GL_MODELVIEW);
@@ -243,24 +243,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	//Draw Scene  ---------------------------	
-
 	App->scene_intro->FillDrawBuffer();
-
-	for (std::list<GameObject*>::iterator it_go = renderBuffer.begin(); it_go != renderBuffer.end(); ++it_go)
-	{
-		drawGameObject((*it_go));
-	}
-	renderBuffer.clear();
-
-	int size = blendColorsBuffer.size();
-	for (int i = 0; i < size; ++i)
-	{
-		GameObject* GO = blendColorsBuffer.top();
-
-		drawGameObject(GO);
-
-		blendColorsBuffer.pop();
-	}
+	drawAllGameObjects();
 
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
@@ -284,35 +268,38 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	//Game -------------------
+
 	glBindFramebuffer(GL_FRAMEBUFFER, GameFramebufferName);
 	glViewport(0, 0, App->window->width, App->window->height);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	float* ViewM=App->camera->camera->getViewMatrix();
-	float* ProjectionM= ViewM = App->camera->camera->getProjectionMatrix();
-
+	
 	if (App->scene_intro->activeCamera != nullptr)
 	{
-		ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
-		ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
-	}
-
-	if (changedFOV)
-	{
-		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glLoadMatrixf(ProjectionM);
+		float* ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
+		float* ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
+
+		//TODO to test
+		if (true)
+		{
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glLoadMatrixf(ProjectionM);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			changedGameFOV = false;
+			changedSceneFOV = true;
+		}
+
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		changedFOV = false;
+		glLoadMatrixf(ViewM);
+
+		//Draw Game  ---------------------------	
+		App->scene_intro->FillDrawBuffer(true);
+		drawAllGameObjects();
 	}
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(ViewM);
-
-	App->scene_intro->FillDrawBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw();
@@ -469,7 +456,26 @@ void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 	}
 }
 
-void ModuleRenderer3D::drawGameObject(GameObject* gameObject)
+void ModuleRenderer3D::drawAllGameObjects()
+{
+	for (std::list<const GameObject*>::const_iterator it_go = renderBuffer.begin(); it_go != renderBuffer.end(); ++it_go)
+	{
+		drawGameObject((*it_go));
+	}
+	renderBuffer.clear();
+
+	int size = blendColorsBuffer.size();
+	for (int i = 0; i < size; ++i)
+	{
+		const GameObject* GO = blendColorsBuffer.top();
+
+		drawGameObject(GO);
+
+		blendColorsBuffer.pop();
+	}
+}
+
+void ModuleRenderer3D::drawGameObject(const GameObject* gameObject)
 {
 	if (gameObject->material != nullptr && gameObject->material->active)
 	{
@@ -592,11 +598,6 @@ void ModuleRenderer3D::drawGameObject(GameObject* gameObject)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
-
-	if (ShowBB || gameObject->selected)
-	{
-		DrawBB(gameObject->boundingBox, { 0, 0.5f, 1 });
-	}
 }
 
 void ModuleRenderer3D::DrawBB(const AABB & BB, vec color) const
@@ -648,7 +649,7 @@ void ModuleRenderer3D::DrawBB(const AABB & BB, vec color) const
 	glLineWidth(1.0f);
 }
 
-void ModuleRenderer3D::addToRenderBuffer(GameObject* gameObject)
+void ModuleRenderer3D::addToRenderBuffer(const GameObject* gameObject)
 {
 	if (gameObject->material != nullptr && gameObject->material->doBlendColors)
 	{

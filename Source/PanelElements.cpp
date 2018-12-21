@@ -10,7 +10,6 @@
 
 PanelElements::PanelElements(const char* name) : Panel(name)
 {
-	active = true;
 }
 
 PanelElements::~PanelElements()
@@ -29,7 +28,8 @@ void PanelElements::Draw()
 
 		if (ImGui::Button("Create Box"))
 		{
-			App->scene_intro->ShapesToDraw.push_back(new MCube(Box_S[0], Box_S[1], Box_S[2], { Box_C[0], Box_C[1], Box_C[2]}));
+			//TODO it creates a gameObject
+			//App->scene_intro->ShapesToDraw.push_back(new MCube(Box_S[0], Box_S[1], Box_S[2], { Box_C[0], Box_C[1], Box_C[2]}));
 		}
 	}
 	if (ImGui::CollapsingHeader("Sphere"))
@@ -50,7 +50,8 @@ void PanelElements::Draw()
 
 		if (ImGui::Button("Create Sphere"))
 		{
-			App->scene_intro->ShapesToDraw.push_back(new MSphere(Sphere_R, S_Ring, S_Sectors, { Sphere_C[0], Sphere_C[1], Sphere_C[2] }));
+			//TODO it creates a gameObject
+			//App->scene_intro->ShapesToDraw.push_back(new MSphere(Sphere_R, S_Ring, S_Sectors, { Sphere_C[0], Sphere_C[1], Sphere_C[2] }));
 		}
 
 	}
@@ -75,7 +76,8 @@ void PanelElements::Draw()
 
 		if (ImGui::Button("Create Cylinder"))
 		{
-			App->scene_intro->ShapesToDraw.push_back(new MCylinder(Cylinder_R, Cylinder_H, Cy_Ring, Cy_Sectors, { Cylinder_C[0], Cylinder_C[1], Cylinder_C[2] }));
+			//TODO it creates a gameObject
+			//App->scene_intro->ShapesToDraw.push_back(new MCylinder(Cylinder_R, Cylinder_H, Cy_Ring, Cy_Sectors, { Cylinder_C[0], Cylinder_C[1], Cylinder_C[2] }));
 		}
 	}
 	if (ImGui::CollapsingHeader("Capsule"))
@@ -99,7 +101,8 @@ void PanelElements::Draw()
 
 		if (ImGui::Button("Create Capsule"))
 		{
-			App->scene_intro->ShapesToDraw.push_back(new MCapsule(Capsule_R, Capsule_H, Ca_Ring, Ca_Sectors, { Capsule_C[0], Capsule_C[1], Capsule_C[2] }));
+			//TODO it creates a gameObject
+			//App->scene_intro->ShapesToDraw.push_back(new MCapsule(Capsule_R, Capsule_H, Ca_Ring, Ca_Sectors, { Capsule_C[0], Capsule_C[1], Capsule_C[2] }));
 		}
 	}
 	if (ImGui::CollapsingHeader("Frustum"))
@@ -124,7 +127,8 @@ void PanelElements::Draw()
 
 		if (ImGui::Button("Create Frustum"))
 		{
-			App->scene_intro->ShapesToDraw.push_back(new MFrustum(Frustum_Ds, Frustum_D, Frustum_W, Frustum_H, { Frustum_C[0], Frustum_C[1], Frustum_C[2] }));
+			//TODO it creates a gameObject
+			//App->scene_intro->ShapesToDraw.push_back(new MFrustum(Frustum_Ds, Frustum_D, Frustum_W, Frustum_H, { Frustum_C[0], Frustum_C[1], Frustum_C[2] }));
 		}
 	}
 

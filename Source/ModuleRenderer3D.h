@@ -45,10 +45,11 @@ public:
 
 	void CalculateGlobalMatrix(GameObject* gameObject);
 
-	void drawGameObject(GameObject* gameObject);
+	void drawAllGameObjects();
+	void drawGameObject(const GameObject* gameObject);
 	void DrawBB(const AABB& BB, vec color) const;
 
-	void addToRenderBuffer(GameObject* gameObject);
+	void addToRenderBuffer(const GameObject* gameObject);
 	void removeFromRenderBuffer(GameObject* gameObject);
 
 public:
@@ -78,7 +79,8 @@ public:
 	bool Frustum_Culling = true;
 	bool ShowClickRay = false;
 
-	bool changedFOV = false;
+	bool changedSceneFOV = false;
+	bool changedGameFOV = false;
 
 	uint buff_id = 0;
 
@@ -89,8 +91,8 @@ public:
 	vector<ComponentCamera*> cameras;
 
 	/*list<Mesh*> meshes;*/
-	std::priority_queue<GameObject*, std::vector<GameObject*>, closerToCamera> blendColorsBuffer;
-	std::list<GameObject*> renderBuffer;
+	std::priority_queue<const GameObject*, std::vector<const GameObject*>, closerToCamera> blendColorsBuffer;
+	std::list<const GameObject*> renderBuffer;
 };
 
 #endif // !__MODULERENDERER3D_H__

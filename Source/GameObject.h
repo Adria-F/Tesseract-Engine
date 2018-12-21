@@ -28,6 +28,7 @@ public:
 	void RemoveComponent(Component* component);
 
 	void Update(float dt);
+	void Draw(bool game) const;
 	void DrawComponentsUI();
 
 	void Save(JSON_Value* gameobject);
