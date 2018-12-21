@@ -24,6 +24,8 @@ public:
 
 	MSphere* sphere = nullptr;
 	MLine* line = nullptr;
+
+	float4x4 globalOffset=float4x4::identity;
 };
 
 #endif // !__COMPONENTBONE_H__

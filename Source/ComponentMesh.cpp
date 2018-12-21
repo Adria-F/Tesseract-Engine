@@ -89,8 +89,6 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 			ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
 			if (bone != nullptr && rBone != nullptr)
 			{
-
-
 				float4x4 boneTransform = (((ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix)*rBone->Offset;
 
 				for (int j = 0; j < rBone->numWeights; j++)
@@ -105,9 +103,7 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 				}
 			}
 		}
-}
-
-
+	}
 }
 
 void ComponentMesh::Save(JSON_Value * component) const
