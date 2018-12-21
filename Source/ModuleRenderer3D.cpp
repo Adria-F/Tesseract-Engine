@@ -448,14 +448,13 @@ void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 			if (gameObject->parent != nullptr)
 			{
 				ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
-
-				if ((ComponentBone*)gameObject->parent->GetComponent(BONE) != nullptr)
+				if (rBone != nullptr && (ComponentBone*)gameObject->parent->GetComponent(BONE) != nullptr)
 				{
-					bone->globalOffset = ((ComponentBone*)gameObject->parent->GetComponent(BONE))->globalOffset*rBone->Offset;
+					bone->globalOffset = ((ComponentBone*)gameObject->parent->GetComponent(BONE))->globalOffset*rBone->Offset.Inverted();
 				}
 				else
 				{
-					bone->globalOffset = rBone->Offset;
+					bone->globalOffset = rBone->Offset.Inverted();
 				}
 			}
 		}
@@ -512,16 +511,13 @@ void ModuleRenderer3D::drawGameObject(GameObject* gameObject)
 		
 		if (mesh != nullptr)
 		{
-			float* auxVertex = new float[mesh->num_vertices * 3];
-			memcpy(auxVertex, &mesh->vertices[0], sizeof(float)*mesh->num_vertices * 3);
-
-			gameObject->mesh->Skining(mesh, auxVertex);
+			float* auxVertex = gameObject->mesh->Skining();
 
 			//Assign Vertices
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 
-			if (App->inGameMode())
+			if (auxVertex != nullptr)
 			{
 				glVertexPointer(3, GL_FLOAT, 0, &auxVertex[0]);
 			}

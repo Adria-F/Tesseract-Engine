@@ -167,7 +167,7 @@ bool BoneTransform::calcCurrentIndex(float time)
 {
 	bool ret = false;
 
-	if (currentPosIndex == -1 || currentRotIndex == -1 || currentScaleIndex == -1 ||
+	if (!App->inGameMode() || currentPosIndex == -1 || currentRotIndex == -1 || currentScaleIndex == -1 ||
 		nextPosIndex == -1 || nextRotIndex == -1 || nextScaleIndex == -1)
 	{
 		currentPosIndex = currentRotIndex = currentScaleIndex = 0;
