@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "ModuleWindow.h"
+#include "ModuleGUI.h"
 #include "ComponentAnimation.h"
 #include "ModuleResource.h"
 #include "Resource.h"
@@ -64,6 +66,7 @@ bool ComponentAnimation::Update(float dt)
 void ComponentAnimation::DrawInfo()
 {
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	ResourceAnimation* blendAnimation = (ResourceAnimation*)App->resources->GetResource(blendRUID);
 
 	ImGui::PushID("toggleAnimation");
 	ImGui::Checkbox("", &active);
@@ -87,6 +90,36 @@ void ComponentAnimation::DrawInfo()
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
 
+		ImGui::NewLine();
+		ImGui::Text("Blend Animation");
+
+		ImGui::Checkbox("Blend Animation:", &blend);
+
+		if (blend)
+		{
+			animations = App->resources->getResourcesByType(R_ANIMATION);
+
+			beginDroppableSpace((blendAnimation == nullptr) ? "No Selected" : blendAnimation->GetName(), blendAnimation == nullptr);
+
+			ImGui::BeginChild("All Animations", ImVec2(250, 140), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+			for (int i = 0; i < animations.size(); i++)
+			{
+				if (ImGui::Button(animations[i]->GetName()))
+				{
+					assignBlendResource(animations[i]->GetUID());
+				}
+			}
+
+			ImGui::EndChild();
+
+
+			if (blendAnimation != nullptr)
+			{
+				ImGui::SliderFloat("Blend", &blendPercent, 0.0f, 1.0f,"%.3f %");
+			}
+
+		}
 	}
 }
 
@@ -121,6 +154,32 @@ void ComponentAnimation::assignResource(uint UID)
 			}
 		}
 	}
+}
+
+void ComponentAnimation::assignBlendResource(uint UID)
+{
+	blendRUID = UID;
+	blendBones.clear();
+
+	ResourceAnimation* blendAnimation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	if (blendAnimation != nullptr)
+	{
+		blendAnimation->time = 0;
+
+		for (int i = 0; i < blendAnimation->numBones; i++)
+		{
+			GameObject* GO = gameObject->getChildByName(blendAnimation->boneTransformations[i].NodeName.c_str());
+			if (GO != nullptr)
+			{
+				blendBones[i] = GO->UID;
+			}
+		}
+	}
+
+}
+
+void ComponentAnimation::blendAnimation()
+{
 }
 
 void ComponentAnimation::Save(JSON_Value * component) const
@@ -163,3 +222,5 @@ bool ComponentAnimation::Finished() const
 
 	return false;
 }
+
+
