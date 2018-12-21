@@ -12,10 +12,12 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ComponentTransformation.h"
+#include "ComponentBone.h"
 
 #include "ModuleResource.h"
 #include "ResourceMaterial.h"
 #include "ResourceMesh.h"
+#include "ResourceBone.h"
 
 #include "PanelScene.h"
 
@@ -439,6 +441,24 @@ void ModuleRenderer3D::CalculateGlobalMatrix(GameObject* gameObject)
 			transform->globalMatrix = ((ComponentTransformation*)gameObject->parent->GetComponent(TRANSFORMATION))->globalMatrix*transform->localMatrix;
 		}
 
+	ComponentBone* bone = (ComponentBone*)gameObject->GetComponent(BONE);
+
+		if (bone != nullptr)
+		{
+			if (gameObject->parent != nullptr)
+			{
+				ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
+
+				if ((ComponentBone*)gameObject->parent->GetComponent(BONE) != nullptr)
+				{
+					bone->globalOffset = ((ComponentBone*)gameObject->parent->GetComponent(BONE))->globalOffset*rBone->Offset;
+				}
+				else
+				{
+					bone->globalOffset = rBone->Offset;
+				}
+			}
+		}
 
 		for (std::list<GameObject*>::iterator it_c = gameObject->childs.begin(); it_c != gameObject->childs.end(); it_c++)
 		{

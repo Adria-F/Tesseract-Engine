@@ -103,9 +103,7 @@ void ComponentMesh::Skining(ResourceMesh* mesh, float* vertices)
 				}
 			}
 		}
-}
-
-
+	}
 }
 
 void ComponentMesh::Save(JSON_Value * component) const
