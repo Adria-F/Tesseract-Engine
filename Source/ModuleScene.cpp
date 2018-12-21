@@ -18,6 +18,11 @@
 
 #include "GameObject.h"
 
+//TEST to change animations
+#include "ComponentAnimation.h"
+#include "Resource.h"
+#include "ResourceAnimation.h"
+
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
 #include "mmgr/mmgr.h"
@@ -70,6 +75,15 @@ update_status ModuleScene::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
+	if (idleAnim == 0)
+		idleAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy.fbx", "animations", "Take 001(2)");
+
+	if (walkAnim == 0)
+		walkAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@move_forward_B.fbx", "animations", "Take 001(4)");
+
+	if (attackAnim == 0)
+		attackAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@hp_upper_right_A.fbx", "animations", "Take 001(3)");
+
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		quadTree->Clear();
@@ -90,7 +104,34 @@ update_status ModuleScene::Update(float dt)
 			it_go = gameObjects.begin();
 		}
 		else
+		{
+			ComponentAnimation* anim = (ComponentAnimation*)(*it_go).second->GetComponent(ANIMATION);
+			if (anim != nullptr && App->inGameMode())
+			{
+				if (anim->RUID == attackAnim && anim->Finished())
+				{
+					anim->assignResource(idleAnim);
+					anim->loop = true;
+				}
+
+				if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+				{
+					anim->assignResource(attackAnim);
+					anim->loop = false;
+				}
+				if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && anim->RUID == idleAnim)
+				{
+					anim->assignResource(walkAnim);
+					anim->loop = true;
+				}
+				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
+				{
+					anim->assignResource(idleAnim);
+				}
+			}
+
 			it_go++;
+		}
 	}
 
 	return ret;

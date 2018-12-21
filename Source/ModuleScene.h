@@ -84,6 +84,11 @@ public:
 
 private:
 
+	//TEST to change animations
+	uint idleAnim = 0;
+	uint walkAnim = 0;
+	uint attackAnim = 0;
+
 	map<uint, GameObject*> gameObjects;
 	map<uint, Component*> components;
 };

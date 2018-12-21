@@ -10,6 +10,8 @@
 #include "ComponentTransformation.h"
 #include "ComponentBone.h"
 
+#include "ResourceBone.h"
+
 ComponentAnimation::ComponentAnimation(GameObject* parent, componentType type) : Component(parent, type)
 {
 }
@@ -39,8 +41,8 @@ bool ComponentAnimation::Update(float dt)
 			GameObject* GO = App->scene_intro->getGameObject(bones[i]);
 			if (GO != nullptr)
 			{
-				animation->time += dt;
-				if (animation->time > animation->getDuration())
+				animation->time += dt*0.02f;
+				if (animation->time > animation->getDuration() && loop)
 				{
 					animation->time -= animation->getDuration();
 				}
@@ -75,6 +77,8 @@ void ComponentAnimation::DrawInfo()
 		pickResourceButton(R_ANIMATION);
 		if (animation != nullptr)
 		{
+			ImGui::Checkbox("Loop", &loop);
+
 			if (ImGui::Checkbox("Draw Bones", &debugDraw))
 			{
 				activateDebugBones(gameObject, debugDraw);
@@ -106,6 +110,8 @@ void ComponentAnimation::assignResource(uint UID)
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
+		animation->time = 0;
+
 		for (int i = 0; i < animation->numBones; i++)
 		{
 			GameObject* GO = gameObject->getChildByName(animation->boneTransformations[i].NodeName.c_str());
@@ -144,4 +150,16 @@ void ComponentAnimation::Load(JSON_Value * component)
 	Resource* res = App->resources->GetResource(RUID);
 	if (res != nullptr)
 		res->LoadtoMemory();
+}
+
+bool ComponentAnimation::Finished() const
+{
+	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	if (animation != nullptr)
+	{
+		if (animation->time > animation->getDuration() && !loop)
+			return true;
+	}
+
+	return false;
 }
