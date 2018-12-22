@@ -223,13 +223,13 @@ update_status ModuleGUI::Update(float dt)
 
 update_status ModuleGUI::PostUpdate(float dt)
 {	
-	ImGui::Begin("Scene");	
-	if (ImGui::IsWindowFocused() || ImGui::IsWindowAppearing())
+	ImGui::Begin("Scene");
+	if (ImGui::IsWindowAppearing())
 		lastFocusScene = true;
 	ImGui::End();
 
 	ImGui::Begin("Game");
-	if (ImGui::IsWindowFocused() || ImGui::IsWindowAppearing())
+	if (ImGui::IsWindowAppearing())
 		lastFocusScene = false;
 	ImGui::End();
 
