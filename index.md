@@ -9,10 +9,12 @@ This is a 3D Engine created as the main project of the Engines subject of the
 ## Contributors:
 This engine is created by:
 
-<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi">
+<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="100">
+
 [Adrià Ferrer](https://github.com/Adria-F)
 
-<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb">
+<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="100">
+
 [Marc Garcia](https://github.com/MaxitoSama)
 
 ## Individual work:
@@ -77,7 +79,6 @@ If you want to download the latest release click [here](https://github.com/Adria
 
 ## License
 
-You can access to our license [here]().
 
 MIT License
 
