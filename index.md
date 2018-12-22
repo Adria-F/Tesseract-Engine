@@ -9,45 +9,77 @@ This is a 3D Engine created as the main project of the Engines subject of the
 ## Contributors:
 This engine is created by:
 
-<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="100">
+<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="300">
 
 [Adrià Ferrer](https://github.com/Adria-F)
 
-<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="100">
+<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="300">
 
 [Marc Garcia](https://github.com/MaxitoSama)
 
-## Individual work:
-* GameObjects (Both)
-* AABBs (Marc)
-* Game Components (Marc)
-* Panel Assets (Adrià)
-* Panel Hierarchy (Both)
-* Panel Inspector (Adrià)
-* Panel FileDialog (Adrià)
-* QuadTree (Marc)
-* Frustum Culling (Marc)
-* Textures Importing (Adrià)
-* FBX importing (Both)
-* meshes and scenes own format (Adrià)
-* Mouse picking (Both)
-* Time manager (Marc)
-* Resources (classes) (Marc)
-* Resource Manager (Both)
-* .meta files management (Adrià)
-* File system (Adrià)
-* JSON_Manager (Adrià)
-* Guizmos (Both)
+## Members Tasks:
 
-### Adrià Ferrer
-Work
+### Both:
+* GameObjects
+* Panel Hierarchy
+* FBX importing
+* Mouse picking
+* Resource Manager
+* Guizmos
+* Animations importing
+* Animation Component
+* Animation Resource
+* Game Panel
 
-### Marc garcia
-Work
+### Adrià Ferrer:
+* Panel Assets
+* Panel Inspector
+* Panel FileDialog
+* Textures Importing
+* meshes and scenes own format
+* .meta files management
+* File system
+* JSON_Manager
+* Bone Components
+* Skeleton animation
+* Bone hierarchy and mesh linking
+
+### Marc garcia:
+* AABBs
+* Game Components
+* QuadTree
+* Frustum Culling
+* Time manager
+* Resources (classes)
+* Bone Resource
+* Animation interpolations
+* Skinning
+* Blending
 
 ## Main Core Sub-systems
+It has a hierarchy of gameObjects, each can have multiple components that define and complement them (transformation, mesh, material, animation, bone, camera).
+Can manipulate their transformation directly from the scene panel through the usage of a guizmo.
+Can freely add, remove and change parent and order of gameObjects into the hierarchy panel.
+It has a file and resource systems, to manage asset files, imort them and store them as binaries for easily usage.
+It is using a QuadTree to optimize frustum culling of static gameObjects.
+It has scene serialization of json files through rapidjson library.
 
 ## Skeletal Animation system
+The importing of animations is done with Assimp, from fbx and dae files.
+When creating meshes, it reads the bones that it is using and create the corresponding bone resource. It then reads all the animations of the scene and creates
+the animation resources, storing the corresponding transformations over time of the bones (linked by name).
+When assigning a resource to a component animation, it looks for the used bones inside the gameObjects hierarchy and save the UID of the components to later usage.
+
+
+On the Update, it loops through all the bones and apply the corresponding transformation to the gameObjects, calculating interpolations if activated, as well as
+animation blending when changing them.
+
+To do the interpolation, it basically does a Lerp operation of the current frame and the next frame based on the percentage of time elapsed.
+For animation blending, it temporally keeps the new resource that will be assigned and do interpolation between the frame of the current animation and the first frame
+of the next animation before finally swaping the animations.
+
+Before the render of the mesh, it calculates a morphed version of it, adapting to the linked bones and rendering it instead of the original one.
+
 
 editor gif
 
