@@ -37,6 +37,7 @@ public:
 	uint blendRUID = 0;
 
 	float animTime = 0.0f;
+	float blendAnimTime = 0.0f;
 	float blendPercent = 0.0f;
 	float blendTime = 0.0f;
 	float totalBlendTime = 0.1f;

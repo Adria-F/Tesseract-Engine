@@ -36,7 +36,7 @@ bool ComponentAnimation::Update(float dt)
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
-		animTime += dt;
+		animTime += dt*speed;
 		
 		if (animTime > animation->getDuration() && loop)
 		{
@@ -69,16 +69,16 @@ bool ComponentAnimation::Update(float dt)
 					
 					if (rblendAnimation != nullptr)
 					{
-						if (blendTime > rblendAnimation->getDuration() && loop)
+						if (blendAnimTime > rblendAnimation->getDuration() && loop)
 						{
-							blendTime -= rblendAnimation->getDuration();
+							blendAnimTime -= rblendAnimation->getDuration();
 						}
 
 						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond);
-						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendTime*rblendAnimation->ticksXsecond);
+						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendAnimTime*rblendAnimation->ticksXsecond);
 						
 						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
-						rblendAnimation->boneTransformations[i].calcTransfrom(blendTime*rblendAnimation->ticksXsecond);
+						rblendAnimation->boneTransformations[i].calcTransfrom(blendAnimTime*rblendAnimation->ticksXsecond);
 						
 						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
 						LOG("%f", blendTime);
@@ -90,14 +90,16 @@ bool ComponentAnimation::Update(float dt)
 
 		if (blend && smoothT)
 		{
-			blendTime += dt;
+			blendTime += dt * speed;
+			blendAnimTime += dt * speed;
 
 			if (blendTime > totalBlendTime)
 			{
 				assignResource(blendRUID);
-				animTime = blendTime;
+				animTime = blendAnimTime;
+				blendAnimTime = 0.0f;
 				blendTime = 0.0f;
-				blendRUID = 0;
+				blendRUID = 0.0f;
 				blend = false;
 			}
 		}
@@ -129,6 +131,13 @@ void ComponentAnimation::DrawInfo()
 			{
 				activateDebugBones(gameObject, debugDraw);
 			}
+
+			ImGui::Text("Animation Speed:");
+			ImGui::SameLine();
+
+			ImGui::PushID("Speed");
+			ImGui::InputFloat("", &speed, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+			ImGui::PopID();
 
 			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->ticks,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
@@ -182,7 +191,8 @@ void ComponentAnimation::assignResource(uint UID, bool doBlend)
 		blendRUID = UID;
 		blendBones.clear();
 		blend = true;
-		blendTime = 0;
+		blendTime = 0.0f;
+		blendAnimTime = 0.0f;
 	}
 
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(UID);
