@@ -69,12 +69,17 @@ bool ComponentAnimation::Update(float dt)
 					
 					if (rblendAnimation != nullptr)
 					{
+						if (blendTime > rblendAnimation->getDuration() && loop)
+						{
+							blendTime -= rblendAnimation->getDuration();
+						}
+
 						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond);
 						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendTime*rblendAnimation->ticksXsecond);
 						
 						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
 						rblendAnimation->boneTransformations[i].calcTransfrom(blendTime*rblendAnimation->ticksXsecond);
-
+						
 						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
 						LOG("%f", blendTime);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
