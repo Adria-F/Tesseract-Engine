@@ -16,6 +16,7 @@
 
 ComponentAnimation::ComponentAnimation(GameObject* parent, componentType type) : Component(parent, type)
 {
+	smoothT = true;
 }
 
 ComponentAnimation::~ComponentAnimation()
@@ -35,6 +36,27 @@ bool ComponentAnimation::Update(float dt)
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
+		animTime += dt;
+		
+		if (animTime > animation->getDuration() && loop)
+		{
+			animTime -= animation->getDuration();
+		}
+
+		if (blend)
+		{
+			blendTime += dt;
+			
+			if (blendTime > totalBlendTime)
+			{
+				assignResource(blendRUID);
+				animTime = blendTime;
+				blendTime = 0.0f;
+				blendRUID = 0;
+				blend = false;
+			}
+		}
+
 		for (int i = 0; i < animation->numBones; i++)
 		{
 			if (bones.find(i) == bones.end()) //If no game object assigned
@@ -43,18 +65,34 @@ bool ComponentAnimation::Update(float dt)
 			GameObject* GO = App->scene_intro->getGameObject(bones[i]);
 			if (GO != nullptr)
 			{
-				animation->time += dt*0.02f;
-				if (animation->time > animation->getDuration() && loop)
+				ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
+				if (!blend || !smoothT)
 				{
-					animation->time -= animation->getDuration();
+					if (animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond))
+					{
+						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
+						transform->localMatrix = animation->boneTransformations[i].lastTransform;
+					}
 				}
-
-				if (animation->boneTransformations[i].calcCurrentIndex(animation->time*animation->ticksXsecond))
+				else 
 				{
-					animation->boneTransformations[i].calcTransfrom(animation->time*animation->ticksXsecond);
+					if (blendBones.find(i) == blendBones.end()) //If no game object assigned
+						continue;
 
-					ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
-					transform->localMatrix = animation->boneTransformations[i].lastTransform;
+					ResourceAnimation* rblendAnimation = (ResourceAnimation*)App->resources->GetResource(blendRUID);
+					
+					if (blendRUID!=0)
+					{
+						animation->boneTransformations[i].calcCurrentIndex(blendTime*rblendAnimation->ticksXsecond);
+						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond);
+						
+						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
+						rblendAnimation->boneTransformations[i].calcTransfrom(blendTime*rblendAnimation->ticksXsecond);
+
+						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
+
+						transform->localMatrix = animation->boneTransformations[i].lastTransform;
+					}
 				}
 			}
 		}
@@ -92,34 +130,24 @@ void ComponentAnimation::DrawInfo()
 		}
 
 		ImGui::NewLine();
+
 		ImGui::Text("Blend Animation");
 
-		ImGui::Checkbox("Blend Animation:", &blend);
+		ImGui::Text("Blend time:");
+		ImGui::SameLine();
+		
+		ImGui::PushID("total blend time");
+		ImGui::InputFloat("", &totalBlendTime, 0.0f, 0.0f,"%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::PopID();
 
-		if (blend)
+		if (ImGui::Checkbox("Smooth Transition", &smoothT))
 		{
-			animations = App->resources->getResourcesByType(R_ANIMATION);
+			frozenT = false;
+		}
 
-			beginDroppableSpace((blendAnimation == nullptr) ? "No Selected" : blendAnimation->GetName(), blendAnimation == nullptr);
-
-			ImGui::BeginChild("All Animations", ImVec2(250, 140), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
-
-			for (int i = 0; i < animations.size(); i++)
-			{
-				if (ImGui::Button(animations[i]->GetName()))
-				{
-					assignBlendResource(animations[i]->GetUID());
-				}
-			}
-
-			ImGui::EndChild();
-
-
-			if (blendAnimation != nullptr)
-			{
-				ImGui::SliderFloat("Blend", &blendPercent, 0.0f, 1.0f,"%.3f %");
-			}
-
+		if (ImGui::Checkbox("Frozen Transition", &frozenT))
+		{
+			smoothT = false;
 		}
 	}
 }
@@ -144,7 +172,7 @@ void ComponentAnimation::assignResource(uint UID)
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
-		animation->time = 0;
+		animTime = 0;
 
 		for (int i = 0; i < animation->numBones; i++)
 		{
@@ -162,10 +190,11 @@ void ComponentAnimation::assignBlendResource(uint UID)
 	blendRUID = UID;
 	blendBones.clear();
 
-	ResourceAnimation* blendAnimation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	ResourceAnimation* blendAnimation = (ResourceAnimation*)App->resources->GetResource(UID);
 	if (blendAnimation != nullptr)
 	{
-		blendAnimation->time = 0;
+		blendAnimation->LoadtoMemory();
+		blendTime = 0;
 
 		for (int i = 0; i < blendAnimation->numBones; i++)
 		{
@@ -176,11 +205,6 @@ void ComponentAnimation::assignBlendResource(uint UID)
 			}
 		}
 	}
-
-}
-
-void ComponentAnimation::blendAnimation()
-{
 }
 
 void ComponentAnimation::Save(JSON_Value * component) const
@@ -219,7 +243,7 @@ bool ComponentAnimation::Finished() const
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
-		if (animation->time > animation->getDuration() && !loop)
+		if (animTime > animation->getDuration() && !loop)
 			return true;
 	}
 

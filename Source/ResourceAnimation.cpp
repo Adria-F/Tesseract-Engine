@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResource.h"
 #include "ResourceAnimation.h"
 #include "ModuleGUI.h"
 #include "PanelAnimation.h"
@@ -264,3 +265,31 @@ void BoneTransform::calcTransfrom(float time)
 	}
 }
 
+void BoneTransform::blendAnimation()
+{
+}
+
+void BoneTransform::smoothBlending(const float4x4& blendtrans, float time)
+{
+	vec position_1;
+	Quat rotation_1 ;
+	vec scale_1;
+
+	lastTransform.Decompose(position_1, rotation_1, scale_1);
+	
+	vec position_2;
+	Quat rotation_2;
+	vec scale_2;
+
+	blendtrans.Decompose(position_2, rotation_2, scale_2);
+	
+	vec finalpos	= position_1.Lerp(position_2, time);
+	Quat finalrot	= rotation_1.Slerp(rotation_2, time);
+	vec finalscale	= scale_1.Lerp(scale_2, time);
+
+	lastTransform.Set(float4x4::FromTRS(finalpos, finalrot, finalscale));
+}
+
+void BoneTransform::frozenBlending(const BoneTransform& bone, float time, float blendTime)
+{
+}
