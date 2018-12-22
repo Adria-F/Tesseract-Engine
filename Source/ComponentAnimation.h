@@ -18,10 +18,7 @@ public:
 	void DrawInfo();
 	void activateDebugBones(GameObject* GO, bool active);
 
-	void assignResource(uint UID);
-	void assignBlendResource(uint UID);
-
-
+	void assignResource(uint UID, bool doBlend = false);
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
@@ -29,8 +26,6 @@ public:
 	bool Finished() const;
 
 public:
-
-	std::vector<Resource*> animations;
 
 	bool loop = false;
 	bool debugDraw = false;

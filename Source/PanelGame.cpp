@@ -38,15 +38,16 @@ void PanelGame::Draw()
 		size = newSize;
 		resizedLastFrame = true;
 	}
-	float AR = App->scene_intro->activeCamera->camera->frustum.AspectRatio();
-	if (AR != lastAR)
-	{
-		lastAR = AR;
-		resizedLastFrame = true;
-	}
 
 	if (App->scene_intro->activeCamera != nullptr)
 	{
+		float AR = App->scene_intro->activeCamera->camera->frustum.AspectRatio();
+		if (AR != lastAR)
+		{
+			lastAR = AR;
+			resizedLastFrame = true;
+		}
+
 		if (resizedLastFrame)
 		{
 			resizedLastFrame = false;

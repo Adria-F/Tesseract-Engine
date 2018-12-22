@@ -43,20 +43,6 @@ bool ComponentAnimation::Update(float dt)
 			animTime -= animation->getDuration();
 		}
 
-		if (blend)
-		{
-			blendTime += dt;
-			
-			if (blendTime > totalBlendTime)
-			{
-				assignResource(blendRUID);
-				animTime = blendTime;
-				blendTime = 0.0f;
-				blendRUID = 0;
-				blend = false;
-			}
-		}
-
 		for (int i = 0; i < animation->numBones; i++)
 		{
 			if (bones.find(i) == bones.end()) //If no game object assigned
@@ -81,19 +67,33 @@ bool ComponentAnimation::Update(float dt)
 
 					ResourceAnimation* rblendAnimation = (ResourceAnimation*)App->resources->GetResource(blendRUID);
 					
-					if (blendRUID!=0)
+					if (rblendAnimation != nullptr)
 					{
-						animation->boneTransformations[i].calcCurrentIndex(blendTime*rblendAnimation->ticksXsecond);
 						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond);
+						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendTime*rblendAnimation->ticksXsecond);
 						
 						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
 						rblendAnimation->boneTransformations[i].calcTransfrom(blendTime*rblendAnimation->ticksXsecond);
 
 						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
-
+						LOG("%f", blendTime);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
 					}
 				}
+			}
+		}
+
+		if (blend && smoothT)
+		{
+			blendTime += dt;
+
+			if (blendTime > totalBlendTime)
+			{
+				assignResource(blendRUID);
+				animTime = blendTime;
+				blendTime = 0.0f;
+				blendRUID = 0;
+				blend = false;
 			}
 		}
 	}
@@ -164,44 +164,37 @@ void ComponentAnimation::activateDebugBones(GameObject* GO, bool active)
 	}
 }
 
-void ComponentAnimation::assignResource(uint UID)
+void ComponentAnimation::assignResource(uint UID, bool doBlend)
 {
-	Component::assignResource(UID);
-	bones.clear();
+	if (!doBlend)
+	{
+		Component::assignResource(UID);
+		bones.clear();
+		animTime = 0;
+	}
+	else
+	{
+		blendRUID = UID;
+		blendBones.clear();
+		blend = true;
+		blendTime = 0;
+	}
 
-	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
+	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(UID);
 	if (animation != nullptr)
 	{
-		animTime = 0;
+		if (doBlend)
+			animation->LoadtoMemory();
 
 		for (int i = 0; i < animation->numBones; i++)
 		{
 			GameObject* GO = gameObject->getChildByName(animation->boneTransformations[i].NodeName.c_str());
 			if (GO != nullptr)
 			{
-				bones[i] = GO->UID;
-			}
-		}
-	}
-}
-
-void ComponentAnimation::assignBlendResource(uint UID)
-{
-	blendRUID = UID;
-	blendBones.clear();
-
-	ResourceAnimation* blendAnimation = (ResourceAnimation*)App->resources->GetResource(UID);
-	if (blendAnimation != nullptr)
-	{
-		blendAnimation->LoadtoMemory();
-		blendTime = 0;
-
-		for (int i = 0; i < blendAnimation->numBones; i++)
-		{
-			GameObject* GO = gameObject->getChildByName(blendAnimation->boneTransformations[i].NodeName.c_str());
-			if (GO != nullptr)
-			{
-				blendBones[i] = GO->UID;
+				if (!doBlend)
+					bones[i] = GO->UID;
+				else
+					blendBones[i] = GO->UID;
 			}
 		}
 	}

@@ -282,7 +282,7 @@ void BoneTransform::smoothBlending(const float4x4& blendtrans, float time)
 	vec scale_2;
 
 	blendtrans.Decompose(position_2, rotation_2, scale_2);
-	
+
 	vec finalpos	= position_1.Lerp(position_2, time);
 	Quat finalrot	= rotation_1.Slerp(rotation_2, time);
 	vec finalscale	= scale_1.Lerp(scale_2, time);

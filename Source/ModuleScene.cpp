@@ -111,27 +111,23 @@ update_status ModuleScene::Update(float dt)
 			{
 				if (anim->RUID == attackAnim && anim->Finished())
 				{
-					anim->assignBlendResource(idleAnim);
+					anim->assignResource(idleAnim, true);
 					anim->loop = true;
-					anim->blend = true;
 				}
 
 				if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && anim->RUID == idleAnim)
 				{
-					anim->assignBlendResource(attackAnim);
+					anim->assignResource(attackAnim, true);
 					anim->loop = false;
-					anim->blend = true;
 				}
 				if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && anim->RUID == idleAnim)
 				{
-					anim->assignBlendResource(walkAnim);
+					anim->assignResource(walkAnim, true);
 					anim->loop = true;
-					anim->blend = true;
 				}
-				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP && anim->RUID == walkAnim)
+				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
 				{
-					anim->assignBlendResource(idleAnim);
-					anim->blend = true;
+					anim->assignResource(idleAnim, true);
 				}
 			}
 
