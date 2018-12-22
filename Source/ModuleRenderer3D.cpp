@@ -281,17 +281,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		float* ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
 		float* ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
 
-		//TODO to test
-		if (true)
-		{
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glLoadMatrixf(ProjectionM);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			changedGameFOV = false;
-			changedSceneFOV = true;
-		}
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(ProjectionM);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		changedSceneFOV = true;
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(ViewM);

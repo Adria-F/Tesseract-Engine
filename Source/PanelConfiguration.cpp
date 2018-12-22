@@ -234,26 +234,9 @@ void PanelConfiguration::Draw()
 		ImGui::Text("X: %d | Y: %d", App->input->mouse_x, App->input->mouse_y);
 	}
 
-	if (ImGui::CollapsingHeader("Time Manager"))
+	if (ImGui::CollapsingHeader("Game"))
 	{
-		static int GameFrCap = App->getGameFramerateCap();
-		if (ImGui::SliderInt("Game MaxFPS", &GameFrCap, 1, 120))
-			App->setGameFramerateCap(GameFrCap);
-		
-		if (ImGui::Checkbox("Game Vsync", &App->renderer3D->vsync))
-		{
-			if (App->renderer3D->vsync)
-				SDL_GL_SetSwapInterval(1);
-			else
-				SDL_GL_SetSwapInterval(0);
-		}
-
-		char title[25];
-		sprintf_s(title, 25, "Game Framerate %.1f", game_fps_log[game_fps_log.size() - 1]);
-		ImGui::PlotHistogram("##Game framerate", &game_fps_log[0], game_fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-
-		sprintf_s(title, 25, "Game Milliseconds %0.1f", game_ms_log[game_ms_log.size() - 1]);
-		ImGui::PlotHistogram("##Game milliseconds", &game_ms_log[0], game_ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+		ImGui::SliderFloat("Game Speed", &App->gameSpeed, 0.1f, 5.0f);		
 	}
 
 	ImGui::End();

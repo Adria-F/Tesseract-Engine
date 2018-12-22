@@ -52,6 +52,7 @@ public:
 
 	//Timer game_timer;
 	float game_dt = 0.0f;
+	float gameSpeed = 1.0f;
 
 private:
 

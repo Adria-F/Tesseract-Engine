@@ -137,8 +137,10 @@ void Application::PrepareUpdate()
 	}
 	else
 	{
-		game_dt = dt / ((float)GameframerateCap/ (float)framerateCap);
+		game_dt = dt;
 	}
+
+	game_dt *= gameSpeed;
 
 	ms_timer.Start();
 
