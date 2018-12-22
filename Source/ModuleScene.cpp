@@ -79,7 +79,7 @@ update_status ModuleScene::Update(float dt)
 		idleAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy.fbx", "animations", "Take 001(2)");
 
 	if (walkAnim == 0)
-		walkAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@move_forward_B.fbx", "animations", "Take 001(4)");
+		walkAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@walk.fbx", "animations", "Take 001(5)");
 
 	if (attackAnim == 0)
 		attackAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@hp_upper_right_A.fbx", "animations", "Take 001(3)");
