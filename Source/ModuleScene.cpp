@@ -87,7 +87,6 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		quadTree->Clear();
-
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
@@ -112,23 +111,27 @@ update_status ModuleScene::Update(float dt)
 			{
 				if (anim->RUID == attackAnim && anim->Finished())
 				{
-					anim->assignResource(idleAnim);
+					anim->assignBlendResource(idleAnim);
 					anim->loop = true;
+					anim->blend = true;
 				}
 
 				if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && anim->RUID == idleAnim)
 				{
-					anim->assignResource(attackAnim);
+					anim->assignBlendResource(attackAnim);
 					anim->loop = false;
+					anim->blend = true;
 				}
 				if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && anim->RUID == idleAnim)
 				{
-					anim->assignResource(walkAnim);
+					anim->assignBlendResource(walkAnim);
 					anim->loop = true;
+					anim->blend = true;
 				}
 				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP && anim->RUID == walkAnim)
 				{
-					anim->assignResource(idleAnim);
+					anim->assignBlendResource(idleAnim);
+					anim->blend = true;
 				}
 			}
 

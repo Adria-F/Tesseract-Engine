@@ -10,6 +10,10 @@ struct BoneTransform
 	bool calcCurrentIndex(float time);
 	void calcTransfrom(float time);
 
+	void blendAnimation();
+	void smoothBlending(const float4x4& blendtrans, float time);
+	void frozenBlending(const BoneTransform& bone, float time, float blendTime);
+
 	std::string NodeName = "";
 	
 	float4x4 lastTransform = float4x4::identity;
@@ -55,8 +59,6 @@ public:
 	
 	float ticks = 0.0f;
 	float ticksXsecond = 0.0f;
-
-	float time = 0.0f;
 	
 	int numBones=0;
 

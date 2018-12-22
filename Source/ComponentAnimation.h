@@ -21,7 +21,7 @@ public:
 	void assignResource(uint UID);
 	void assignBlendResource(uint UID);
 
-	void blendAnimation();
+
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
@@ -36,10 +36,16 @@ public:
 	bool debugDraw = false;
 	bool bonesLoaded = false;
 	bool blend = false;
+	bool smoothT = false;
+	bool frozenT = false;
 
 	uint blendRUID = 0;
 
+	float animTime = 0.0f;
 	float blendPercent = 0.0f;
+	float blendTime = 0.0f;
+	float totalBlendTime = 0.1f;
+	float speed = 1.0f;
 
 	//bone transformation index and bone GameObject UID
 	std::map<uint, uint> bones;
