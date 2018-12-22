@@ -31,27 +31,42 @@ void PanelGame::Draw()
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar;
 	ImGui::Begin(name.c_str(), &active, flags);
 
+	ImVec2 newSize = ImGui::GetWindowContentRegionMax();
+	newSize.y += 30;
+	if (newSize != size)
+	{	
+		size = newSize;
+		resizedLastFrame = true;
+	}
+	float AR = App->scene_intro->activeCamera->camera->frustum.AspectRatio();
+	if (AR != lastAR)
+	{
+		lastAR = AR;
+		resizedLastFrame = true;
+	}
+
 	if (App->scene_intro->activeCamera != nullptr)
 	{
-		ImVec2 newSize = ImGui::GetWindowSize();
-		if (newSize != size)
+		if (resizedLastFrame)
 		{
-			resizedLastFrame = true;
-			size = newSize;
-			float newAR = size.x / size.y;
-			if (App->scene_intro->activeCamera != nullptr)
-				App->scene_intro->activeCamera->camera->setAspectRatio(newAR);
-			App->renderer3D->changedGameFOV = true;
-		}
-		else
 			resizedLastFrame = false;
 
-		ImGui::Image((ImTextureID)App->renderer3D->GamerenderedTexture, { (float)size.x, (float)size.y }, { 0,1 }, { 1,0 });
+			viewSize.x = size.x;
+			viewSize.y = viewSize.x / AR;
+
+			if (viewSize.y > size.y)
+			{
+				viewSize.y = size.y;
+				viewSize.x = viewSize.y*AR;
+			}
+		}
+
+		ImGui::SetCursorPos({ (size.x - viewSize.x) / 2, (size.y - viewSize.y) / 2 });
+		ImGui::Image((ImTextureID)App->renderer3D->GamerenderedTexture, { (float)viewSize.x, (float)viewSize.y }, { 0,1 }, { 1,0 });
 	}
 	else
 	{
-		ImVec2 newSize = ImGui::GetWindowSize();
-		ImGui::SetCursorPos({ newSize.x / 2 - 65,newSize.y / 2 - 15 });
+		ImGui::SetCursorPos({ size.x / 2 - 65,size.y / 2 - 15 });
 		ImGui::Text("No Main Camera Defined");
 	}
 
