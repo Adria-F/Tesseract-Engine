@@ -311,9 +311,20 @@ void ComponentAnimation::Save(JSON_Value * component) const
 	animation->addBool("loop", loop);
 
 	//TMP
-	animation->addUint("walkUID", walkUID);
-	animation->addUint("attackUID", attackUID);
+	ResourceAnimation* walk = (ResourceAnimation*)App->resources->GetResource(walkUID);
+	if (walk != nullptr)
+	{
+		animation->addString("walkFBX", walk->GetFile());
+		animation->addString("walkAnimation", walk->GetName());
+	}
 	animation->addFloat("walkBlendTime", walkBlendTime);
+
+	ResourceAnimation* attack = (ResourceAnimation*)App->resources->GetResource(attackUID);
+	if (attack != nullptr)
+	{
+		animation->addString("attackFBX", attack->GetFile());
+		animation->addString("attackAnimation", attack->GetName());
+	}
 	animation->addFloat("attackBlendTime", attackBlendTime);
 
 	if (rAnimation != nullptr)
@@ -332,8 +343,8 @@ void ComponentAnimation::Load(JSON_Value * component)
 	loop = component->getBool("loop");
 
 	//TMP
-	walkUID = component->getUint("walkUID");
-	attackUID = component->getUint("attackUID");
+	walkUID = App->resources->getResourceUIDFromMeta(component->getString("walkFBX"), "animations", component->getString("walkAnimation"));
+	attackUID = App->resources->getResourceUIDFromMeta(component->getString("attackFBX"), "animations", component->getString("attackAnimation"));
 	walkBlendTime = component->getFloat("walkBlendTime");
 	attackBlendTime = component->getFloat("attackBlendTime");
 

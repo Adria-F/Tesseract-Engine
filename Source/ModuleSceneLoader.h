@@ -33,7 +33,6 @@ public:
 
 	std::vector<ResourceMesh*> importMeshes(const char* path, const aiScene* scene, std::vector<uint>& meshUIDs, std::vector<uint>& bonesUIDs, std::vector<ResourceBone*>& rBones, JSON_Value* meta, bool newMeta = false);
 	std::vector<ResourceAnimation*> importAnimations(const char* path, const aiScene* scene, std::vector<uint>& animationUIDs, JSON_Value* meta, bool newMeta = false);
-	std::vector<ResourceBone*> importBones(const char* path, const aiScene* scene, std::vector<uint>& bonesUIDs, JSON_Value* meta, bool newMeta=false);
 	std::vector<uint> importBonesFromMesh(const char* path, const aiMesh* mesh, std::vector<uint>& bonesUIDs, std::vector<ResourceBone*>& rBones, std::map<std::string*, uint>& boneUIDs, std::vector<std::string*> bonesNames, uint meshUID, JSON_Value* meta, bool newMeta = false);
 	std::vector<ResourceMaterial*> importMaterials(const char* path, const aiScene* scene);
 	ResourceMaterial* importColor(const char* path, const aiScene* scene, int index);
