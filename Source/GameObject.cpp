@@ -56,7 +56,24 @@ void GameObject::Update(float dt)
 	if (active)
 	{
 		if (animation != nullptr)
+		{
+			if (!App->inGameMode() && animation->TestPlay)
+			{
+				dt = App->GetDeltaTime();
+				
+				if (!selected)
+				{
+					animation->TestPlay = false;
+					animation->animTime = 0.0f;
+				}
+			}
+			else
+			{
+				animation->TestPlay = false;
+			}
+
 			animation->Update(dt);
+		}
 
 		if (camera != nullptr)
 			camera->Update(dt);

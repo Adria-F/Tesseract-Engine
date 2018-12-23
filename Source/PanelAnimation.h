@@ -33,8 +33,10 @@ private:
 
 	ImVec2 barMovement = { 0, 0 };
 	ImVec2 mouseMovement = { 0, 0 };
+	
 	bool dragging = false;
 	bool scrolled = false;
+	bool animplay = false;
 
 	float recSize=700;
 	float zoom = 50;
