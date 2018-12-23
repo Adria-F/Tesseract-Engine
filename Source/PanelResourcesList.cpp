@@ -84,7 +84,7 @@ void PanelResourcesList::Draw()
 		{
 			if (callbackComponent != nullptr)
 			{
-				callbackComponent->assignResource(resourceList[i]->GetUID());
+				callbackComponent->onResourceListEvent(resourceList[i]->GetUID(), tag.c_str());
 			}
 			active = false;
 		}
@@ -95,13 +95,14 @@ void PanelResourcesList::Draw()
 	ImGui::End();
 }
 
-void PanelResourcesList::startList(ResType type, int x, int y, Component* callback)
+void PanelResourcesList::startList(ResType type, int x, int y, Component* callback, const char* tag)
 {
 	currentType = type;
 	resources = App->resources->getResourcesByType(type);
 	if (type == R_TEXTURE)
 		extraResources = App->resources->getResourcesByType(R_COLOR);
 	callbackComponent = callback;
+	this->tag = tag;
 
 	ImGui::SetWindowPos(name.c_str(), {(float)x, (float)y });
 

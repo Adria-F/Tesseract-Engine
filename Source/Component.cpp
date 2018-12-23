@@ -70,6 +70,14 @@ void Component::assignResource(uint UID)
 		newR->LoadtoMemory();
 }
 
+void Component::onResourceListEvent(uint UID, std::string tag)
+{
+	if (tag == "MAIN")
+	{
+		assignResource(UID);
+	}
+}
+
 void Component::beginDroppableSpace(const char * string, bool empty, float2 size)
 {
 	float button_alpha = 0.7f;
@@ -88,9 +96,12 @@ void Component::beginDroppableSpace(const char * string, bool empty, float2 size
 	ImGui::PopStyleColor(3);
 }
 
-void Component::pickResourceButton(ResType type)
+void Component::pickResourceButton(ResType type, const char* tag)
 {
-	ImGui::PushID(("pick"+std::to_string(type)).c_str());
+	std::string ID = "pick" + std::to_string(type);
+	ID += tag;
+
+	ImGui::PushID(ID.c_str());
 	if (ImGui::RadioButton("", false))
 	{
 		ImVec2 pos = ImGui::GetWindowPos();
@@ -98,7 +109,7 @@ void Component::pickResourceButton(ResType type)
 			pos.x += ImGui::GetWindowWidth();
 		else
 			pos.x -= 204;
-		App->gui->startResourceList(type, pos.x, pos.y, this);
+		App->gui->startResourceList(type, pos.x, pos.y, this, tag);
 	}
 	ImGui::PopID();
 }

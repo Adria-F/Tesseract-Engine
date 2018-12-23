@@ -249,7 +249,10 @@ std::vector<ResourceMesh*> ModuleSceneLoader::importMeshes(const char* path, con
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		//Create Resource Mesh
-		std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : "Unnamed";
+		std::string fileName;
+		App->fileSystem->splitPath(path, nullptr, &fileName, nullptr);
+
+		std::string meshName = (scene->mMeshes[i]->mName.length > 0) ? scene->mMeshes[i]->mName.C_Str() : fileName+"_Mesh";
 		meshName = App->resources->getResourceAvailableName(meshName.c_str(), R_MESH); //Get the available name for the mesh
 
 		ResourceMesh* meshResource = nullptr;
@@ -319,7 +322,10 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	std::map<std::string*, uint> animationsUIDs;
 	for (int i = 0; i < scene->mNumAnimations; i++)
 	{
-		std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : "Unnamed";
+		std::string fileName;
+		App->fileSystem->splitPath(path, nullptr, &fileName, nullptr);
+
+		std::string animationName = (scene->mAnimations[i]->mName.length > 0) ? scene->mAnimations[i]->mName.C_Str() : fileName+"_Animation";
 		animationName = App->resources->getResourceAvailableName(animationName.c_str(), R_ANIMATION);
 
 		uint UID = App->resources->getResourceUIDFromMeta(path, animationName.c_str());
@@ -355,65 +361,17 @@ std::vector<ResourceAnimation*> ModuleSceneLoader::importAnimations(const char* 
 	return rAnimations;
 }
 
-std::vector<ResourceBone*> ModuleSceneLoader::importBones(const char * path, const aiScene * scene, std::vector<uint>& bonesUIDs, JSON_Value* meta, bool newMeta)
-{
-	std::vector<ResourceBone*> rBones;
-	vector<std::string*> BonesNames;
-	std::map<std::string*, uint> boneUIDs;
-	for (int i = 0; i < scene->mNumMeshes; i++)
-	{
-		for (int j = 0; j < scene->mMeshes[i]->mNumBones; j++)
-		{
-			aiBone* bone = scene->mMeshes[i]->mBones[j];
-			std::string boneName = (bone->mName.length > 0) ? bone->mName.C_Str() : "Unnamed";
-			boneName = App->resources->getResourceAvailableName(boneName.c_str(), R_BONE); //Get the available name for the animation
-
-			uint UID = App->resources->getResourceUIDFromMeta(path, boneName.c_str());
-			if (UID == 0)
-				UID = GENERATE_UID();
-
-			std::string exportedFile;
-			ResourceBone* boneResource = nullptr;
-			if (App->animations->importBones(bone,UID,exportedFile))
-			{
-				//TODO what if different meshes with same name
-				//modify scene .meta
-
-				bonesUIDs.push_back(UID);
-				std::string* nameAlloc = new std::string(boneName);
-				BonesNames.push_back(nameAlloc); //Allocate it to keep it through the loop (Cleaned later)
-				boneUIDs[nameAlloc] = UID;
-
-				boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
-				boneResource->name = bone->mName.C_Str();
-				boneResource->file = path;
-				boneResource->exported_file = exportedFile;
-			}
-			rBones.push_back(boneResource);
-		}
-	}
-
-	if (newMeta)
-		App->resources->updateMetaUIDsList(path, "bones", boneUIDs, meta);
-	else
-		App->resources->updateMetaUIDsList(path, "bones", boneUIDs);
-	int size = boneUIDs.size();
-	for (int i = 0; i < size; i++) //Clean the vector of names
-		RELEASE(BonesNames[i]);
-	BonesNames.clear();
-	boneUIDs.clear(); //The allocated names are cleaned with the vector
-
-	return rBones;
-}
-
 std::vector<uint> ModuleSceneLoader::importBonesFromMesh(const char * path, const aiMesh* mesh, std::vector<uint>& bonesUIDs, std::vector<ResourceBone*>& rBones, std::map<std::string*, uint>& boneUIDs, std::vector<std::string*> bonesNames, uint meshUID, JSON_Value* meta, bool newMeta)
 {
 	std::vector<uint> rBonesUID;
 		
 	for (int j = 0; j < mesh->mNumBones; j++)
 	{
+		std::string fileName;
+		App->fileSystem->splitPath(path, nullptr, &fileName, nullptr);
+
 		aiBone* bone = mesh->mBones[j];
-		std::string boneName = (bone->mName.length > 0) ? bone->mName.C_Str() : "Unnamed";		
+		std::string boneName = (bone->mName.length > 0) ? bone->mName.C_Str() : fileName+"_Bone";		
 		App->fileSystem->getAvailableNameFromArray(bonesNames, boneName);
 
 		uint UID = App->resources->getResourceUIDFromMeta(path, boneName.c_str());
@@ -432,7 +390,7 @@ std::vector<uint> ModuleSceneLoader::importBonesFromMesh(const char * path, cons
 			boneUIDs[nameAlloc] = UID;
 			bonesNames.push_back(nameAlloc);
 
-			boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, 0);
+			boneResource = (ResourceBone*)App->resources->AddResource(R_BONE, UID);
 			boneResource->name = bone->mName.C_Str();
 			boneResource->file = path;
 			boneResource->exported_file = exportedFile;

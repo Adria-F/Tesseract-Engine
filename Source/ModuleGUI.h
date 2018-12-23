@@ -49,7 +49,7 @@ public:
 	void SaveDialogAt(const char* path, const char* exclusiveExtension = nullptr);
 	void LoadDialogAt(const char* path, const char* exclusiveExtension = nullptr);
 
-	void startResourceList(ResType type, int x, int y, Component* callback);
+	void startResourceList(ResType type, int x, int y, Component* callback, const char* tag);
 
 	void saveDefaultImgui();
 

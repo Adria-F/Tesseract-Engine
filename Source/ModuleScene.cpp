@@ -75,15 +75,6 @@ update_status ModuleScene::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	if (idleAnim == 0)
-		idleAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy.fbx", "animations", "Take 001(2)");
-
-	if (walkAnim == 0)
-		walkAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@walk.fbx", "animations", "Take 001(5)");
-
-	if (attackAnim == 0)
-		attackAnim = App->resources->getResourceUIDFromMeta("Assets/Models/BlueGuy@hp_upper_right_A.fbx", "animations", "Take 001(3)");
-
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		quadTree->Clear();
@@ -107,26 +98,6 @@ update_status ModuleScene::Update(float dt)
 		else
 		{
 			ComponentAnimation* anim = (ComponentAnimation*)(*it_go).second->GetComponent(ANIMATION);
-			if (anim != nullptr && App->inGameMode())
-			{
-				if (anim->RUID == attackAnim && anim->Finished())
-				{
-					anim->assignResource(idleAnim, true);
-				}
-
-				if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && anim->RUID == idleAnim)
-				{
-					anim->assignResource(attackAnim, true,false);
-				}
-				if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && anim->RUID == idleAnim)
-				{
-					anim->assignResource(walkAnim, true);
-				}
-				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
-				{
-					anim->assignResource(idleAnim, true);
-				}
-			}
 
 			it_go++;
 		}

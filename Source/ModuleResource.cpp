@@ -275,6 +275,15 @@ bool ModuleResource::deleteResource(uint uid)
 	return false;
 }
 
+void ModuleResource::deleteAllResources()
+{
+	for (std::map<uint, Resource*>::iterator it_rs = resources.begin(); it_rs != resources.end(); it_rs++)
+	{
+		RELEASE((*it_rs).second);
+	}
+	resources.clear();
+}
+
 uint ModuleResource::GetResourceByFile(const char* file)
 {
 	uint ret = 0;

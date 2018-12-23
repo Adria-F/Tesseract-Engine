@@ -23,6 +23,7 @@ public:
 	Resource* GetResource(uint uid);
 	Resource* AddResource(ResType type, uint forced_uid = 0);
 	bool deleteResource(uint uid);
+	void deleteAllResources();
 	uint GetResourceByFile(const char* file);
 	std::vector<Resource*> getResourcesByType(ResType type);
 	std::string getResourceAvailableName(const char* name, ResType type);

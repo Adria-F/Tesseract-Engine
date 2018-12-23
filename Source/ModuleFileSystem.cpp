@@ -530,6 +530,8 @@ void ModuleFileSystem::reimportFiles()
 		if (PHYSFS_exists(mainPaths[i]) == 0)
 			PHYSFS_mkdir(mainPaths[i]);
 	}
+
+	App->resources->deleteAllResources();
 }
 
 void ModuleFileSystem::deleteMetasAt(const char * path)
