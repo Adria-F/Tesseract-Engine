@@ -100,6 +100,8 @@ float* ComponentMesh::Skining()
 				for (int j = 0; j < rBone->numWeights; j++)
 				{
 					uint VertexIndex = rBone->weights[j].VertexID;
+					if (VertexIndex*3 >= mesh->num_vertices * 3)
+						continue;
 					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
 					float3 movementWeight = boneTransform.TransformPos(startingVertex);
 
