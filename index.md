@@ -7,16 +7,12 @@ This is a 3D Engine created as the main project of the Engines subject of the
  
  
 ## Contributors:
-This engine is created by:
+This engine is created by [Adrià Ferrer](https://github.com/Adria-F) and [Marc Garcia](https://github.com/MaxitoSama):
 
 <p align="center"> 
-<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="300">
-<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="300">
+<img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="300"> 
+<img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="300"> 
 </p>
-
-[Adrià Ferrer](https://github.com/Adria-F)
-                                          
-[Marc Garcia](https://github.com/MaxitoSama)
 
 ## Members Tasks:
 
@@ -87,10 +83,16 @@ of the next animation before finally swaping the animations.
 Before the render of the mesh, it calculates a morphed version of it, adapting to the linked bones and rendering it instead of the original one.
 
 
-editor gif
+* Editor gif
+<img src="https://i.imgur.com/WlKvYpc.gif" width="600">
 
 
-in-game gif
+* In-game gif
+<img src="https://i.imgur.com/VrgteMT.gif" width="600">
+
+* Innovation gif
+<img src="https://i.imgur.com/yJ7HX97.gif" width="600">
+
 
 ## How does it work
 <iframe width="560" height="315" src="https://www.youtube.com/embed/1RCCo8iVn8Q" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
