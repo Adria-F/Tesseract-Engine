@@ -85,7 +85,7 @@ bool ComponentAnimation::Update(float dt)
 				ComponentTransformation* transform = (ComponentTransformation*)GO->GetComponent(TRANSFORMATION);
 				if (!blend || !smoothT)
 				{
-					if (animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond))
+					if (animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond,TestPlay))
 					{
 						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
@@ -105,8 +105,8 @@ bool ComponentAnimation::Update(float dt)
 							blendAnimTime -= rblendAnimation->getDuration();
 						}
 
-						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond);
-						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendAnimTime*rblendAnimation->ticksXsecond);
+						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond, TestPlay);
+						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendAnimTime*rblendAnimation->ticksXsecond, TestPlay);
 						
 						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
 						rblendAnimation->boneTransformations[i].calcTransfrom(blendAnimTime*rblendAnimation->ticksXsecond);

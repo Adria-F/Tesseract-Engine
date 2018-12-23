@@ -52,6 +52,8 @@ public:
 	float totalBlendTime = 0.1f;
 	float speed = 1.0f;
 
+	bool TestPlay = false;
+
 	//bone transformation index and bone GameObject UID
 	std::map<uint, uint> bones;
 	std::map<uint, uint> blendBones;

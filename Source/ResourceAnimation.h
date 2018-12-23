@@ -7,7 +7,7 @@ struct BoneTransform
 {
 	~BoneTransform();
 
-	bool calcCurrentIndex(float time);
+	bool calcCurrentIndex(float time,bool test);
 	void calcTransfrom(float time);
 
 	void blendAnimation();
