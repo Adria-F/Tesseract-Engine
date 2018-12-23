@@ -3,6 +3,7 @@
 
 #include "Panel.h"
 
+class ComponentAnimation;
 class ResourceAnimation;
 class BoneTransform;
 
@@ -12,12 +13,16 @@ class PanelAnimation :
 public:
 
 	PanelAnimation(const char* name);
+
+	bool fillInfo();
+
 	~PanelAnimation();
 
 	void Draw();
 
 public:
 
+	ComponentAnimation* compAnimation = nullptr;
 	ResourceAnimation* animation = nullptr;
 	BoneTransform* selectedBone=nullptr;
 

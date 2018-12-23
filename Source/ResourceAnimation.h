@@ -51,7 +51,6 @@ public:
 	bool LoadAnimation();
 	bool UnloadFromMemory();
 	
-	void SendAnimationtoPanel();
 	void resetFrames();
 	float getDuration() const;
 

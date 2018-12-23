@@ -112,18 +112,15 @@ update_status ModuleScene::Update(float dt)
 				if (anim->RUID == attackAnim && anim->Finished())
 				{
 					anim->assignResource(idleAnim, true);
-					anim->loop = true;
 				}
 
 				if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && anim->RUID == idleAnim)
 				{
-					anim->assignResource(attackAnim, true);
-					anim->loop = false;
+					anim->assignResource(attackAnim, true,false);
 				}
 				if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN && anim->RUID == idleAnim)
 				{
 					anim->assignResource(walkAnim, true);
-					anim->loop = true;
 				}
 				else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
 				{

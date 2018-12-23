@@ -81,7 +81,6 @@ bool ComponentAnimation::Update(float dt)
 						rblendAnimation->boneTransformations[i].calcTransfrom(blendAnimTime*rblendAnimation->ticksXsecond);
 						
 						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
-						LOG("%f", blendTime);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
 					}
 				}
@@ -101,6 +100,7 @@ bool ComponentAnimation::Update(float dt)
 				blendTime = 0.0f;
 				blendRUID = 0.0f;
 				blend = false;
+				loop = blendLoop;
 			}
 		}
 	}
@@ -139,7 +139,7 @@ void ComponentAnimation::DrawInfo()
 			ImGui::InputFloat("", &speed, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::PopID();
 
-			ImGui::Text("Animation Times:\n Duration: %f | Speed: %f", animation->ticks,animation->ticksXsecond);
+			ImGui::Text("Animation Times:\nDuration: %.2f | Speed: %f", animation->ticks,animation->ticksXsecond);
 			ImGui::Text("Number of bones: %d", animation->numBones);
 		}
 
@@ -158,11 +158,6 @@ void ComponentAnimation::DrawInfo()
 		{
 			frozenT = false;
 		}
-
-		if (ImGui::Checkbox("Frozen Transition", &frozenT))
-		{
-			smoothT = false;
-		}
 	}
 }
 
@@ -178,7 +173,7 @@ void ComponentAnimation::activateDebugBones(GameObject* GO, bool active)
 	}
 }
 
-void ComponentAnimation::assignResource(uint UID, bool doBlend)
+void ComponentAnimation::assignResource(uint UID, bool doBlend, bool blendloop)
 {
 	if (!doBlend)
 	{
@@ -193,13 +188,16 @@ void ComponentAnimation::assignResource(uint UID, bool doBlend)
 		blend = true;
 		blendTime = 0.0f;
 		blendAnimTime = 0.0f;
+		blendLoop = blendloop;
 	}
 
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(UID);
 	if (animation != nullptr)
 	{
 		if (doBlend)
+		{
 			animation->LoadtoMemory();
+		}
 
 		for (int i = 0; i < animation->numBones; i++)
 		{

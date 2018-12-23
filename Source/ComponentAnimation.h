@@ -18,7 +18,7 @@ public:
 	void DrawInfo();
 	void activateDebugBones(GameObject* GO, bool active);
 
-	void assignResource(uint UID, bool doBlend = false);
+	void assignResource(uint UID, bool doBlend = false,bool blendloop=true);
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
@@ -28,6 +28,7 @@ public:
 public:
 
 	bool loop = false;
+	bool blendLoop = false;
 	bool debugDraw = false;
 	bool bonesLoaded = false;
 	bool blend = false;

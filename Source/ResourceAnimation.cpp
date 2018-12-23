@@ -26,7 +26,6 @@ void ResourceAnimation::setImportDefaults(JSON_Value& importSettings)
 bool ResourceAnimation::LoadInMemory()
 {
 	LoadAnimation();
-	SendAnimationtoPanel();
 
 	return true;
 }
@@ -125,16 +124,6 @@ bool ResourceAnimation::UnloadFromMemory()
 	}
 
 	return true;
-}
-
-void ResourceAnimation::SendAnimationtoPanel()
-{
-	if (App->gui->animations != nullptr)
-	{
-		App->gui->animations->animation = this;
-		App->gui->animations->numFrames = ticks;
-
-	}
 }
 
 void ResourceAnimation::resetFrames()
