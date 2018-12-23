@@ -3,6 +3,11 @@
 #include "ModuleFileSystem.h"
 #include "ComponentMesh.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ResourceBone::ResourceBone(uint UID, ResType type) :Resource(UID, type)
 {
 }
@@ -63,6 +68,8 @@ bool ResourceBone::LoadBone()
 			cursor += bytes;
 		}
 	}
+
+	RELEASE_ARRAY(buffer);
 
 	return true;
 }

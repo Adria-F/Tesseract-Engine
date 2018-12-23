@@ -7,6 +7,11 @@
 #include "ModuleResource.h"
 #include "ResourceAnimation.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 PanelAnimation::PanelAnimation(const char* name):Panel(name)
 {
 	active = true;

@@ -7,6 +7,11 @@
 
 #include "Primitive.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ResourceAnimation::ResourceAnimation(uint UID, ResType type) :Resource(UID, type)
 {
 
@@ -122,6 +127,8 @@ bool ResourceAnimation::UnloadFromMemory()
 	{
 		App->gui->animations->animation = nullptr;
 	}
+
+	RELEASE_ARRAY(boneTransformations);
 
 	return true;
 }

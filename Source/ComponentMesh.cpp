@@ -15,10 +15,10 @@
 #include "ResourceMesh.h"
 #include "ResourceBone.h"
 
-//#ifdef _DEBUG
-////#define TEST_MEMORY_MANAGER
-//#include "mmgr/mmgr.h"
-//#endif
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
 
 ComponentMesh::ComponentMesh(GameObject* parent, componentType type) : Component(parent, type)
 {

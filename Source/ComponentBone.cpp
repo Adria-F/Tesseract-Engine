@@ -10,6 +10,11 @@
 
 #include "Primitive.h"
 
+#ifdef _DEBUG
+//#define TEST_MEMORY_MANAGER
+#include "mmgr/mmgr.h"
+#endif
+
 ComponentBone::ComponentBone(GameObject* parent, componentType type) : Component(parent, type)
 {
 	sphere = new MSphere();
@@ -22,6 +27,10 @@ ComponentBone::~ComponentBone()
 {
 	RELEASE(sphere);
 	RELEASE(line);
+
+	ResourceBone* bone = (ResourceBone*)App->resources->GetResource(RUID);
+	if (bone != nullptr)
+		bone->UnloadMemory();
 }
 
 bool ComponentBone::drawDebugInfo()
