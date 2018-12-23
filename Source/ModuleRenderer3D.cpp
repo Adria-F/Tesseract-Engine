@@ -649,7 +649,7 @@ void ModuleRenderer3D::DrawBB(const AABB & BB, vec color) const
 
 void ModuleRenderer3D::addToRenderBuffer(const GameObject* gameObject)
 {
-	if (gameObject->material != nullptr && gameObject->material->doBlendColors)
+	if (gameObject->material != nullptr && (gameObject->material->doBlendColors || gameObject->material->transparentColor))
 	{
 		blendColorsBuffer.push(gameObject);
 	}

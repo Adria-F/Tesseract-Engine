@@ -82,17 +82,19 @@ void ComponentMesh::DrawInfo()
 float* ComponentMesh::Skining()
 {
 	ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResource(RUID);
-	if (mesh != nullptr && componentsBones.size() > 0)
+	if (mesh != nullptr && componentsBones.size() > 0 && gameObject->parent != nullptr && gameObject->parent->GetComponent(ANIMATION) != nullptr)
 	{
 		float* vertices = new float[mesh->num_vertices * 3];
 		memset(vertices, 0, sizeof(float)*mesh->num_vertices * 3);
 
+		bool hasBones = false;
 		for (int i = 0; i < componentsBones.size(); i++)
 		{
 			ComponentBone* bone = (ComponentBone*)App->scene_intro->getComponent(componentsBones[i]);
 			ResourceBone* rBone = (ResourceBone*)App->resources->GetResource(bone->RUID);
 			if (bone != nullptr && rBone != nullptr)
 			{				
+				hasBones = true;
 				float4x4 boneTransform = (((ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix)*rBone->Offset;
 
 				for (int j = 0; j < rBone->numWeights; j++)
@@ -108,7 +110,10 @@ float* ComponentMesh::Skining()
 			}
 		}
 
-		return vertices;
+		if (!hasBones)
+			return nullptr;
+		else
+			return vertices;
 	}
 
 	return nullptr;
