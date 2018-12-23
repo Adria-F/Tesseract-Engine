@@ -13,7 +13,7 @@ PanelAnimation::PanelAnimation(const char* name):Panel(name)
 
 	zoom= 25;
 	numFrames = 100;
-	recSize = 700;
+	recSize = 1000;
 	speed = 0.5f;
 	progress = 0.0f;
 	winSize = 1000.0f;
@@ -61,12 +61,20 @@ void PanelAnimation::Draw()
 		if (ImGui::Button("Play"))
 		{
 			compAnimation->TestPlay = true;
+			compAnimation->TestPause = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Pause"))
+		{
+			compAnimation->TestPause = !compAnimation->TestPause;
+			mouseMovement.x = progress;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Stop") && compAnimation->TestPlay)
 		{
 			compAnimation->TestPlay = false;
 			compAnimation->animTime=0.0f;
+			compAnimation->TestPause = false;
 		}
 		
 
@@ -132,18 +140,18 @@ void PanelAnimation::Draw()
 		}
 
 		//RedLine 
-		if (!App->inGameMode() && !compAnimation->TestPlay)
+		if (!App->inGameMode() && !compAnimation->TestPlay && !compAnimation->TestPause)
 		{
 			ImGui::GetWindowDrawList()->AddLine({ redbar.x,redbar.y - 10 }, ImVec2(redbar.x, redbar.y + 165), IM_COL32(255, 0, 0, 100), 1.0f);
 			progress = 0.0f;
 			ImGui::SetScrollX(0);
 		}
-		else
+		else if(!compAnimation->TestPause)
 		{
 			float auxprgbar = progress;
 
 			ImGui::GetWindowDrawList()->AddLine({ redbar.x + progress,redbar.y - 10 }, ImVec2(redbar.x + progress, redbar.y + 165), IM_COL32(255, 0, 0, 255), 1.0f);
-
+			
 			if (!App->isGamePaused())
 			{
 				progress = (compAnimation->animTime*animation->ticksXsecond)*zoom;
@@ -165,6 +173,57 @@ void PanelAnimation::Draw()
 				progress = 0.0f;
 				ImGui::SetScrollX(0);
 			}
+		}
+
+		if (compAnimation->TestPause)
+		{
+			ImGui::SetCursorPos(ImVec2(0, 20));
+			ImVec2 leftLimit = { ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y + 130 };
+			ImVec2 rightLimit = { ImGui::GetCursorScreenPos().x + 20, ImGui::GetCursorScreenPos().y + 145 };
+
+			bool mouse = ImGui::IsMouseHoveringRect({ leftLimit.x + mouseMovement.x , leftLimit.y }, { rightLimit.x + mouseMovement.x , rightLimit.y });
+
+			ImGui::GetWindowDrawList()->AddRectFilled({ leftLimit.x + mouseMovement.x , leftLimit.y }, { rightLimit.x + mouseMovement.x , rightLimit.y }, ImColor(1.0f, 0.7f, 0.3f, 1.0f));
+
+
+			if (mouse && ImGui::IsMouseDown(0) && dragging == false)
+			{
+				dragging = true;
+			}
+
+
+			if (dragging && ImGui::IsMouseDown(0))
+			{
+				if (leftLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x > leftLimit.x && rightLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x < leftLimit.x + zoom*numFrames)
+				{
+
+					int num = (numFrames - (winSize / zoom));
+
+					if (ImGui::GetMouseDragDelta(0).x > 0)
+					{
+						mouseMovement.x += (winSize - (numFrames > 10 ? recSize / 10 : recSize / numFrames)) / numFrames;
+						barMovement.x += ((numFrames - (winSize / zoom)) * zoom) / numFrames;
+					}
+					if (ImGui::GetMouseDragDelta(0).x < 0)
+					{
+						mouseMovement.x -= (winSize - (numFrames > 10 ? recSize / 10 : recSize / numFrames)) / numFrames;
+						barMovement.x -= ((numFrames - (winSize / zoom)) * zoom) / numFrames;
+					}
+
+					mouseMovement.y += 0;
+					ImGui::ResetMouseDragDelta();
+				}
+
+				progress = mouseMovement.x;
+				compAnimation->animTime = progress / (animation->ticksXsecond *zoom);
+				
+			}
+			else
+			{
+				dragging = false;
+			}
+
+			ImGui::GetWindowDrawList()->AddLine({ redbar.x + progress,redbar.y - 10 }, ImVec2(redbar.x + progress, redbar.y + 165), IM_COL32(255, 0, 0, 255), 1.0f);
 		}
 
 		ImGui::EndChild();

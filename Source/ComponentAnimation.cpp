@@ -36,7 +36,8 @@ bool ComponentAnimation::Update(float dt)
 	ResourceAnimation* animation = (ResourceAnimation*)App->resources->GetResource(RUID);
 	if (animation != nullptr)
 	{
-		animTime += dt*speed;
+		if(!TestPause)
+			animTime += dt*speed;
 		
 		if (animTime > animation->getDuration() && loop)
 		{

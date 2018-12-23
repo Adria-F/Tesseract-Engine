@@ -45,6 +45,7 @@ public:
 	float speed = 1.0f;
 
 	bool TestPlay = false;
+	bool TestPause = false;
 
 	//bone transformation index and bone GameObject UID
 	std::map<uint, uint> bones;

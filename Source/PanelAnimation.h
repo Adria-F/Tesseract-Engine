@@ -37,6 +37,7 @@ private:
 	bool dragging = false;
 	bool scrolled = false;
 	bool animplay = false;
+	bool animpaus = false;
 
 	float recSize=700;
 	float zoom = 50;

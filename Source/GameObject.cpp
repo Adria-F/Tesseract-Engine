@@ -64,12 +64,14 @@ void GameObject::Update(float dt)
 				if (!selected)
 				{
 					animation->TestPlay = false;
+					animation->TestPause = false;
 					animation->animTime = 0.0f;
 				}
 			}
 			else
 			{
 				animation->TestPlay = false;
+				animation->TestPause = false;
 			}
 
 			animation->Update(dt);
