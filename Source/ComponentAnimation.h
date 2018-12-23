@@ -19,6 +19,7 @@ public:
 	void activateDebugBones(GameObject* GO, bool active);
 
 	void assignResource(uint UID, bool doBlend = false,bool blendloop=true);
+	void onResourceListEvent(uint UID, std::string tag);
 
 	void Save(JSON_Value* component) const;
 	void Load(JSON_Value* component);
@@ -36,6 +37,13 @@ public:
 	bool frozenT = false;
 
 	uint blendRUID = 0;
+
+	uint idleUID = 0;
+	uint walkUID = 0;
+	uint attackUID = 0;
+
+	float walkBlendTime = 0.1f;
+	float attackBlendTime = 0.1f;
 
 	float animTime = 0.0f;
 	float blendAnimTime = 0.0f;

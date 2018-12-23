@@ -292,9 +292,9 @@ void ModuleGUI::LoadDialogAt(const char * path, const char* exclusiveExtension)
 	fileDialog->LoadAt(path, exclusiveExtension);
 }
 
-void ModuleGUI::startResourceList(ResType type, int x, int y, Component* callback)
+void ModuleGUI::startResourceList(ResType type, int x, int y, Component* callback, const char* tag)
 {
-	resourcesList->startList(type, x, y, callback);
+	resourcesList->startList(type, x, y, callback, tag);
 }
 
 void ModuleGUI::saveDefaultImgui()

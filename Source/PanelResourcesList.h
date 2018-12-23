@@ -14,7 +14,7 @@ public:
 
 	void Draw();
 
-	void startList(ResType type, int x, int y, Component* callback);
+	void startList(ResType type, int x, int y, Component* callback, const char* tag);
 
 public:
 
@@ -22,6 +22,7 @@ public:
 	std::vector<Resource*> resources;
 	std::vector<Resource*> extraResources;
 	Component* callbackComponent = nullptr;
+	std::string tag;
 
 	bool showExtra = false;
 };
