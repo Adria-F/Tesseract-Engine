@@ -68,6 +68,7 @@ void PanelAnimation::Draw()
 		{
 			compAnimation->TestPause = !compAnimation->TestPause;
 			mouseMovement.x = progress;
+			buttonPos = progress;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Stop") && compAnimation->TestPlay)
@@ -177,44 +178,26 @@ void PanelAnimation::Draw()
 
 		if (compAnimation->TestPause)
 		{
-			ImGui::SetCursorPos(ImVec2(0, 20));
-			ImVec2 leftLimit = { ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y + 130 };
-			ImVec2 rightLimit = { ImGui::GetCursorScreenPos().x + 20, ImGui::GetCursorScreenPos().y + 145 };
+			ImGui::SetCursorPos({ buttonPos,ImGui::GetCursorPosY() + 140 });
+			ImGui::PushID("scrollButton");
+			ImGui::Button("", { 20, 15 });
+			ImGui::PopID();
 
-			bool mouse = ImGui::IsMouseHoveringRect({ leftLimit.x + mouseMovement.x , leftLimit.y }, { rightLimit.x + mouseMovement.x , rightLimit.y });
-
-			ImGui::GetWindowDrawList()->AddRectFilled({ leftLimit.x + mouseMovement.x , leftLimit.y }, { rightLimit.x + mouseMovement.x , rightLimit.y }, ImColor(1.0f, 0.7f, 0.3f, 1.0f));
-
-
-			if (mouse && ImGui::IsMouseDown(0) && dragging == false)
+			if (ImGui::IsItemClicked(0) && dragging == false)
 			{
 				dragging = true;
+				offset = ImGui::GetMousePos().x - ImGui::GetWindowPos().x - buttonPos;
 			}
-
 
 			if (dragging && ImGui::IsMouseDown(0))
 			{
-				if (leftLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x > leftLimit.x && rightLimit.x + mouseMovement.x + ImGui::GetMouseDragDelta(0).x < leftLimit.x + zoom*numFrames)
-				{
+				buttonPos = ImGui::GetMousePos().x - ImGui::GetWindowPos().x - offset;
+				if (buttonPos < 0)
+					buttonPos = 0;
+				if (buttonPos > numFrames*zoom - 20)
+					buttonPos = numFrames * zoom - 20;
 
-					int num = (numFrames - (winSize / zoom));
-
-					if (ImGui::GetMouseDragDelta(0).x > 0)
-					{
-						mouseMovement.x += (winSize - (numFrames > 10 ? recSize / 10 : recSize / numFrames)) / numFrames;
-						barMovement.x += ((numFrames - (winSize / zoom)) * zoom) / numFrames;
-					}
-					if (ImGui::GetMouseDragDelta(0).x < 0)
-					{
-						mouseMovement.x -= (winSize - (numFrames > 10 ? recSize / 10 : recSize / numFrames)) / numFrames;
-						barMovement.x -= ((numFrames - (winSize / zoom)) * zoom) / numFrames;
-					}
-
-					mouseMovement.y += 0;
-					ImGui::ResetMouseDragDelta();
-				}
-
-				progress = mouseMovement.x;
+				progress = buttonPos;
 				compAnimation->animTime = progress / (animation->ticksXsecond *zoom);
 				
 			}

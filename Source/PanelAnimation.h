@@ -33,6 +33,9 @@ private:
 
 	ImVec2 barMovement = { 0, 0 };
 	ImVec2 mouseMovement = { 0, 0 };
+
+	float buttonPos = 0.0f;
+	float offset = 0.0f;
 	
 	bool dragging = false;
 	bool scrolled = false;
