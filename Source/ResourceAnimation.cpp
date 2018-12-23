@@ -221,7 +221,7 @@ bool BoneTransform::calcCurrentIndex(float time, bool test)
 	return ret;
 }
 
-void BoneTransform::calcTransfrom(float time)
+void BoneTransform::calcTransfrom(float time,bool interpolation)
 {
 	float tp, ts, tr;
 
@@ -248,7 +248,7 @@ void BoneTransform::calcTransfrom(float time)
 	Quat rotation = rotation_1.Slerp(rotation_2, tr);
 	vec scale = scale_1.Lerp(scale_2, ts);
 
-	if (App->gui->animations->interpolation)
+	if (interpolation)
 	{
 		lastTransform.Set(float4x4::FromTRS(position, rotation, scale));
 	}

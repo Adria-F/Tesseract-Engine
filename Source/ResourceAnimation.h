@@ -8,7 +8,7 @@ struct BoneTransform
 	~BoneTransform();
 
 	bool calcCurrentIndex(float time,bool test);
-	void calcTransfrom(float time);
+	void calcTransfrom(float time, bool interpolation);
 
 	void blendAnimation();
 	void smoothBlending(const float4x4& blendtrans, float time);

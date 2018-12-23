@@ -35,6 +35,7 @@ public:
 	bool blend = false;
 	bool smoothT = false;
 	bool frozenT = false;
+	bool interpolation=false;
 
 	uint blendRUID = 0;
 

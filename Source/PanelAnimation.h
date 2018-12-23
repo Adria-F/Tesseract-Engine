@@ -27,7 +27,6 @@ public:
 	BoneTransform* selectedBone=nullptr;
 
 	float numFrames = 1;
-	bool interpolation = false;
 
 private:
 

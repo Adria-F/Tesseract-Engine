@@ -88,7 +88,7 @@ bool ComponentAnimation::Update(float dt)
 				{
 					if (animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond,TestPlay))
 					{
-						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
+						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond, interpolation);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
 					}
 				}
@@ -109,8 +109,8 @@ bool ComponentAnimation::Update(float dt)
 						animation->boneTransformations[i].calcCurrentIndex(animTime*animation->ticksXsecond, TestPlay);
 						rblendAnimation->boneTransformations[i].calcCurrentIndex(blendAnimTime*rblendAnimation->ticksXsecond, TestPlay);
 						
-						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond);
-						rblendAnimation->boneTransformations[i].calcTransfrom(blendAnimTime*rblendAnimation->ticksXsecond);
+						animation->boneTransformations[i].calcTransfrom(animTime*animation->ticksXsecond, interpolation);
+						rblendAnimation->boneTransformations[i].calcTransfrom(blendAnimTime*rblendAnimation->ticksXsecond, interpolation);
 						
 						animation->boneTransformations[i].smoothBlending(rblendAnimation->boneTransformations[i].lastTransform, blendTime / totalBlendTime);
 						transform->localMatrix = animation->boneTransformations[i].lastTransform;
@@ -158,6 +158,7 @@ void ComponentAnimation::DrawInfo()
 		if (animation != nullptr)
 		{
 			ImGui::Checkbox("Loop", &loop);
+			ImGui::Checkbox("Interpolation", &interpolation);
 
 			if (ImGui::Checkbox("Draw Bones", &debugDraw))
 			{

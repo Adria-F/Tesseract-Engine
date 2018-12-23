@@ -260,8 +260,6 @@ void PanelAnimation::Draw()
 		ImGui::EndGroup();
 
 		ImGui::NewLine();
-
-		ImGui::Checkbox("Interpolation", &interpolation);
 	}
 
 	ImGui::End();
