@@ -15,11 +15,7 @@ This engine is created by:
 | <img src="https://drive.google.com/uc?id=1vQUdU2pbTyUeGBdSpkp46poJoaWvpupi" width="300"> | <img src="https://drive.google.com/uc?id=1cIlNdQMWxLPZz0VO1siO7d_wgM4mKkGb" width="300"> |
 | --- | --- |
 | [Adrià Ferrer](https://github.com/Adria-F) | [Marc Garcia](https://github.com/MaxitoSama)
-</p>|
-
-
-                                          
-
+</p>
 
 ## Members Tasks:
 
