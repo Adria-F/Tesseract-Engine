@@ -122,11 +122,11 @@ void GameObject::Draw(bool game) const
 			{
 				(*it_c)->drawDebugInfo();
 			}
-		}
 
-		if (App->renderer3D->ShowBB || selected)
-		{
-			App->renderer3D->DrawBB(boundingBox, { 0, 0.5f, 1 });
+			if (App->renderer3D->ShowBB || selected)
+			{
+				App->renderer3D->DrawBB(boundingBox, { 0, 0.5f, 1 });
+			}
 		}
 
 		for (std::list<GameObject*>::const_iterator it_c = childs.begin(); it_c != childs.end(); it_c++)
