@@ -91,6 +91,7 @@ editor gif
 
 
 in-game gif
+[InGame](https://i.imgur.com/VrgteMT.gifv)
 
 ## How does it work
 1 minute video
