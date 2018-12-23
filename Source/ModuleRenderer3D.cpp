@@ -224,79 +224,73 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	//Draw Scene  ---------------------------	
-	if (App->gui->sceneVisible())
+	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	if (changedSceneFOV)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-
-		if (changedSceneFOV)
-		{
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glLoadMatrixf(App->camera->camera->getProjectionMatrix());
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			changedSceneFOV = false;
-		}
-
+		glLoadMatrixf(App->camera->camera->getProjectionMatrix());
 		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(App->camera->camera->getViewMatrix());
-
-		App->scene_intro->FillDrawBuffer();
-		drawAllGameObjects();
-
-		MPlane base_plane(0, 1, 0, 0);
-		base_plane.axis = true;
-		base_plane.Render();
-
-		if (ShowClickRay) //Debug click ray
-		{
-			glLineWidth(2.0f);
-
-			glBegin(GL_LINES);
-
-			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-			glVertex3f(clickA.x, clickA.y, clickA.z);
-			glVertex3f(clickB.x, clickB.y, clickB.z);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-			glEnd();
-
-			glLineWidth(1.0f);
-		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glLoadIdentity();
+		changedSceneFOV = false;
 	}
 
-	//Game -------------------
-	if (App->gui->gameVisible())
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->camera->getViewMatrix());
+
+	App->scene_intro->FillDrawBuffer();
+	drawAllGameObjects();
+
+	MPlane base_plane(0, 1, 0, 0);
+	base_plane.axis = true;
+	base_plane.Render();
+
+	if (ShowClickRay) //Debug click ray
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, GameFramebufferName);
+		glLineWidth(2.0f);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBegin(GL_LINES);
 
-		if (App->scene_intro->activeCamera != nullptr)
-		{
-			glLoadIdentity();
-			float* ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
-			float* ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+		glVertex3f(clickA.x, clickA.y, clickA.z);
+		glVertex3f(clickB.x, clickB.y, clickB.z);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glLoadMatrixf(ProjectionM);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			changedSceneFOV = true;
+		glEnd();
 
-			glMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(ViewM);
+		glLineWidth(1.0f);
+	}
 
-			//Draw Game  ---------------------------	
-			App->scene_intro->FillDrawBuffer(true);
-			drawAllGameObjects();
-		}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//Game -------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, GameFramebufferName);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	if (App->scene_intro->activeCamera != nullptr)
+	{
+		glLoadIdentity();
+		float* ViewM = App->scene_intro->activeCamera->camera->getViewMatrix();
+		float* ProjectionM = App->scene_intro->activeCamera->camera->getProjectionMatrix();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(ProjectionM);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		changedSceneFOV = true;
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(ViewM);
+
+		//Draw Game  ---------------------------	
+		App->scene_intro->FillDrawBuffer(true);
+		drawAllGameObjects();
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

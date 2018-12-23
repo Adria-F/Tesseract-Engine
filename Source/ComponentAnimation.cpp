@@ -311,6 +311,7 @@ void ComponentAnimation::Save(JSON_Value * component) const
 	animation->addUint("UID", UID);
 	animation->addBool("debugDraw", debugDraw);
 	animation->addBool("loop", loop);
+	animation->addBool("interpolation", interpolation);
 
 	//TMP
 	ResourceAnimation* walk = (ResourceAnimation*)App->resources->GetResource(walkUID);
@@ -343,6 +344,7 @@ void ComponentAnimation::Load(JSON_Value * component)
 	RUID = App->resources->getResourceUIDFromMeta(component->getString("FBX"), "animations", component->getString("animation"));
 	debugDraw = component->getBool("debugDraw");
 	loop = component->getBool("loop");
+	interpolation = component->getBool("interpolation");
 
 	//TMP
 	walkUID = App->resources->getResourceUIDFromMeta(component->getString("walkFBX"), "animations", component->getString("walkAnimation"));

@@ -391,7 +391,7 @@ GameObject* GameObject::getChildByName(const char* name) const
 
 	for (std::list<GameObject*>::const_iterator it_go = childs.begin(); it_go != childs.end(); it_go++)
 	{
-		if ((*it_go)->name == name)
+		if ((*it_go)->name.find(name) != -1)
 		{
 			child = (*it_go);
 			break;
