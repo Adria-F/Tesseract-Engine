@@ -87,11 +87,16 @@ of the next animation before finally swaping the animations.
 Before the render of the mesh, it calculates a morphed version of it, adapting to the linked bones and rendering it instead of the original one.
 
 
-editor gif
+* Editor gif
+<img src="https://i.imgur.com/WlKvYpc.gif" width="600">
 
 
-in-game gif
-[InGame](https://i.imgur.com/VrgteMT.gifv)
+* In-game gif
+<img src="https://i.imgur.com/VrgteMT.gif" width="600">
+
+* Innovation gif
+<img src="https://i.imgur.com/yJ7HX97.gif" width="600">
+
 
 ## How does it work
 1 minute video
