@@ -56,6 +56,9 @@ This texture, accepts windows resizing without deforming.
 
 * We have a panel file dialog that allows to open a directory and navigate through its folders, (you can define an exclusive extension to search or ignore).
 
+* We designed a panel animation where we can see the timeline of the animation, with each keyframe for each bone. It also allows you to see a preview of the animation or even
+scroll manually to move through the animation.
+
 ## Libraries
 
 * STL to use the basic containers.
@@ -70,29 +73,6 @@ This texture, accepts windows resizing without deforming.
 * [mmgr](http://www.flipcode.com/archives/Presenting_A_Memory_Manager.shtml) to manage the memory used.
 * [PHYSFS](https://icculus.org/physfs/) to manage files.
 * [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) Immediate mode 3D gizmo for scene editing and other controls based on Dear Imgui
-
-## Work of each member
-
-* GameObjects (Both)
-* AABBs (Marc)
-* Game Components (Marc)
-* Panel Assets (Adrià)
-* Panel Hierarchy (Both)
-* Panel Inspector (Adrià)
-* Panel FileDialog (Adrià)
-* QuadTree (Marc)
-* Frustum Culling (Marc)
-* Textures Importing (Adrià)
-* FBX importing (Both)
-* meshes and scenes own format (Adrià)
-* Mouse picking (Both)
-* Time manager (Marc)
-* Resources (classes) (Marc)
-* Resource Manager (Both)
-* .meta files management (Adrià)
-* File system (Adrià)
-* JSON_Manager (Adrià)
-* Guizmos (Both)
 
 ## License
 
