@@ -171,6 +171,7 @@
     <ClInclude Include="Panel.h" />
     <ClInclude Include="PanelAbout.h" />
     <ClInclude Include="PanelAnimation.h" />
+    <ClInclude Include="PanelAnimationGraph.h" />
     <ClInclude Include="PanelAssets.h" />
     <ClInclude Include="PanelConfiguration.h" />
     <ClInclude Include="PanelConsole.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="rapidjson\writer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceAnimation.h" />
+    <ClInclude Include="ResourceAnimationGraph.h" />
     <ClInclude Include="ResourceBone.h" />
     <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="ResourceScene.h" />
@@ -302,6 +304,7 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="PanelAbout.cpp" />
     <ClCompile Include="PanelAnimation.cpp" />
+    <ClCompile Include="PanelAnimationGraph.cpp" />
     <ClCompile Include="PanelAssets.cpp" />
     <ClCompile Include="PanelConfiguration.cpp" />
     <ClCompile Include="PanelConsole.cpp" />
@@ -339,6 +342,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceAnimation.cpp" />
+    <ClCompile Include="ResourceAnimationGraph.cpp" />
     <ClCompile Include="ResourceBone.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="ResourceScene.cpp" />

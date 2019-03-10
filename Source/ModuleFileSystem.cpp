@@ -32,7 +32,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER, MESHES_FOLDER, ANIMATIONS_FOLDER,BONES_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
+		ASSETS_FOLDER, LIBRARY_FOLDER, SETTINGS_FOLDER, MESHES_FOLDER, ANIMATIONS_FOLDER,BONES_FOLDER, GRAPHS_FOLDER, TEXTURES_FOLDER, FBX_FOLDER
 	};
 	for (uint i = 0; i < PATHS_AMOUNT; ++i)
 	{
@@ -318,7 +318,7 @@ uint ModuleFileSystem::getAvailablePath(const char* originalPath, std::string* p
 	while (fileExists(newPath.c_str()))
 	{
 		num_version++;
-		newPath = directory + filename + '(' + std::to_string(num_version) + ')' + extension;
+		newPath = directory + filename + '(' + std::to_string(num_version) + ')' + '.' + extension;
 	}
 
 	if (path != nullptr)
@@ -449,6 +449,10 @@ uint ModuleFileSystem::manageDroppedFiles(const char* path)
 	else if (extension == "tesseractMat")
 	{
 		ret = App->resources->ImportFile(full_path.c_str(), R_COLOR);
+	}
+	else if (extension == "tesseractGraph")
+	{
+		ret = App->resources->ImportFile(full_path.c_str(), R_ANIMATIONGRAPH);
 	}
 	else
 	{

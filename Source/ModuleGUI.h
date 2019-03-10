@@ -21,6 +21,7 @@ class PanelFileDialog;
 class PanelResourcesList;
 class PanelGame;
 class PanelAnimation;
+class PanelAnimationGraph;
 
 class Texture;
 
@@ -84,6 +85,7 @@ public:
 	PanelResourcesList* resourcesList = nullptr;
 	PanelGame* GameScene = nullptr;
 	PanelAnimation* animations = nullptr;
+	PanelAnimationGraph* animationGraph = nullptr;
 
 	Texture* folder = nullptr;
 	Texture* file = nullptr;

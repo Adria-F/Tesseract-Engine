@@ -5,8 +5,9 @@
 
 struct aiAnimation;
 struct aiBone;
-struct ResourceAnimation;
+class ResourceAnimation;
 class ResourceBone;
+class ResourceAnimationGraph;
 
 class ModuleAnimations : public Module
 {
@@ -19,6 +20,9 @@ public:
 
 	bool importBones(aiBone* bone, uint UID, std::string& newpath);
 	bool saveBones(ResourceBone* bone, uint UID, std::string& newpath);
+
+	bool importGraph(uint UID, std::string& newpath);
+	bool saveGraph(ResourceAnimationGraph* graph, uint UID);
 };
 
 #endif // !__MODULEANIMATIONS_H__

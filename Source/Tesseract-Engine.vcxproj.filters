@@ -528,6 +528,12 @@
     <ClInclude Include="ResourceBone.h">
       <Filter>Sources\Modules\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="PanelAnimationGraph.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceAnimationGraph.h">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -858,6 +864,12 @@
       <Filter>Sources\Modules\Components</Filter>
     </ClCompile>
     <ClCompile Include="ResourceBone.cpp">
+      <Filter>Sources\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelAnimationGraph.cpp">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceAnimationGraph.cpp">
       <Filter>Sources\Modules\Resources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,6 +19,7 @@
 #include "PanelResourcesList.h"
 #include "PanelGame.h"
 #include "PanelAnimation.h"
+#include "PanelAnimationGraph.h"
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -80,6 +81,8 @@ bool ModuleGUI::Init(JSON_File* document)
 	panels.push_back(GameScene = new PanelGame("Game"));
 	
 	panels.push_back(animations = new PanelAnimation("Animations"));
+
+	panels.push_back(animationGraph = new PanelAnimationGraph("Animation Graph"));
 
 	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -190,6 +193,8 @@ update_status ModuleGUI::Update(float dt)
 				assets->toggleActive();
 			if (ImGui::MenuItem("Animation", NULL, animations->isActive()))
 				animations->toggleActive();
+			if (ImGui::MenuItem("Animaton Graph", NULL, animationGraph->isActive()))
+				animationGraph->toggleActive();
 			ImGui::EndMenu();
 		}
 

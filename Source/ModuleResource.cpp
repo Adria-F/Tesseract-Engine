@@ -3,6 +3,7 @@
 #include "ModuleSceneLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
+#include "ModuleAnimations.h"
 
 #include "Resource.h"
 #include "ResourceMesh.h"
@@ -10,6 +11,7 @@
 #include "ResourceMaterial.h"
 #include "ResourceAnimation.h"
 #include "ResourceBone.h"
+#include "ResourceAnimationGraph.h"
 
 #ifdef _DEBUG
 //#define TEST_MEMORY_MANAGER
@@ -88,6 +90,10 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 				loaded = App->scene_loader->importScene(file, UID, meshesUID, animationsUID, bonesUID, written_file, metaValue, newMeta);
 				meta->setValue("meta", metaValue);
 				break;
+			case R_ANIMATIONGRAPH:
+				//TMP
+				loaded = App->animations->importGraph(UID, written_file);
+				break;
 			}
 
 			if (loaded)
@@ -137,6 +143,9 @@ uint ModuleResource::ImportFile(const char* file, ResType type)
 			{
 			case R_TEXTURE:
 				newRes->exported_file = TEXTURES_FOLDER + std::to_string(UID) + TEXTURES_EXTENSION;
+				break;
+			case R_ANIMATIONGRAPH:
+				newRes->exported_file = GRAPHS_FOLDER + std::to_string(UID) + GRAPH_EXTENSION;
 				break;
 			
 			case R_SCENE:
@@ -254,6 +263,9 @@ Resource* ModuleResource::AddResource(ResType type, uint forced_uid)
 		break;
 	case R_BONE:
 		ret = (Resource*)new ResourceBone(forced_uid, R_BONE);
+		break;
+	case R_ANIMATIONGRAPH:
+		ret = (Resource*)new ResourceAnimationGraph(forced_uid, R_ANIMATIONGRAPH);
 		break;
 	}
 	

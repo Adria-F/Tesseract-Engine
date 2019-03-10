@@ -73,13 +73,17 @@ enum update_status
 #define VSYNC false
 #define TITLE "3D Engine"
 
+#define GRAPH_NODE_WINDOW_PADDING 10.0f
+#define GRAPH_LINK_RADIUS 5.0f
+
 // Files PATHS
-#define PATHS_AMOUNT 8
+#define PATHS_AMOUNT 9
 #define ASSETS_FOLDER "Assets/"
 #define LIBRARY_FOLDER "Library/"
 #define MESHES_FOLDER "Library/Meshes/"
 #define ANIMATIONS_FOLDER "Library/Animations/"
 #define BONES_FOLDER "Library/Animations/Bones/"
+#define GRAPHS_FOLDER "Library/Animations/Graphs/"
 #define TEXTURES_FOLDER "Library/Textures/"
 #define FBX_FOLDER "Library/Scenes/"
 #define SETTINGS_FOLDER "Settings/"
@@ -92,6 +96,7 @@ enum update_status
 #define TEXTURES_EXTENSION ".dds"
 #define SCENES_EXTENSION ".tesseractScene"
 #define MATERIAL_EXTENSION ".tesseractMat"
+#define GRAPH_EXTENSION ".tesseractGraph"
 #define META_EXTENSION ".meta"
 
 #endif // !__GLOBALS_H__

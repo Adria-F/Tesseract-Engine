@@ -470,7 +470,7 @@ ResourceMaterial* ModuleSceneLoader::importColor(const char* path, const aiScene
 	//resource->name = App->resources->getResourceAvailableName("Color", R_COLOR);
 	resource->setColorName();
 
-	//Create a file for stroing the material
+	//Create a file for storing the material
 	char* buffer = new char[sizeof(float) * 4];
 	float colors[4] = { color.x, color.y, color.z, 1.0f };
 	memcpy(buffer, colors, sizeof(float) * 4);

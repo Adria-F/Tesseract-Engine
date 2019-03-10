@@ -35,6 +35,9 @@ void PanelResourcesList::Draw()
 	case R_ANIMATION:
 		ImGui::Text("Animations");
 		break;
+	case R_ANIMATIONGRAPH:
+		ImGui::Text("Animation Graphs");
+		break;
 	}
 	ImGui::EndMenuBar();
 	if (currentType == R_TEXTURE)

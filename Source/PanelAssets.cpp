@@ -87,12 +87,34 @@ void PanelAssets::Draw()
 				App->fileSystem->createDirectory(path.c_str());
 
 				assetsElement* newFolder = new assetsElement();
-				newFolder->type == assetsElement::FOLDER;
+				newFolder->type = assetsElement::FOLDER;
 				newFolder->renaming = true;
 				newFolder->name = "Unnamed";
 				if (num_version > 0)
 					newFolder->name += '(' + std::to_string(num_version) + ')';
 				elements.push_back(newFolder);
+
+				creating = false;
+				renaming = true;
+			}
+			if (ImGui::Button("Animation Graph"))
+			{
+				std::string path = current_path;
+				if (path.size() > 0 && path.back() != '/')
+					path += '/';
+				path += "Unnamed";
+				path += GRAPH_EXTENSION;
+				uint num_version = App->fileSystem->getAvailablePath(path.c_str(), &path);
+				App->fileSystem->writeFile(path.c_str(), nullptr, 0, true);
+
+				assetsElement* newGraph = new assetsElement();
+				newGraph->type = assetsElement::FILE;
+				newGraph->renaming = true;
+				newGraph->name = "Unnamed";
+				if (num_version > 0)
+					newGraph->name += '(' + std::to_string(num_version) + ')';
+				newGraph->name += GRAPH_EXTENSION;
+				elements.push_back(newGraph);
 
 				creating = false;
 				renaming = true;

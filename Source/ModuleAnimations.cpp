@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include "ResourceAnimation.h"
 #include "ResourceBone.h"
+#include "ResourceAnimationGraph.h"
 
 #include "Assimp/include/anim.h"
 #include "Assimp/include/mesh.h"
@@ -227,7 +228,6 @@ bool ModuleAnimations::importBones(aiBone* bone, uint UID, std::string& newpath)
 
 bool ModuleAnimations::saveBones(ResourceBone* bone, uint UID, std::string& newpath)
 {
-
 	bool ret = false;
 
 	uint ranges = bone->numWeights;
@@ -279,5 +279,81 @@ bool ModuleAnimations::saveBones(ResourceBone* bone, uint UID, std::string& newp
 	newpath = BONES_FOLDER + std::to_string(UID) + BONE_EXTENSION;
 
 	return ret;
+}
 
+bool ModuleAnimations::importGraph(uint UID, std::string & newpath)
+{
+	char* buffer = new char[sizeof(int)];
+	int zero = 0;
+	memcpy(buffer, &zero, sizeof(int));
+
+	App->fileSystem->writeFile((GRAPHS_FOLDER + std::to_string(UID) + GRAPH_EXTENSION).c_str(), buffer, sizeof(int), true);
+	RELEASE_ARRAY(buffer);
+
+	newpath = GRAPHS_FOLDER + std::to_string(UID) + GRAPH_EXTENSION;
+
+	return true;
+}
+
+bool ModuleAnimations::saveGraph(ResourceAnimationGraph* graph, uint UID)
+{
+	uint size = 0;
+	//Nodes: nameLength, name, position, UID, animation UID, num Links
+	size += sizeof(int);
+	for (std::map<uint, Node*>::iterator it_n = graph->nodes.begin(); it_n != graph->nodes.end(); ++it_n)
+	{
+		size += (*it_n).second->name.length() + 2 * sizeof(float) + 4 * sizeof(uint);
+
+		for (std::list<NodeLink*>::iterator it_l = (*it_n).second->links.begin(); it_l != (*it_n).second->links.end(); ++it_l)
+		{
+			size += sizeof(int) + 2*sizeof(uint);
+		}
+	}
+	//Links: type, UID, connected node
+	//Transitions: originNode, destinationNode, output, input
+
+	char* buffer = new char[size];
+	char* cursor = buffer;
+
+	uint bytes = 0;
+
+	int nodeAmount = graph->nodes.size();
+	memcpy(cursor, &nodeAmount, sizeof(int));
+	cursor += sizeof(int);
+	for (std::map<uint, Node*>::iterator it_n = graph->nodes.begin(); it_n != graph->nodes.end(); ++it_n)
+	{
+		bytes = (*it_n).second->name.length();
+		memcpy(cursor, &bytes, sizeof(uint));
+		cursor += sizeof(uint);
+		memcpy(cursor, (*it_n).second->name.c_str(), bytes);
+		cursor += bytes;
+
+		float position[2] = { (*it_n).second->pos.x, (*it_n).second->pos.y };
+		bytes = sizeof(float) * 2;
+		memcpy(cursor, position, bytes);
+		cursor += bytes;
+
+		uint uids[3] = { (*it_n).second->UID, (*it_n).second->animationUID, (*it_n).second->links.size() };
+		bytes = sizeof(uint) * 3;
+		memcpy(cursor, uids, bytes);
+		cursor += bytes;
+
+		for (std::list<NodeLink*>::iterator it_l = (*it_n).second->links.begin(); it_l != (*it_n).second->links.end(); ++it_l)
+		{
+			int type = (int)(*it_l)->type;
+			bytes = sizeof(int);
+			memcpy(cursor, &type, bytes);
+			cursor += bytes;
+
+			uint links[2] = { (*it_l)->UID, (*it_l)->connectedNodeLink };
+			bytes = sizeof(uint) * 2;
+			memcpy(cursor, links, bytes);
+			cursor += bytes;
+		}
+	}
+
+	App->fileSystem->writeFile((GRAPHS_FOLDER + std::to_string(UID) + GRAPH_EXTENSION).c_str(), buffer, size, true);
+	RELEASE_ARRAY(buffer);
+
+	return true;
 }

@@ -96,6 +96,10 @@ float* ComponentMesh::Skining()
 			{				
 				hasBones = true;
 				float4x4 boneTransform = (((ComponentTransformation*)gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Inverted()*((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix)*rBone->Offset;
+				float3 pos, scale;
+				Quat rot;
+				((ComponentTransformation*)bone->gameObject->GetComponent(TRANSFORMATION))->globalMatrix.Decompose(pos, rot, scale);
+				scale = scale;
 
 				for (int j = 0; j < rBone->numWeights; j++)
 				{
@@ -104,6 +108,10 @@ float* ComponentMesh::Skining()
 						continue;
 					float3 startingVertex(&mesh->vertices[VertexIndex * 3]);
 					float3 movementWeight = boneTransform.TransformPos(startingVertex);
+					if (startingVertex.y < 0.13f && startingVertex.y > 0.11f)
+					{
+						LOG("Index: %d | Value: %f", VertexIndex, startingVertex.y);
+					}
 
 					vertices[VertexIndex * 3] += movementWeight.x*rBone->weights[j].weight;
 					vertices[VertexIndex * 3 + 1] += movementWeight.y*rBone->weights[j].weight;
